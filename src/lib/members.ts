@@ -867,5 +867,37 @@ export const memberData = [
 			'Forensic Science'
 		],
 		backups: ["Children's Stories*", 'Audio Podcasting*']
+	},
+	{
+		id: '60',
+		name: 'ISAIAH LEONG',
+		email: 's-ileong@lwsd.org',
+		startTime: '10/5/23 9:38:32',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 9:41:40',
+		events: [
+			'VEX Robotics*',
+			'Robotic Challenge* (Washington Only)',
+			'Engineering Design*',
+			'Dragster Design*'
+		],
+		backups: ['Architectural Design*', 'Board Game Design*']
+	},
+	{
+		id: '61',
+		name: 'IDA SMITH',
+		email: 's-idsmith@lwsd.org',
+		startTime: '10/5/23 10:13:50',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 10:15:46',
+		events: [
+			'Board Game Design*',
+			"Children's Stories*",
+			'Promotional Design',
+			'Technology Problem Solving',
+			'Transportation Modeling*',
+			'Prepared Presentation*'
+		],
+		backups: ['Fashion Design and Technology*', 'Concept Art (Washington Only)']
 	}
 ];
