@@ -930,5 +930,70 @@ export const memberData = [
 			'Debating Technological Issues*'
 		],
 		backups: ['Promotional Design', 'Concept Art (Washington Only)']
+	},
+	{
+		id: '64',
+		name: 'RAMEEN SYED',
+		email: 's-rsyed@lwsd.org',
+		startTime: '10/5/23 15:35:20',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 15:37:20',
+		events: [
+			'Software Development*',
+			'Coding',
+			'Digital Video Production*',
+			'Silent Film (Washington Only)'
+		],
+		backups: ['Essays on Technology', 'Career Prep* (Washington Only)']
+	},
+	{
+		id: '65',
+		name: 'SAISRISANJANA LINGAMALLU',
+		email: 's-salingamallu@lwsd.org',
+		startTime: '10/5/23 15:26:13',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 15:39:13',
+		events: [
+			'Audio Podcasting*',
+			"Children's Stories*",
+			'Forensic Science',
+			'Biotechnology Design*',
+			'Fashion Design and Technology*',
+			'Board Game Design*'
+		],
+		backups: ['Extemporaneous Speech', 'Prepared Presentation*']
+	},
+	{
+		id: '66',
+		name: 'CAROLINA PROCTOR',
+		email: 's-cproctor@lwsd.org',
+		startTime: '10/5/23 15:34:54',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 15:39:28',
+		events: [
+			'Audio Podcasting*',
+			'Fashion Design and Technology*',
+			'Flight Endurance*',
+			'Music Production*',
+			"Children's Stories*",
+			'STEM Mass Media (Washington Only)'
+		],
+		backups: ['Board Game Design*', 'Silent Film (Washington Only)']
+	},
+	{
+		id: '67',
+		name: 'CAITLIN COPLEY',
+		email: 's-ccopley@lwsd.org',
+		startTime: '10/5/23 15:38:21',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 15:40:33',
+		events: [
+			'Biotechnology Design*',
+			"Children's Stories*",
+			'Board Game Design*',
+			'Forensic Science',
+			'Data Science and Analytics*'
+		],
+		backups: ['Audio Podcasting*', 'Concept Art (Washington Only)']
 	}
 ];
