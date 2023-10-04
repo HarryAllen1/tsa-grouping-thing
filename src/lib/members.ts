@@ -899,5 +899,36 @@ export const memberData = [
 			'Prepared Presentation*'
 		],
 		backups: ['Fashion Design and Technology*', 'Concept Art (Washington Only)']
+	},
+	{
+		id: '62',
+		name: 'PATRICK MCMANUS',
+		email: 's-PMCMANUS@lwsd.org',
+		startTime: '10/5/23 12:50:59',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 12:52:47',
+		events: [
+			'Computer-Aided Design (CAD), Engineering',
+			'Engineering Design*',
+			'Technology Bowl',
+			'Trebuchet (Washington Only)',
+			'Flight Endurance*'
+		],
+		backups: ['Dragster Design*', 'Transportation Modeling*']
+	},
+	{
+		id: '63',
+		name: 'BRENDON LUO',
+		email: 's-bluo@lwsd.org',
+		startTime: '10/4/23 19:00:06',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 14:13:16',
+		events: [
+			'Biotechnology Design*',
+			'Flight Endurance*',
+			'Trebuchet (Washington Only)',
+			'Debating Technological Issues*'
+		],
+		backups: ['Promotional Design', 'Concept Art (Washington Only)']
 	}
 ];
