@@ -21,7 +21,7 @@
 		?.events.map((e) => ({
 			...events.find((ev) => ev.event === e)
 		}))
-		.filter((e) => (e.minTeamSize ?? 999) > 1);
+		.filter((e) => (e.maxTeamSize ?? 999) > 1);
 
 	const correctType = (eventData: DocumentData) =>
 		eventData as { name: string; members: { name: string; email: string }[] };
