@@ -995,5 +995,52 @@ export const memberData = [
 			'Data Science and Analytics*'
 		],
 		backups: ['Audio Podcasting*', 'Concept Art (Washington Only)']
+	},
+	{
+		id: '68',
+		name: 'MAHDI EL HUSSEINI',
+		email: 's-MEL-HUSSEINI@lwsd.org',
+		startTime: '10/5/23 15:37:08',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 15:41:51',
+		events: [
+			'Drone Challenge (UAV)*',
+			'Engineering Design*',
+			'Coding',
+			'Technology Bowl',
+			'Video Game Design*',
+			'Dragster Design*'
+		],
+		backups: ['Technology Problem Solving', 'Software Development*']
+	},
+	{
+		id: '69',
+		name: 'ZAHID MANNAN',
+		email: 's-zmannan@lwsd.org',
+		startTime: '10/5/23 15:43:44',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 15:44:22',
+		events: [
+			"Children's Stories*",
+			'Essays on Technology',
+			'Architectural Design*',
+			'Forensic Science'
+		],
+		backups: ['Photographic Technology', 'Geospatial Technology*']
+	},
+	{
+		id: '70',
+		name: 'VIHAN AGARWAL',
+		email: 's-vihagarwal@lwsd.org',
+		startTime: '10/5/23 15:22:52',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 15:51:35',
+		events: [
+			'Video Game Design*',
+			'Virtual Reality Visualization (VR)*',
+			'VEX Robotics*',
+			'Robotic Challenge* (Washington Only)'
+		],
+		backups: ['Webmaster*', 'Animatronics*']
 	}
 ];
