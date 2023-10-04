@@ -27,7 +27,9 @@
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)}>Sign out</Button>
 	<Button href="/" class="my-4">Back to regular sign up page</Button>
-	<div class="flex flex-col items-center gap-4">
+	<div
+		class="flex flex-col items-center gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:items-start"
+	>
 		{#each signedUpEvents as event}
 			<Doc ref="events/{event.event}" let:data>
 				<Card.Root class="w-96">
