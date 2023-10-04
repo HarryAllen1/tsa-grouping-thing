@@ -837,5 +837,35 @@ export const memberData = [
 			'Board Game Design*'
 		],
 		backups: ['Coding', 'Dragster Design*']
+	},
+	{
+		id: '58',
+		name: 'ANIKA KAMATH',
+		email: 's-ankamath@lwsd.org',
+		startTime: '10/4/23 22:02:27',
+		lastModifiedTime: '',
+		completionTime: '10/4/23 22:25:00',
+		events: [
+			'Biotechnology Design*',
+			'Board Game Design*',
+			'Engineering Design*',
+			'Forensic Science'
+		],
+		backups: ["Children's Stories*", 'Audio Podcasting*']
+	},
+	{
+		id: '59',
+		name: 'SAIANIVARTH SANKARA',
+		email: 's-ssankara@lwsd.org',
+		startTime: '10/4/23 22:00:07',
+		lastModifiedTime: '',
+		completionTime: '10/4/23 22:25:12',
+		events: [
+			'Biotechnology Design*',
+			'Board Game Design*',
+			'Engineering Design*',
+			'Forensic Science'
+		],
+		backups: ["Children's Stories*", 'Audio Podcasting*']
 	}
 ];
