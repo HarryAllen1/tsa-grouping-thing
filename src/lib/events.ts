@@ -13,7 +13,7 @@ export const events: Event[] = [
 		perChapter: 3
 	},
 	{
-		event: 'Animatronics',
+		event: 'Animatronics*',
 		minTeamSize: 2,
 		maxTeamSize: 6,
 		perChapter: 3
@@ -163,7 +163,7 @@ export const events: Event[] = [
 		perChapter: 3
 	},
 	{
-		event: 'Infographic* (Washington Only)',
+		event: 'Infographic (Washington Only)',
 		minTeamSize: 1,
 		maxTeamSize: 1,
 		perChapter: 3
@@ -205,7 +205,7 @@ export const events: Event[] = [
 		perChapter: 3
 	},
 	{
-		event: 'Robotics Challenge*',
+		event: 'Robotic Challenge* (Washington Only)',
 		minTeamSize: 2,
 		maxTeamSize: 4,
 		perChapter: 3
