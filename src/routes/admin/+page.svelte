@@ -76,7 +76,12 @@
 														{#each memberData
 															.filter((p) => !team.members.filter((t) => t.email === p.email).length)
 															.sort((a, b) => a.name.localeCompare(b.name)) as person}
-															<li class="flex flex-row items-center">
+															<li
+																class:text-green-500={memberData
+																	.filter((m) => m.events.includes(event.event ?? ''))
+																	.find((e) => e.email === (person?.email ?? ''))}
+																class="flex flex-row items-center"
+															>
 																{person.name}
 																<Button
 																	on:click={async () => {
@@ -117,6 +122,9 @@
 												<!-- svelte-ignore a11y-click-events-have-key-events -->
 												<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 												<li
+													class:text-green-500={memberData
+														.filter((m) => m.events.includes(event.event ?? ''))
+														.find((e) => e.email === (teamMember?.email ?? ''))}
 													class="hover:underline hover:text-red-500 hover:cursor-pointer"
 													on:click={async () => {
 														const members = team.members;
