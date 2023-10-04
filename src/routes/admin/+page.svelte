@@ -35,7 +35,19 @@
 				<Card.Root class="w-96">
 					<Card.Header>
 						<Card.Title>{event.event}</Card.Title>
-						<Card.Description>Max {event.maxTeamSize} people per team</Card.Description>
+						<Card.Description>
+							<ul>
+								<li>
+									Min {event.minTeamSize} people per team
+								</li>
+								<li>
+									Max {event.maxTeamSize} people per team
+								</li>
+								<li>
+									Max {event.perChapter} teams per chapter
+								</li>
+							</ul>
+						</Card.Description>
 					</Card.Header>
 					<Card.Content class="flex flex-col gap-4">
 						{#if event.event === 'Technology Bowl'}
