@@ -12,6 +12,7 @@
 	import AlertTitle from '../lib/components/alert/alert-title.svelte';
 	import AlertDescription from '../lib/components/alert/alert-description.svelte';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
+	import { admins } from './admins';
 
 	const user = userStore(auth);
 
@@ -37,6 +38,9 @@
 		<p>
 			Email: {$user?.email}
 		</p>
+		{#if admins.includes($user?.email ?? '')}
+			<Button href="/admin">Admin page (this button is only visible to admins)</Button>
+		{/if}
 	</div>
 
 	{#if !signedUpEvents || signedUpEvents.length === 0}
@@ -68,7 +72,7 @@
 									{@const team = correctType(te)}
 									<Card.Root class="bg-blue-500 bg-opacity-20">
 										<Card.Title class="m-2 ml-4">
-											{#if team.members.find((e) => e.email === ($user?.email ?? ''))}
+											{#if team.members?.find((e) => e.email === ($user?.email ?? ''))}
 												<Button
 													variant="destructive"
 													on:click={async () => {
@@ -117,15 +121,14 @@
 														<Dialog.Title>Add People</Dialog.Title>
 														<Dialog.Description>
 															{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-																<Alert variant="destructive" class="dark:brightness-200">
-																	<AlertTitle>Error</AlertTitle>
-																	<AlertDescription>This team is full</AlertDescription>
+																<Alert class="dark:brightness-200">
+																	<AlertTitle>This team is full</AlertTitle>
 																</Alert>
 															{:else}
 																<p>People who signed up for this event:</p>
 																<ul>
 																	{#each memberData.filter((m) => m.events.includes(event.event ?? '') && !data.teams.find( (// @ts-ignore
-																					t) => t.members.find((e) => e.email === m.email) )) as person}
+																					t) => t.members?.find((e) => e.email === m.email) )) as person}
 																		<li class="flex flex-row items-center">
 																			{person.name}
 																			<Button
