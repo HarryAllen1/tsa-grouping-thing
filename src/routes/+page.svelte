@@ -162,10 +162,7 @@
 													</Dialog.Content>
 												</Dialog.Root>
 											{:else}
-												<p>
-													Ask someone in this team to add you if you want to join this team (you
-													must have signed up for this event)!
-												</p>
+												<p>Ask someone in this team to add you if you want to join this team!</p>
 											{/if}
 										</Card.Title>
 										<Card.Content>
