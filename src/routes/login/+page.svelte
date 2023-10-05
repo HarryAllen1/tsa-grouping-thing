@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { OAuthProvider, signInWithPopup } from 'firebase/auth';
+	import {
+		OAuthProvider,
+		browserLocalPersistence,
+		setPersistence,
+		signInWithPopup
+	} from 'firebase/auth';
 	import { auth } from '$lib';
 	import * as Card from '$lib/components/card';
 	import { Button } from '$lib/components/button';
@@ -10,9 +15,6 @@
 	}
 
 	const provider = new OAuthProvider('microsoft.com');
-	provider.setCustomParameters({
-		tenant: 'lwsd.onmicrosoft.com'
-	});
 	provider.addScope('email');
 	provider.addScope('openid');
 	provider.addScope('profile');
@@ -25,6 +27,7 @@
 	<Card.Content>
 		<Button
 			on:click={async () => {
+				await setPersistence(auth, browserLocalPersistence);
 				const user = await signInWithPopup(auth, provider);
 				if (user) {
 					goto('/');

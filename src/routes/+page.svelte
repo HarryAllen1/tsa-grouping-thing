@@ -1,20 +1,151 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { auth, db, events, memberData } from '$lib';
+	import { Button } from '$lib/components/button';
+	import * as Card from '$lib/components/card';
 	import { signOut } from 'firebase/auth';
-	import Button from '../lib/components/button/button.svelte';
-	import { doc, setDoc } from 'firebase/firestore';
+	import { Doc, userStore } from 'sveltefire';
+	import Alert from '../lib/components/alert/alert.svelte';
+	import AlertTitle from '../lib/components/alert/alert-title.svelte';
+	import AlertDescription from '../lib/components/alert/alert-description.svelte';
+	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
 
-	const singedUpEvents = memberData
+	const user = userStore(auth);
+
+	if (!$user) goto('/login');
+
+	const signedUpEvents = memberData
 		.find((m) => m.email === auth.currentUser?.email)
 		?.events.map((e) => ({
 			...events.find((ev) => ev.event === e)
 		}));
 
-	for (const event of events) {
-		setDoc(doc(db, 'events', event.event), []);
-	}
+	const correctType = (eventData: DocumentData) =>
+		eventData as { name: string; members: { name: string; email: string }[] };
 </script>
 
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)}>Sign out</Button>
+	<div class="w-full">
+		<h2 class="font-bold text-xl">User info</h2>
+		<p>
+			Name: {$user?.displayName}
+		</p>
+		<p>
+			Email: {$user?.email}
+		</p>
+	</div>
+
+	{#if !signedUpEvents || signedUpEvents.length === 0}
+		<p class="mt-4 w-full">
+			You haven't signed up for any events yet. Please see a board member or advisor.
+		</p>
+	{:else}
+		<Alert variant="destructive" class="mt-4 dark:brightness-200">
+			<AlertTitle>This list only includes team events.</AlertTitle>
+			<AlertDescription>Individual events are not in this list</AlertDescription>
+		</Alert>
+		<p class="my-4 w-full">You have signed up for the following team events:</p>
+		<div class="flex flex-col items-center gap-4">
+			{#each signedUpEvents as event}
+				<Doc ref="events/{event.event}" let:data>
+					<Card.Root class="w-96">
+						<Card.Header>
+							<Card.Title>{event.event}</Card.Title>
+							<Card.Description>Max {event.maxTeamSize} people per team</Card.Description>
+						</Card.Header>
+						<Card.Content class="flex flex-col gap-4">
+							{#each data.teams as te}
+								{@const team = correctType(te)}
+								<Card.Root class="bg-blue-500 bg-opacity-20">
+									<Card.Title class="m-2 ml-4">
+										{#if team.members.find((e) => e.email === ($user?.email ?? '') && e.name === ($user?.displayName ?? ''))}
+											<Button
+												variant="destructive"
+												on:click={async () => {
+													const members = team.members;
+													members.splice(
+														members.findIndex(
+															(e) =>
+																e.email === ($user?.email ?? '') &&
+																e.name === ($user?.displayName ?? '')
+														),
+														1
+													);
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: data.teams.filter(
+																// @ts-ignore
+																(t) => t.members.length > 0
+															)
+														},
+														{
+															merge: true
+														}
+													);
+												}}>Leave</Button
+											>
+										{:else}
+											<Button
+												class="bg-green-500 hover:bg-green-400"
+												on:click={async () => {
+													const members = team.members;
+													members.push({
+														name: $user?.displayName ?? '',
+														email: $user?.email ?? ''
+													});
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: data.teams
+														},
+														{
+															merge: true
+														}
+													);
+												}}>Join</Button
+											>
+										{/if}
+									</Card.Title>
+									<Card.Content>
+										<ul>
+											{#each team.members as teamMember}
+												<li>{teamMember.name}</li>
+											{/each}
+										</ul>
+									</Card.Content>
+								</Card.Root>
+							{/each}
+						</Card.Content>
+						<Card.Footer>
+							<Button
+								on:click={async () => {
+									data.teams.push({
+										members: [
+											{
+												name: $user?.displayName ?? '',
+												email: $user?.email ?? ''
+											}
+										]
+									});
+									await setDoc(
+										doc(db, 'events', event.event ?? ''),
+										{
+											teams: data.teams
+										},
+										{
+											merge: true
+										}
+									);
+								}}
+							>
+								Create Team
+							</Button>
+						</Card.Footer>
+					</Card.Root>
+				</Doc>
+			{/each}
+		</div>
+	{/if}
 </div>
