@@ -100,22 +100,24 @@
 													}}>Leave</Button
 												>
 												<Dialog.Root>
-													<Tooltip.Root>
-														<Tooltip.Trigger>
-															<Dialog.Trigger
-																disabled={team.members.length >= (event.maxTeamSize ?? 9999)}
-															>
-																<Button
-																	class="bg-green-500 hover:bg-green-400"
-																	disabled={team.members.length >= (event.maxTeamSize ?? 9999)}
-																	>Add people</Button
-																>
-															</Dialog.Trigger>
-														</Tooltip.Trigger>
-														<Tooltip.Content>
-															<p>Team is full</p>
-														</Tooltip.Content>
-													</Tooltip.Root>
+													{#if team.members.length >= (event.maxTeamSize ?? 9999)}
+														<Tooltip.Root>
+															<Tooltip.Trigger>
+																<Dialog.Trigger disabled>
+																	<Button class="bg-green-500 hover:bg-green-400" disabled
+																		>Add people</Button
+																	>
+																</Dialog.Trigger>
+															</Tooltip.Trigger>
+															<Tooltip.Content>
+																<p>Team is full</p>
+															</Tooltip.Content>
+														</Tooltip.Root>
+													{:else}
+														<Dialog.Trigger>
+															<Button class="bg-green-500 hover:bg-green-400">Add people</Button>
+														</Dialog.Trigger>
+													{/if}
 
 													<Dialog.Content>
 														<Dialog.Title>Add People</Dialog.Title>
