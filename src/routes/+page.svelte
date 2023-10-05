@@ -68,7 +68,7 @@
 									{@const team = correctType(te)}
 									<Card.Root class="bg-blue-500 bg-opacity-20">
 										<Card.Title class="m-2 ml-4">
-											{#if team.members.find((e) => e.email === ($user?.email ?? '') && e.name === ($user?.displayName ?? ''))}
+											{#if team.members.find((e) => e.email === ($user?.email ?? ''))}
 												<Button
 													variant="destructive"
 													on:click={async () => {
@@ -185,7 +185,7 @@
 								data.teams.find((t) =>
 									t.members.find(
 										// @ts-ignore
-										(e) => e.email === ($user?.email ?? '') && e.name === ($user?.displayName ?? '')
+										(e) => e.email === ($user?.email ?? '')
 									)
 								) || event.event === 'Technology Bowl'}
 								on:click={async () => {
