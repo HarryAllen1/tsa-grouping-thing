@@ -8,9 +8,7 @@
 	import * as Tooltip from '$lib/components/tooltip';
 	import * as Dialog from '$lib/components/dialog';
 	import { Doc, userStore } from 'sveltefire';
-	import Alert from '../lib/components/alert/alert.svelte';
-	import AlertTitle from '../lib/components/alert/alert-title.svelte';
-	import AlertDescription from '../lib/components/alert/alert-description.svelte';
+	import { Alert, AlertTitle, AlertDescription } from '$lib/components/alert';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
 	import { admins } from './admins';
 
