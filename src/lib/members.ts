@@ -802,5 +802,40 @@ export const memberData = [
 			'Technology Problem Solving'
 		],
 		backups: ['Career Prep* (Washington Only)', 'Silent Film (Washington Only)']
+	},
+	{
+		id: '55',
+		name: 'GABRIELLA HESS',
+		email: 's-ghess@lwsd.org',
+		startTime: '10/4/23 19:30:57',
+		lastModifiedTime: '',
+		completionTime: '10/4/23 19:33:58',
+		events: ['Forensic Science', 'Board Game Design*', "Children's Stories*", 'Dragster Design*'],
+		backups: ['Architectural Design*', 'Biotechnology Design*']
+	},
+	{
+		id: '56',
+		name: 'LIV HILMAR',
+		email: 's-lhilmar@lwsd.org',
+		startTime: '10/4/23 19:34:57',
+		lastModifiedTime: '',
+		completionTime: '10/4/23 20:02:08',
+		events: ['Forensic Science', 'Board Game Design*', "Children's Stories*", 'Dragster Design*'],
+		backups: ['Music Production*', 'Architectural Design*']
+	},
+	{
+		id: '57',
+		name: 'DAVIS HOWARD',
+		email: 's-DAHOWARD@lwsd.org',
+		startTime: '10/4/23 20:31:14',
+		lastModifiedTime: '',
+		completionTime: '10/4/23 20:33:32',
+		events: [
+			'Data Science and Analytics*',
+			'Debating Technological Issues*',
+			'Webmaster*',
+			'Board Game Design*'
+		],
+		backups: ['Coding', 'Dragster Design*']
 	}
 ];
