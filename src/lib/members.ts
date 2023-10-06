@@ -550,16 +550,16 @@ export const memberData = [
 		name: 'MARLIN WONG',
 		email: 's-mwong@lwsd.org',
 		startTime: '10/2/23 15:29:57',
-		lastModifiedTime: '',
+		lastModifiedTime: '10/5/23 22:08:22',
 		completionTime: '10/2/23 15:31:31',
 		events: [
 			'Coding',
-			'Webmaster*',
 			'Data Science and Analytics*',
 			'Drone Challenge (UAV)*',
-			'Technology Bowl'
+			'Technology Bowl',
+			'Trebuchet (Washington Only)'
 		],
-		backups: ['Trebuchet (Washington Only)', 'Video Game Design*']
+		backups: ['Video Game Design*', 'Geospatial Technology*']
 	},
 	{
 		id: '39',
