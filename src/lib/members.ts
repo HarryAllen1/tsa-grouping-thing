@@ -1092,4 +1092,7 @@ export const memberData = [
 		],
 		backups: ['Silent Film (Washington Only)', 'Board Game Design*']
 	}
-];
+].map((s) => ({
+	...s,
+	email: s.email.toLowerCase()
+}));
