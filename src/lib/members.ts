@@ -166,14 +166,15 @@ export const memberData = [
 		name: 'ANNA MELOMED',
 		email: 's-amelomed@lwsd.org',
 		startTime: '9/29/23 15:51:07',
-		lastModifiedTime: '',
+		lastModifiedTime: '10/5/23 17:33:31',
 		completionTime: '9/29/23 15:52:44',
 		events: [
 			'Data Science and Analytics*',
 			'Software Development*',
 			'Virtual Reality Visualization (VR)*',
 			'Webmaster*',
-			'On Demand Video'
+			'On Demand Video',
+			'Silent Film (Washington Only)'
 		],
 		backups: ['Debating Technological Issues*', 'On Demand Video']
 	},
@@ -197,14 +198,15 @@ export const memberData = [
 		name: 'ARUN CHANDAR',
 		email: 's-achandar@lwsd.org',
 		startTime: '9/29/23 15:51:31',
-		lastModifiedTime: '',
+		lastModifiedTime: '10/5/23 17:34:24',
 		completionTime: '9/29/23 15:53:46',
 		events: [
 			'Engineering Design*',
-			'Music Production*',
 			'On Demand Video',
 			'VEX Robotics*',
-			'Webmaster*'
+			'Webmaster*',
+			"Children's Stories*",
+			'Technology Problem Solving'
 		],
 		backups: ['Virtual Reality Visualization (VR)*', 'Debating Technological Issues*']
 	},
@@ -564,16 +566,16 @@ export const memberData = [
 		name: 'ASHLEY LI',
 		email: 's-ASLI@lwsd.org',
 		startTime: '10/2/23 15:33:37',
-		lastModifiedTime: '',
+		lastModifiedTime: '10/5/23 16:14:11',
 		completionTime: '10/2/23 15:35:12',
 		events: [
 			'Architectural Design*',
-			'Essays on Technology',
 			'Software Development*',
 			'Biotechnology Design*',
-			'Fashion Design and Technology*'
+			'Fashion Design and Technology*',
+			'Trebuchet (Washington Only)'
 		],
-		backups: ['Coding', 'Trebuchet (Washington Only)']
+		backups: ['Coding', 'Essays on Technology']
 	},
 	{
 		id: '40',
@@ -1042,5 +1044,52 @@ export const memberData = [
 			'Robotic Challenge* (Washington Only)'
 		],
 		backups: ['Webmaster*', 'Animatronics*']
+	},
+	{
+		id: '71',
+		name: 'DEVINITY MCCRAY',
+		email: 's-dmccray@lwsd.org',
+		startTime: '10/5/23 16:11:19',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 16:15:15',
+		events: [
+			'Audio Podcasting*',
+			'Coding',
+			'Digital Video Production*',
+			'Music Production*',
+			'Video Game Design*',
+			'Concept Art (Washington Only)'
+		],
+		backups: ['Software Development*', 'Concept Art (Washington Only)']
+	},
+	{
+		id: '72',
+		name: 'ELIZA HAMLET',
+		email: 's-elhamlet@lwsd.org',
+		startTime: '10/5/23 16:19:44',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 16:21:03',
+		events: [
+			'Board Game Design*',
+			"Children's Stories*",
+			'Essays on Technology',
+			'Fashion Design and Technology*'
+		],
+		backups: ['Audio Podcasting*', 'Essays on Technology']
+	},
+	{
+		id: '73',
+		name: 'LUCY ROTH',
+		email: 's-lroth@lwsd.org',
+		startTime: '10/5/23 16:30:20',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 16:33:25',
+		events: [
+			"Children's Stories*",
+			'Fashion Design and Technology*',
+			'Music Production*',
+			'Animation (Washington Only)'
+		],
+		backups: ['Silent Film (Washington Only)', 'Board Game Design*']
 	}
 ];
