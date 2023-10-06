@@ -42,6 +42,12 @@
 		<p>
 			Email: {$user?.email}
 		</p>
+		{#if !$user.email || !$user.displayName}
+			<p>
+				Something went wrong. Try refreshing the page, then logging out. If it still doesn't work,
+				contact Harry on Teams or <a href="mailto:s-hallen@lwsd.org">by email</a>
+			</p>
+		{/if}
 		{#if admins.includes($user?.email ?? '')}
 			<Button href="/admin">Admin page (this button is only visible to admins)</Button>
 		{/if}
