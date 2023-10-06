@@ -2,19 +2,17 @@
 	import { goto } from '$app/navigation';
 	import { auth, db, events, memberData } from '$lib';
 	import { Button } from '$lib/components/button';
-	import { Plus } from 'lucide-svelte';
 	import * as Card from '$lib/components/card';
-	import { signOut } from 'firebase/auth';
-	import * as Tooltip from '$lib/components/tooltip';
 	import * as Dialog from '$lib/components/dialog';
-	import { Doc, userStore } from 'sveltefire';
-	import { Alert, AlertTitle, AlertDescription } from '$lib/components/alert';
+	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
+	import { Plus } from 'lucide-svelte';
+	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
 
 	const user = userStore(auth);
 
-	if (!$user || !admins.includes($user.email ?? '')) {
+	if (!$user || !admins.includes($user.email?.toLowerCase() ?? '')) {
 		goto('/');
 	}
 
