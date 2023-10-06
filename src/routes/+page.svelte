@@ -11,13 +11,18 @@
 	import { Alert, AlertTitle, AlertDescription } from '$lib/components/alert';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
 	import { admins } from './admins';
+	import { readable } from 'svelte/store';
 
-	const user = userStore(auth);
+	const baaahhh = userStore(auth);
+	const user = readable({
+		...$baaahhh,
+		email: $baaahhh?.email?.toLowerCase()
+	});
 
 	if (!$user) goto('/login');
 
 	const signedUpEvents = memberData
-		.find((m) => m.email === auth.currentUser?.email)
+		.find((m) => m.email.toLowerCase() === $user?.email)
 		?.events.map((e) => ({
 			...events.find((ev) => ev.event === e)
 		}))
@@ -73,16 +78,14 @@
 									{@const team = correctType(te)}
 									<Card.Root class="bg-blue-500 bg-opacity-20">
 										<Card.Title class="m-2 ml-4">
-											{#if team.members?.find((e) => e.email === ($user?.email ?? ''))}
+											{#if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 												<Button
 													variant="destructive"
 													on:click={async () => {
 														const members = team.members;
 														members.splice(
 															members.findIndex(
-																(e) =>
-																	e.email === ($user?.email ?? '') &&
-																	e.name === ($user?.displayName ?? '')
+																(e) => e.email.toLowerCase() === ($user?.email ?? '')
 															),
 															1
 														);
@@ -131,7 +134,7 @@
 																<p>People who signed up for this event:</p>
 																<ul>
 																	{#each memberData.filter((m) => m.events.includes(event.event ?? '') && !data.teams.find( (// @ts-ignore
-																					t) => t.members?.find((e) => e.email === m.email) )) as person}
+																					t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()) )) as person}
 																		<li class="flex flex-row items-center">
 																			{person.name}
 																			<Button
@@ -188,7 +191,7 @@
 								data.teams.find((t) =>
 									t.members.find(
 										// @ts-ignore
-										(e) => e.email === ($user?.email ?? '')
+										(e) => e.email.toLowerCase() === ($user?.email ?? '')
 									)
 								) || event.event === 'Technology Bowl'}
 								on:click={async () => {
