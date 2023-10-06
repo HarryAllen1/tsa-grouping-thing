@@ -157,7 +157,7 @@ export const events: Event[] = [
 		perChapter: 2
 	},
 	{
-		event: 'Geospacial Technology*',
+		event: 'Geospatial Technology*',
 		minTeamSize: 2,
 		maxTeamSize: 3,
 		perChapter: 3
