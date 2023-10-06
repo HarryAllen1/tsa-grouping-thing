@@ -1108,6 +1108,21 @@ export const memberData = [
 			'Animatronics*'
 		],
 		backups: ['VEX Robotics*', 'Video Game Design*']
+	},
+	{
+		id: '75',
+		name: 'OLIVIA KASPRICK',
+		email: 's-okasprick@lwsd.org',
+		startTime: '10/6/23 9:09:26',
+		lastModifiedTime: '',
+		completionTime: '10/6/23 9:10:31',
+		events: [
+			'Architectural Design*',
+			'Board Game Design*',
+			'Fashion Design and Technology*',
+			'Forensic Science'
+		],
+		backups: ['Photographic Technology', 'Technology Problem Solving']
 	}
 ].map((s) => ({
 	...s,
