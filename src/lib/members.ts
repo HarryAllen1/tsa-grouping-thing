@@ -1091,6 +1091,23 @@ export const memberData = [
 			'Animation (Washington Only)'
 		],
 		backups: ['Silent Film (Washington Only)', 'Board Game Design*']
+	},
+	{
+		id: '74',
+		name: 'KARUNYA PENUMALLA',
+		email: 's-kpenumalla@lwsd.org',
+		startTime: '10/5/23 19:41:46',
+		lastModifiedTime: '',
+		completionTime: '10/5/23 19:43:49',
+		events: [
+			'Coding',
+			'Drone Challenge (UAV)*',
+			'Video Game Design*',
+			'Robotic Challenge* (Washington Only)',
+			'Technology Bowl',
+			'Animatronics*'
+		],
+		backups: ['VEX Robotics*', 'Video Game Design*']
 	}
 ].map((s) => ({
 	...s,
