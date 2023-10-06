@@ -1,23 +1,18 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { auth, db, events, memberData } from '$lib';
+	import { Alert, AlertDescription, AlertTitle } from '$lib/components/alert';
 	import { Button } from '$lib/components/button';
-	import { Plus } from 'lucide-svelte';
 	import * as Card from '$lib/components/card';
-	import { signOut } from 'firebase/auth';
-	import * as Tooltip from '$lib/components/tooltip';
 	import * as Dialog from '$lib/components/dialog';
-	import { Doc, userStore } from 'sveltefire';
-	import { Alert, AlertTitle, AlertDescription } from '$lib/components/alert';
+	import * as Tooltip from '$lib/components/tooltip';
+	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
+	import { Plus } from 'lucide-svelte';
+	import { Doc, userStore } from 'sveltefire';
 	import { admins } from './admins';
-	import { readable } from 'svelte/store';
 
-	const baaahhh = userStore(auth);
-	const user = readable({
-		...$baaahhh,
-		email: $baaahhh?.email?.toLowerCase()
-	});
+	const user = userStore(auth);
 
 	if (!$user) goto('/login');
 
@@ -42,7 +37,7 @@
 		<p>
 			Email: {$user?.email}
 		</p>
-		{#if !$user.email || !$user.displayName}
+		{#if !$user?.email || !$user?.displayName}
 			<p>
 				Something went wrong. Try refreshing the page, then logging out. If it still doesn't work,
 				contact Harry on Teams or <a href="mailto:s-hallen@lwsd.org">by email</a>
