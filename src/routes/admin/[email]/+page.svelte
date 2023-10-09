@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { auth, db, events, memberData } from '$lib';
 	import { Alert, AlertDescription, AlertTitle } from '$lib/components/alert';
 	import { Button } from '$lib/components/button';
@@ -9,13 +10,21 @@
 	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
 	import { Plus } from 'lucide-svelte';
+	import { writable } from 'svelte/store';
 	import { Doc, userStore } from 'sveltefire';
-	import { admins } from './admins';
-	import { correctTeamsDataType } from '../lib/types';
+	import { admins } from '../../admins';
+	import { correctTeamsDataType } from '../../../lib/types';
 
-	const user = userStore(auth);
+	const aaaaaaaaa = userStore(auth);
+	const user = writable({
+		...$aaaaaaaaa,
+		email: decodeURIComponent($page.params.email)
+	});
 
 	if (!$user) goto('/login');
+	if (!$user || !admins.includes($user.email?.toLowerCase() ?? '')) {
+		goto('/');
+	}
 
 	const signedUpEvents = memberData
 		.find((m) => m.email.toLowerCase() === $user?.email)
