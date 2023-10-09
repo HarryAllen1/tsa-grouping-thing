@@ -1135,6 +1135,39 @@ export const memberData = [
 		completionTime: '10/8/23 22:32:35',
 		events: ['Technology Bowl', 'On Demand Video'],
 		backups: ['Flight Endurance*', 'Board Game Design*']
+	},
+	{
+		id: '77',
+		name: 'DOROTHY CARVER',
+		email: 's-dcarver@lwsd.org',
+		startTime: '10/9/23 15:44:36',
+		lastModifiedTime: '',
+		completionTime: '10/9/23 15:45:26',
+		events: [
+			'Architectural Design*',
+			'Computer-Aided Design (CAD), Engineering',
+			'Computer-Aided Design (CAD), Architecture',
+			'Drone Challenge (UAV)*',
+			'Dragster Design*'
+		],
+		backups: ['VEX Robotics*', 'Robotic Challenge* (Washington Only)']
+	},
+	{
+		id: '78',
+		name: 'ARNAV GUPTA',
+		email: 's-arnagupta@lwsd.org',
+		startTime: '10/10/23 8:19:38',
+		lastModifiedTime: '',
+		completionTime: '10/10/23 8:21:04',
+		events: [
+			'Architectural Design*',
+			'Audio Podcasting*',
+			'Board Game Design*',
+			'Debating Technological Issues*',
+			'Digital Video Production*',
+			'Music Production*'
+		],
+		backups: ['Video Game Design*', 'On Demand Video']
 	}
 ].map((s) => ({
 	...s,
