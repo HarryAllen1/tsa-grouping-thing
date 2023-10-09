@@ -66,11 +66,11 @@
 												await setDoc(
 													doc(db, 'events', event.event ?? ''),
 													{
-														teams: data.teams
+														teams: data.teams,
 													},
 													{
-														merge: true
-													}
+														merge: true,
+													},
 												);
 											}}>Delete team</Button
 										>
@@ -99,16 +99,16 @@
 																		const members = team.members;
 																		members.push({
 																			name: person.name,
-																			email: person.email
+																			email: person.email,
 																		});
 																		await setDoc(
 																			doc(db, 'events', event.event ?? ''),
 																			{
-																				teams: data.teams
+																				teams: data.teams,
 																			},
 																			{
-																				merge: true
-																			}
+																				merge: true,
+																			},
 																		);
 																	}}
 																	variant="outline"
@@ -143,18 +143,18 @@
 															members.findIndex(
 																(e) =>
 																	e.email === (teamMember?.email ?? '') &&
-																	e.name === (teamMember?.name ?? '')
+																	e.name === (teamMember?.name ?? ''),
 															),
-															1
+															1,
 														);
 														await setDoc(
 															doc(db, 'events', event.event ?? ''),
 															{
-																teams: data.teams
+																teams: data.teams,
 															},
 															{
-																merge: true
-															}
+																merge: true,
+															},
 														);
 													}}
 												>
@@ -171,16 +171,16 @@
 						<Button
 							on:click={async () => {
 								data.teams.push({
-									members: []
+									members: [],
 								});
 								await setDoc(
 									doc(db, 'events', event.event ?? ''),
 									{
-										teams: data.teams
+										teams: data.teams,
 									},
 									{
-										merge: true
-									}
+										merge: true,
+									},
 								);
 							}}
 						>

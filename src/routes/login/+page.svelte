@@ -3,7 +3,7 @@
 		OAuthProvider,
 		browserLocalPersistence,
 		setPersistence,
-		signInWithPopup
+		signInWithPopup,
 	} from 'firebase/auth';
 	import { auth } from '$lib';
 	import * as Card from '$lib/components/card';

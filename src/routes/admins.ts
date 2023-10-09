@@ -5,5 +5,5 @@ export const admins = [
 	's-rgarg@lwsd.org',
 	's-abhide@lwsd.org',
 	's-sliyanage@lwsd.org',
-	's-wzou@lwsd.org'
+	's-wzou@lwsd.org',
 ];

@@ -11,7 +11,7 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
 		getModeOsPrefers,
 		modeCurrent,
 		setModeCurrent,
-		setModeUserPrefers
+		setModeUserPrefers,
 	} from './light-switch';
 
 	type OnKeyDownEvent = KeyboardEvent & {
@@ -59,9 +59,9 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
 		class={cn(
 			buttonVariants({
 				size: 'sm',
-				variant: 'ghost'
+				variant: 'ghost',
 			}),
-			'w-9 px-0'
+			'w-9 px-0',
 		)}
 	>
 		{#if $modeCurrent}

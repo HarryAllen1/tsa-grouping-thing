@@ -18,7 +18,7 @@
 	const aaaaaaaaa = userStore(auth);
 	const user = writable({
 		...$aaaaaaaaa,
-		email: decodeURIComponent($page.params.email)
+		email: decodeURIComponent($page.params.email),
 	});
 
 	if (!$user) goto('/login');
@@ -29,7 +29,7 @@
 	const signedUpEvents = memberData
 		.find((m) => m.email.toLowerCase() === $user?.email)
 		?.events.map((e) => ({
-			...events.find((ev) => ev.event === e)
+			...events.find((ev) => ev.event === e),
 		}))
 		.filter((e) => (e.maxTeamSize ?? 999) > 1);
 
@@ -96,21 +96,21 @@
 														const members = team.members;
 														members.splice(
 															members.findIndex(
-																(e) => e.email.toLowerCase() === ($user?.email ?? '')
+																(e) => e.email.toLowerCase() === ($user?.email ?? ''),
 															),
-															1
+															1,
 														);
 														await setDoc(
 															doc(db, 'events', event.event ?? ''),
 															{
 																teams: data.teams.filter(
 																	// @ts-ignore
-																	(t) => t.members.length > 0
-																)
+																	(t) => t.members.length > 0,
+																),
 															},
 															{
-																merge: true
-															}
+																merge: true,
+															},
 														);
 													}}>Leave</Button
 												>
@@ -145,7 +145,7 @@
 																<p>People who signed up for this event:</p>
 																<ul>
 																	{#each memberData.filter((m) => m.events.includes(event.event ?? '') && !data.teams.find( (// @ts-ignore
-																					t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()) )) as person}
+																					t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), )) as person}
 																		<li class="flex flex-row items-center">
 																			{person.name}
 																			<Button
@@ -153,16 +153,16 @@
 																					const members = team.members;
 																					members.push({
 																						name: person.name,
-																						email: person.email
+																						email: person.email,
 																					});
 																					await setDoc(
 																						doc(db, 'events', event.event ?? ''),
 																						{
-																							teams: data.teams
+																							teams: data.teams,
 																						},
 																						{
-																							merge: true
-																						}
+																							merge: true,
+																						},
 																					);
 																				}}
 																				variant="outline"
@@ -200,7 +200,7 @@
 							<Button
 								disabled={!!(
 									correctTeamsDataType(data.teams).find((t) =>
-										t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))
+										t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')),
 									) || event.event === 'Technology Bowl'
 								)}
 								on:click={async () => {
@@ -208,18 +208,18 @@
 										members: [
 											{
 												name: $user?.displayName ?? '',
-												email: $user?.email ?? ''
-											}
-										]
+												email: $user?.email ?? '',
+											},
+										],
 									});
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
 										{
-											teams: data.teams
+											teams: data.teams,
 										},
 										{
-											merge: true
-										}
+											merge: true,
+										},
 									);
 								}}
 							>
