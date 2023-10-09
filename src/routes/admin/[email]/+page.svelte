@@ -7,24 +7,28 @@
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
 	import * as Tooltip from '$lib/components/tooltip';
+	import { correctTeamsDataType } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
 	import { Plus } from 'lucide-svelte';
 	import { writable } from 'svelte/store';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../../admins';
-	import { correctTeamsDataType } from '../../../lib/types';
 
 	const aaaaaaaaa = userStore(auth);
+
+	if (!$aaaaaaaaa) goto('/login');
+	if (!$aaaaaaaaa || !admins.includes($aaaaaaaaa.email?.toLowerCase() ?? '')) {
+		goto('/');
+	}
+
 	const user = writable({
 		...$aaaaaaaaa,
 		email: decodeURIComponent($page.params.email),
+		displayName: memberData.find(
+			(m) => m.email.toLowerCase() === decodeURIComponent($page.params.email).toLowerCase(),
+		)?.name,
 	});
-
-	if (!$user) goto('/login');
-	if (!$user || !admins.includes($user.email?.toLowerCase() ?? '')) {
-		goto('/');
-	}
 
 	const signedUpEvents = memberData
 		.find((m) => m.email.toLowerCase() === $user?.email)
