@@ -8,6 +8,7 @@
 	import * as Dialog from '$lib/components/dialog';
 	import * as Tooltip from '$lib/components/tooltip';
 	import { correctTeamsDataType } from '$lib/types';
+	import * as Select from '$lib/components/select';
 	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
 	import { Plus } from 'lucide-svelte';
@@ -30,6 +31,11 @@
 		)?.name,
 	});
 
+	const selectOptions = memberData.map((m) => ({
+		value: m.email,
+		label: m.name,
+	}));
+
 	const signedUpEvents = memberData
 		.find((m) => m.email.toLowerCase() === $user?.email)
 		?.events.map((e) => ({
@@ -42,7 +48,22 @@
 </script>
 
 <div class="mt-8 flex flex-col items-center">
-	<Button on:click={() => signOut(auth)}>Sign out</Button>
+	<Button on:click={() => signOut(auth)} class="mb-4">Sign out</Button>
+	<Select.Root>
+		<Select.Trigger class="w-[180px] mb-4">
+			<Select.Value placeholder={$user.displayName} />
+		</Select.Trigger>
+		<Select.Content class="max-h-full overflow-y-scroll">
+			{#each selectOptions as option}
+				<Select.Item
+					on:click={() => goto(`/admin/${encodeURIComponent(option.value)}`)}
+					value={option.value}
+					label={option.label}>{option.label}</Select.Item
+				>
+			{/each}
+		</Select.Content>
+		<Select.Input name="favoriteFruit" />
+	</Select.Root>
 	<div class="w-full">
 		<h2 class="font-bold text-xl">User info</h2>
 		<p>
