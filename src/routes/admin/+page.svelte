@@ -10,6 +10,7 @@
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
 	import { correctTeamsDataType } from '../../lib/types';
+	import * as Select from '$lib/components/select';
 
 	const user = userStore(auth);
 
@@ -19,6 +20,11 @@
 
 	const signedUpEvents = events;
 
+	const selectOptions = memberData.map((m) => ({
+		value: m.email,
+		label: m.name,
+	}));
+
 	const correctType = (eventData: DocumentData) =>
 		eventData as { name: string; members: { name: string; email: string }[] };
 </script>
@@ -26,6 +32,21 @@
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)}>Sign out</Button>
 	<Button href="/" class="my-4">Back to regular sign up page</Button>
+	<Select.Root>
+		<Select.Trigger class="w-[180px] mb-4">
+			<Select.Value placeholder="View by member" />
+		</Select.Trigger>
+		<Select.Content class="max-h-full overflow-y-scroll">
+			{#each selectOptions as option}
+				<Select.Item
+					on:click={() => goto(`/admin/${encodeURIComponent(option.value)}`)}
+					value={option.value}
+					label={option.label}>{option.label}</Select.Item
+				>
+			{/each}
+		</Select.Content>
+		<Select.Input name="favoriteFruit" />
+	</Select.Root>
 	<div
 		class="flex flex-col items-center gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:items-start"
 	>
