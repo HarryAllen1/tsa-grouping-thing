@@ -50,7 +50,7 @@
 					<path d="M10.496 10.496H20V20h-9.504z" fill="#FFB900" />
 				</g>
 			</svg>
-			Sign in with Microsoft</Button
-		>
+			Sign in with Microsoft
+		</Button>
 	</Card.Content>
 </Card.Root>
