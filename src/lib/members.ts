@@ -320,16 +320,16 @@ export const memberData = [
 		name: 'HANA JACOBS',
 		email: 's-hjacobs@lwsd.org',
 		startTime: '9/29/23 19:03:26',
-		lastModifiedTime: '',
+		lastModifiedTime: '10/9/23 13:53:44',
 		completionTime: '9/29/23 19:03:40',
 		events: [
 			'Architectural Design*',
-			'Computer-Aided Design (CAD), Engineering',
 			'VEX Robotics*',
 			'Dragster Design*',
-			'Drone Challenge (UAV)*'
+			'Drone Challenge (UAV)*',
+			'Computer-Aided Design (CAD), Architecture'
 		],
-		backups: ['Computer-Aided Design (CAD), Architecture', 'Engineering Design*']
+		backups: ['Engineering Design*', 'Computer-Aided Design (CAD), Engineering']
 	},
 	{
 		id: '24',
@@ -679,13 +679,14 @@ export const memberData = [
 		name: 'NORA REDMOND',
 		email: 's-nredmond@lwsd.org',
 		startTime: '10/3/23 16:27:53',
-		lastModifiedTime: '',
+		lastModifiedTime: '10/8/23 21:52:17',
 		completionTime: '10/3/23 16:47:47',
 		events: [
 			'Architectural Design*',
 			'Forensic Science',
 			'Debating Technological Issues*',
-			'Music Production*'
+			'Music Production*',
+			'Technology Problem Solving'
 		],
 		backups: ['Biotechnology Design*', 'Technology Problem Solving']
 	},
@@ -1124,6 +1125,16 @@ export const memberData = [
 			'Forensic Science'
 		],
 		backups: ['Photographic Technology', 'Technology Problem Solving']
+	},
+	{
+		id: '76',
+		name: 'JONATHAN KONG',
+		email: 's-jkong@lwsd.org',
+		startTime: '10/6/23 15:14:33',
+		lastModifiedTime: '',
+		completionTime: '10/8/23 22:32:35',
+		events: ['Technology Bowl', 'On Demand Video'],
+		backups: ['Flight Endurance*', 'Board Game Design*']
 	}
 ].map((s) => ({
 	...s,
