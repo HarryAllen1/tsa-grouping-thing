@@ -35,11 +35,21 @@
 			}}
 			class="w-full"
 		>
-			<img
-				class="h-6 mr-4"
-				src="https://supabase.com/dashboard/img/icons/microsoft-icon.svg"
-				alt="Microsoft logo"
-			/>
+			<svg
+				height="100%"
+				viewBox="0 0 20 20"
+				width="100%"
+				class="h-6 mr-4 bg-white p-[1px]"
+				preserveAspectRatio="xMidYMid meet"
+				focusable="false"
+			>
+				<g fill="none">
+					<path d="M0 0h9.504v9.504H0z" fill="#F25022" />
+					<path d="M10.496 0H20v9.504h-9.504z" fill="#7FBA00" />
+					<path d="M0 10.496h9.504V20H0z" fill="#00A4EF" />
+					<path d="M10.496 10.496H20V20h-9.504z" fill="#FFB900" />
+				</g>
+			</svg>
 			Sign in with Microsoft</Button
 		>
 	</Card.Content>
