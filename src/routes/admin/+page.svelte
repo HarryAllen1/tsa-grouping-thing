@@ -9,6 +9,7 @@
 	import { Plus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
+	import { correctTeamsDataType } from '../../lib/types';
 
 	const user = userStore(auth);
 
@@ -61,7 +62,7 @@
 										<Button
 											variant="destructive"
 											on:click={async () => {
-												data.teams = data.teams.filter((t) => t !== te);
+												data.teams = correctTeamsDataType(data.teams).filter((t) => t !== te);
 												await setDoc(
 													doc(db, 'events', event.event ?? ''),
 													{
