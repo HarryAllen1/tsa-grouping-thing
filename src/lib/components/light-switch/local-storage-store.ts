@@ -30,7 +30,7 @@ function getStorage(type: StorageType) {
 export function localStorageStore<T>(
 	key: string,
 	initialValue: T,
-	options?: Options<T>
+	options?: Options<T>,
 ): Writable<T> {
 	const serializer = options?.serializer ?? JSON;
 	const storageType = options?.storage ?? 'local';
@@ -73,7 +73,7 @@ export function localStorageStore<T>(
 				updateStorage(key, value);
 				set(value);
 			},
-			subscribe
+			subscribe,
 		};
 	}
 

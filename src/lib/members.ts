@@ -10,9 +10,9 @@ export const memberData = [
 			'Data Science and Analytics*',
 			'Dragster Design*',
 			'Photographic Technology',
-			'Virtual Reality Visualization (VR)*'
+			'Virtual Reality Visualization (VR)*',
 		],
-		backups: ['Technology Problem Solving', 'Board Game Design*']
+		backups: ['Technology Problem Solving', 'Board Game Design*'],
 	},
 	{
 		id: '2',
@@ -25,9 +25,9 @@ export const memberData = [
 			'Computer-Aided Design (CAD), Engineering',
 			'Dragster Design*',
 			'Engineering Design*',
-			'Video Game Design*'
+			'Video Game Design*',
 		],
-		backups: ['Computer-Aided Design (CAD), Architecture', 'Structural Design and Engineering*']
+		backups: ['Computer-Aided Design (CAD), Architecture', 'Structural Design and Engineering*'],
 	},
 	{
 		id: '3',
@@ -37,7 +37,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '9/29/23 15:50:41',
 		events: ['Software Development*', 'Technology Problem Solving', 'Coding', 'Video Game Design*'],
-		backups: ['Technology Bowl', 'Webmaster*']
+		backups: ['Technology Bowl', 'Webmaster*'],
 	},
 	{
 		id: '4',
@@ -50,9 +50,9 @@ export const memberData = [
 			'Digital Video Production*',
 			'Animation (Washington Only)',
 			'Silent Film (Washington Only)',
-			'Concept Art (Washington Only)'
+			'Concept Art (Washington Only)',
 		],
-		backups: ['Architectural Design*', "Children's Stories*"]
+		backups: ['Architectural Design*', "Children's Stories*"],
 	},
 	{
 		id: '5',
@@ -65,9 +65,9 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Extemporaneous Speech',
 			'Forensic Science',
-			'Photographic Technology'
+			'Photographic Technology',
 		],
-		backups: ['Essays on Technology', 'On Demand Video']
+		backups: ['Essays on Technology', 'On Demand Video'],
 	},
 	{
 		id: '6',
@@ -80,9 +80,9 @@ export const memberData = [
 			'Audio Podcasting*',
 			'Computer-Aided Design (CAD), Architecture',
 			'Debating Technological Issues*',
-			'Extemporaneous Speech'
+			'Extemporaneous Speech',
 		],
-		backups: ['Essays on Technology', 'Silent Film (Washington Only)']
+		backups: ['Essays on Technology', 'Silent Film (Washington Only)'],
 	},
 	{
 		id: '7',
@@ -95,9 +95,9 @@ export const memberData = [
 			'Audio Podcasting*',
 			"Children's Stories*",
 			'Forensic Science',
-			'Debating Technological Issues*'
+			'Debating Technological Issues*',
 		],
-		backups: ['On Demand Video', 'Technology Problem Solving']
+		backups: ['On Demand Video', 'Technology Problem Solving'],
 	},
 	{
 		id: '8',
@@ -110,9 +110,9 @@ export const memberData = [
 			'On Demand Video',
 			'Computer-Aided Design (CAD), Engineering',
 			'Extemporaneous Speech',
-			'Essays on Technology'
+			'Essays on Technology',
 		],
-		backups: ['Computer-Aided Design (CAD), Architecture', 'Video Game Design*']
+		backups: ['Computer-Aided Design (CAD), Architecture', 'Video Game Design*'],
 	},
 	{
 		id: '9',
@@ -125,9 +125,9 @@ export const memberData = [
 			'Photographic Technology',
 			'Technology Problem Solving',
 			'VEX Robotics*',
-			'Video Game Design*'
+			'Video Game Design*',
 		],
-		backups: ['Virtual Reality Visualization (VR)*', 'Engineering Design*']
+		backups: ['Virtual Reality Visualization (VR)*', 'Engineering Design*'],
 	},
 	{
 		id: '10',
@@ -140,9 +140,9 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Drone Challenge (UAV)*',
 			'Forensic Science',
-			'Debating Technological Issues*'
+			'Debating Technological Issues*',
 		],
-		backups: ['Trebuchet (Washington Only)', 'Flight Endurance*']
+		backups: ['Trebuchet (Washington Only)', 'Flight Endurance*'],
 	},
 	{
 		id: '11',
@@ -157,9 +157,9 @@ export const memberData = [
 			'Essays on Technology',
 			'Extemporaneous Speech',
 			'Career Prep* (Washington Only)',
-			'Music Production*'
+			'Music Production*',
 		],
-		backups: ["Children's Stories*", 'Data Science and Analytics*']
+		backups: ["Children's Stories*", 'Data Science and Analytics*'],
 	},
 	{
 		id: '12',
@@ -174,9 +174,9 @@ export const memberData = [
 			'Virtual Reality Visualization (VR)*',
 			'Webmaster*',
 			'On Demand Video',
-			'Silent Film (Washington Only)'
+			'Silent Film (Washington Only)',
 		],
-		backups: ['Debating Technological Issues*', 'On Demand Video']
+		backups: ['Debating Technological Issues*', 'On Demand Video'],
 	},
 	{
 		id: '13',
@@ -189,9 +189,9 @@ export const memberData = [
 			'Computer-Aided Design (CAD), Engineering',
 			'Engineering Design*',
 			'VEX Robotics*',
-			'Video Game Design*'
+			'Video Game Design*',
 		],
-		backups: ['Technology Bowl', 'Structural Design and Engineering*']
+		backups: ['Technology Bowl', 'Structural Design and Engineering*'],
 	},
 	{
 		id: '14',
@@ -206,9 +206,9 @@ export const memberData = [
 			'VEX Robotics*',
 			'Webmaster*',
 			"Children's Stories*",
-			'Technology Problem Solving'
+			'Technology Problem Solving',
 		],
-		backups: ['Virtual Reality Visualization (VR)*', 'Debating Technological Issues*']
+		backups: ['Virtual Reality Visualization (VR)*', 'Debating Technological Issues*'],
 	},
 	{
 		id: '15',
@@ -221,9 +221,9 @@ export const memberData = [
 			'Computer-Aided Design (CAD), Engineering',
 			'STEM Mass Media (Washington Only)',
 			'Transportation Modeling*',
-			'Technology Problem Solving'
+			'Technology Problem Solving',
 		],
-		backups: ['Board Game Design*', 'Career Prep* (Washington Only)']
+		backups: ['Board Game Design*', 'Career Prep* (Washington Only)'],
 	},
 	{
 		id: '16',
@@ -236,9 +236,9 @@ export const memberData = [
 			'Audio Podcasting*',
 			'Board Game Design*',
 			'Digital Video Production*',
-			'On Demand Video'
+			'On Demand Video',
 		],
-		backups: ['Senior Solar Sprint*', 'Trebuchet (Washington Only)']
+		backups: ['Senior Solar Sprint*', 'Trebuchet (Washington Only)'],
 	},
 	{
 		id: '17',
@@ -248,7 +248,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '9/29/23 15:56:45',
 		events: ['Flight Endurance*', 'On Demand Video', 'Technology Bowl', 'Board Game Design*'],
-		backups: ['Drone Challenge (UAV)*', 'Forensic Science']
+		backups: ['Drone Challenge (UAV)*', 'Forensic Science'],
 	},
 	{
 		id: '18',
@@ -261,9 +261,9 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Drone Challenge (UAV)*',
 			'Forensic Science',
-			'Debating Technological Issues*'
+			'Debating Technological Issues*',
 		],
-		backups: ['Flight Endurance*', 'Trebuchet (Washington Only)']
+		backups: ['Flight Endurance*', 'Trebuchet (Washington Only)'],
 	},
 	{
 		id: '19',
@@ -276,9 +276,9 @@ export const memberData = [
 			'Computer-Aided Design (CAD), Engineering',
 			'Engineering Design*',
 			'Flight Endurance*',
-			'VEX Robotics*'
+			'VEX Robotics*',
 		],
-		backups: ['Technology Bowl', 'Transportation Modeling*']
+		backups: ['Technology Bowl', 'Transportation Modeling*'],
 	},
 	{
 		id: '20',
@@ -291,9 +291,9 @@ export const memberData = [
 			'Board Game Design*',
 			'Dragster Design*',
 			'Structural Design and Engineering*',
-			'Trebuchet (Washington Only)'
+			'Trebuchet (Washington Only)',
 		],
-		backups: ['Transportation Modeling*', 'Technology Problem Solving']
+		backups: ['Transportation Modeling*', 'Technology Problem Solving'],
 	},
 	{
 		id: '21',
@@ -303,7 +303,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '9/29/23 17:57:20',
 		events: ['Debating Technological Issues*', 'Coding', 'Career Prep* (Washington Only)'],
-		backups: ['Data Science and Analytics*', 'Coding']
+		backups: ['Data Science and Analytics*', 'Coding'],
 	},
 	{
 		id: '22',
@@ -313,7 +313,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '9/29/23 18:13:48',
 		events: ['Biotechnology Design*', 'On Demand Video', 'Video Game Design*', 'Forensic Science'],
-		backups: ['Drone Challenge (UAV)*', 'Silent Film (Washington Only)']
+		backups: ['Drone Challenge (UAV)*', 'Silent Film (Washington Only)'],
 	},
 	{
 		id: '23',
@@ -327,9 +327,9 @@ export const memberData = [
 			'VEX Robotics*',
 			'Dragster Design*',
 			'Drone Challenge (UAV)*',
-			'Computer-Aided Design (CAD), Architecture'
+			'Computer-Aided Design (CAD), Architecture',
 		],
-		backups: ['Engineering Design*', 'Computer-Aided Design (CAD), Engineering']
+		backups: ['Engineering Design*', 'Computer-Aided Design (CAD), Engineering'],
 	},
 	{
 		id: '24',
@@ -342,9 +342,9 @@ export const memberData = [
 			'Drone Challenge (UAV)*',
 			'Senior Solar Sprint*',
 			'Trebuchet (Washington Only)',
-			'Video Game Design*'
+			'Video Game Design*',
 		],
-		backups: ['Software Development*', 'Coding']
+		backups: ['Software Development*', 'Coding'],
 	},
 	{
 		id: '25',
@@ -354,7 +354,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '9/29/23 22:22:09',
 		events: ['Drone Challenge (UAV)*', 'VEX Robotics*', 'On Demand Video', 'Dragster Design*'],
-		backups: ['Flight Endurance*', 'Trebuchet (Washington Only)']
+		backups: ['Flight Endurance*', 'Trebuchet (Washington Only)'],
 	},
 	{
 		id: '26',
@@ -367,9 +367,9 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Fashion Design and Technology*',
 			'Forensic Science',
-			'Music Production*'
+			'Music Production*',
 		],
-		backups: ['Architectural Design*', 'Debating Technological Issues*']
+		backups: ['Architectural Design*', 'Debating Technological Issues*'],
 	},
 	{
 		id: '27',
@@ -382,9 +382,9 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Architectural Design*',
 			'Forensic Science',
-			'Fashion Design and Technology*'
+			'Fashion Design and Technology*',
 		],
-		backups: ['Debating Technological Issues*', 'VEX Robotics*']
+		backups: ['Debating Technological Issues*', 'VEX Robotics*'],
 	},
 	{
 		id: '28',
@@ -398,9 +398,9 @@ export const memberData = [
 			"Children's Stories*",
 			'Forensic Science',
 			'Fashion Design and Technology*',
-			'Engineering Design*'
+			'Engineering Design*',
 		],
-		backups: ['Board Game Design*', 'Video Game Design*']
+		backups: ['Board Game Design*', 'Video Game Design*'],
 	},
 	{
 		id: '29',
@@ -413,9 +413,9 @@ export const memberData = [
 			'Software Development*',
 			'Virtual Reality Visualization (VR)*',
 			'Webmaster*',
-			'VEX Robotics*'
+			'VEX Robotics*',
 		],
-		backups: ['On Demand Video', 'Video Game Design*']
+		backups: ['On Demand Video', 'Video Game Design*'],
 	},
 	{
 		id: '30',
@@ -430,9 +430,9 @@ export const memberData = [
 			'Technology Bowl',
 			'Technology Problem Solving',
 			'Webmaster*',
-			'VEX Robotics*'
+			'VEX Robotics*',
 		],
-		backups: ['On Demand Video', 'Video Game Design*']
+		backups: ['On Demand Video', 'Video Game Design*'],
 	},
 	{
 		id: '31',
@@ -447,9 +447,9 @@ export const memberData = [
 			'Extemporaneous Speech',
 			'Career Prep* (Washington Only)',
 			'Prepared Presentation*',
-			'Chapter Team'
+			'Chapter Team',
 		],
-		backups: ['Data Science and Analytics*', 'Biotechnology Design*']
+		backups: ['Data Science and Analytics*', 'Biotechnology Design*'],
 	},
 	{
 		id: '32',
@@ -464,9 +464,9 @@ export const memberData = [
 			'Technology Problem Solving',
 			'Webmaster*',
 			'Virtual Reality Visualization (VR)*',
-			'Software Development*'
+			'Software Development*',
 		],
-		backups: ['Audio Podcasting*', 'Forensic Science']
+		backups: ['Audio Podcasting*', 'Forensic Science'],
 	},
 	{
 		id: '33',
@@ -476,7 +476,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '10/1/23 14:51:18',
 		events: ['Board Game Design*', 'Technology Bowl', 'Video Game Design*', 'On Demand Video'],
-		backups: ['VEX Robotics*', 'Technology Problem Solving']
+		backups: ['VEX Robotics*', 'Technology Problem Solving'],
 	},
 	{
 		id: '34',
@@ -491,9 +491,9 @@ export const memberData = [
 			'Extemporaneous Speech',
 			'Prepared Presentation*',
 			'Technology Problem Solving',
-			'Animation (Washington Only)'
+			'Animation (Washington Only)',
 		],
-		backups: ['Photographic Technology', 'Career Prep* (Washington Only)']
+		backups: ['Photographic Technology', 'Career Prep* (Washington Only)'],
 	},
 	{
 		id: '35',
@@ -508,9 +508,9 @@ export const memberData = [
 			'Software Development*',
 			'Drone Challenge (UAV)*',
 			'Trebuchet (Washington Only)',
-			'Video Game Design*'
+			'Video Game Design*',
 		],
-		backups: ['Music Production*', 'Prepared Presentation*']
+		backups: ['Music Production*', 'Prepared Presentation*'],
 	},
 	{
 		id: '36',
@@ -525,9 +525,9 @@ export const memberData = [
 			'On Demand Video',
 			'Promotional Design',
 			'Technology Bowl',
-			'Software Development*'
+			'Software Development*',
 		],
-		backups: ['Forensic Science', 'Future Technology Teacher*']
+		backups: ['Forensic Science', 'Future Technology Teacher*'],
 	},
 	{
 		id: '37',
@@ -541,9 +541,9 @@ export const memberData = [
 			'Software Development*',
 			'Technology Bowl',
 			'Webmaster*',
-			'Technology Problem Solving'
+			'Technology Problem Solving',
 		],
-		backups: ['Photographic Technology', 'Extemporaneous Speech']
+		backups: ['Photographic Technology', 'Extemporaneous Speech'],
 	},
 	{
 		id: '38',
@@ -558,9 +558,9 @@ export const memberData = [
 			'Drone Challenge (UAV)*',
 			'Technology Bowl',
 			'Trebuchet (Washington Only)',
-			'Webmaster*'
+			'Webmaster*',
 		],
-		backups: ['Video Game Design*', 'Geospatial Technology*']
+		backups: ['Video Game Design*', 'Geospatial Technology*'],
 	},
 	{
 		id: '39',
@@ -574,9 +574,9 @@ export const memberData = [
 			'Software Development*',
 			'Biotechnology Design*',
 			'Fashion Design and Technology*',
-			'Trebuchet (Washington Only)'
+			'Trebuchet (Washington Only)',
 		],
-		backups: ['Coding', 'Essays on Technology']
+		backups: ['Coding', 'Essays on Technology'],
 	},
 	{
 		id: '40',
@@ -591,9 +591,9 @@ export const memberData = [
 			'Senior Solar Sprint*',
 			'Software Development*',
 			'Virtual Reality Visualization (VR)*',
-			'Drone Challenge (UAV)*'
+			'Drone Challenge (UAV)*',
 		],
-		backups: ['Essays on Technology', 'Prepared Presentation*']
+		backups: ['Essays on Technology', 'Prepared Presentation*'],
 	},
 	{
 		id: '41',
@@ -607,9 +607,9 @@ export const memberData = [
 			'Senior Solar Sprint*',
 			'Drone Challenge (UAV)*',
 			'Virtual Reality Visualization (VR)*',
-			'Coding'
+			'Coding',
 		],
-		backups: ['Video Game Design*', 'Webmaster*']
+		backups: ['Video Game Design*', 'Webmaster*'],
 	},
 	{
 		id: '42',
@@ -623,9 +623,9 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Fashion Design and Technology*',
 			'Trebuchet (Washington Only)',
-			'Infographic (Washington Only)'
+			'Infographic (Washington Only)',
 		],
-		backups: ["Children's Stories*", 'Promotional Design']
+		backups: ["Children's Stories*", 'Promotional Design'],
 	},
 	{
 		id: '43',
@@ -638,9 +638,9 @@ export const memberData = [
 			'Music Production*',
 			'Photographic Technology',
 			'Engineering Design*',
-			'Digital Video Production*'
+			'Digital Video Production*',
 		],
-		backups: ['VEX Robotics*', 'Board Game Design*']
+		backups: ['VEX Robotics*', 'Board Game Design*'],
 	},
 	{
 		id: '44',
@@ -653,9 +653,9 @@ export const memberData = [
 			'Forensic Science',
 			'Music Production*',
 			'Biotechnology Design*',
-			'Debating Technological Issues*'
+			'Debating Technological Issues*',
 		],
-		backups: ['Essays on Technology', 'Computer-Aided Design (CAD), Architecture']
+		backups: ['Essays on Technology', 'Computer-Aided Design (CAD), Architecture'],
 	},
 	{
 		id: '45',
@@ -670,9 +670,9 @@ export const memberData = [
 			"Children's Stories*",
 			'Digital Video Production*',
 			'Engineering Design*',
-			'On Demand Video'
+			'On Demand Video',
 		],
-		backups: ['Engineering Design*', 'Extemporaneous Speech']
+		backups: ['Engineering Design*', 'Extemporaneous Speech'],
 	},
 	{
 		id: '46',
@@ -686,9 +686,9 @@ export const memberData = [
 			'Forensic Science',
 			'Debating Technological Issues*',
 			'Music Production*',
-			'Technology Problem Solving'
+			'Technology Problem Solving',
 		],
-		backups: ['Biotechnology Design*', 'Technology Problem Solving']
+		backups: ['Biotechnology Design*', 'Technology Problem Solving'],
 	},
 	{
 		id: '47',
@@ -698,7 +698,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '10/3/23 18:02:41',
 		events: ['Board Game Design*', 'On Demand Video', 'Technology Bowl', 'Video Game Design*'],
-		backups: ['VEX Robotics*', 'Computer-Aided Design (CAD), Engineering']
+		backups: ['VEX Robotics*', 'Computer-Aided Design (CAD), Engineering'],
 	},
 	{
 		id: '48',
@@ -711,9 +711,9 @@ export const memberData = [
 			'Audio Podcasting*',
 			'Architectural Design*',
 			'Fashion Design and Technology*',
-			'Music Production*'
+			'Music Production*',
 		],
-		backups: ['Video Game Design*', 'Career Prep* (Washington Only)']
+		backups: ['Video Game Design*', 'Career Prep* (Washington Only)'],
 	},
 	{
 		id: '49',
@@ -726,9 +726,9 @@ export const memberData = [
 			'Career Prep* (Washington Only)',
 			'Technology Problem Solving',
 			'Forensic Science',
-			'Prepared Presentation*'
+			'Prepared Presentation*',
 		],
-		backups: ['Essays on Technology', 'Extemporaneous Speech']
+		backups: ['Essays on Technology', 'Extemporaneous Speech'],
 	},
 	{
 		id: '50',
@@ -741,9 +741,9 @@ export const memberData = [
 			'Animatronics*',
 			'Fashion Design and Technology*',
 			'Animation (Washington Only)',
-			'Concept Art (Washington Only)'
+			'Concept Art (Washington Only)',
 		],
-		backups: ["Children's Stories*", 'On Demand Video']
+		backups: ["Children's Stories*", 'On Demand Video'],
 	},
 	{
 		id: '51',
@@ -756,9 +756,9 @@ export const memberData = [
 			'Senior Solar Sprint*',
 			'Drone Challenge (UAV)*',
 			'Flight Endurance*',
-			'Music Production*'
+			'Music Production*',
 		],
-		backups: ['Structural Design and Engineering*', 'Board Game Design*']
+		backups: ['Structural Design and Engineering*', 'Board Game Design*'],
 	},
 	{
 		id: '52',
@@ -771,9 +771,9 @@ export const memberData = [
 			'Architectural Design*',
 			'Computer-Aided Design (CAD), Engineering',
 			'Photographic Technology',
-			'Prepared Presentation*'
+			'Prepared Presentation*',
 		],
-		backups: ['Career Prep* (Washington Only)', 'Trebuchet (Washington Only)']
+		backups: ['Career Prep* (Washington Only)', 'Trebuchet (Washington Only)'],
 	},
 	{
 		id: '53',
@@ -787,9 +787,9 @@ export const memberData = [
 			'Prepared Presentation*',
 			'Trebuchet (Washington Only)',
 			'Engineering Design*',
-			'Photographic Technology'
+			'Photographic Technology',
 		],
-		backups: ['Technology Problem Solving', 'Data Science and Analytics*']
+		backups: ['Technology Problem Solving', 'Data Science and Analytics*'],
 	},
 	{
 		id: '54',
@@ -803,9 +803,9 @@ export const memberData = [
 			'Audio Podcasting*',
 			"Children's Stories*",
 			'Prepared Presentation*',
-			'Technology Problem Solving'
+			'Technology Problem Solving',
 		],
-		backups: ['Career Prep* (Washington Only)', 'Silent Film (Washington Only)']
+		backups: ['Career Prep* (Washington Only)', 'Silent Film (Washington Only)'],
 	},
 	{
 		id: '55',
@@ -815,7 +815,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '10/4/23 19:33:58',
 		events: ['Forensic Science', 'Board Game Design*', "Children's Stories*", 'Dragster Design*'],
-		backups: ['Architectural Design*', 'Biotechnology Design*']
+		backups: ['Architectural Design*', 'Biotechnology Design*'],
 	},
 	{
 		id: '56',
@@ -825,7 +825,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '10/4/23 20:02:08',
 		events: ['Forensic Science', 'Board Game Design*', "Children's Stories*", 'Dragster Design*'],
-		backups: ['Music Production*', 'Architectural Design*']
+		backups: ['Music Production*', 'Architectural Design*'],
 	},
 	{
 		id: '57',
@@ -838,9 +838,9 @@ export const memberData = [
 			'Data Science and Analytics*',
 			'Debating Technological Issues*',
 			'Webmaster*',
-			'Board Game Design*'
+			'Board Game Design*',
 		],
-		backups: ['Coding', 'Dragster Design*']
+		backups: ['Coding', 'Dragster Design*'],
 	},
 	{
 		id: '58',
@@ -853,9 +853,9 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Board Game Design*',
 			'Engineering Design*',
-			'Forensic Science'
+			'Forensic Science',
 		],
-		backups: ["Children's Stories*", 'Audio Podcasting*']
+		backups: ["Children's Stories*", 'Audio Podcasting*'],
 	},
 	{
 		id: '59',
@@ -868,9 +868,9 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Board Game Design*',
 			'Engineering Design*',
-			'Forensic Science'
+			'Forensic Science',
 		],
-		backups: ["Children's Stories*", 'Audio Podcasting*']
+		backups: ["Children's Stories*", 'Audio Podcasting*'],
 	},
 	{
 		id: '60',
@@ -883,9 +883,9 @@ export const memberData = [
 			'VEX Robotics*',
 			'Robotic Challenge* (Washington Only)',
 			'Engineering Design*',
-			'Dragster Design*'
+			'Dragster Design*',
 		],
-		backups: ['Architectural Design*', 'Board Game Design*']
+		backups: ['Architectural Design*', 'Board Game Design*'],
 	},
 	{
 		id: '61',
@@ -900,9 +900,9 @@ export const memberData = [
 			'Promotional Design',
 			'Technology Problem Solving',
 			'Transportation Modeling*',
-			'Prepared Presentation*'
+			'Prepared Presentation*',
 		],
-		backups: ['Fashion Design and Technology*', 'Concept Art (Washington Only)']
+		backups: ['Fashion Design and Technology*', 'Concept Art (Washington Only)'],
 	},
 	{
 		id: '62',
@@ -916,9 +916,9 @@ export const memberData = [
 			'Engineering Design*',
 			'Technology Bowl',
 			'Trebuchet (Washington Only)',
-			'Flight Endurance*'
+			'Flight Endurance*',
 		],
-		backups: ['Dragster Design*', 'Transportation Modeling*']
+		backups: ['Dragster Design*', 'Transportation Modeling*'],
 	},
 	{
 		id: '63',
@@ -931,9 +931,9 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Flight Endurance*',
 			'Trebuchet (Washington Only)',
-			'Debating Technological Issues*'
+			'Debating Technological Issues*',
 		],
-		backups: ['Promotional Design', 'Concept Art (Washington Only)']
+		backups: ['Promotional Design', 'Concept Art (Washington Only)'],
 	},
 	{
 		id: '64',
@@ -946,9 +946,9 @@ export const memberData = [
 			'Software Development*',
 			'Coding',
 			'Digital Video Production*',
-			'Silent Film (Washington Only)'
+			'Silent Film (Washington Only)',
 		],
-		backups: ['Essays on Technology', 'Career Prep* (Washington Only)']
+		backups: ['Essays on Technology', 'Career Prep* (Washington Only)'],
 	},
 	{
 		id: '65',
@@ -963,9 +963,9 @@ export const memberData = [
 			'Forensic Science',
 			'Biotechnology Design*',
 			'Fashion Design and Technology*',
-			'Board Game Design*'
+			'Board Game Design*',
 		],
-		backups: ['Extemporaneous Speech', 'Prepared Presentation*']
+		backups: ['Extemporaneous Speech', 'Prepared Presentation*'],
 	},
 	{
 		id: '66',
@@ -980,9 +980,9 @@ export const memberData = [
 			'Flight Endurance*',
 			'Music Production*',
 			"Children's Stories*",
-			'STEM Mass Media (Washington Only)'
+			'STEM Mass Media (Washington Only)',
 		],
-		backups: ['Board Game Design*', 'Silent Film (Washington Only)']
+		backups: ['Board Game Design*', 'Silent Film (Washington Only)'],
 	},
 	{
 		id: '67',
@@ -996,9 +996,9 @@ export const memberData = [
 			"Children's Stories*",
 			'Board Game Design*',
 			'Forensic Science',
-			'Data Science and Analytics*'
+			'Data Science and Analytics*',
 		],
-		backups: ['Audio Podcasting*', 'Concept Art (Washington Only)']
+		backups: ['Audio Podcasting*', 'Concept Art (Washington Only)'],
 	},
 	{
 		id: '68',
@@ -1013,9 +1013,9 @@ export const memberData = [
 			'Coding',
 			'Technology Bowl',
 			'Video Game Design*',
-			'Dragster Design*'
+			'Dragster Design*',
 		],
-		backups: ['Technology Problem Solving', 'Software Development*']
+		backups: ['Technology Problem Solving', 'Software Development*'],
 	},
 	{
 		id: '69',
@@ -1028,9 +1028,9 @@ export const memberData = [
 			"Children's Stories*",
 			'Essays on Technology',
 			'Architectural Design*',
-			'Forensic Science'
+			'Forensic Science',
 		],
-		backups: ['Photographic Technology', 'Geospatial Technology*']
+		backups: ['Photographic Technology', 'Geospatial Technology*'],
 	},
 	{
 		id: '70',
@@ -1043,9 +1043,9 @@ export const memberData = [
 			'Video Game Design*',
 			'Virtual Reality Visualization (VR)*',
 			'VEX Robotics*',
-			'Robotic Challenge* (Washington Only)'
+			'Robotic Challenge* (Washington Only)',
 		],
-		backups: ['Webmaster*', 'Animatronics*']
+		backups: ['Webmaster*', 'Animatronics*'],
 	},
 	{
 		id: '71',
@@ -1060,9 +1060,9 @@ export const memberData = [
 			'Digital Video Production*',
 			'Music Production*',
 			'Video Game Design*',
-			'Concept Art (Washington Only)'
+			'Concept Art (Washington Only)',
 		],
-		backups: ['Software Development*', 'Concept Art (Washington Only)']
+		backups: ['Software Development*', 'Concept Art (Washington Only)'],
 	},
 	{
 		id: '72',
@@ -1075,9 +1075,9 @@ export const memberData = [
 			'Board Game Design*',
 			"Children's Stories*",
 			'Essays on Technology',
-			'Fashion Design and Technology*'
+			'Fashion Design and Technology*',
 		],
-		backups: ['Audio Podcasting*', 'Essays on Technology']
+		backups: ['Audio Podcasting*', 'Essays on Technology'],
 	},
 	{
 		id: '73',
@@ -1090,9 +1090,9 @@ export const memberData = [
 			"Children's Stories*",
 			'Fashion Design and Technology*',
 			'Music Production*',
-			'Animation (Washington Only)'
+			'Animation (Washington Only)',
 		],
-		backups: ['Silent Film (Washington Only)', 'Board Game Design*']
+		backups: ['Silent Film (Washington Only)', 'Board Game Design*'],
 	},
 	{
 		id: '74',
@@ -1107,9 +1107,9 @@ export const memberData = [
 			'Video Game Design*',
 			'Robotic Challenge* (Washington Only)',
 			'Technology Bowl',
-			'Animatronics*'
+			'Animatronics*',
 		],
-		backups: ['VEX Robotics*', 'Video Game Design*']
+		backups: ['VEX Robotics*', 'Video Game Design*'],
 	},
 	{
 		id: '75',
@@ -1122,9 +1122,9 @@ export const memberData = [
 			'Architectural Design*',
 			'Board Game Design*',
 			'Fashion Design and Technology*',
-			'Forensic Science'
+			'Forensic Science',
 		],
-		backups: ['Photographic Technology', 'Technology Problem Solving']
+		backups: ['Photographic Technology', 'Technology Problem Solving'],
 	},
 	{
 		id: '76',
@@ -1134,7 +1134,7 @@ export const memberData = [
 		lastModifiedTime: '',
 		completionTime: '10/8/23 22:32:35',
 		events: ['Technology Bowl', 'On Demand Video'],
-		backups: ['Flight Endurance*', 'Board Game Design*']
+		backups: ['Flight Endurance*', 'Board Game Design*'],
 	},
 	{
 		id: '77',
@@ -1148,9 +1148,9 @@ export const memberData = [
 			'Computer-Aided Design (CAD), Engineering',
 			'Computer-Aided Design (CAD), Architecture',
 			'Drone Challenge (UAV)*',
-			'Dragster Design*'
+			'Dragster Design*',
 		],
-		backups: ['VEX Robotics*', 'Robotic Challenge* (Washington Only)']
+		backups: ['VEX Robotics*', 'Robotic Challenge* (Washington Only)'],
 	},
 	{
 		id: '78',
@@ -1165,11 +1165,11 @@ export const memberData = [
 			'Board Game Design*',
 			'Debating Technological Issues*',
 			'Digital Video Production*',
-			'Music Production*'
+			'Music Production*',
 		],
-		backups: ['Video Game Design*', 'On Demand Video']
-	}
+		backups: ['Video Game Design*', 'On Demand Video'],
+	},
 ].map((s) => ({
 	...s,
-	email: s.email.toLowerCase()
+	email: s.email.toLowerCase(),
 }));
