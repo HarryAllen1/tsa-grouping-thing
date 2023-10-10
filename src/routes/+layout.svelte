@@ -4,10 +4,11 @@
 	import { auth, db, storage } from '$lib';
 	import { LightSwitch } from '$lib/components/light-switch';
 	import { onAuthStateChanged } from 'firebase/auth';
+	import { onDestroy } from 'svelte';
 	import { FirebaseApp } from 'sveltefire';
 	import '../app.css';
 
-	onAuthStateChanged(auth, async (user) => {
+	const unsub = onAuthStateChanged(auth, async (user) => {
 		if (!user && $page.url.pathname !== '/login') {
 			await goto('/login');
 		}
@@ -17,6 +18,8 @@
 			await goto('/login');
 		}
 	});
+
+	onDestroy(unsub);
 </script>
 
 <div class="max-w-full flex flex-col items-center pt-4">
