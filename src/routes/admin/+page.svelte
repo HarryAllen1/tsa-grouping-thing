@@ -4,13 +4,13 @@
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
+	import * as Select from '$lib/components/select';
 	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
 	import { Plus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
+	import { correctTeamsDataType } from '$lib/types';
 	import { admins } from '../admins';
-	import { correctTeamsDataType } from '../../lib/types';
-	import * as Select from '$lib/components/select';
 
 	const user = userStore(auth);
 
