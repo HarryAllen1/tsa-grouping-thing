@@ -31,10 +31,12 @@
 		)?.name,
 	});
 
-	const selectOptions = memberData.map((m) => ({
-		value: m.email,
-		label: m.name,
-	}));
+	const selectOptions = memberData
+		.map((m) => ({
+			value: m.email,
+			label: m.name,
+		}))
+		.sort((a, b) => a.label.localeCompare(b.label));
 
 	const signedUpEvents = memberData
 		.find((m) => m.email.toLowerCase() === $user?.email)
@@ -50,7 +52,7 @@
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)} class="mb-4">Sign out</Button>
 	<Select.Root>
-		<Select.Trigger class="w-[180px] mb-4">
+		<Select.Trigger class="w-48 mb-4">
 			<Select.Value placeholder={$user.displayName} />
 		</Select.Trigger>
 		<Select.Content class="max-h-full overflow-y-scroll">
