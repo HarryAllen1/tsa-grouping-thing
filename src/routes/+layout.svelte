@@ -7,13 +7,14 @@
 	import { FirebaseApp } from 'sveltefire';
 	import '../app.css';
 
-	onAuthStateChanged(auth, (user) => {
+	onAuthStateChanged(auth, async (user) => {
 		if (!user && $page.url.pathname !== '/login') {
-			goto('/login');
+			await goto('/login');
 		}
 		if (user && !user?.email?.endsWith('lwsd.org')) {
 			alert('You must use an LWSD account to log in.');
-			auth.signOut();
+			await auth.currentUser?.delete();
+			await goto('/login');
 		}
 	});
 </script>
