@@ -20,10 +20,12 @@
 
 	const signedUpEvents = events;
 
-	const selectOptions = memberData.map((m) => ({
-		value: m.email,
-		label: m.name,
-	}));
+	const selectOptions = memberData
+		.map((m) => ({
+			value: m.email,
+			label: m.name,
+		}))
+		.sort((a, b) => a.label.localeCompare(b.label));
 
 	const correctType = (eventData: DocumentData) =>
 		eventData as { name: string; members: { name: string; email: string }[] };
@@ -33,7 +35,7 @@
 	<Button on:click={() => signOut(auth)}>Sign out</Button>
 	<Button href="/" class="my-4">Back to regular sign up page</Button>
 	<Select.Root>
-		<Select.Trigger class="w-[180px] mb-4">
+		<Select.Trigger class="w-48 mb-4">
 			<Select.Value placeholder="View by member" />
 		</Select.Trigger>
 		<Select.Content class="max-h-full overflow-y-scroll">
