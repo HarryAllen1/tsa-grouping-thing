@@ -7,10 +7,11 @@
 	import * as Dialog from '$lib/components/dialog';
 	import Label from '$lib/components/label/label.svelte';
 	import * as Select from '$lib/components/select';
+	import * as Tooltip from '$lib/components/tooltip';
 	import { correctTeamsDataType } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
-	import { Plus, Trash2, UserPlus } from 'lucide-svelte';
+	import { Crown, Plus, Trash2, UserPlus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
 
@@ -30,7 +31,11 @@
 		.sort((a, b) => a.label.localeCompare(b.label));
 
 	const correctType = (eventData: DocumentData) =>
-		eventData as { name: string; members: { name: string; email: string }[] };
+		eventData as {
+			name: string;
+			members: { name: string; email: string }[];
+			teamCaptain?: string;
+		};
 </script>
 
 <div class="mt-8 flex flex-col items-center">
@@ -207,6 +212,14 @@
 														}}
 													>
 														{teamMember.name}
+														{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+															<Tooltip.Root>
+																<Tooltip.Trigger>
+																	<Crown class="h-4 w-4" />
+																</Tooltip.Trigger>
+																<Tooltip.Content>Team captain</Tooltip.Content>
+															</Tooltip.Root>
+														{/if}
 													</li>
 												{/each}
 											</ul>
