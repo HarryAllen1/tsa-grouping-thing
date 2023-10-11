@@ -83,8 +83,8 @@
 						<Card.Content class="flex flex-col gap-4">
 							{#if event.event === 'Technology Bowl'}
 								<p>
-									The team for this event will be based off of a test which you will take at a later
-									date.
+									The team for this event will be based off of a test which you
+									will take at a later date.
 								</p>
 							{:else}
 								{#each data.teams as te}
@@ -94,7 +94,9 @@
 											<Button
 												variant="destructive"
 												on:click={async () => {
-													data.teams = correctTeamsDataType(data.teams).filter((t) => t !== te);
+													data.teams = correctTeamsDataType(data.teams).filter(
+														(t) => t !== te,
+													);
 													await setDoc(
 														doc(db, 'events', event.event ?? ''),
 														{
@@ -108,21 +110,27 @@
 											>
 											<Dialog.Root>
 												<Dialog.Trigger>
-													<Button class="bg-green-500 hover:bg-green-400">Add people</Button>
+													<Button class="bg-green-500 hover:bg-green-400"
+														>Add people</Button
+													>
 												</Dialog.Trigger>
 
 												<Dialog.Content class="max-h-full overflow-y-scroll">
 													<Dialog.Title>Add People</Dialog.Title>
 													<Dialog.Description>
-														<p>All people not already in team:</p>
+														<p>All people not already in a team:</p>
 														<ul>
 															{#each memberData
-																.filter((p) => !team.members.filter((t) => t.email === p.email).length)
-																.sort((a, b) => a.name.localeCompare(b.name)) as person}
+																.filter((p) => !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email.toLowerCase()), ))
+																.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
 																<li
 																	class:text-green-500={memberData
-																		.filter((m) => m.events.includes(event.event ?? ''))
-																		.find((e) => e.email === (person?.email ?? ''))}
+																		.filter((m) =>
+																			m.events.includes(event.event ?? ''),
+																		)
+																		.find(
+																			(e) => e.email === (person?.email ?? ''),
+																		)}
 																	class="flex flex-row items-center"
 																>
 																	{person.name}
@@ -150,8 +158,8 @@
 																</li>
 															{:else}
 																<li>
-																	No one else singed up for this event. Please see a board member
-																	for next steps.
+																	No one else singed up for this event. Teams
+																	should probably be merged.
 																</li>
 															{/each}
 														</ul>
@@ -166,10 +174,13 @@
 													<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 													<li
 														class:text-green-500={memberData
-															.filter((m) => m.events.includes(event.event ?? ''))
+															.filter((m) =>
+																m.events.includes(event.event ?? ''),
+															)
 															.find(
 																(e) =>
-																	e.email.toLowerCase() === (teamMember?.email.toLowerCase() ?? ''),
+																	e.email.toLowerCase() ===
+																	(teamMember?.email.toLowerCase() ?? ''),
 															)}
 														class="hover:underline hover:text-red-500 hover:cursor-pointer"
 														on:click={async () => {

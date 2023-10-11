@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -8,11 +8,19 @@
 		<script>
 			const elemHtmlClasses = document.documentElement.classList;
 			// Conditions
-			const condLocalStorageUserPrefs = localStorage.getItem('modeUserPrefers') === 'false';
-			const condLocalStorageUserPrefsExists = !('modeUserPrefers' in localStorage);
-			const condMatchMedia = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			const condLocalStorageUserPrefs =
+				localStorage.getItem('modeUserPrefers') === 'false';
+			const condLocalStorageUserPrefsExists = !(
+				'modeUserPrefers' in localStorage
+			);
+			const condMatchMedia = window.matchMedia(
+				'(prefers-color-scheme: dark)',
+			).matches;
 			// Add/remove `.dark` class to HTML element
-			if (condLocalStorageUserPrefs || (condLocalStorageUserPrefsExists && condMatchMedia)) {
+			if (
+				condLocalStorageUserPrefs ||
+				(condLocalStorageUserPrefsExists && condMatchMedia)
+			) {
 				elemHtmlClasses.add('dark');
 			} else {
 				elemHtmlClasses.remove('dark');

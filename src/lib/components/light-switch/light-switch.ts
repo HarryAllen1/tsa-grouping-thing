@@ -12,7 +12,10 @@ import { localStorageStore } from './local-storage-store';
 /** Store: OS Preference Mode */
 export const modeOsPrefers = localStorageStore<boolean>('modeOsPrefers', false);
 /** Store: User Preference Mode */
-export const modeUserPrefers = localStorageStore<boolean | undefined>('modeUserPrefers', undefined);
+export const modeUserPrefers = localStorageStore<boolean | undefined>(
+	'modeUserPrefers',
+	undefined,
+);
 /** Store: Current Mode State */
 export const modeCurrent = localStorageStore<boolean>('modeCurrent', false);
 
@@ -20,7 +23,9 @@ export const modeCurrent = localStorageStore<boolean>('modeCurrent', false);
 
 /** Get the OS Preference for light/dark mode */
 export function getModeOsPrefers(): boolean {
-	const prefersLightMode = window.matchMedia('(prefers-color-scheme: light)').matches;
+	const prefersLightMode = window.matchMedia(
+		'(prefers-color-scheme: light)',
+	).matches;
 	modeOsPrefers.set(prefersLightMode);
 	return prefersLightMode;
 }
@@ -49,7 +54,9 @@ export function setModeUserPrefers(value: boolean): void {
 export function setModeCurrent(value: boolean) {
 	const elemHtmlClasses = document.documentElement.classList;
 	const classDark = `dark`;
-	value === true ? elemHtmlClasses.remove(classDark) : elemHtmlClasses.add(classDark);
+	value === true
+		? elemHtmlClasses.remove(classDark)
+		: elemHtmlClasses.add(classDark);
 	modeCurrent.set(value);
 }
 
@@ -59,11 +66,17 @@ export function setModeCurrent(value: boolean) {
 export function setInitialClassState() {
 	const elemHtmlClasses = document.documentElement.classList;
 	// Conditions
-	const condLocalStorageUserPrefs = localStorage.getItem('modeUserPrefers') === 'false';
+	const condLocalStorageUserPrefs =
+		localStorage.getItem('modeUserPrefers') === 'false';
 	const condLocalStorageUserPrefsExists = !('modeUserPrefers' in localStorage);
-	const condMatchMedia = window.matchMedia('(prefers-color-scheme: dark)').matches;
+	const condMatchMedia = window.matchMedia(
+		'(prefers-color-scheme: dark)',
+	).matches;
 	// Add/remove `.dark` class to HTML element
-	if (condLocalStorageUserPrefs || (condLocalStorageUserPrefsExists && condMatchMedia)) {
+	if (
+		condLocalStorageUserPrefs ||
+		(condLocalStorageUserPrefsExists && condMatchMedia)
+	) {
 		elemHtmlClasses.add('dark');
 	} else {
 		elemHtmlClasses.remove('dark');
@@ -78,7 +91,9 @@ export function autoModeWatcher(): void {
 	function setMode(value: boolean) {
 		const elemHtmlClasses = document.documentElement.classList;
 		const classDark = `dark`;
-		value === true ? elemHtmlClasses.remove(classDark) : elemHtmlClasses.add(classDark);
+		value === true
+			? elemHtmlClasses.remove(classDark)
+			: elemHtmlClasses.add(classDark);
 	}
 	setMode(mql.matches);
 	mql.onchange = () => {
