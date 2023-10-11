@@ -10,7 +10,7 @@
 	import { correctTeamsDataType } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
-	import { Plus } from 'lucide-svelte';
+	import { Plus, Trash2, UserPlus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
 
@@ -106,13 +106,15 @@
 															merge: true,
 														},
 													);
-												}}>Delete team</Button
+												}}
 											>
+												<Trash2 />
+											</Button>
 											<Dialog.Root>
 												<Dialog.Trigger>
-													<Button class="bg-green-500 hover:bg-green-400"
-														>Add people</Button
-													>
+													<Button class="bg-green-500 hover:bg-green-400">
+														<UserPlus />
+													</Button>
 												</Dialog.Trigger>
 
 												<Dialog.Content class="max-h-full overflow-y-scroll">

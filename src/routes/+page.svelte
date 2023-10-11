@@ -8,7 +8,7 @@
 	import * as Tooltip from '$lib/components/tooltip';
 	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
-	import { LogOut, Plus, UserPlus } from 'lucide-svelte';
+	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from './admins';
 	import { correctTeamsDataType } from '../lib/types';
@@ -25,7 +25,11 @@
 		.filter((e) => (e.maxTeamSize ?? 999) > 1);
 
 	const correctType = (eventData: DocumentData) =>
-		eventData as { name: string; members: { name: string; email: string }[] };
+		eventData as {
+			name: string;
+			members: { name: string; email: string }[];
+			teamCaptain?: string;
+		};
 </script>
 
 <div class="mt-8 flex flex-col items-center">
@@ -106,10 +110,9 @@
 																await setDoc(
 																	doc(db, 'events', event.event ?? ''),
 																	{
-																		teams: data.teams.filter(
-																			// @ts-ignore
-																			(t) => t.members.length > 0,
-																		),
+																		teams: correctTeamsDataType(
+																			data.teams,
+																		).filter((t) => t.members.length > 0),
 																	},
 																	{
 																		merge: true,
@@ -206,7 +209,21 @@
 														</Dialog.Description>
 													</Dialog.Content>
 												</Dialog.Root>
-												<Button class="my-0">Become Team Captain</Button>
+												<Button
+													on:click={async () => {
+														const teamButMutable = team;
+														teamButMutable.teamCaptain = $user?.email ?? '';
+														await setDoc(
+															doc(db, 'events', event.event ?? ''),
+															{
+																teams: data.teams,
+															},
+															{
+																merge: true,
+															},
+														);
+													}}>Become Team Captain</Button
+												>
 											{:else}
 												<p>
 													Ask someone in this team to add you if you want to
@@ -217,7 +234,17 @@
 										<Card.Content>
 											<ul>
 												{#each team.members as teamMember}
-													<li>{teamMember.name}</li>
+													<li>
+														{teamMember.name}
+														{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+															<Tooltip.Root>
+																<Tooltip.Trigger>
+																	<Crown class="h-4 w-4" />
+																</Tooltip.Trigger>
+																<Tooltip.Content>Team captain</Tooltip.Content>
+															</Tooltip.Root>
+														{/if}
+													</li>
 												{/each}
 											</ul>
 										</Card.Content>
