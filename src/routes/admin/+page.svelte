@@ -61,8 +61,8 @@
 		class="flex flex-col items-center gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:items-start"
 	>
 		{#each signedUpEvents as event}
-			{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
-				<Doc ref="events/{event.event}" let:data>
+			<Doc ref="events/{event.event}" let:data>
+				{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
 					<Card.Root class="w-96">
 						<Card.Header>
 							<Card.Title>{event.event}</Card.Title>
@@ -223,8 +223,8 @@
 							</Button>
 						</Card.Footer>
 					</Card.Root>
-				</Doc>
-			{/if}
+				{/if}
+			</Doc>
 		{/each}
 	</div>
 </div>
