@@ -43,7 +43,7 @@
 		</Label>
 	</div>
 	<Select.Root>
-		<Select.Trigger class="w-48 mb-4">
+		<Select.Trigger class="w-56 mb-4">
 			<Select.Value placeholder="View by member" />
 		</Select.Trigger>
 		<Select.Content class="max-h-full overflow-y-scroll">

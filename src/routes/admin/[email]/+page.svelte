@@ -52,7 +52,7 @@
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)} class="mb-4">Sign out</Button>
 	<Select.Root>
-		<Select.Trigger class="w-48 mb-4">
+		<Select.Trigger class="w-56 mb-4">
 			<Select.Value placeholder={$user.displayName} />
 		</Select.Trigger>
 		<Select.Content class="max-h-full overflow-y-scroll">
@@ -80,7 +80,7 @@
 				contact Harry on Teams or <a href="mailto:s-hallen@lwsd.org">by email</a>
 			</p>
 		{/if}
-		{#if admins.includes($user?.email ?? '')}
+		{#if admins.includes($aaaaaaaaa?.email ?? '')}
 			<Button href="/admin">Admin page (this button is only visible to admins)</Button>
 		{/if}
 	</div>
@@ -116,106 +116,119 @@
 									{@const team = correctType(te)}
 									<Card.Root class="bg-blue-500 bg-opacity-20">
 										<Card.Title class="m-2 ml-4">
-											{#if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
-												<Button
-													variant="destructive"
-													on:click={async () => {
-														const members = team.members;
-														members.splice(
-															members.findIndex(
-																(e) => e.email.toLowerCase() === ($user?.email ?? ''),
+											<Button
+												variant="destructive"
+												on:click={async () => {
+													const members = team.members;
+													members.splice(
+														members.findIndex(
+															(e) => e.email.toLowerCase() === ($user?.email ?? ''),
+														),
+														1,
+													);
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: data.teams.filter(
+																// @ts-ignore
+																(t) => t.members.length > 0,
 															),
-															1,
-														);
-														await setDoc(
-															doc(db, 'events', event.event ?? ''),
-															{
-																teams: data.teams.filter(
-																	// @ts-ignore
-																	(t) => t.members.length > 0,
-																),
-															},
-															{
-																merge: true,
-															},
-														);
-													}}>Leave</Button
-												>
-												<Dialog.Root>
-													{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-														<Tooltip.Root>
-															<Tooltip.Trigger>
-																<Dialog.Trigger disabled>
-																	<Button class="bg-green-500 hover:bg-green-400" disabled
-																		>Add people</Button
-																	>
-																</Dialog.Trigger>
-															</Tooltip.Trigger>
-															<Tooltip.Content>
-																<p>Team is full</p>
-															</Tooltip.Content>
-														</Tooltip.Root>
-													{:else}
-														<Dialog.Trigger>
-															<Button class="bg-green-500 hover:bg-green-400">Add people</Button>
-														</Dialog.Trigger>
-													{/if}
+														},
+														{
+															merge: true,
+														},
+													);
+												}}>Leave</Button
+											>
+											<Dialog.Root>
+												<Dialog.Trigger>
+													<Button class="bg-green-500 hover:bg-green-400">Add people</Button>
+												</Dialog.Trigger>
 
-													<Dialog.Content>
-														<Dialog.Title>Add People</Dialog.Title>
-														<Dialog.Description>
-															{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-																<Alert class="dark:brightness-200">
-																	<AlertTitle>This team is full</AlertTitle>
-																</Alert>
+												<Dialog.Content class="max-h-full overflow-y-scroll">
+													<Dialog.Title>Add People</Dialog.Title>
+													<Dialog.Description>
+														<p>All people not already in team:</p>
+														<ul>
+															{#each memberData
+																.filter((p) => !team.members.filter((t) => t.email === p.email).length)
+																.sort((a, b) => a.name.localeCompare(b.name)) as person}
+																<li
+																	class:text-green-500={memberData
+																		.filter((m) => m.events.includes(event.event ?? ''))
+																		.find((e) => e.email === (person?.email ?? ''))}
+																	class="flex flex-row items-center"
+																>
+																	{person.name}
+																	<Button
+																		on:click={async () => {
+																			const members = team.members;
+																			members.push({
+																				name: person.name,
+																				email: person.email,
+																			});
+																			await setDoc(
+																				doc(db, 'events', event.event ?? ''),
+																				{
+																					teams: data.teams,
+																				},
+																				{
+																					merge: true,
+																				},
+																			);
+																		}}
+																		variant="outline"
+																		size="icon"
+																		class="ml-2"><Plus /></Button
+																	>
+																</li>
 															{:else}
-																<p>People who signed up for this event:</p>
-																<ul>
-																	{#each memberData.filter((m) => m.events.includes(event.event ?? '') && !data.teams.find( (// @ts-ignore
-																					t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), )) as person}
-																		<li class="flex flex-row items-center">
-																			{person.name}
-																			<Button
-																				on:click={async () => {
-																					const members = team.members;
-																					members.push({
-																						name: person.name,
-																						email: person.email,
-																					});
-																					await setDoc(
-																						doc(db, 'events', event.event ?? ''),
-																						{
-																							teams: data.teams,
-																						},
-																						{
-																							merge: true,
-																						},
-																					);
-																				}}
-																				variant="outline"
-																				size="icon"
-																				class="ml-2"><Plus /></Button
-																			>
-																		</li>
-																	{:else}
-																		<li>
-																			No one else singed up for this event. Please see a board
-																			member for next steps.
-																		</li>
-																	{/each}
-																</ul>
-															{/if}
-														</Dialog.Description>
-													</Dialog.Content>
-												</Dialog.Root>
-											{:else}
-												<p>Ask someone in this team to add you if you want to join this team!</p>
-											{/if}
+																<li>
+																	No one else singed up for this event. Please see a board member
+																	for next steps.
+																</li>
+															{/each}
+														</ul>
+													</Dialog.Description>
+												</Dialog.Content>
+											</Dialog.Root>
 										</Card.Title>
 										<Card.Content>
 											<ul>
 												{#each team.members as teamMember}
-													<li>{teamMember.name}</li>
+													<!-- svelte-ignore a11y-click-events-have-key-events -->
+													<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+													<li
+														class:text-green-500={memberData
+															.filter((m) => m.events.includes(event.event ?? ''))
+															.find(
+																(e) =>
+																	e.email.toLowerCase() === (teamMember?.email.toLowerCase() ?? ''),
+															)}
+														class="hover:underline hover:text-red-500 hover:cursor-pointer"
+														on:click={async () => {
+															const members = team.members;
+															members.splice(
+																members.findIndex(
+																	(e) =>
+																		e.email === (teamMember?.email ?? '') &&
+																		e.name === (teamMember?.name ?? ''),
+																),
+																1,
+															);
+															await setDoc(
+																doc(db, 'events', event.event ?? ''),
+																{
+																	teams: data.teams,
+																},
+																{
+																	merge: true,
+																},
+															);
+														}}
+													>
+														{teamMember.name}
+													</li>
 												{/each}
 											</ul>
 										</Card.Content>
