@@ -51,7 +51,8 @@ export function localStorageStore<T>(
 
 			if (browser) {
 				const handleStorage = (event: StorageEvent) => {
-					if (event.key === key) set(event.newValue ? serializer.parse(event.newValue) : null);
+					if (event.key === key)
+						set(event.newValue ? serializer.parse(event.newValue) : null);
 				};
 
 				window.addEventListener('storage', handleStorage);

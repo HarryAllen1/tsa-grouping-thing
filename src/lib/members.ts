@@ -27,7 +27,10 @@ export const memberData = [
 			'Engineering Design*',
 			'Video Game Design*',
 		],
-		backups: ['Computer-Aided Design (CAD), Architecture', 'Structural Design and Engineering*'],
+		backups: [
+			'Computer-Aided Design (CAD), Architecture',
+			'Structural Design and Engineering*',
+		],
 	},
 	{
 		id: '3',
@@ -36,7 +39,12 @@ export const memberData = [
 		startTime: '9/29/23 15:49:40',
 		lastModifiedTime: '',
 		completionTime: '9/29/23 15:50:41',
-		events: ['Software Development*', 'Technology Problem Solving', 'Coding', 'Video Game Design*'],
+		events: [
+			'Software Development*',
+			'Technology Problem Solving',
+			'Coding',
+			'Video Game Design*',
+		],
 		backups: ['Technology Bowl', 'Webmaster*'],
 	},
 	{
@@ -112,7 +120,10 @@ export const memberData = [
 			'Extemporaneous Speech',
 			'Essays on Technology',
 		],
-		backups: ['Computer-Aided Design (CAD), Architecture', 'Video Game Design*'],
+		backups: [
+			'Computer-Aided Design (CAD), Architecture',
+			'Video Game Design*',
+		],
 	},
 	{
 		id: '9',
@@ -208,7 +219,10 @@ export const memberData = [
 			"Children's Stories*",
 			'Technology Problem Solving',
 		],
-		backups: ['Virtual Reality Visualization (VR)*', 'Debating Technological Issues*'],
+		backups: [
+			'Virtual Reality Visualization (VR)*',
+			'Debating Technological Issues*',
+		],
 	},
 	{
 		id: '15',
@@ -247,7 +261,12 @@ export const memberData = [
 		startTime: '9/29/23 15:55:02',
 		lastModifiedTime: '',
 		completionTime: '9/29/23 15:56:45',
-		events: ['Flight Endurance*', 'On Demand Video', 'Technology Bowl', 'Board Game Design*'],
+		events: [
+			'Flight Endurance*',
+			'On Demand Video',
+			'Technology Bowl',
+			'Board Game Design*',
+		],
 		backups: ['Drone Challenge (UAV)*', 'Forensic Science'],
 	},
 	{
@@ -302,7 +321,11 @@ export const memberData = [
 		startTime: '9/29/23 17:55:23',
 		lastModifiedTime: '',
 		completionTime: '9/29/23 17:57:20',
-		events: ['Debating Technological Issues*', 'Coding', 'Career Prep* (Washington Only)'],
+		events: [
+			'Debating Technological Issues*',
+			'Coding',
+			'Career Prep* (Washington Only)',
+		],
 		backups: ['Data Science and Analytics*', 'Coding'],
 	},
 	{
@@ -312,7 +335,12 @@ export const memberData = [
 		startTime: '9/29/23 18:12:42',
 		lastModifiedTime: '',
 		completionTime: '9/29/23 18:13:48',
-		events: ['Biotechnology Design*', 'On Demand Video', 'Video Game Design*', 'Forensic Science'],
+		events: [
+			'Biotechnology Design*',
+			'On Demand Video',
+			'Video Game Design*',
+			'Forensic Science',
+		],
 		backups: ['Drone Challenge (UAV)*', 'Silent Film (Washington Only)'],
 	},
 	{
@@ -329,7 +357,10 @@ export const memberData = [
 			'Drone Challenge (UAV)*',
 			'Computer-Aided Design (CAD), Architecture',
 		],
-		backups: ['Engineering Design*', 'Computer-Aided Design (CAD), Engineering'],
+		backups: [
+			'Engineering Design*',
+			'Computer-Aided Design (CAD), Engineering',
+		],
 	},
 	{
 		id: '24',
@@ -353,7 +384,12 @@ export const memberData = [
 		startTime: '9/29/23 22:18:30',
 		lastModifiedTime: '',
 		completionTime: '9/29/23 22:22:09',
-		events: ['Drone Challenge (UAV)*', 'VEX Robotics*', 'On Demand Video', 'Dragster Design*'],
+		events: [
+			'Drone Challenge (UAV)*',
+			'VEX Robotics*',
+			'On Demand Video',
+			'Dragster Design*',
+		],
 		backups: ['Flight Endurance*', 'Trebuchet (Washington Only)'],
 	},
 	{
@@ -475,7 +511,12 @@ export const memberData = [
 		startTime: '10/1/23 14:49:43',
 		lastModifiedTime: '',
 		completionTime: '10/1/23 14:51:18',
-		events: ['Board Game Design*', 'Technology Bowl', 'Video Game Design*', 'On Demand Video'],
+		events: [
+			'Board Game Design*',
+			'Technology Bowl',
+			'Video Game Design*',
+			'On Demand Video',
+		],
 		backups: ['VEX Robotics*', 'Technology Problem Solving'],
 	},
 	{
@@ -655,7 +696,10 @@ export const memberData = [
 			'Biotechnology Design*',
 			'Debating Technological Issues*',
 		],
-		backups: ['Essays on Technology', 'Computer-Aided Design (CAD), Architecture'],
+		backups: [
+			'Essays on Technology',
+			'Computer-Aided Design (CAD), Architecture',
+		],
 	},
 	{
 		id: '45',
@@ -697,7 +741,12 @@ export const memberData = [
 		startTime: '10/3/23 18:01:55',
 		lastModifiedTime: '',
 		completionTime: '10/3/23 18:02:41',
-		events: ['Board Game Design*', 'On Demand Video', 'Technology Bowl', 'Video Game Design*'],
+		events: [
+			'Board Game Design*',
+			'On Demand Video',
+			'Technology Bowl',
+			'Video Game Design*',
+		],
 		backups: ['VEX Robotics*', 'Computer-Aided Design (CAD), Engineering'],
 	},
 	{
@@ -805,7 +854,10 @@ export const memberData = [
 			'Prepared Presentation*',
 			'Technology Problem Solving',
 		],
-		backups: ['Career Prep* (Washington Only)', 'Silent Film (Washington Only)'],
+		backups: [
+			'Career Prep* (Washington Only)',
+			'Silent Film (Washington Only)',
+		],
 	},
 	{
 		id: '55',
@@ -814,7 +866,12 @@ export const memberData = [
 		startTime: '10/4/23 19:30:57',
 		lastModifiedTime: '',
 		completionTime: '10/4/23 19:33:58',
-		events: ['Forensic Science', 'Board Game Design*', "Children's Stories*", 'Dragster Design*'],
+		events: [
+			'Forensic Science',
+			'Board Game Design*',
+			"Children's Stories*",
+			'Dragster Design*',
+		],
 		backups: ['Architectural Design*', 'Biotechnology Design*'],
 	},
 	{
@@ -824,7 +881,12 @@ export const memberData = [
 		startTime: '10/4/23 19:34:57',
 		lastModifiedTime: '',
 		completionTime: '10/4/23 20:02:08',
-		events: ['Forensic Science', 'Board Game Design*', "Children's Stories*", 'Dragster Design*'],
+		events: [
+			'Forensic Science',
+			'Board Game Design*',
+			"Children's Stories*",
+			'Dragster Design*',
+		],
 		backups: ['Music Production*', 'Architectural Design*'],
 	},
 	{
@@ -902,7 +964,10 @@ export const memberData = [
 			'Transportation Modeling*',
 			'Prepared Presentation*',
 		],
-		backups: ['Fashion Design and Technology*', 'Concept Art (Washington Only)'],
+		backups: [
+			'Fashion Design and Technology*',
+			'Concept Art (Washington Only)',
+		],
 	},
 	{
 		id: '62',
