@@ -217,7 +217,7 @@ export const memberData = [
 			'VEX Robotics*',
 			'Webmaster*',
 			"Children's Stories*",
-			'Computer-Aided Design (CAD), Architecture',
+			'Architectural Design*',
 		],
 		backups: [
 			'Virtual Reality Visualization (VR)*',
