@@ -35,6 +35,7 @@
 			name: string;
 			members: { name: string; email: string }[];
 			teamCaptain?: string;
+			lastUpdatedBy?: string;
 		};
 </script>
 
@@ -143,11 +144,14 @@
 																	{person.name}
 																	<Button
 																		on:click={async () => {
-																			const members = team.members;
-																			members.push({
+																			const teamButMutable = team;
+																			teamButMutable.members.push({
 																				name: person.name,
 																				email: person.email,
 																			});
+																			teamButMutable.lastUpdatedBy =
+																				$user?.email ?? '';
+
 																			await setDoc(
 																				doc(db, 'events', event.event ?? ''),
 																				{
@@ -183,6 +187,7 @@
 														on:click={async () => {
 															const teamButMutable = team;
 															teamButMutable.teamCaptain = '';
+															teamButMutable.lastUpdatedBy = $user?.email ?? '';
 															await setDoc(
 																doc(db, 'events', event.event ?? ''),
 																{
@@ -204,6 +209,8 @@
 																	const teamButMutable = team;
 																	teamButMutable.teamCaptain =
 																		teamMember?.email ?? '';
+																	teamButMutable.lastUpdatedBy =
+																		$user?.email ?? '';
 																	await setDoc(
 																		doc(db, 'events', event.event ?? ''),
 																		{
@@ -249,15 +256,16 @@
 															)}
 														class="hover:underline hover:text-red-500 hover:cursor-pointer"
 														on:click={async () => {
-															const members = team.members;
-															members.splice(
-																members.findIndex(
+															const teamButMutable = team;
+															teamButMutable.members.splice(
+																teamButMutable.members.findIndex(
 																	(e) =>
 																		e.email === (teamMember?.email ?? '') &&
 																		e.name === (teamMember?.name ?? ''),
 																),
 																1,
 															);
+															teamButMutable.lastUpdatedBy = $user?.email ?? '';
 															await setDoc(
 																doc(db, 'events', event.event ?? ''),
 																{
@@ -291,6 +299,7 @@
 								on:click={async () => {
 									data.teams.push({
 										members: [],
+										lastUpdatedBy: $user?.email ?? '',
 									});
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
