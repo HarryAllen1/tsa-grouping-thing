@@ -204,7 +204,7 @@
 															<!-- svelte-ignore a11y-click-events-have-key-events -->
 															<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 															<li
-																class="pointer"
+																class="cursor-pointer"
 																on:click={async () => {
 																	const teamButMutable = team;
 																	teamButMutable.teamCaptain =
