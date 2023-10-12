@@ -29,6 +29,7 @@
 			name: string;
 			members: { name: string; email: string }[];
 			teamCaptain?: string;
+			lastUpdatedBy?: string;
 		};
 </script>
 
@@ -98,15 +99,17 @@
 														<Button
 															variant="destructive"
 															on:click={async () => {
-																const members = team.members;
-																members.splice(
-																	members.findIndex(
+																const teamButMutable = team;
+																teamButMutable.members.splice(
+																	teamButMutable.members.findIndex(
 																		(e) =>
 																			e.email.toLowerCase() ===
 																			($user?.email ?? ''),
 																	),
 																	1,
 																);
+																teamButMutable.lastUpdatedBy =
+																	$user?.email ?? '';
 																await setDoc(
 																	doc(db, 'events', event.event ?? ''),
 																	{
@@ -174,11 +177,13 @@
 																			{person.name}
 																			<Button
 																				on:click={async () => {
-																					const members = team.members;
-																					members.push({
+																					const teamButMutable = team;
+																					teamButMutable.members.push({
 																						name: person.name,
 																						email: person.email,
 																					});
+																					teamButMutable.lastUpdatedBy =
+																						$user?.email ?? '';
 																					await setDoc(
 																						doc(
 																							db,
@@ -213,6 +218,7 @@
 													on:click={async () => {
 														const teamButMutable = team;
 														teamButMutable.teamCaptain = $user?.email ?? '';
+														teamButMutable.lastUpdatedBy = $user?.email ?? '';
 														await setDoc(
 															doc(db, 'events', event.event ?? ''),
 															{
@@ -269,6 +275,7 @@
 												email: $user?.email ?? '',
 											},
 										],
+										lastUpdatedBy: $user?.email ?? '',
 									});
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
