@@ -95,7 +95,7 @@
 								{#each data.teams as te}
 									{@const team = correctType(te)}
 									<Card.Root class="bg-blue-500 bg-opacity-20">
-										<Card.Title class="m-2 ml-4">
+										<Card.Title class="m-2 ml-4 flex flex-row gap-1">
 											<Button
 												variant="destructive"
 												on:click={async () => {
@@ -171,6 +171,64 @@
 															{/each}
 														</ul>
 													</Dialog.Description>
+												</Dialog.Content>
+											</Dialog.Root>
+											<Dialog.Root>
+												<Dialog.Trigger>
+													<Button>Team Captain</Button>
+												</Dialog.Trigger>
+												<Dialog.Content>
+													<Dialog.Title>Manage team captain</Dialog.Title>
+													<Button
+														on:click={async () => {
+															const teamButMutable = team;
+															teamButMutable.teamCaptain = '';
+															await setDoc(
+																doc(db, 'events', event.event ?? ''),
+																{
+																	teams: data.teams,
+																},
+																{
+																	merge: true,
+																},
+															);
+														}}>Clear</Button
+													>
+													<ul>
+														{#each team.members as teamMember}
+															<!-- svelte-ignore a11y-click-events-have-key-events -->
+															<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+															<li
+																class="pointer"
+																on:click={async () => {
+																	const teamButMutable = team;
+																	teamButMutable.teamCaptain =
+																		teamMember?.email ?? '';
+																	await setDoc(
+																		doc(db, 'events', event.event ?? ''),
+																		{
+																			teams: data.teams,
+																		},
+																		{
+																			merge: true,
+																		},
+																	);
+																}}
+															>
+																{teamMember.name}
+																{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+																	<Tooltip.Root>
+																		<Tooltip.Trigger>
+																			<Crown class="h-4 w-4" />
+																		</Tooltip.Trigger>
+																		<Tooltip.Content
+																			>Team captain</Tooltip.Content
+																		>
+																	</Tooltip.Root>
+																{/if}
+															</li>
+														{/each}
+													</ul>
 												</Dialog.Content>
 											</Dialog.Root>
 										</Card.Title>
