@@ -8,7 +8,7 @@
 	import Label from '$lib/components/label/label.svelte';
 	import * as Select from '$lib/components/select';
 	import * as Tooltip from '$lib/components/tooltip';
-	import { correctTeamsDataType } from '$lib/types';
+	import { correctDocType, correctTeamsDataType } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
 	import { Crown, Plus, Trash2, UserPlus } from 'lucide-svelte';
@@ -30,6 +30,35 @@
 		}))
 		.sort((a, b) => a.label.localeCompare(b.label));
 
+	export const eventData = memberData
+		.reduce(
+			(acc, item) => {
+				item.events.forEach((eventName) => {
+					const existingEntry = acc.find((entry) => entry.event === eventName);
+
+					if (existingEntry) {
+						existingEntry.members.push({
+							name: item.name,
+							id: item.id,
+							email: item.email,
+						});
+					} else {
+						acc.push({
+							event: eventName,
+							members: [{ name: item.name, id: item.id, email: item.email }],
+						});
+					}
+				});
+
+				return acc;
+			},
+			[] as {
+				event: string;
+				members: { name: string; id: string; email: string }[];
+			}[],
+		)
+		.sort((a, b) => a.event.localeCompare(b.event));
+
 	const correctType = (eventData: DocumentData) =>
 		eventData as {
 			name: string;
@@ -42,8 +71,10 @@
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)}>Sign out</Button>
 	<Button href="/" class="my-4">Back to regular sign up page</Button>
-	<h1 class="text-3xl font-bold">
-		Please don't add yourself to events that you aren't in!
+	<h1 class="text-3xl font-bold max-w-screen-md">
+		Please don't add yourself to events that you aren't in! If people want you
+		to add them to an event they aren't in, tell them to edit their event
+		sign-up form, then message Harry so he can update this page.
 	</h1>
 	<div>
 		<Label>
@@ -70,7 +101,9 @@
 		class="flex flex-col items-center gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:items-start"
 	>
 		{#each signedUpEvents as event}
-			<Doc ref="events/{event.event}" let:data>
+			{@const eventMemberStats = eventData.find((e) => e.event === event.event)}
+			<Doc ref="events/{event.event}" let:data={untyped}>
+				{@const data = correctDocType(untyped)}
 				{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
 					<Card.Root class="w-96">
 						<Card.Header>
@@ -86,6 +119,12 @@
 									<li class:text-red-500={data.teams.length > event.perChapter}>
 										Max {event.perChapter} teams per chapter (currently {data
 											.teams.length})
+									</li>
+									<li>
+										{data.teams.reduce(
+											(acc, curr) => acc + curr.members.length,
+											0,
+										)}/{eventMemberStats?.members.length ?? 0} people joined teams
 									</li>
 								</ul>
 							</Card.Description>
@@ -104,7 +143,8 @@
 											<Button
 												variant="destructive"
 												on:click={async () => {
-													data.teams = correctTeamsDataType(data.teams).filter(
+													const teamsButMutable = data;
+													teamsButMutable.teams = data.teams.filter(
 														(t) => t !== te,
 													);
 													await setDoc(
