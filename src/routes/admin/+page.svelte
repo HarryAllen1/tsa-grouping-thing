@@ -42,6 +42,9 @@
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)}>Sign out</Button>
 	<Button href="/" class="my-4">Back to regular sign up page</Button>
+	<h1 class="text-3xl font-bold">
+		Please don't add yourself to events that you aren't in!
+	</h1>
 	<div>
 		<Label>
 			<Checkbox bind:checked={shouldHideIndividualEvents} />
@@ -80,8 +83,9 @@
 									<li>
 										Max {event.maxTeamSize} people per team
 									</li>
-									<li>
-										Max {event.perChapter} teams per chapter
+									<li class:text-red-500={data.teams.length > event.perChapter}>
+										Max {event.perChapter} teams per chapter (currently {data
+											.teams.length})
 									</li>
 								</ul>
 							</Card.Description>
