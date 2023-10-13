@@ -27,7 +27,9 @@
 		...$aaaaaaaaa,
 		email: decodeURIComponent($page.params.email),
 		displayName: memberData.find(
-			(m) => m.email.toLowerCase() === decodeURIComponent($page.params.email).toLowerCase(),
+			(m) =>
+				m.email.toLowerCase() ===
+				decodeURIComponent($page.params.email).toLowerCase(),
 		)?.name,
 	});
 
@@ -51,16 +53,17 @@
 
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)} class="mb-4">Sign out</Button>
-	<Select.Root>
+	<Select.Root
+		onSelectedChange={async (option) =>
+			await goto(`/admin/${encodeURIComponent(String(option?.value))}`)}
+	>
 		<Select.Trigger class="w-56 mb-4">
 			<Select.Value placeholder={$user.displayName} />
 		</Select.Trigger>
 		<Select.Content class="max-h-full overflow-y-scroll">
 			{#each selectOptions as option}
-				<Select.Item
-					on:click={() => goto(`/admin/${encodeURIComponent(option.value)}`)}
-					value={option.value}
-					label={option.label}>{option.label}</Select.Item
+				<Select.Item value={option.value} label={option.label}
+					>{option.label}</Select.Item
 				>
 			{/each}
 		</Select.Content>
@@ -76,23 +79,29 @@
 		</p>
 		{#if !$user?.email || !$user?.displayName}
 			<p>
-				Something went wrong. Try refreshing the page, then logging out. If it still doesn't work,
-				contact Harry on Teams or <a href="mailto:s-hallen@lwsd.org">by email</a>
+				Something went wrong. Try refreshing the page, then logging out. If it
+				still doesn't work, contact Harry on Teams or <a
+					href="mailto:s-hallen@lwsd.org">by email</a
+				>
 			</p>
 		{/if}
 		{#if admins.includes($aaaaaaaaa?.email ?? '')}
-			<Button href="/admin">Admin page (this button is only visible to admins)</Button>
+			<Button href="/admin"
+				>Admin page (this button is only visible to admins)</Button
+			>
 		{/if}
 	</div>
 
 	{#if !signedUpEvents || signedUpEvents.length === 0}
 		<p class="mt-4 w-full">
-			You haven't signed up for any events yet. Please see a board member or advisor.
+			You haven't signed up for any events yet. Please see a board member or
+			advisor.
 		</p>
 	{:else}
 		<Alert variant="destructive" class="mt-4 dark:brightness-200">
 			<AlertTitle>This list only includes team events.</AlertTitle>
-			<AlertDescription>Individual events are not in this list</AlertDescription>
+			<AlertDescription>Individual events are not in this list</AlertDescription
+			>
 		</Alert>
 		<p class="my-4 w-full">You have signed up for the following team events:</p>
 		<div
@@ -103,13 +112,15 @@
 					<Card.Root class="w-96">
 						<Card.Header>
 							<Card.Title>{event.event}</Card.Title>
-							<Card.Description>Max {event.maxTeamSize} people per team</Card.Description>
+							<Card.Description
+								>Max {event.maxTeamSize} people per team</Card.Description
+							>
 						</Card.Header>
 						<Card.Content class="flex flex-col gap-4">
 							{#if event.event === 'Technology Bowl'}
 								<p>
-									The team for this event will be based off of a test which you will take at a later
-									date.
+									The team for this event will be based off of a test which you
+									will take at a later date.
 								</p>
 							{:else}
 								{#each data.teams as te}
@@ -122,7 +133,8 @@
 													const members = team.members;
 													members.splice(
 														members.findIndex(
-															(e) => e.email.toLowerCase() === ($user?.email ?? ''),
+															(e) =>
+																e.email.toLowerCase() === ($user?.email ?? ''),
 														),
 														1,
 													);
@@ -142,7 +154,9 @@
 											>
 											<Dialog.Root>
 												<Dialog.Trigger>
-													<Button class="bg-green-500 hover:bg-green-400">Add people</Button>
+													<Button class="bg-green-500 hover:bg-green-400"
+														>Add people</Button
+													>
 												</Dialog.Trigger>
 
 												<Dialog.Content class="max-h-full overflow-y-scroll">
@@ -152,11 +166,15 @@
 														<ul>
 															{#each memberData
 																.filter((p) => !team.members.filter((t) => t.email === p.email).length)
-																.sort((a, b) => a.name.localeCompare(b.name)) as person}
+																.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
 																<li
 																	class:text-green-500={memberData
-																		.filter((m) => m.events.includes(event.event ?? ''))
-																		.find((e) => e.email === (person?.email ?? ''))}
+																		.filter((m) =>
+																			m.events.includes(event.event ?? ''),
+																		)
+																		.find(
+																			(e) => e.email === (person?.email ?? ''),
+																		)}
 																	class="flex flex-row items-center"
 																>
 																	{person.name}
@@ -184,8 +202,8 @@
 																</li>
 															{:else}
 																<li>
-																	No one else singed up for this event. Please see a board member
-																	for next steps.
+																	No one else singed up for this event. Please
+																	see a board member for next steps.
 																</li>
 															{/each}
 														</ul>
@@ -200,10 +218,13 @@
 													<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 													<li
 														class:text-green-500={memberData
-															.filter((m) => m.events.includes(event.event ?? ''))
+															.filter((m) =>
+																m.events.includes(event.event ?? ''),
+															)
 															.find(
 																(e) =>
-																	e.email.toLowerCase() === (teamMember?.email.toLowerCase() ?? ''),
+																	e.email.toLowerCase() ===
+																	(teamMember?.email.toLowerCase() ?? ''),
 															)}
 														class="hover:underline hover:text-red-500 hover:cursor-pointer"
 														on:click={async () => {
@@ -240,7 +261,9 @@
 							<Button
 								disabled={!!(
 									correctTeamsDataType(data.teams).find((t) =>
-										t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')),
+										t.members.find(
+											(e) => e.email.toLowerCase() === ($user?.email ?? ''),
+										),
 									) || event.event === 'Technology Bowl'
 								)}
 								on:click={async () => {
