@@ -7,7 +7,12 @@
 	import * as Dialog from '$lib/components/dialog';
 	import * as Tooltip from '$lib/components/tooltip';
 	import { signOut } from 'firebase/auth';
-	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
+	import {
+		doc,
+		setDoc,
+		type DocumentData,
+		Timestamp,
+	} from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from './admins';
@@ -30,6 +35,7 @@
 			members: { name: string; email: string }[];
 			teamCaptain?: string;
 			lastUpdatedBy?: string;
+			lastUpdatedTime?: Timestamp;
 		};
 </script>
 
@@ -110,6 +116,10 @@
 																);
 																teamButMutable.lastUpdatedBy =
 																	$user?.email ?? '';
+																teamButMutable.lastUpdatedTime = new Timestamp(
+																	Date.now() / 1000,
+																	0,
+																);
 																await setDoc(
 																	doc(db, 'events', event.event ?? ''),
 																	{
@@ -184,6 +194,8 @@
 																					});
 																					teamButMutable.lastUpdatedBy =
 																						$user?.email ?? '';
+																					teamButMutable.lastUpdatedTime =
+																						new Timestamp(Date.now() / 1000, 0);
 																					await setDoc(
 																						doc(
 																							db,
@@ -219,6 +231,10 @@
 														const teamButMutable = team;
 														teamButMutable.teamCaptain = $user?.email ?? '';
 														teamButMutable.lastUpdatedBy = $user?.email ?? '';
+														teamButMutable.lastUpdatedTime = new Timestamp(
+															Date.now() / 1000,
+															0,
+														);
 														await setDoc(
 															doc(db, 'events', event.event ?? ''),
 															{
