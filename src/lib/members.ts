@@ -559,7 +559,7 @@ export const memberData = [
 		name: 'SRISAIMEENAKSHI ARASADA',
 		email: 's-sarasada@lwsd.org',
 		startTime: '10/2/23 13:49:17',
-		lastModifiedTime: '10/12/23 15:48:27',
+		lastModifiedTime: '10/14/23 20:28:57',
 		completionTime: '10/2/23 13:54:11',
 		events: [
 			'Webmaster*',
@@ -567,7 +567,7 @@ export const memberData = [
 			'On Demand Video',
 			'Software Development*',
 			'Biotechnology Design*',
-			'Engineering Design*',
+			'Architectural Design*',
 		],
 		backups: ['Forensic Science', 'Future Technology Teacher*'],
 	},

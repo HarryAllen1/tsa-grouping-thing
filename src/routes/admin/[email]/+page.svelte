@@ -62,9 +62,9 @@
 		</Select.Trigger>
 		<Select.Content class="max-h-full overflow-y-scroll">
 			{#each selectOptions as option}
-				<Select.Item value={option.value} label={option.label}
-					>{option.label}</Select.Item
-				>
+				<Select.Item value={option.value} label={option.label}>
+					<a href="/admin/{encodeURIComponent(option.value)}">{option.label}</a>
+				</Select.Item>
 			{/each}
 		</Select.Content>
 		<Select.Input name="favoriteFruit" />
