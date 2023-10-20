@@ -149,6 +149,10 @@
 										<Button
 											variant="destructive"
 											on:click={async () => {
+												if (
+													!confirm('Are you sure you want to delete this team?')
+												)
+													return;
 												const teamsButMutable = data;
 												teamsButMutable.teams = data.teams.filter(
 													(t) => t !== te,
