@@ -36,6 +36,8 @@
 			teamCaptain?: string;
 			lastUpdatedBy?: string;
 			lastUpdatedTime?: Timestamp;
+			locked?: boolean;
+			[key: string]: unknown;
 		};
 </script>
 
