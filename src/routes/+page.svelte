@@ -94,234 +94,228 @@
 							</Card.Description>
 						</Card.Header>
 						<Card.Content class="flex flex-col gap-4">
-							{#if event.event === 'Technology Bowl'}
+							{#if data.locked}
 								<p>
-									The team for this event will be based off of a written test
-									which you will take during the meeting on 12 October
+									This event is locked, likely due to eliminations. If this
+									doesn't seem correct, contact a board member.
 								</p>
-							{:else}
-								{#each data.teams as te}
-									{@const team = correctType(te)}
-									<Card.Root class="bg-blue-500 bg-opacity-20">
-										<Card.Title class="m-2 ml-4 flex flex-row gap-1">
-											{#if team.locked}
-												<Tooltip.Root>
-													<Tooltip.Trigger>
-														<p>This team is currently locked from editing.</p>
-													</Tooltip.Trigger>
-													<Tooltip.Content>
-														This likely due to eliminations. If this is
-														unexpected, contact a board member.
-													</Tooltip.Content>
-												</Tooltip.Root>
-											{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
-												<Tooltip.Root>
-													<Tooltip.Trigger>
-														<Button
-															variant="destructive"
-															on:click={async () => {
-																const teamButMutable = team;
-																teamButMutable.members.splice(
-																	teamButMutable.members.findIndex(
-																		(e) =>
-																			e.email.toLowerCase() ===
-																			($user?.email ?? ''),
-																	),
-																	1,
-																);
-																teamButMutable.lastUpdatedBy =
-																	$user?.email ?? '';
-																teamButMutable.lastUpdatedTime = new Timestamp(
-																	Date.now() / 1000,
-																	0,
-																);
-																await setDoc(
-																	doc(db, 'events', event.event ?? ''),
-																	{
-																		teams: correctTeamsDataType(
-																			data.teams,
-																		).filter((t) => t.members.length > 0),
-																	},
-																	{
-																		merge: true,
-																	},
-																);
-															}}
-														>
-															<LogOut />
-														</Button>
-													</Tooltip.Trigger>
-													<Tooltip.Content>Leave team</Tooltip.Content>
-												</Tooltip.Root>
-												<Dialog.Root>
-													{#if team.members.length >= (event.maxTeamSize ?? 9999)}
+							{/if}
+							{#each data.teams as te}
+								{@const team = correctType(te)}
+								<Card.Root class="bg-blue-500 bg-opacity-20">
+									<Card.Title class="m-2 ml-4 flex flex-row gap-1">
+										{#if !data.locked && team.locked}
+											<Tooltip.Root>
+												<Tooltip.Trigger>
+													<p>This team is currently locked from editing.</p>
+												</Tooltip.Trigger>
+												<Tooltip.Content>
+													This likely due to eliminations. If this is
+													unexpected, contact a board member.
+												</Tooltip.Content>
+											</Tooltip.Root>
+										{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
+											<Tooltip.Root>
+												<Tooltip.Trigger>
+													<Button
+														variant="destructive"
+														on:click={async () => {
+															const teamButMutable = team;
+															teamButMutable.members.splice(
+																teamButMutable.members.findIndex(
+																	(e) =>
+																		e.email.toLowerCase() ===
+																		($user?.email ?? ''),
+																),
+																1,
+															);
+															teamButMutable.lastUpdatedBy = $user?.email ?? '';
+															teamButMutable.lastUpdatedTime = new Timestamp(
+																Date.now() / 1000,
+																0,
+															);
+															await setDoc(
+																doc(db, 'events', event.event ?? ''),
+																{
+																	teams: correctTeamsDataType(
+																		data.teams,
+																	).filter((t) => t.members.length > 0),
+																},
+																{
+																	merge: true,
+																},
+															);
+														}}
+													>
+														<LogOut />
+													</Button>
+												</Tooltip.Trigger>
+												<Tooltip.Content>Leave team</Tooltip.Content>
+											</Tooltip.Root>
+											<Dialog.Root>
+												{#if team.members.length >= (event.maxTeamSize ?? 9999)}
+													<Tooltip.Root>
+														<Tooltip.Trigger>
+															<Dialog.Trigger disabled>
+																<Button
+																	class="bg-green-500 hover:bg-green-400"
+																	disabled
+																>
+																	<UserPlus />
+																</Button>
+															</Dialog.Trigger>
+														</Tooltip.Trigger>
+														<Tooltip.Content>
+															<p>Team is full</p>
+														</Tooltip.Content>
+													</Tooltip.Root>
+												{:else}
+													<Dialog.Trigger>
 														<Tooltip.Root>
 															<Tooltip.Trigger>
-																<Dialog.Trigger disabled>
-																	<Button
-																		class="bg-green-500 hover:bg-green-400"
-																		disabled
-																	>
-																		<UserPlus />
-																	</Button>
-																</Dialog.Trigger>
+																<Button class="bg-green-500 hover:bg-green-400">
+																	<UserPlus />
+																</Button>
 															</Tooltip.Trigger>
-															<Tooltip.Content>
-																<p>Team is full</p>
-															</Tooltip.Content>
+															<Tooltip.Content>Add person</Tooltip.Content>
 														</Tooltip.Root>
-													{:else}
-														<Dialog.Trigger>
-															<Tooltip.Root>
-																<Tooltip.Trigger>
-																	<Button
-																		class="bg-green-500 hover:bg-green-400"
-																	>
-																		<UserPlus />
-																	</Button>
-																</Tooltip.Trigger>
-																<Tooltip.Content>Add person</Tooltip.Content>
-															</Tooltip.Root>
-														</Dialog.Trigger>
-													{/if}
+													</Dialog.Trigger>
+												{/if}
 
-													<Dialog.Content>
-														<Dialog.Title>Add People</Dialog.Title>
-														<Dialog.Description>
-															{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-																<Alert class="dark:brightness-200">
-																	<AlertTitle>This team is full</AlertTitle>
-																</Alert>
-															{:else}
-																<p>People who signed up for this event:</p>
-																<ul>
-																	{#each memberData
-																		.filter((m) => m.events.includes(event.event ?? '') && !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
-																		.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
-																		<li class="flex flex-row items-center">
-																			{person.name}
-																			<Button
-																				on:click={async () => {
-																					const teamButMutable = team;
-																					teamButMutable.members.push({
-																						name: person.name,
-																						email: person.email,
-																					});
-																					teamButMutable.lastUpdatedBy =
-																						$user?.email ?? '';
-																					teamButMutable.lastUpdatedTime =
-																						new Timestamp(Date.now() / 1000, 0);
-																					await setDoc(
-																						doc(
-																							db,
-																							'events',
-																							event.event ?? '',
-																						),
-																						{
-																							teams: data.teams,
-																						},
-																						{
-																							merge: true,
-																						},
-																					);
-																				}}
-																				variant="outline"
-																				size="icon"
-																				class="ml-2"><Plus /></Button
-																			>
-																		</li>
-																	{:else}
-																		<li>
-																			No one else singed up for this event.
-																			Please see a board member for next steps.
-																		</li>
-																	{/each}
-																</ul>
-															{/if}
-														</Dialog.Description>
-													</Dialog.Content>
-												</Dialog.Root>
-												<Button
-													on:click={async () => {
-														const teamButMutable = team;
-														teamButMutable.teamCaptain = $user?.email ?? '';
-														teamButMutable.lastUpdatedBy = $user?.email ?? '';
-														teamButMutable.lastUpdatedTime = new Timestamp(
-															Date.now() / 1000,
-															0,
-														);
-														await setDoc(
-															doc(db, 'events', event.event ?? ''),
-															{
-																teams: data.teams,
-															},
-															{
-																merge: true,
-															},
-														);
-													}}>Become Team Captain</Button
-												>
-											{:else}
-												<p>
-													Ask someone in this team to add you if you want to
-													join this team!
-												</p>
-											{/if}
-										</Card.Title>
-										<Card.Content>
-											<ul>
-												{#each team.members as teamMember}
-													<li>
-														{teamMember.name}
-														{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
-															<Tooltip.Root>
-																<Tooltip.Trigger>
-																	<Crown class="h-4 w-4" />
-																</Tooltip.Trigger>
-																<Tooltip.Content>Team captain</Tooltip.Content>
-															</Tooltip.Root>
+												<Dialog.Content>
+													<Dialog.Title>Add People</Dialog.Title>
+													<Dialog.Description>
+														{#if team.members.length >= (event.maxTeamSize ?? 9999)}
+															<Alert class="dark:brightness-200">
+																<AlertTitle>This team is full</AlertTitle>
+															</Alert>
+														{:else}
+															<p>People who signed up for this event:</p>
+															<ul>
+																{#each memberData
+																	.filter((m) => m.events.includes(event.event ?? '') && !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
+																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
+																	<li class="flex flex-row items-center">
+																		{person.name}
+																		<Button
+																			on:click={async () => {
+																				const teamButMutable = team;
+																				teamButMutable.members.push({
+																					name: person.name,
+																					email: person.email,
+																				});
+																				teamButMutable.lastUpdatedBy =
+																					$user?.email ?? '';
+																				teamButMutable.lastUpdatedTime =
+																					new Timestamp(Date.now() / 1000, 0);
+																				await setDoc(
+																					doc(db, 'events', event.event ?? ''),
+																					{
+																						teams: data.teams,
+																					},
+																					{
+																						merge: true,
+																					},
+																				);
+																			}}
+																			variant="outline"
+																			size="icon"
+																			class="ml-2"><Plus /></Button
+																		>
+																	</li>
+																{:else}
+																	<li>
+																		No one else singed up for this event. Please
+																		see a board member for next steps.
+																	</li>
+																{/each}
+															</ul>
 														{/if}
-													</li>
-												{/each}
-											</ul>
-										</Card.Content>
-									</Card.Root>
-								{/each}
-							{/if}
+													</Dialog.Description>
+												</Dialog.Content>
+											</Dialog.Root>
+											<Button
+												on:click={async () => {
+													const teamButMutable = team;
+													teamButMutable.teamCaptain = $user?.email ?? '';
+													teamButMutable.lastUpdatedBy = $user?.email ?? '';
+													teamButMutable.lastUpdatedTime = new Timestamp(
+														Date.now() / 1000,
+														0,
+													);
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: data.teams,
+														},
+														{
+															merge: true,
+														},
+													);
+												}}>Become Team Captain</Button
+											>
+										{:else if !data.locked}
+											<p>
+												Ask someone in this team to add you if you want to join
+												this team!
+											</p>
+										{/if}
+									</Card.Title>
+									<Card.Content>
+										<ul>
+											{#each team.members as teamMember}
+												<li>
+													{teamMember.name}
+													{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+														<Tooltip.Root>
+															<Tooltip.Trigger>
+																<Crown class="h-4 w-4" />
+															</Tooltip.Trigger>
+															<Tooltip.Content>Team captain</Tooltip.Content>
+														</Tooltip.Root>
+													{/if}
+												</li>
+											{/each}
+										</ul>
+									</Card.Content>
+								</Card.Root>
+							{/each}
 						</Card.Content>
-						<Card.Footer>
-							<Button
-								disabled={!!(
-									correctTeamsDataType(data.teams).find((t) =>
-										t.members.find(
-											(e) => e.email.toLowerCase() === ($user?.email ?? ''),
-										),
-									) || event.event === 'Technology Bowl'
-								)}
-								on:click={async () => {
-									data.teams.push({
-										members: [
+						{#if !data.locked}
+							<Card.Footer>
+								<Button
+									disabled={!!(
+										correctTeamsDataType(data.teams).find((t) =>
+											t.members.find(
+												(e) => e.email.toLowerCase() === ($user?.email ?? ''),
+											),
+										) || event.event === 'Technology Bowl'
+									)}
+									on:click={async () => {
+										data.teams.push({
+											members: [
+												{
+													name: $user?.displayName ?? '',
+													email: $user?.email ?? '',
+												},
+											],
+											lastUpdatedBy: $user?.email ?? '',
+										});
+										await setDoc(
+											doc(db, 'events', event.event ?? ''),
 											{
-												name: $user?.displayName ?? '',
-												email: $user?.email ?? '',
+												teams: data.teams,
 											},
-										],
-										lastUpdatedBy: $user?.email ?? '',
-									});
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											teams: data.teams,
-										},
-										{
-											merge: true,
-										},
-									);
-								}}
-							>
-								Create Team
-							</Button>
-						</Card.Footer>
+											{
+												merge: true,
+											},
+										);
+									}}
+								>
+									Create Team
+								</Button>
+							</Card.Footer>
+						{/if}
 					</Card.Root>
 				</Doc>
 			{/each}
