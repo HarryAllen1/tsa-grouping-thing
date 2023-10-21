@@ -5,17 +5,20 @@
 	import * as Card from '$lib/components/card';
 	import Checkbox from '$lib/components/checkbox/checkbox.svelte';
 	import * as Dialog from '$lib/components/dialog';
+	import { Input } from '$lib/components/input';
 	import Label from '$lib/components/label/label.svelte';
 	import * as Select from '$lib/components/select';
+	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
 	import { correctDocType, correctTeamsDataType } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import {
+		Timestamp,
 		doc,
 		setDoc,
 		type DocumentData,
-		Timestamp,
 	} from 'firebase/firestore';
+	import Fuse from 'fuse.js';
 	import { Crown, Plus, Trash2, UserPlus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
@@ -26,16 +29,9 @@
 		goto('/');
 	}
 
-	let shouldHideIndividualEvents = false;
-	const signedUpEvents = events;
-	const selectOptions = memberData
-		.map((m) => ({
-			value: m.email,
-			label: m.name,
-		}))
-		.sort((a, b) => a.label.localeCompare(b.label));
+	let search = '';
 
-	export const eventData = memberData
+	const eventData = memberData
 		.reduce(
 			(acc, item) => {
 				item.events.forEach((eventName) => {
@@ -62,7 +58,37 @@
 				members: { name: string; id: string; email: string }[];
 			}[],
 		)
+		.map((e) => {
+			const event = events.find((ev) => ev.event === e.event)!;
+			return {
+				...e,
+				...event,
+			};
+		})
 		.sort((a, b) => a.event.localeCompare(b.event));
+
+	let shouldHideIndividualEvents = false;
+	const fuse = new Fuse(
+		eventData.map((e) => ({ ...e, members: e.members.map((m) => m.name) })),
+		{
+			keys: ['event', 'members'],
+			threshold: 0.2,
+		},
+	);
+	$: signedUpEvents = search
+		? eventData.filter((e) =>
+				fuse
+					.search(search)
+					.map((r) => r.item.event)
+					.includes(e.event),
+		  )
+		: eventData;
+	const selectOptions = memberData
+		.map((m) => ({
+			value: m.email,
+			label: m.name,
+		}))
+		.sort((a, b) => a.label.localeCompare(b.label));
 
 	const correctType = (eventData: DocumentData) =>
 		eventData as {
@@ -79,7 +105,7 @@
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)}>Sign out</Button>
 	<Button href="/" class="my-4">Back to regular sign up page</Button>
-	<h1 class="text-3xl font-bold max-w-screen-md">
+	<h1 class="text-3xl font-bold max-w-screen-md m-4">
 		Please don't add yourself to events that you aren't in! If people want you
 		to add them to an event they aren't in, tell them to edit their event
 		sign-up form, then message Harry so he can update this page.
@@ -105,15 +131,16 @@
 		</Select.Content>
 		<Select.Input name="favoriteFruit" />
 	</Select.Root>
+	<Input class="mb-4" bind:value={search} placeholder="Search" />
 	<div
-		class="flex flex-col items-center gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:items-start"
+		class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
 	>
 		{#each signedUpEvents as event}
 			{@const eventMemberStats = eventData.find((e) => e.event === event.event)}
 			<Doc ref="events/{event.event}" let:data={untyped}>
 				{@const data = correctDocType(untyped)}
 				{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
-					<Card.Root class="w-96">
+					<Card.Root class="w-[350px]">
 						<Card.Header>
 							<Card.Title>{event.event}</Card.Title>
 							<Card.Description>
@@ -146,105 +173,173 @@
 							{/if}
 							{#each data.teams as te}
 								{@const team = correctType(te)}
-								<Card.Root class="bg-blue-500 bg-opacity-20">
-									<Card.Title class="m-2 ml-4 flex flex-row gap-1">
-										<Button
-											variant="destructive"
-											on:click={async () => {
-												if (
-													!confirm('Are you sure you want to delete this team?')
-												)
-													return;
-												const teamsButMutable = data;
-												teamsButMutable.teams = data.teams.filter(
-													(t) => t !== te,
-												);
-												await setDoc(
-													doc(db, 'events', event.event ?? ''),
-													{
-														teams: data.teams,
-													},
-													{
-														merge: true,
-													},
-												);
-											}}
-										>
-											<Trash2 />
-										</Button>
-										<Dialog.Root>
-											<Dialog.Trigger>
-												<Button class="bg-green-500 hover:bg-green-400">
-													<UserPlus />
-												</Button>
-											</Dialog.Trigger>
+								<Card.Root class="bg-blue-100 dark:bg-slate-900 bg-opacity-20">
+									<Card.Title class="m-2 ml-4 flex flex-col gap-2">
+										<div class="flex flex-row gap-1">
+											<Button
+												variant="destructive"
+												on:click={async () => {
+													if (
+														!confirm(
+															'Are you sure you want to delete this team?',
+														)
+													)
+														return;
+													const teamsButMutable = data;
+													teamsButMutable.teams = data.teams.filter(
+														(t) => t !== te,
+													);
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: data.teams,
+														},
+														{
+															merge: true,
+														},
+													);
+												}}
+											>
+												<Trash2 />
+											</Button>
+											<Dialog.Root>
+												<Dialog.Trigger>
+													<Button class="bg-green-500 hover:bg-green-400">
+														<UserPlus />
+													</Button>
+												</Dialog.Trigger>
 
-											<Dialog.Content class="max-h-full overflow-y-scroll">
-												<Dialog.Title>Add People</Dialog.Title>
-												<Dialog.Description>
-													<p>All people not already in a team:</p>
-													<ul>
-														{#each memberData
-															.filter((p) => !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email.toLowerCase()), ))
-															.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
-															<li
-																class:text-green-500={memberData
-																	.filter((m) =>
-																		m.events.includes(event.event ?? ''),
-																	)
-																	.find(
-																		(e) => e.email === (person?.email ?? ''),
-																	)}
-																class="flex flex-row items-center"
-															>
-																{person.name}
-																<Button
-																	on:click={async () => {
-																		const teamButMutable = team;
-																		teamButMutable.members.push({
-																			name: person.name,
-																			email: person.email,
-																		});
-																		teamButMutable.lastUpdatedBy =
-																			$user?.email ?? '';
-																		teamButMutable.lastUpdatedTime =
-																			new Timestamp(Date.now() / 1000, 0);
-
-																		await setDoc(
-																			doc(db, 'events', event.event ?? ''),
-																			{
-																				teams: data.teams,
-																			},
-																			{
-																				merge: true,
-																			},
-																		);
-																	}}
-																	variant="outline"
-																	size="icon"
-																	class="ml-2"><Plus /></Button
+												<Dialog.Content class="max-h-full overflow-y-scroll">
+													<Dialog.Title>Add People</Dialog.Title>
+													<Dialog.Description>
+														<p>All people not already in a team:</p>
+														<ul>
+															{#each memberData
+																.filter((p) => !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email.toLowerCase()), ))
+																.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
+																<li
+																	class:text-green-500={memberData
+																		.filter((m) =>
+																			m.events.includes(event.event ?? ''),
+																		)
+																		.find(
+																			(e) => e.email === (person?.email ?? ''),
+																		)}
+																	class="flex flex-row items-center"
 																>
-															</li>
-														{:else}
-															<li>
-																No one else singed up for this event. Teams
-																should probably be merged.
+																	{person.name}
+																	<Button
+																		on:click={async () => {
+																			const teamButMutable = team;
+																			teamButMutable.members.push({
+																				name: person.name,
+																				email: person.email,
+																			});
+																			teamButMutable.lastUpdatedBy =
+																				$user?.email ?? '';
+																			teamButMutable.lastUpdatedTime =
+																				new Timestamp(Date.now() / 1000, 0);
+
+																			await setDoc(
+																				doc(db, 'events', event.event ?? ''),
+																				{
+																					teams: data.teams,
+																				},
+																				{
+																					merge: true,
+																				},
+																			);
+																		}}
+																		variant="outline"
+																		size="icon"
+																		class="ml-2"><Plus /></Button
+																	>
+																</li>
+															{:else}
+																<li>
+																	No one else singed up for this event. Teams
+																	should probably be merged.
+																</li>
+															{/each}
+														</ul>
+													</Dialog.Description>
+												</Dialog.Content>
+											</Dialog.Root>
+
+											<Dialog.Root>
+												<Dialog.Trigger>
+													<Button>Team Captain</Button>
+												</Dialog.Trigger>
+												<Dialog.Content>
+													<Dialog.Title>Manage team captain</Dialog.Title>
+													<Button
+														on:click={async () => {
+															const teamButMutable = team;
+															teamButMutable.teamCaptain = '';
+															teamButMutable.lastUpdatedBy = $user?.email ?? '';
+															teamButMutable.lastUpdatedTime = new Timestamp(
+																Date.now() / 1000,
+																0,
+															);
+															await setDoc(
+																doc(db, 'events', event.event ?? ''),
+																{
+																	teams: data.teams,
+																},
+																{
+																	merge: true,
+																},
+															);
+														}}>Clear</Button
+													>
+													<ul>
+														{#each team.members as teamMember}
+															<!-- svelte-ignore a11y-click-events-have-key-events -->
+															<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+															<li
+																class="cursor-pointer"
+																on:click={async () => {
+																	const teamButMutable = team;
+																	teamButMutable.teamCaptain =
+																		teamMember?.email ?? '';
+																	teamButMutable.lastUpdatedBy =
+																		$user?.email ?? '';
+																	teamButMutable.lastUpdatedTime =
+																		new Timestamp(Date.now() / 1000, 0);
+																	await setDoc(
+																		doc(db, 'events', event.event ?? ''),
+																		{
+																			teams: data.teams,
+																		},
+																		{
+																			merge: true,
+																		},
+																	);
+																}}
+															>
+																{teamMember.name}
+																{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+																	<Tooltip.Root>
+																		<Tooltip.Trigger>
+																			<Crown class="h-4 w-4" />
+																		</Tooltip.Trigger>
+																		<Tooltip.Content
+																			>Team captain</Tooltip.Content
+																		>
+																	</Tooltip.Root>
+																{/if}
 															</li>
 														{/each}
 													</ul>
-												</Dialog.Description>
-											</Dialog.Content>
-										</Dialog.Root>
-										<Dialog.Root>
-											<Dialog.Trigger>
-												<Button>Team Captain</Button>
-											</Dialog.Trigger>
-											<Dialog.Content>
-												<Dialog.Title>Manage team captain</Dialog.Title>
-												<Button
-													on:click={async () => {
+												</Dialog.Content>
+											</Dialog.Root>
+										</div>
+										<div>
+											<Label class="flex flex-row items-center gap-2">
+												<Switch
+													onCheckedChange={async (checked) => {
 														const teamButMutable = team;
-														teamButMutable.teamCaptain = '';
+														teamButMutable.locked = checked;
 														teamButMutable.lastUpdatedBy = $user?.email ?? '';
 														teamButMutable.lastUpdatedTime = new Timestamp(
 															Date.now() / 1000,
@@ -259,50 +354,12 @@
 																merge: true,
 															},
 														);
-													}}>Clear</Button
-												>
-												<ul>
-													{#each team.members as teamMember}
-														<!-- svelte-ignore a11y-click-events-have-key-events -->
-														<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-														<li
-															class="cursor-pointer"
-															on:click={async () => {
-																const teamButMutable = team;
-																teamButMutable.teamCaptain =
-																	teamMember?.email ?? '';
-																teamButMutable.lastUpdatedBy =
-																	$user?.email ?? '';
-																teamButMutable.lastUpdatedTime = new Timestamp(
-																	Date.now() / 1000,
-																	0,
-																);
-																await setDoc(
-																	doc(db, 'events', event.event ?? ''),
-																	{
-																		teams: data.teams,
-																	},
-																	{
-																		merge: true,
-																	},
-																);
-															}}
-														>
-															{teamMember.name}
-															{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
-																<Tooltip.Root>
-																	<Tooltip.Trigger>
-																		<Crown class="h-4 w-4" />
-																	</Tooltip.Trigger>
-																	<Tooltip.Content>Team captain</Tooltip.Content
-																	>
-																</Tooltip.Root>
-															{/if}
-														</li>
-													{/each}
-												</ul>
-											</Dialog.Content>
-										</Dialog.Root>
+													}}
+													checked={team.locked ?? false}
+												/>
+												Lock team
+											</Label>
+										</div>
 									</Card.Title>
 									<Card.Content>
 										<ul>

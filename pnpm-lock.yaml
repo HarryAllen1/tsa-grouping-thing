@@ -20,6 +20,9 @@ dependencies:
   formsnap:
     specifier: ^0.2.0
     version: 0.2.0(svelte@4.2.1)(sveltekit-superforms@1.8.0)(zod@3.22.4)
+  fuse.js:
+    specifier: ^6.6.2
+    version: 6.6.2
   lucide-svelte:
     specifier: ^0.287.0
     version: 0.287.0(svelte@4.2.1)
@@ -1881,6 +1884,11 @@ packages:
     os: [darwin]
     requiresBuild: true
     optional: true
+
+  /fuse.js@6.6.2:
+    resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
+    engines: {node: '>=10'}
+    dev: false
 
   /gauge@3.0.2:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}
