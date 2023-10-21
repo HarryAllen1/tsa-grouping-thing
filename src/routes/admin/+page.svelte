@@ -83,6 +83,7 @@
 					.includes(e.event),
 		  )
 		: eventData;
+
 	const selectOptions = memberData
 		.map((m) => ({
 			value: m.email,
@@ -131,12 +132,11 @@
 		</Select.Content>
 		<Select.Input name="favoriteFruit" />
 	</Select.Root>
-	<Input class="mb-4" bind:value={search} placeholder="Search" />
+	<!-- <Input class="mb-4" bind:value={search} placeholder="Search" /> -->
 	<div
 		class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
 	>
 		{#each signedUpEvents as event}
-			{@const eventMemberStats = eventData.find((e) => e.event === event.event)}
 			<Doc ref="events/{event.event}" let:data={untyped}>
 				{@const data = correctDocType(untyped)}
 				{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
@@ -159,12 +159,32 @@
 										{data.teams.reduce(
 											(acc, curr) => acc + curr.members.length,
 											0,
-										)}/{eventMemberStats?.members.length ?? 0} people joined teams
+										)}/{eventData.find((e) => e.event === event.event)?.members
+											.length ?? 0} people joined teams
 									</li>
 								</ul>
 							</Card.Description>
 						</Card.Header>
 						<Card.Content class="flex flex-col gap-4">
+							<Label class="flex flex-row items-center gap-2">
+								<Switch
+									onCheckedChange={async (checked) => {
+										const dataButMutable = data;
+										dataButMutable.locked = checked;
+										await setDoc(
+											doc(db, 'events', event.event ?? ''),
+											{
+												locked: checked,
+											},
+											{
+												merge: true,
+											},
+										);
+									}}
+									checked={data.locked ?? false}
+								/>
+								Lock event
+							</Label>
 							{#if event.event === 'Technology Bowl'}
 								<p>
 									The team for this event will be based off of a test which you

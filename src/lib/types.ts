@@ -16,4 +16,5 @@ export const correctDocType = (data: DocumentData) =>
 			lastUpdatedBy?: string;
 			lastUpdatedTime?: Timestamp;
 		}[];
+		locked?: boolean;
 	};
