@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Select from '@/registry/default/ui/select';
+	import * as Select from '../select';
 	import { getFormField } from 'formsnap';
 	import type { Select as SelectPrimitive } from 'bits-ui';
 

@@ -36,6 +36,7 @@
 		"bits-ui": "^0.5.7",
 		"clsx": "^2.0.0",
 		"firebase": "^10.5.0",
+		"formsnap": "^0.2.0",
 		"lucide-svelte": "^0.287.0",
 		"sveltefire": "^0.4.2",
 		"tailwind-merge": "^1.14.0",
