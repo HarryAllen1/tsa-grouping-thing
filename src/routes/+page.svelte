@@ -60,9 +60,9 @@
 			</p>
 		{/if}
 		{#if admins.includes($user?.email ?? '')}
-			<Button href="/admin"
-				>Admin page (this button is only visible to admins)</Button
-			>
+			<Button href="/admin">
+				Admin page (this button is only visible to admins)
+			</Button>
 		{/if}
 	</div>
 
@@ -74,21 +74,24 @@
 	{:else}
 		<Alert variant="destructive" class="mt-4 dark:brightness-200">
 			<AlertTitle>This list only includes team events.</AlertTitle>
-			<AlertDescription>Individual events are not in this list</AlertDescription
-			>
+			<AlertDescription>
+				Individual events are not in this list
+			</AlertDescription>
 		</Alert>
 		<p class="my-4 w-full">You have signed up for the following team events:</p>
 		<div
-			class="flex flex-col items-center gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:items-start"
+			class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
 		>
 			{#each signedUpEvents as event}
 				<Doc ref="events/{event.event}" let:data>
 					<Card.Root class="w-96">
 						<Card.Header>
-							<Card.Title>{event.event}</Card.Title>
-							<Card.Description
-								>Max {event.maxTeamSize} people per team</Card.Description
-							>
+							<Card.Title>
+								{event.event}
+							</Card.Title>
+							<Card.Description>
+								Max {event.maxTeamSize} people per team
+							</Card.Description>
 						</Card.Header>
 						<Card.Content class="flex flex-col gap-4">
 							{#if event.event === 'Technology Bowl'}
@@ -101,7 +104,17 @@
 									{@const team = correctType(te)}
 									<Card.Root class="bg-blue-500 bg-opacity-20">
 										<Card.Title class="m-2 ml-4 flex flex-row gap-1">
-											{#if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
+											{#if team.locked}
+												<Tooltip.Root>
+													<Tooltip.Trigger>
+														<p>This team is currently locked from editing.</p>
+													</Tooltip.Trigger>
+													<Tooltip.Content>
+														This likely due to eliminations. If this is
+														unexpected, contact a board member.
+													</Tooltip.Content>
+												</Tooltip.Root>
+											{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 												<Tooltip.Root>
 													<Tooltip.Trigger>
 														<Button

@@ -118,7 +118,7 @@
 		</Alert>
 		<p class="my-4 w-full">You have signed up for the following team events:</p>
 		<div
-			class="flex flex-col items-center gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:items-start"
+			class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
 		>
 			{#each signedUpEvents as event}
 				<Doc ref="events/{event.event}" let:data>
