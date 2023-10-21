@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getFormField } from 'formsnap';
 	import type { Switch as SwitchPrimitive } from 'bits-ui';
-	import { Switch } from '@/registry/default/ui/switch';
+	import { Switch } from '../switch';
 	type $$Props = SwitchPrimitive.Props;
 	type $$Events = SwitchPrimitive.Events;
 
