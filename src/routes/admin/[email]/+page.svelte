@@ -10,7 +10,12 @@
 	import { correctTeamsDataType } from '$lib/types';
 	import * as Select from '$lib/components/select';
 	import { signOut } from 'firebase/auth';
-	import { doc, setDoc, type DocumentData } from 'firebase/firestore';
+	import {
+		doc,
+		setDoc,
+		type DocumentData,
+		Timestamp,
+	} from 'firebase/firestore';
 	import { Plus } from 'lucide-svelte';
 	import { writable } from 'svelte/store';
 	import { Doc, userStore } from 'sveltefire';
@@ -48,7 +53,15 @@
 		.filter((e) => (e.maxTeamSize ?? 999) > 1);
 
 	const correctType = (eventData: DocumentData) =>
-		eventData as { name: string; members: { name: string; email: string }[] };
+		eventData as {
+			name: string;
+			members: { name: string; email: string }[];
+			teamCaptain?: string;
+			lastUpdatedBy?: string;
+			lastUpdatedTime?: Timestamp;
+			locked?: boolean;
+			[key: string]: unknown;
+		};
 </script>
 
 <div class="mt-8 flex flex-col items-center">
