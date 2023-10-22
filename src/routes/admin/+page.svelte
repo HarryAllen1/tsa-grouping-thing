@@ -75,14 +75,11 @@
 			threshold: 0.2,
 		},
 	);
-	$: signedUpEvents = search
-		? eventData.filter((e) =>
-				fuse
-					.search(search)
-					.map((r) => r.item.event)
-					.includes(e.event),
-		  )
-		: eventData;
+	const signedUpEvents = eventData;
+	$: eventResults =
+		search === ''
+			? eventData.map((r) => r.event)
+			: fuse.search(search).map((r) => r.item.event);
 
 	const selectOptions = memberData
 		.map((m) => ({
@@ -132,7 +129,7 @@
 		</Select.Content>
 		<Select.Input name="favoriteFruit" />
 	</Select.Root>
-	<!-- <Input class="mb-4" bind:value={search} placeholder="Search" /> -->
+	<Input class="mb-4" bind:value={search} placeholder="Search" />
 	<div
 		class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
 	>
@@ -140,7 +137,11 @@
 			<Doc ref="events/{event.event}" let:data={untyped}>
 				{@const data = correctDocType(untyped)}
 				{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
-					<Card.Root class="w-[350px]">
+					<Card.Root
+						class="w-[350px] {eventResults.includes(event.event)
+							? ''
+							: 'hidden'}"
+					>
 						<Card.Header>
 							<Card.Title>{event.event}</Card.Title>
 							<Card.Description>
