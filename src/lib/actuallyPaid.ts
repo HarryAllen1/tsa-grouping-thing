@@ -74,4 +74,6 @@ export const actuallyPaid = [
 	's-apreizler@lwsd.org',
 	's-jsegesser@lwsd.org',
 	's-ccopley@lwsd.org',
+	// late people:
+	's-MEL-HUSSEINI@lwsd.org'
 ].map((e) => e.toLowerCase());
