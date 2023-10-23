@@ -22,6 +22,8 @@
 	import { Crown, Plus, Trash2, UserPlus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
+	import { actuallyPaid } from '$lib/actuallyPaid';
+	import NoDollar from '$lib/NoDollar.svelte';
 
 	const user = userStore(auth);
 
@@ -249,6 +251,16 @@
 																	class="flex flex-row items-center"
 																>
 																	{person.name}
+																	{#if !actuallyPaid.includes(person.email.toLowerCase())}
+																		<Tooltip.Root>
+																			<Tooltip.Trigger>
+																				<NoDollar class="h-6 w-6 ml-2" />
+																			</Tooltip.Trigger>
+																			<Tooltip.Content
+																				>This person didn't pay the $28 TSA fee</Tooltip.Content
+																			>
+																		</Tooltip.Root>
+																	{/if}
 																	<Button
 																		on:click={async () => {
 																			const teamButMutable = team;
@@ -339,6 +351,16 @@
 																}}
 															>
 																{teamMember.name}
+																{#if !actuallyPaid.includes(teamMember.email.toLowerCase())}
+																	<Tooltip.Root>
+																		<Tooltip.Trigger>
+																			<NoDollar class="h-6 w-6 ml-2" />
+																		</Tooltip.Trigger>
+																		<Tooltip.Content
+																			>This person didn't pay the $28 TSA fee</Tooltip.Content
+																		>
+																	</Tooltip.Root>
+																{/if}
 																{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 																	<Tooltip.Root>
 																		<Tooltip.Trigger>
@@ -419,6 +441,16 @@
 													}}
 												>
 													{teamMember.name}
+													{#if !actuallyPaid.includes(teamMember.email.toLowerCase())}
+														<Tooltip.Root>
+															<Tooltip.Trigger>
+																<NoDollar class="h-4 w-4" />
+															</Tooltip.Trigger>
+															<Tooltip.Content
+																>This person didn't pay the $28 TSA fee</Tooltip.Content
+															>
+														</Tooltip.Root>
+													{/if}
 													{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 														<Tooltip.Root>
 															<Tooltip.Trigger>
