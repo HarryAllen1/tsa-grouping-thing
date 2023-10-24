@@ -70,13 +70,14 @@
 	let shouldHideIndividualEvents = false;
 
 	const fuseKeys = { event: true, members: true };
+	let threshold = 0.2;
 	$: fuse = new Fuse(
 		eventData.map((e) => ({ ...e, members: e.members.map((m) => m.name) })),
 		{
 			keys: Object.entries(fuseKeys)
 				.filter(([, value]) => value)
 				.map(([key]) => key),
-			threshold: 0.2,
+			threshold,
 		},
 	);
 	const signedUpEvents = eventData;
@@ -95,6 +96,12 @@
 			locked?: boolean;
 			[key: string]: unknown;
 		};
+
+	export const reallyStupidFunction = (arr: Array<unknown>) =>
+		arr as {
+			name: string;
+			email: string;
+		}[];
 </script>
 
 <div class="mt-8 flex flex-col items-center">
@@ -118,6 +125,10 @@
 		<Label class="flex flex-row items-center">
 			<Switch class="mr-2" bind:checked={shouldHideIndividualEvents}></Switch>
 			Hide individual events
+		</Label>
+		<Label class="flex flex-row items-center">
+			<Input type="number" bind:value={threshold} min="0" max="1" step="0.1" />
+			Threshold
 		</Label>
 	</div>
 	<Input class="mb-4" bind:value={search} placeholder="Search" />
@@ -157,6 +168,27 @@
 											.length ?? 0} people joined teams
 									</li>
 								</ul>
+								{@const peopleInTeams = data.teams.reduce(
+									(acc, curr) => [...acc, ...curr.members],
+									reallyStupidFunction([]),
+								)}
+								{@const peopleNotInTeams = memberData.filter(
+									(m) =>
+										m.events.includes(event.event ?? '') &&
+										!peopleInTeams.find(
+											(e) => e.email.toLowerCase() === m.email.toLowerCase(),
+										),
+								)}
+								{#if peopleNotInTeams.length}
+									<details>
+										<summary>People not in teams</summary>
+										<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+											{#each peopleNotInTeams as person}
+												<li>{person.name}</li>
+											{/each}
+										</ul>
+									</details>
+								{/if}
 							</Card.Description>
 						</Card.Header>
 						<Card.Content class="flex flex-col gap-4">
