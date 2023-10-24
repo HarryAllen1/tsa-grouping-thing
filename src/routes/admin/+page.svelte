@@ -70,6 +70,7 @@
 		.sort((a, b) => a.event.localeCompare(b.event));
 
 	let shouldHideIndividualEvents = false;
+	let onlyShowOverflown = false;
 
 	const fuseKeys = { event: true, members: true };
 	let threshold = 0.2;
@@ -197,6 +198,10 @@
 			Hide individual events
 		</Label>
 		<Label class="flex flex-row items-center">
+			<Switch class="mr-2" bind:checked={onlyShowOverflown}></Switch>
+			Only show overflown events
+		</Label>
+		<Label class="flex flex-row items-center">
 			<Input type="number" bind:value={threshold} min="0" max="1" step="0.1" />
 			Threshold
 		</Label>
@@ -214,7 +219,10 @@
 					<Card.Root
 						class="w-[350px] {eventResults.includes(event.event)
 							? ''
-							: 'hidden'}"
+							: 'hidden'} {onlyShowOverflown &&
+						data.teams.length <= event.perChapter
+							? 'hidden'
+							: ''}"
 					>
 						<Card.Header>
 							<Card.Title>{event.event}</Card.Title>
