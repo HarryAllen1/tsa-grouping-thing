@@ -17,10 +17,12 @@
 		doc,
 		setDoc,
 		type DocumentData,
+		getDocs,
+		collection,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import { Crown, Plus, Trash2, UserPlus } from 'lucide-svelte';
-	import { Doc, userStore } from 'sveltefire';
+	import { Doc, collectionStore, userStore } from 'sveltefire';
 	import { admins } from '../admins';
 
 	const user = userStore(auth);
@@ -103,17 +105,78 @@
 			email: string;
 		}[];
 
-	// const downloadAsJSON = async () => {};
-	// const downloadAsCSV = async () => {};
+	const downloadAsJSON = async () => {
+		const teamsJSON = (await getDocs(collection(db, 'events'))).docs.map(
+			(d) => ({
+				event: d.id,
+				...d.data(),
+			}),
+		);
+
+		const teamsBlob = new Blob(
+			[new TextEncoder().encode(JSON.stringify(teamsJSON, null, 2))],
+			{
+				type: 'application/json;charset=utf-8',
+			},
+		);
+
+		const url = URL.createObjectURL(teamsBlob);
+		const a = document.createElement('a');
+		a.style.display = 'none';
+		a.href = url;
+		a.download = 'teams.json';
+		document.body.append(a);
+		a.click();
+		URL.revokeObjectURL(url);
+		a.remove();
+	};
+	const downloadAsCSV = async () => {
+		const header = 'Event,Team Captain,Team Members\n';
+		interface Team {
+			teamCaptain?: string;
+			members: { name: string; email: string }[];
+		}
+		const teamsCSV = (await getDocs(collection(db, 'events'))).docs
+			.map((d) => ({
+				event: d.id,
+				...(d.data() as { teams: Team[] }),
+			}))
+			.map((d) =>
+				d.teams
+					.map(
+						(t) =>
+							`${d.event},${t.teamCaptain ?? ''},${t.members
+								.map((m) => m.name)
+								.join(';')}`,
+					)
+					.join('\n'),
+			)
+			.join('\n')
+			.replaceAll('\n\n', '\n');
+
+		const teamsBlob = new Blob([new TextEncoder().encode(header + teamsCSV)], {
+			type: 'text/csv;charset=utf-8',
+		});
+
+		const url = URL.createObjectURL(teamsBlob);
+		const a = document.createElement('a');
+		a.style.display = 'none';
+		a.href = url;
+		a.download = 'teams.csv';
+		document.body.append(a);
+		a.click();
+		URL.revokeObjectURL(url);
+		a.remove();
+	};
 </script>
 
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)}>Sign out</Button>
 	<Button href="/" class="my-4">Back to regular sign up page</Button>
-	<!-- <div>
+	<div>
 		<Button on:click={downloadAsJSON}>Download as JSON</Button>
 		<Button on:click={downloadAsCSV}>Download as CSV (for Excel)</Button>
-	</div> -->
+	</div>
 	<h1 class="text-3xl font-bold max-w-screen-md m-4">
 		Please don't add yourself to events that you aren't in! If people want you
 		to add them to an event they aren't in, tell them to edit their event
