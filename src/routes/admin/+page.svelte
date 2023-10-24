@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { auth, db, events, memberData } from '$lib';
+	import NoDollar from '$lib/NoDollar.svelte';
+	import { actuallyPaid } from '$lib/actuallyPaid';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
 	import Checkbox from '$lib/components/checkbox/checkbox.svelte';
 	import * as Dialog from '$lib/components/dialog';
 	import { Input } from '$lib/components/input';
 	import Label from '$lib/components/label/label.svelte';
-	import * as Select from '$lib/components/select';
 	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
 	import { correctDocType, correctTeamsDataType } from '$lib/types';
@@ -22,8 +23,6 @@
 	import { Crown, Plus, Trash2, UserPlus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
-	import { actuallyPaid } from '$lib/actuallyPaid';
-	import NoDollar from '$lib/NoDollar.svelte';
 
 	const user = userStore(auth);
 
@@ -70,10 +69,14 @@
 		.sort((a, b) => a.event.localeCompare(b.event));
 
 	let shouldHideIndividualEvents = false;
-	const fuse = new Fuse(
+
+	const fuseKeys = { event: true, members: true };
+	$: fuse = new Fuse(
 		eventData.map((e) => ({ ...e, members: e.members.map((m) => m.name) })),
 		{
-			keys: ['event', 'members'],
+			keys: Object.entries(fuseKeys)
+				.filter(([, value]) => value)
+				.map(([key]) => key),
 			threshold: 0.2,
 		},
 	);
@@ -82,13 +85,6 @@
 		search === ''
 			? eventData.map((r) => r.event)
 			: fuse.search(search).map((r) => r.item.event);
-
-	const selectOptions = memberData
-		.map((m) => ({
-			value: m.email,
-			label: m.name,
-		}))
-		.sort((a, b) => a.label.localeCompare(b.label));
 
 	const correctType = (eventData: DocumentData) =>
 		eventData as {
@@ -110,27 +106,21 @@
 		to add them to an event they aren't in, tell them to edit their event
 		sign-up form, then message Harry so he can update this page.
 	</h1>
-	<div>
-		<Label>
-			<Checkbox bind:checked={shouldHideIndividualEvents} />
-			<span class="ml-2">Hide individual events</span>
+
+	<div class="w-full mb-4 flex flex-row gap-4">
+		<Label class="flex flex-row items-center">
+			<Switch class="mr-2" bind:checked={fuseKeys.event}></Switch>
+			Search by events
+		</Label>
+		<Label class="flex flex-row items-center">
+			<Switch class="mr-2" bind:checked={fuseKeys.members}></Switch>
+			Search by members
+		</Label>
+		<Label class="flex flex-row items-center">
+			<Switch class="mr-2" bind:checked={shouldHideIndividualEvents}></Switch>
+			Hide individual events
 		</Label>
 	</div>
-	<Select.Root>
-		<Select.Trigger class="w-56 mb-4">
-			<Select.Value placeholder="View by member" />
-		</Select.Trigger>
-		<Select.Content class="max-h-full overflow-y-scroll">
-			{#each selectOptions as option}
-				<Select.Item
-					on:click={() => goto(`/admin/${encodeURIComponent(option.value)}`)}
-					value={option.value}
-					label={option.label}>{option.label}</Select.Item
-				>
-			{/each}
-		</Select.Content>
-		<Select.Input name="favoriteFruit" />
-	</Select.Root>
 	<Input class="mb-4" bind:value={search} placeholder="Search" />
 	<div
 		class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
