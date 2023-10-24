@@ -123,7 +123,7 @@
 	</div>
 	<Input class="mb-4" bind:value={search} placeholder="Search" />
 
-	<p>Green team: full; red team: over or underfilled</p>
+	<p class="mb-4">Green team: full; red team: over or underfilled</p>
 	<div
 		class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
 	>
