@@ -5,7 +5,6 @@
 	import { actuallyPaid } from '$lib/actuallyPaid';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
-	import Checkbox from '$lib/components/checkbox/checkbox.svelte';
 	import * as Dialog from '$lib/components/dialog';
 	import { Input } from '$lib/components/input';
 	import Label from '$lib/components/label/label.svelte';
