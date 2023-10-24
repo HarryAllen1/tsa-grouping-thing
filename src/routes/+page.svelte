@@ -29,6 +29,11 @@
 		}))
 		.filter((e) => (e.maxTeamSize ?? 999) > 1);
 
+	const individualEvents = memberData
+		.find((m) => m.email.toLowerCase() === $user?.email)
+		?.events.map((e) => ({ ...events.find((ev) => ev.event === e) }))
+		.filter((e) => e.maxTeamSize === 1);
+
 	const correctType = (eventData: DocumentData) =>
 		eventData as {
 			name: string;
@@ -75,9 +80,22 @@
 		<Alert variant="destructive" class="mt-4 dark:brightness-200">
 			<AlertTitle>This list only includes team events.</AlertTitle>
 			<AlertDescription>
-				Individual events are not in this list
+				Individual events are not in this list, you will be automatically be
+				assigned to a team with just yourself.
 			</AlertDescription>
 		</Alert>
+		{#if individualEvents?.length}
+			<div class="mt-4 w-full">
+				<p>You have signed up for the following individual events:</p>
+				<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+					{#each individualEvents as event}
+						<li>
+							{event.event}
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
 		<p class="my-4 w-full">You have signed up for the following team events:</p>
 		<div
 			class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
