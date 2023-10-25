@@ -97,16 +97,23 @@
 			[key: string]: unknown;
 		};
 
-	export const reallyStupidFunction = (arr: Array<unknown>) =>
+	const reallyStupidFunction = (arr: unknown[]) =>
 		arr as {
 			name: string;
 			email: string;
 		}[];
+
+	// const downloadAsJSON = async () => {};
+	// const downloadAsCSV = async () => {};
 </script>
 
 <div class="mt-8 flex flex-col items-center">
 	<Button on:click={() => signOut(auth)}>Sign out</Button>
 	<Button href="/" class="my-4">Back to regular sign up page</Button>
+	<!-- <div>
+		<Button on:click={downloadAsJSON}>Download as JSON</Button>
+		<Button on:click={downloadAsCSV}>Download as CSV (for Excel)</Button>
+	</div> -->
 	<h1 class="text-3xl font-bold max-w-screen-md m-4">
 		Please don't add yourself to events that you aren't in! If people want you
 		to add them to an event they aren't in, tell them to edit their event
