@@ -13,10 +13,13 @@
 	} from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
 	import { Doc, docStore, userStore } from 'sveltefire';
+	import { admins } from '../../admins';
 
 	const user = userStore(auth);
 
-	if (!$user) goto('/login');
+	if (!$user || !admins.includes($user.email?.toLowerCase() ?? '')) {
+		goto('/');
+	}
 
 	const userDoc = docStore<UserDoc>(
 		db,

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { auth, db, events, memberData } from '$lib';
+	import { auth, db, events } from '$lib';
 	import { Alert, AlertDescription, AlertTitle } from '$lib/components/alert';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
@@ -16,7 +16,7 @@
 		DocumentReference,
 	} from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
-	import { Doc, docStore, userStore } from 'sveltefire';
+	import { Doc, collectionStore, docStore, userStore } from 'sveltefire';
 	import { admins } from './admins';
 
 	const user = userStore(auth);
@@ -30,16 +30,15 @@
 			DocumentData
 		>,
 	);
-	$: signedUpEvents = $userDoc?.events
+	$: signedUpEvents = ($userDoc?.events ?? [])
 		.map((e) => ({
 			...events.find((ev) => ev.event === e),
 		}))
 		.filter((e) => (e.maxTeamSize ?? 999) > 1);
 
-	const individualEvents = memberData
-		.find((m) => m.email.toLowerCase() === $user?.email)
-		?.events.map((e) => ({ ...events.find((ev) => ev.event === e) }))
-		.filter((e) => e.maxTeamSize === 1);
+	const allUsers = collectionStore<UserDoc>(db, 'users');
+
+	$: individualEvents = signedUpEvents.filter((e) => e.maxTeamSize === 1);
 
 	const correctType = (eventData: DocumentData) =>
 		eventData as {
@@ -226,7 +225,7 @@
 														{:else}
 															<p>People who signed up for this event:</p>
 															<ul>
-																{#each memberData
+																<!-- {#each $allUsers
 																	.filter((m) => m.events.includes(event.event ?? '') && !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
 																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
 																	<li class="flex flex-row items-center">
@@ -262,7 +261,7 @@
 																		No one else singed up for this event. Please
 																		see a board member for next steps.
 																	</li>
-																{/each}
+																{/each} -->
 															</ul>
 														{/if}
 													</Dialog.Description>
