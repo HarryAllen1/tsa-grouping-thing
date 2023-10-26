@@ -75,6 +75,11 @@
 					id={event.event}
 					class="h-6 w-6 flex items-center justify-center [&>div]:w-6 [&>div]:h-6"
 					onCheckedChange={async () => {
+						if (
+							data.locked ||
+							(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= 6)
+						)
+							return;
 						await setDoc(doc(db, 'users', $user?.email ?? ''), {
 							events: eventMap[event.event]
 								? $userDoc?.events.filter((e) => e !== event.event) ?? []
