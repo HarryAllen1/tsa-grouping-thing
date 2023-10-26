@@ -1,24 +1,62 @@
 <script lang="ts">
-	import { auth, db, events } from '$lib';
+	import { goto } from '$app/navigation';
+	import { auth, db, events, memberData } from '$lib';
 	import { Button } from '$lib/components/button';
+	import { Checkbox } from '$lib/components/checkbox';
+	import { Label } from '$lib/components/label';
 	import type { UserDoc } from '$lib/types';
-	import { Collection, Doc, docStore, userStore } from 'sveltefire';
-	import Checkbox from '../../lib/components/checkbox/checkbox.svelte';
-	import Label from '../../lib/components/label/label.svelte';
+	import {
+		DocumentReference,
+		doc,
+		type DocumentData,
+		setDoc,
+	} from 'firebase/firestore';
+	import { Lock } from 'lucide-svelte';
+	import { onDestroy } from 'svelte';
+	import { Doc, docStore, userStore } from 'sveltefire';
 
 	const user = userStore(auth);
 
-	const userDoc = docStore<UserDoc>(db, `users/${$user?.email?.toLowerCase()}`);
+	if (!$user) goto('/login');
+
+	const userDoc = docStore<UserDoc>(
+		db,
+		doc(db, 'users', $user?.email ?? '') as DocumentReference<
+			UserDoc,
+			DocumentData
+		>,
+	);
+
+	setDoc(doc(db, 'users', $user?.email ?? ''), {
+		events:
+			memberData.find(
+				(member) => member.email.toLowerCase() === $user?.email?.toLowerCase(),
+			)?.events ?? [],
+	});
+
+	$: eventMap = events.reduce(
+		(acc, curr) => ({
+			...acc,
+			[curr.event]: $userDoc?.events.includes(curr.event) ?? false,
+		}),
+		{} as { [event: string]: boolean },
+	);
 </script>
 
 <Button href="/" class="mt-4">Go back to team creation page</Button>
 
 <h1
-	class="scroll-m-20 mt-4 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+	class="scroll-m-20 mt-4 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 >
 	Changes will automatically be saved. Try to leave any teams for events you are
 	dropping.
 </h1>
+<h1
+	class="scroll-m-20 mt-4 mb-4 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+>
+	Crossed out events are locked, liekly due to eliminations.
+</h1>
+
 <div class="flex flex-col gap-2">
 	{#each events as event}
 		<Doc
@@ -37,16 +75,23 @@
 		>
 			<div class="flex items-center space-x-2">
 				<Checkbox
+					checked={eventMap[event.event]}
+					disabled={data.locked}
 					id={event.event}
 					class="h-6 w-6 flex items-center justify-center [&>div]:w-6 [&>div]:h-6"
 					onCheckedChange={() => {}}
 				/>
 				<Label
 					for={event.event}
-					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {data.locked
+						? 'line-through'
+						: ''}"
 				>
 					<span class="ml-2">{event.event}</span>
 				</Label>
+				{#if data.locked}
+					<Lock />
+				{/if}
 			</div>
 		</Doc>
 	{/each}
