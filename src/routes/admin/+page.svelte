@@ -22,7 +22,7 @@
 		type DocumentData,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import { Crown, Plus, Trash2, UserPlus } from 'lucide-svelte';
+	import { Crown, Mail, Plus, Trash2, UserPlus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
 
@@ -481,9 +481,9 @@
 																		<Tooltip.Trigger>
 																			<Crown class="h-4 w-4" />
 																		</Tooltip.Trigger>
-																		<Tooltip.Content
-																			>Team captain</Tooltip.Content
-																		>
+																		<Tooltip.Content>
+																			Team captain
+																		</Tooltip.Content>
 																	</Tooltip.Root>
 																{/if}
 															</li>
@@ -491,6 +491,15 @@
 													</ul>
 												</Dialog.Content>
 											</Dialog.Root>
+										</div>
+										<div>
+											<Button
+												href="mailto:?cc={board.join(';')}&bcc={team.members
+													.map((p) => p.email)
+													.join(';')}&subject={event.event}"
+											>
+												<Mail />
+											</Button>
 										</div>
 										<div>
 											<Label class="flex flex-row items-center gap-2">
