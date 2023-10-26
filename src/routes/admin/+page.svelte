@@ -127,9 +127,9 @@
 				d.teams
 					.map(
 						(t) =>
-							`${d.event},${t.teamCaptain ?? ''},${t.members
+							`"${d.event}","${t.teamCaptain ?? ''}","${t.members
 								.map((m) => m.name)
-								.join(';')}`,
+								.join(';')}"`,
 					)
 					.join('\n'),
 			)
