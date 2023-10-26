@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { auth, db, events, memberData } from '$lib';
+	import { auth, db, events } from '$lib';
 	import NoDollar from '$lib/NoDollar.svelte';
 	import { actuallyPaid } from '$lib/actuallyPaid';
 	import { Button } from '$lib/components/button';
@@ -10,7 +10,12 @@
 	import Label from '$lib/components/label/label.svelte';
 	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
-	import { correctDocType, correctTeamsDataType, type Team } from '$lib/types';
+	import {
+		correctDocType,
+		correctTeamsDataType,
+		UserDoc,
+		type Team,
+	} from '$lib/types';
 	import { board } from '$lib/board';
 	import { signOut } from 'firebase/auth';
 	import {
@@ -23,7 +28,7 @@
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import { Crown, Mail, Plus, Trash2, UserPlus } from 'lucide-svelte';
-	import { Doc, userStore } from 'sveltefire';
+	import { Doc, collectionStore, userStore } from 'sveltefire';
 	import { admins } from '../admins';
 
 	const user = userStore(auth);
@@ -33,6 +38,8 @@
 	}
 
 	let search = '';
+
+	const usersDoc = collectionStore<UserDoc>(db, 'users');
 
 	const eventData = memberData
 		.reduce(
@@ -181,7 +188,7 @@
 		to add them to an event they aren't in, tell them to edit their event
 		sign-up form, then message Harry so he can update this page.
 	</h1>
-
+	<Button href="/events/list">See signup forms</Button>
 	<div class="w-full mb-4 flex flex-row gap-4">
 		<Label class="flex flex-row items-center">
 			<Switch class="mr-2" bind:checked={fuseKeys.event}></Switch>
