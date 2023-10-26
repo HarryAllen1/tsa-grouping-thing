@@ -6,25 +6,32 @@
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
 	import * as Tooltip from '$lib/components/tooltip';
-	import { correctTeamsDataType } from '$lib/types';
+	import { correctTeamsDataType, type UserDoc } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import {
 		Timestamp,
 		doc,
 		setDoc,
 		type DocumentData,
+		DocumentReference,
 	} from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
-	import { Doc, userStore } from 'sveltefire';
+	import { Doc, docStore, userStore } from 'sveltefire';
 	import { admins } from './admins';
 
 	const user = userStore(auth);
 
 	if (!$user) goto('/login');
 
-	const signedUpEvents = memberData
-		.find((m) => m.email.toLowerCase() === $user?.email)
-		?.events.map((e) => ({
+	const userDoc = docStore<UserDoc>(
+		db,
+		doc(db, 'users', $user?.email ?? '') as DocumentReference<
+			UserDoc,
+			DocumentData
+		>,
+	);
+	$: signedUpEvents = $userDoc?.events
+		.map((e) => ({
 			...events.find((ev) => ev.event === e),
 		}))
 		.filter((e) => (e.maxTeamSize ?? 999) > 1);
@@ -80,8 +87,14 @@
 
 	{#if !signedUpEvents || signedUpEvents.length === 0}
 		<p class="mt-4 w-full">
-			You haven't signed up for any events yet. Please see a board member or
-			advisor.
+			You haven't signed up for any events yet. Please add some events on the <a
+				href="/events">event sign up page.</a
+			>
+		</p>
+	{:else if signedUpEvents.length < 4}
+		<p class="mt-4 w-full">
+			You haven't signed up for enough events yet. Please add some more events
+			on the <a href="/events">event sign up page.</a>
 		</p>
 	{:else}
 		<Alert variant="destructive" class="mt-4 dark:brightness-200">
@@ -129,16 +142,12 @@
 								{@const team = correctType(te)}
 								<Card.Root class="bg-blue-500 bg-opacity-20">
 									<Card.Title class="m-2 ml-4 flex flex-row gap-1">
-										{#if !data.locked && team.locked}
-											<Tooltip.Root>
-												<Tooltip.Trigger>
-													<p>This team is currently locked from editing.</p>
-												</Tooltip.Trigger>
-												<Tooltip.Content>
-													This likely due to eliminations. If this is
-													unexpected, contact a board member.
-												</Tooltip.Content>
-											</Tooltip.Root>
+										{#if team.locked}
+											<p>
+												This team is currently locked from editing. This likely
+												due to eliminations. If this is unexpected, or you want
+												to change something, contact a board member.
+											</p>
 										{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 											<Tooltip.Root>
 												<Tooltip.Trigger>
