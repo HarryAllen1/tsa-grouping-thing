@@ -26,13 +26,6 @@
 		>,
 	);
 
-	setDoc(doc(db, 'users', $user?.email ?? ''), {
-		events:
-			memberData.find(
-				(member) => member.email.toLowerCase() === $user?.email?.toLowerCase(),
-			)?.events ?? [],
-	});
-
 	$: eventMap = events.reduce(
 		(acc, curr) => ({
 			...acc,
