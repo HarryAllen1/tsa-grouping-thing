@@ -40,8 +40,10 @@
 		"fuse.js": "^6.6.2",
 		"lucide-svelte": "^0.288.0",
 		"sveltefire": "^0.4.2",
+		"sveltekit-superforms": "^1.8.0",
 		"tailwind-merge": "^1.14.0",
-		"tailwind-variants": "^0.1.16"
+		"tailwind-variants": "^0.1.16",
+		"zod": "^3.22.4"
 	},
 	"volta": {
 		"node": "18.18.1"

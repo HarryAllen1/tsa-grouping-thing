@@ -6,17 +6,17 @@
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
 	import * as Tooltip from '$lib/components/tooltip';
+	import { correctTeamsDataType } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import {
+		Timestamp,
 		doc,
 		setDoc,
 		type DocumentData,
-		Timestamp,
 	} from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
 	import { Doc, userStore } from 'sveltefire';
 	import { admins } from './admins';
-	import { correctTeamsDataType } from '../lib/types';
 
 	const user = userStore(auth);
 
@@ -70,6 +70,13 @@
 			</Button>
 		{/if}
 	</div>
+	<Button
+		href="/events"
+		size="lg"
+		class="w-full h-24 my-4 text-3xl text-black bg-green-400 hover:bg-green-500"
+	>
+		Signup/change events
+	</Button>
 
 	{#if !signedUpEvents || signedUpEvents.length === 0}
 		<p class="mt-4 w-full">

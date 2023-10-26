@@ -10,7 +10,7 @@
 	import Label from '$lib/components/label/label.svelte';
 	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
-	import { correctDocType, correctTeamsDataType } from '$lib/types';
+	import { correctDocType, correctTeamsDataType, type Team } from '$lib/types';
 	import { board } from '$lib/board';
 	import { signOut } from 'firebase/auth';
 	import {
@@ -134,10 +134,7 @@
 	};
 	const downloadAsCSV = async () => {
 		const header = 'Event,Team Captain,Team Members\n';
-		interface Team {
-			teamCaptain?: string;
-			members: { name: string; email: string }[];
-		}
+
 		const teamsCSV = (await getDocs(collection(db, 'events'))).docs
 			.map((d) => ({
 				event: d.id,
