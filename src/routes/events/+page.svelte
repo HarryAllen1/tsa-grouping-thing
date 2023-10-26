@@ -8,11 +8,10 @@
 	import {
 		DocumentReference,
 		doc,
-		type DocumentData,
 		setDoc,
+		type DocumentData,
 	} from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
-	import { onDestroy } from 'svelte';
 	import { Doc, docStore, userStore } from 'sveltefire';
 
 	const user = userStore(auth);
@@ -56,6 +55,8 @@
 >
 	Crossed out events are locked, liekly due to eliminations.
 </h1>
+<p class="mb-2">Minimum 4 events, maximum 6 events.</p>
+<p class="mb-4">Currently {$userDoc?.events.length}/6</p>
 
 <div class="flex flex-col gap-2">
 	{#each events as event}
@@ -76,16 +77,24 @@
 			<div class="flex items-center space-x-2">
 				<Checkbox
 					checked={eventMap[event.event]}
-					disabled={data.locked}
+					disabled={data.locked ||
+						(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= 6)}
 					id={event.event}
 					class="h-6 w-6 flex items-center justify-center [&>div]:w-6 [&>div]:h-6"
-					onCheckedChange={() => {}}
+					onCheckedChange={async () => {
+						await setDoc(doc(db, 'users', $user?.email ?? ''), {
+							events: eventMap[event.event]
+								? $userDoc?.events.filter((e) => e !== event.event) ?? []
+								: [...($userDoc?.events ?? []), event.event],
+						});
+					}}
 				/>
 				<Label
 					for={event.event}
-					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {data.locked
-						? 'line-through'
-						: ''}"
+					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {data.locked ||
+					(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= 6)
+						? 'opacity-50'
+						: ''} {data.locked ? 'line-through' : ''}"
 				>
 					<span class="ml-2">{event.event}</span>
 				</Label>
