@@ -11,18 +11,19 @@
 	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
 	import { correctDocType, correctTeamsDataType } from '$lib/types';
+	import { board } from '$lib/board';
 	import { signOut } from 'firebase/auth';
 	import {
 		Timestamp,
+		collection,
 		doc,
+		getDocs,
 		setDoc,
 		type DocumentData,
-		getDocs,
-		collection,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import { Crown, Plus, Trash2, UserPlus } from 'lucide-svelte';
-	import { Doc, collectionStore, userStore } from 'sveltefire';
+	import { Doc, userStore } from 'sveltefire';
 	import { admins } from '../admins';
 
 	const user = userStore(auth);
@@ -260,6 +261,12 @@
 								{#if peopleNotInTeams.length}
 									<details>
 										<summary>People not in teams</summary>
+										<Button
+											href="mailto:?cc={board.join(';')}&bcc={peopleNotInTeams
+												.map((p) => p.email)
+												.join(';')}&subject={event.event}"
+											>Email everyone</Button
+										>
 										<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 											{#each peopleNotInTeams as person}
 												<li>{person.name}</li>
