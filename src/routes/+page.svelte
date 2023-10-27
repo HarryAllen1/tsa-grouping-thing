@@ -9,14 +9,14 @@
 	import { correctTeamsDataType, type UserDoc } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import {
+		DocumentReference,
 		Timestamp,
 		doc,
 		setDoc,
 		type DocumentData,
-		DocumentReference,
 	} from 'firebase/firestore';
-	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
-	import { Doc, collectionStore, docStore, userStore } from 'sveltefire';
+	import { Crown, LogOut, UserPlus } from 'lucide-svelte';
+	import { Doc, docStore, userStore } from 'sveltefire';
 	import { admins } from './admins';
 
 	const user = userStore(auth);
@@ -35,8 +35,6 @@
 			...events.find((ev) => ev.event === e),
 		}))
 		.filter((e) => (e.maxTeamSize ?? 999) > 1);
-
-	const allUsers = collectionStore<UserDoc>(db, 'users');
 
 	$: individualEvents = signedUpEvents.filter((e) => e.maxTeamSize === 1);
 

@@ -49,7 +49,7 @@
 <h1
 	class="scroll-m-20 mt-4 mb-4 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 >
-	Crossed out events are locked, liekly due to eliminations.
+	Crossed out events are locked, likely due to eliminations.
 </h1>
 <p class="mb-2">Minimum 4 events, maximum 6 events.</p>
 <p class="mb-4">Currently {$userDoc?.events.length}/6</p>

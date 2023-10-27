@@ -41,40 +41,16 @@
 
 	const usersDoc = collectionStore<UserDoc>(db, 'users');
 
-	const eventData = memberData
-		.reduce(
-			(acc, item) => {
-				item.events.forEach((eventName) => {
-					const existingEntry = acc.find((entry) => entry.event === eventName);
-
-					if (existingEntry) {
-						existingEntry.members.push({
-							name: item.name,
-							id: item.id,
-							email: item.email,
-						});
-					} else {
-						acc.push({
-							event: eventName,
-							members: [{ name: item.name, id: item.id, email: item.email }],
-						});
-					}
-				});
-
-				return acc;
-			},
-			[] as {
-				event: string;
-				members: { name: string; id: string; email: string }[];
-			}[],
-		)
-		.map((e) => {
-			const event = events.find((ev) => ev.event === e.event)!;
-			return {
-				...e,
-				...event,
-			};
-		})
+	$: eventData = events
+		.map((e) => ({
+			...e,
+			members: ($usersDoc?.filter((m) => m.events.includes(e.event)) ?? []).map(
+				(m) => ({
+					name: m.name,
+					email: m.email,
+				}),
+			),
+		}))
 		.sort((a, b) => a.event.localeCompare(b.event));
 
 	let shouldHideIndividualEvents = false;
@@ -217,7 +193,7 @@
 	<div
 		class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
 	>
-		{#each signedUpEvents as event}
+		{#each signedUpEvents ?? [] as event}
 			<Doc ref="events/{event.event}" let:data={untyped}>
 				{@const data = correctDocType(untyped)}
 				{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
@@ -255,7 +231,7 @@
 									(acc, curr) => [...acc, ...curr.members],
 									reallyStupidFunction([]),
 								)}
-								{@const peopleNotInTeams = memberData.filter(
+								{@const peopleNotInTeams = $usersDoc.filter(
 									(m) =>
 										m.events.includes(event.event ?? '') &&
 										!peopleInTeams.find(
@@ -356,11 +332,11 @@
 													<Dialog.Description>
 														<p>All people not already in a team:</p>
 														<ul>
-															{#each memberData
+															{#each ($usersDoc ?? [])
 																.filter((p) => !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email.toLowerCase()), ))
 																.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
 																<li
-																	class:text-green-500={memberData
+																	class:text-green-500={$usersDoc
 																		.filter((m) =>
 																			m.events.includes(event.event ?? ''),
 																		)
@@ -538,7 +514,7 @@
 												<!-- svelte-ignore a11y-click-events-have-key-events -->
 												<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 												<li
-													class:text-green-500={memberData
+													class:text-green-500={$usersDoc
 														.filter((m) => m.events.includes(event.event ?? ''))
 														.find(
 															(e) =>
