@@ -18,5 +18,7 @@ export interface Team {
 }
 
 export interface UserDoc {
+	email: string;
+	name: string;
 	events: string[];
 }
