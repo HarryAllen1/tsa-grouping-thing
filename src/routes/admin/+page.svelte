@@ -13,7 +13,7 @@
 	import {
 		correctDocType,
 		correctTeamsDataType,
-		UserDoc,
+		type UserDoc,
 		type Team,
 	} from '$lib/types';
 	import { board } from '$lib/board';
