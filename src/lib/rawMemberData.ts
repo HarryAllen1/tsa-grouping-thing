@@ -98,17 +98,17 @@ export const rawMemberData = [
 		name: 'ADAM ABDEL-RAHMANSAMIR',
 		email: 's-aabdelrahmansamir@lwsd.org',
 		startTime: '9/29/23 15:49:02',
-		lastModifiedTime: '',
+		lastModifiedTime: '10/28/23 15:45:39',
 		completionTime: '9/29/23 15:51:46',
 		events: [
 			'On Demand Video',
 			'Computer-Aided Design (CAD), Engineering',
 			'Extemporaneous Speech',
-			'Essays on Technology',
+			'Board Game Design*',
 		],
 		backups: [
 			'Computer-Aided Design (CAD), Architecture',
-			'Video Game Design*',
+			'Board Game Design*',
 		],
 	},
 	{
