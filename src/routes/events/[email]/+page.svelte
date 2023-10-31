@@ -13,13 +13,23 @@
 	} from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
 	import { Doc, docStore, userStore } from 'sveltefire';
+	import { page } from '$app/stores';
 	import { admins } from '../../admins';
+	import { derived, writable } from 'svelte/store';
 
-	const user = userStore(auth);
+	const actualUser = userStore(auth);
 
-	if (!$user || !admins.includes($user.email?.toLowerCase() ?? '')) {
+	if (
+		!$actualUser ||
+		!admins.includes($actualUser.email?.toLowerCase() ?? '')
+	) {
 		goto('/');
 	}
+
+	const user = derived(actualUser, ($u) => ({
+		...$u,
+		email: $page.params.email,
+	}));
 
 	const userDoc = docStore<UserDoc>(
 		db,
