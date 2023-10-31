@@ -19,13 +19,13 @@ dependencies:
     version: 10.5.2
   formsnap:
     specifier: ^0.3.0
-    version: 0.3.0(svelte@4.2.2)(sveltekit-superforms@1.8.0)(zod@3.22.4)
+    version: 0.3.0(svelte@4.2.2)(sveltekit-superforms@1.9.0)(zod@3.22.4)
   fuse.js:
     specifier: ^7.0.0
     version: 7.0.0
   lucide-svelte:
-    specifier: ^0.290.0
-    version: 0.290.0(svelte@4.2.2)
+    specifier: ^0.291.0
+    version: 0.291.0(svelte@4.2.2)
   sveltefire:
     specifier: ^0.4.2
     version: 0.4.2(firebase@10.5.2)(svelte@4.2.2)
@@ -1875,7 +1875,7 @@ packages:
       tabbable: 6.2.0
     dev: false
 
-  /formsnap@0.3.0(svelte@4.2.2)(sveltekit-superforms@1.8.0)(zod@3.22.4):
+  /formsnap@0.3.0(svelte@4.2.2)(sveltekit-superforms@1.9.0)(zod@3.22.4):
     resolution: {integrity: sha512-1CZgiobEF0Wk2QMsw41kLx8c+a7Ww72ynSQx8S/owhvbUQBVYIijIsjVjWEYAx+s1C7c6exmYg+dASSrgZEXMg==}
     peerDependencies:
       svelte: ^4.0.0
@@ -1883,7 +1883,7 @@ packages:
       zod: ^3.22.2
     dependencies:
       svelte: 4.2.2
-      sveltekit-superforms: 1.8.0(@sveltejs/kit@1.27.2)(svelte@4.2.2)(zod@3.22.4)
+      sveltekit-superforms: 1.9.0(@sveltejs/kit@1.27.2)(svelte@4.2.2)(zod@3.22.4)
       zod: 3.22.4
     dev: false
 
@@ -2190,8 +2190,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /lucide-svelte@0.290.0(svelte@4.2.2):
-    resolution: {integrity: sha512-JAH8R5krev7+2QP9mb37rbk0brViGqJFpD7mHroQYoAZk2rKLzlpPYWHfSGLd6lL7fFea97ThrhJFaMzACEA0A==}
+  /lucide-svelte@0.291.0(svelte@4.2.2):
+    resolution: {integrity: sha512-35POz2Prh1K7I3q35wjpVvyDN4ofhPKl3q9SCZMeNhZpcAOY0Ay66OAEOUTj0IZyM7QyynJr7J4vgUedhXv5fw==}
     peerDependencies:
       svelte: '>=3 <5'
     dependencies:
@@ -2959,8 +2959,8 @@ packages:
       svelte: 4.2.2
     dev: false
 
-  /sveltekit-superforms@1.8.0(@sveltejs/kit@1.27.2)(svelte@4.2.2)(zod@3.22.4):
-    resolution: {integrity: sha512-ig4SJNe72UNlmL2FjXk6Z3I7WYEm+qerA8PB4WOjQkOirztiDNJrY/bs1lF8VLxc56TSG9JQkCtZkgUdlH3yYA==}
+  /sveltekit-superforms@1.9.0(@sveltejs/kit@1.27.2)(svelte@4.2.2)(zod@3.22.4):
+    resolution: {integrity: sha512-gd8/1umhc8yCtrt3TtzFOt51JvRCJPlsL5/0ElalwOF/Q0YjIm+gVOAdT0/xfvloMGfDQ7tBMaz8Y70zYD9s3w==}
     peerDependencies:
       '@sveltejs/kit': 1.x
       svelte: 3.x || 4.x
