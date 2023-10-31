@@ -95,11 +95,17 @@
 						)
 							return;
 
-						await setDoc(doc(db, 'users', $user?.email ?? ''), {
-							events: eventMap[event.event]
-								? $userDoc?.events.filter((e) => e !== event.event) ?? []
-								: [...($userDoc?.events ?? []), event.event],
-						});
+						await setDoc(
+							doc(db, 'users', $user?.email ?? ''),
+							{
+								events: eventMap[event.event]
+									? $userDoc?.events.filter((e) => e !== event.event) ?? []
+									: [...($userDoc?.events ?? []), event.event],
+							},
+							{
+								merge: true,
+							},
+						);
 					}}
 				/>
 				<Label
