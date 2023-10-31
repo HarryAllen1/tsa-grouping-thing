@@ -284,8 +284,11 @@
 															merge: true,
 														},
 													);
-												}}>Become Team Captain</Button
+												}}
+												disabled={team.teamCaptain === $user?.email}
 											>
+												Become Team Captain
+											</Button>
 										{:else if !data.locked}
 											<p>
 												Ask someone in this team to add you if you want to join

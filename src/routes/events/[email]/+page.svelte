@@ -28,7 +28,7 @@
 
 	const user = derived(actualUser, ($u) => ({
 		...$u,
-		email: $page.params.email,
+		email: decodeURIComponent($page.params.email),
 	}));
 
 	const userDoc = docStore<UserDoc>(

@@ -19,8 +19,6 @@
 		}
 	});
 
-	window.addEventListener('offline', () => {});
-
 	onDestroy(unsub);
 </script>
 
