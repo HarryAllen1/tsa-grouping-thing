@@ -15,14 +15,15 @@
 		setDoc,
 		type DocumentData,
 	} from 'firebase/firestore';
-	import { Crown, LogOut, UserPlus } from 'lucide-svelte';
-	import { Doc, docStore, userStore } from 'sveltefire';
+	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
+	import { Doc, collectionStore, docStore, userStore } from 'sveltefire';
 	import { admins } from './admins';
 
 	const user = userStore(auth);
 
 	if (!$user) goto('/login');
 
+	const allUsers = collectionStore<UserDoc>(db, 'users');
 	const userDoc = docStore<UserDoc>(
 		db,
 		doc(db, 'users', $user?.email ?? '') as DocumentReference<
@@ -223,7 +224,7 @@
 														{:else}
 															<p>People who signed up for this event:</p>
 															<ul>
-																<!-- {#each $allUsers
+																{#each $allUsers
 																	.filter((m) => m.events.includes(event.event ?? '') && !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
 																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
 																	<li class="flex flex-row items-center">
@@ -259,7 +260,7 @@
 																		No one else singed up for this event. Please
 																		see a board member for next steps.
 																	</li>
-																{/each} -->
+																{/each}
 															</ul>
 														{/if}
 													</Dialog.Description>

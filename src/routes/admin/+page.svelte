@@ -67,7 +67,7 @@
 			threshold,
 		},
 	);
-	const signedUpEvents = eventData;
+	$: signedUpEvents = eventData;
 	$: eventResults =
 		search === ''
 			? eventData.map((r) => r.event)
@@ -333,8 +333,8 @@
 														<p>All people not already in a team:</p>
 														<ul>
 															{#each ($usersDoc ?? [])
-																.filter((p) => !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email.toLowerCase()), ))
-																.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
+																.filter((p) => !data.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email.toLowerCase()), ))
+																.sort( (a, b) => a?.name?.localeCompare(b?.name), ) as person}
 																<li
 																	class:text-green-500={$usersDoc
 																		.filter((m) =>
