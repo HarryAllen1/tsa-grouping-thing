@@ -230,13 +230,14 @@ export const rawMemberData = [
 		name: 'AADARSH RAO',
 		email: 's-arao@lwsd.org',
 		startTime: '9/29/23 15:57:17',
-		lastModifiedTime: '',
+		lastModifiedTime: '10/30/23 15:08:46',
 		completionTime: '9/29/23 16:01:01',
 		events: [
 			'Biotechnology Design*',
 			'Drone Challenge (UAV)*',
 			'Forensic Science',
 			'Debating Technological Issues*',
+			"Children's Stories*",
 		],
 		backups: ['Flight Endurance*', 'Trebuchet (Washington Only)'],
 	},
@@ -1223,4 +1224,7 @@ export const rawMemberData = [
 		],
 		backups: ['Audio Podcasting*', 'Trebuchet (Washington Only)'],
 	},
-];
+].map((m) => ({
+	...m,
+	email: m.email.toLowerCase(),
+}));
