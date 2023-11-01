@@ -1,4 +1,5 @@
-import { db, events, memberData } from '$lib';
+import { db, events } from '$lib';
+import { rawMemberData as memberData } from '$lib/rawMemberData';
 import { doc, getDoc } from 'firebase/firestore';
 import { correctTeamsDataType } from '$lib/types';
 

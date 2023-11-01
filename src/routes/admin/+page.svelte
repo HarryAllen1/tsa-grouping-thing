@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { auth, db, events, memberData } from '$lib';
-	import NoDollar from '$lib/NoDollar.svelte';
-	import { actuallyPaid } from '$lib/actuallyPaid';
+	import { auth, db, events } from '$lib';
+	import { board } from '$lib/board';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
@@ -10,8 +9,7 @@
 	import Label from '$lib/components/label/label.svelte';
 	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
-	import { correctDocType, correctTeamsDataType } from '$lib/types';
-	import { board } from '$lib/board';
+	import { correctDocType, type Team, type UserDoc } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import {
 		Timestamp,
@@ -22,8 +20,8 @@
 		type DocumentData,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import { Crown, Mail, Plus, Trash2, UserPlus } from 'lucide-svelte';
-	import { Doc, userStore } from 'sveltefire';
+	import { Crown, Mail, Minus, Plus, Trash2, UserPlus } from 'lucide-svelte';
+	import { Doc, collectionStore, userStore } from 'sveltefire';
 	import { admins } from '../admins';
 
 	const user = userStore(auth);
@@ -34,40 +32,18 @@
 
 	let search = '';
 
-	const eventData = memberData
-		.reduce(
-			(acc, item) => {
-				item.events.forEach((eventName) => {
-					const existingEntry = acc.find((entry) => entry.event === eventName);
+	const usersDoc = collectionStore<UserDoc>(db, 'users');
 
-					if (existingEntry) {
-						existingEntry.members.push({
-							name: item.name,
-							id: item.id,
-							email: item.email,
-						});
-					} else {
-						acc.push({
-							event: eventName,
-							members: [{ name: item.name, id: item.id, email: item.email }],
-						});
-					}
-				});
-
-				return acc;
-			},
-			[] as {
-				event: string;
-				members: { name: string; id: string; email: string }[];
-			}[],
-		)
-		.map((e) => {
-			const event = events.find((ev) => ev.event === e.event)!;
-			return {
-				...e,
-				...event,
-			};
-		})
+	$: eventData = events
+		.map((e) => ({
+			...e,
+			members: ($usersDoc?.filter((m) => m.events.includes(e.event)) ?? []).map(
+				(m) => ({
+					name: m.name,
+					email: m.email,
+				}),
+			),
+		}))
 		.sort((a, b) => a.event.localeCompare(b.event));
 
 	let shouldHideIndividualEvents = false;
@@ -84,7 +60,7 @@
 			threshold,
 		},
 	);
-	const signedUpEvents = eventData;
+	$: signedUpEvents = eventData;
 	$: eventResults =
 		search === ''
 			? eventData.map((r) => r.event)
@@ -134,10 +110,7 @@
 	};
 	const downloadAsCSV = async () => {
 		const header = 'Event,Team Captain,Team Members\n';
-		interface Team {
-			teamCaptain?: string;
-			members: { name: string; email: string }[];
-		}
+
 		const teamsCSV = (await getDocs(collection(db, 'events'))).docs
 			.map((d) => ({
 				event: d.id,
@@ -184,7 +157,7 @@
 		to add them to an event they aren't in, tell them to edit their event
 		sign-up form, then message Harry so he can update this page.
 	</h1>
-
+	<Button href="/events/list">See signup forms</Button>
 	<div class="w-full mb-4 flex flex-row gap-4">
 		<Label class="flex flex-row items-center">
 			<Switch class="mr-2" bind:checked={fuseKeys.event}></Switch>
@@ -213,7 +186,7 @@
 	<div
 		class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
 	>
-		{#each signedUpEvents as event}
+		{#each signedUpEvents ?? [] as event}
 			<Doc ref="events/{event.event}" let:data={untyped}>
 				{@const data = correctDocType(untyped)}
 				{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
@@ -251,11 +224,11 @@
 									(acc, curr) => [...acc, ...curr.members],
 									reallyStupidFunction([]),
 								)}
-								{@const peopleNotInTeams = memberData.filter(
+								{@const peopleNotInTeams = $usersDoc.filter(
 									(m) =>
 										m.events.includes(event.event ?? '') &&
 										!peopleInTeams.find(
-											(e) => e.email.toLowerCase() === m.email.toLowerCase(),
+											(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
 										),
 								)}
 								{#if peopleNotInTeams.length}
@@ -352,11 +325,11 @@
 													<Dialog.Description>
 														<p>All people not already in a team:</p>
 														<ul>
-															{#each memberData
-																.filter((p) => !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email.toLowerCase()), ))
-																.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
+															{#each $usersDoc
+																.filter((p) => !data.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
+																.sort( (a, b) => a?.name?.localeCompare(b?.name), ) as person}
 																<li
-																	class:text-green-500={memberData
+																	class:text-green-500={$usersDoc
 																		.filter((m) =>
 																			m.events.includes(event.event ?? ''),
 																		)
@@ -366,16 +339,6 @@
 																	class="flex flex-row items-center"
 																>
 																	{person.name}
-																	{#if !actuallyPaid.includes(person.email.toLowerCase())}
-																		<Tooltip.Root>
-																			<Tooltip.Trigger>
-																				<NoDollar class="h-6 w-6 ml-2" />
-																			</Tooltip.Trigger>
-																			<Tooltip.Content
-																				>This person didn't pay the $28 TSA fee</Tooltip.Content
-																			>
-																		</Tooltip.Root>
-																	{/if}
 																	<Button
 																		on:click={async () => {
 																			const teamButMutable = team;
@@ -466,16 +429,6 @@
 																}}
 															>
 																{teamMember.name}
-																{#if !actuallyPaid.includes(teamMember.email.toLowerCase())}
-																	<Tooltip.Root>
-																		<Tooltip.Trigger>
-																			<NoDollar class="h-6 w-6 ml-2" />
-																		</Tooltip.Trigger>
-																		<Tooltip.Content
-																			>This person didn't pay the $28 TSA fee</Tooltip.Content
-																		>
-																	</Tooltip.Root>
-																{/if}
 																{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 																	<Tooltip.Root>
 																		<Tooltip.Trigger>
@@ -534,47 +487,22 @@
 												<!-- svelte-ignore a11y-click-events-have-key-events -->
 												<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 												<li
-													class:text-green-500={memberData
+													class:text-green-500={$usersDoc
 														.filter((m) => m.events.includes(event.event ?? ''))
 														.find(
 															(e) =>
-																e.email.toLowerCase() ===
-																(teamMember?.email.toLowerCase() ?? ''),
+																e.email?.toLowerCase() ===
+																teamMember.email.toLowerCase(),
 														)}
-													class="hover:underline hover:text-red-500 hover:cursor-pointer"
-													on:click={async () => {
-														const teamButMutable = team;
-														teamButMutable.members.splice(
-															teamButMutable.members.findIndex(
-																(e) =>
-																	e.email === (teamMember?.email ?? '') &&
-																	e.name === (teamMember?.name ?? ''),
-															),
-															1,
-														);
-														teamButMutable.lastUpdatedBy = $user?.email ?? '';
-														await setDoc(
-															doc(db, 'events', event.event ?? ''),
-															{
-																teams: data.teams,
-															},
-															{
-																merge: true,
-															},
-														);
-													}}
+													class="flex flex-row items-center gap-2"
 												>
-													{teamMember.name}
-													{#if !actuallyPaid.includes(teamMember.email.toLowerCase())}
-														<Tooltip.Root>
-															<Tooltip.Trigger>
-																<NoDollar class="h-4 w-4" />
-															</Tooltip.Trigger>
-															<Tooltip.Content
-																>This person didn't pay the $28 TSA fee</Tooltip.Content
-															>
-														</Tooltip.Root>
-													{/if}
+													<a
+														href="/events/{encodeURIComponent(
+															teamMember.email,
+														)}"
+													>
+														{teamMember.name}
+													</a>
 													{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 														<Tooltip.Root>
 															<Tooltip.Trigger>
@@ -583,6 +511,34 @@
 															<Tooltip.Content>Team captain</Tooltip.Content>
 														</Tooltip.Root>
 													{/if}
+													<Button
+														size="icon"
+														class="bg-transparent h-5"
+														variant="outline"
+														on:click={async () => {
+															const teamButMutable = team;
+															teamButMutable.members.splice(
+																teamButMutable.members.findIndex(
+																	(e) =>
+																		e.email === (teamMember?.email ?? '') &&
+																		e.name === (teamMember?.name ?? ''),
+																),
+																1,
+															);
+															teamButMutable.lastUpdatedBy = $user?.email ?? '';
+															await setDoc(
+																doc(db, 'events', event.event ?? ''),
+																{
+																	teams: data.teams,
+																},
+																{
+																	merge: true,
+																},
+															);
+														}}
+													>
+														<Minus />
+													</Button>
 												</li>
 											{/each}
 										</ul>

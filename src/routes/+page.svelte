@@ -1,38 +1,43 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { auth, db, events, memberData } from '$lib';
+	import { auth, db, events } from '$lib';
 	import { Alert, AlertDescription, AlertTitle } from '$lib/components/alert';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
 	import * as Tooltip from '$lib/components/tooltip';
+	import { correctTeamsDataType, type UserDoc } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import {
+		DocumentReference,
+		Timestamp,
 		doc,
 		setDoc,
 		type DocumentData,
-		Timestamp,
 	} from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
-	import { Doc, userStore } from 'sveltefire';
+	import { Doc, collectionStore, docStore, userStore } from 'sveltefire';
 	import { admins } from './admins';
-	import { correctTeamsDataType } from '../lib/types';
 
 	const user = userStore(auth);
 
 	if (!$user) goto('/login');
 
-	const signedUpEvents = memberData
-		.find((m) => m.email.toLowerCase() === $user?.email)
-		?.events.map((e) => ({
+	const allUsers = collectionStore<UserDoc>(db, 'users');
+	const userDoc = docStore<UserDoc>(
+		db,
+		doc(db, 'users', $user?.email ?? '') as DocumentReference<
+			UserDoc,
+			DocumentData
+		>,
+	);
+	$: signedUpEvents = ($userDoc?.events ?? [])
+		.map((e) => ({
 			...events.find((ev) => ev.event === e),
 		}))
 		.filter((e) => (e.maxTeamSize ?? 999) > 1);
 
-	const individualEvents = memberData
-		.find((m) => m.email.toLowerCase() === $user?.email)
-		?.events.map((e) => ({ ...events.find((ev) => ev.event === e) }))
-		.filter((e) => e.maxTeamSize === 1);
+	$: individualEvents = signedUpEvents.filter((e) => e.maxTeamSize === 1);
 
 	const correctType = (eventData: DocumentData) =>
 		eventData as {
@@ -70,11 +75,24 @@
 			</Button>
 		{/if}
 	</div>
+	<Button
+		href="/events"
+		size="lg"
+		class="w-full h-24 my-4 text-3xl text-black bg-green-400 hover:bg-green-500"
+	>
+		Signup/change events
+	</Button>
 
 	{#if !signedUpEvents || signedUpEvents.length === 0}
 		<p class="mt-4 w-full">
-			You haven't signed up for any events yet. Please see a board member or
-			advisor.
+			You haven't signed up for any events yet. Please add some events on the <a
+				href="/events">event sign up page.</a
+			>
+		</p>
+	{:else if signedUpEvents.length < 4}
+		<p class="mt-4 w-full">
+			You haven't signed up for enough events yet. Please add some more events
+			on the <a href="/events">event sign up page.</a>
 		</p>
 	{:else}
 		<Alert variant="destructive" class="mt-4 dark:brightness-200">
@@ -122,16 +140,12 @@
 								{@const team = correctType(te)}
 								<Card.Root class="bg-blue-500 bg-opacity-20">
 									<Card.Title class="m-2 ml-4 flex flex-row gap-1">
-										{#if !data.locked && team.locked}
-											<Tooltip.Root>
-												<Tooltip.Trigger>
-													<p>This team is currently locked from editing.</p>
-												</Tooltip.Trigger>
-												<Tooltip.Content>
-													This likely due to eliminations. If this is
-													unexpected, contact a board member.
-												</Tooltip.Content>
-											</Tooltip.Root>
+										{#if team.locked}
+											<p>
+												This team is currently locked from editing. This likely
+												due to eliminations. If this is unexpected, or you want
+												to change something, contact a board member.
+											</p>
 										{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 											<Tooltip.Root>
 												<Tooltip.Trigger>
@@ -210,7 +224,7 @@
 														{:else}
 															<p>People who signed up for this event:</p>
 															<ul>
-																{#each memberData
+																{#each $allUsers
 																	.filter((m) => m.events.includes(event.event ?? '') && !correctTeamsDataType(data.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
 																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
 																	<li class="flex flex-row items-center">
@@ -270,8 +284,11 @@
 															merge: true,
 														},
 													);
-												}}>Become Team Captain</Button
+												}}
+												disabled={team.teamCaptain === $user?.email}
 											>
+												Become Team Captain
+											</Button>
 										{:else if !data.locked}
 											<p>
 												Ask someone in this team to add you if you want to join
