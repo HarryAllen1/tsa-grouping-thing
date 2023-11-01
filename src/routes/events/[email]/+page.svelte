@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { auth, db, events } from '$lib';
 	import { Button } from '$lib/components/button';
 	import { Checkbox } from '$lib/components/checkbox';
@@ -12,10 +13,9 @@
 		type DocumentData,
 	} from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
+	import { derived } from 'svelte/store';
 	import { Doc, docStore, userStore } from 'sveltefire';
-	import { page } from '$app/stores';
 	import { admins } from '../../admins';
-	import { derived, writable } from 'svelte/store';
 
 	const actualUser = userStore(auth);
 
@@ -49,6 +49,7 @@
 </script>
 
 <Button href="/" class="mt-4">Go back to team creation page</Button>
+<Button href="/events/list" class="mt-4">Go back to event signup list</Button>
 
 <h1
 	class="scroll-m-20 mt-4 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
