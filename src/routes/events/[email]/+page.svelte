@@ -31,13 +31,7 @@
 		email: decodeURIComponent($page.params.email),
 	}));
 
-	const userDoc = docStore<UserDoc>(
-		db,
-		doc(db, 'users', $user?.email ?? '') as DocumentReference<
-			UserDoc,
-			DocumentData
-		>,
-	);
+	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 
 	$: eventMap = events.reduce(
 		(acc, curr) => ({

@@ -5,12 +5,7 @@
 	import { Checkbox } from '$lib/components/checkbox';
 	import { Label } from '$lib/components/label';
 	import type { UserDoc } from '$lib/types';
-	import {
-		DocumentReference,
-		doc,
-		setDoc,
-		type DocumentData,
-	} from 'firebase/firestore';
+	import { doc, setDoc } from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
 	import { Doc, docStore, userStore } from 'sveltefire';
 
@@ -18,13 +13,7 @@
 
 	if (!$user) goto('/login');
 
-	const userDoc = docStore<UserDoc>(
-		db,
-		doc(db, 'users', $user?.email ?? '') as DocumentReference<
-			UserDoc,
-			DocumentData
-		>,
-	);
+	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 
 	$: eventMap = events.reduce(
 		(acc, curr) => ({
