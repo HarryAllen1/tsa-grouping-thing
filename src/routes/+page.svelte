@@ -21,7 +21,7 @@
 
 	const user = userStore(auth);
 
-	$: if (!$user) goto('/login');
+	if (!$user) goto('/login');
 
 	const allUsers = collectionStore<UserDoc>(db, 'users');
 	const userDoc = docStore<UserDoc>(
