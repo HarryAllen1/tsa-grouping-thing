@@ -6,7 +6,7 @@
 	import { Checkbox } from '$lib/components/checkbox';
 	import { Label } from '$lib/components/label';
 	import type { UserDoc } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
+	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
 	import { derived } from 'svelte/store';
 	import { Doc, docStore, userStore } from 'sveltefire';
@@ -86,6 +86,8 @@
 								events: eventMap[event.event]
 									? $userDoc?.events.filter((e) => e !== event.event) ?? []
 									: [...($userDoc?.events ?? []), event.event],
+								lastUpdated: new Timestamp(Date.now() / 1000, 0),
+								lastUpdatedBy: $actualUser?.email ?? '',
 							},
 							{
 								merge: true,
