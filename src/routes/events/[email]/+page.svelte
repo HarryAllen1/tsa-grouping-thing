@@ -6,18 +6,15 @@
 	import { Checkbox } from '$lib/components/checkbox';
 	import { Label } from '$lib/components/label';
 	import type { UserDoc } from '$lib/types';
-	import {
-		DocumentReference,
-		doc,
-		setDoc,
-		type DocumentData,
-	} from 'firebase/firestore';
+	import { doc, setDoc } from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
 	import { derived } from 'svelte/store';
 	import { Doc, docStore, userStore } from 'sveltefire';
 	import { admins } from '../../admins';
 
 	const actualUser = userStore(auth);
+
+	if (!$actualUser) goto(`/login?redirect=${$page.url.pathname}`);
 
 	if (
 		!$actualUser ||
@@ -31,9 +28,9 @@
 		email: decodeURIComponent($page.params.email),
 	}));
 
-	if (!$user) goto('/login');
+	if (!$user) location.href = '/login';
 
-	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
+	const userDoc = docStore<UserDoc>(db, `users/${$user.email}`);
 
 	$: eventMap = events.reduce(
 		(acc, curr) => ({

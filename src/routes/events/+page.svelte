@@ -11,7 +11,7 @@
 
 	const user = userStore(auth);
 
-	if (!$user) goto('/login');
+	if (!$user) location.href = '/login?redirect=/events';
 
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 

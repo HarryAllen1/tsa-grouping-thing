@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { auth, db } from '$lib';
 	import * as Accordion from '$lib/components/accordion';
 	import { Button } from '$lib/components/button';
@@ -9,7 +10,10 @@
 
 	const user = userStore(auth);
 
-	if (!$user || !admins.includes($user.email?.toLowerCase() ?? '')) {
+	if (!$user) {
+		location.href = `/login?redirect=${$page.url.pathname}`;
+	}
+	if (!admins.includes($user?.email?.toLowerCase() ?? '')) {
 		goto('/');
 	}
 

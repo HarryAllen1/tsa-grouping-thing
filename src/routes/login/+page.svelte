@@ -10,10 +10,15 @@
 	import { Button } from '$lib/components/button';
 	import { goto } from '$app/navigation';
 	import { userStore } from 'sveltefire';
+	import { page } from '$app/stores';
 
 	const user = userStore(auth);
 
 	$: if ($user) {
+		const params = $page.url.searchParams.get('redirect');
+		if (params) {
+			goto(params);
+		}
 		goto('/');
 	}
 
@@ -37,6 +42,10 @@
 					await user.user.delete();
 				}
 				if (user.user) {
+					const params = $page.url.searchParams.get('redirect');
+					if (params) {
+						goto(params);
+					}
 					goto('/');
 				}
 			}}
