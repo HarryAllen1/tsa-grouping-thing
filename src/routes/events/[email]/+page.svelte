@@ -102,10 +102,9 @@
 				/>
 				<Label
 					for={event.event}
-					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {data.locked ||
-					(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= 6)
-						? 'opacity-50'
-						: ''} {data.locked ? 'line-through' : ''}"
+					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {data.locked
+						? 'line-through'
+						: ''}"
 				>
 					<span class="ml-2">{event.event}</span>
 				</Label>
