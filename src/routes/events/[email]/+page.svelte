@@ -31,6 +31,8 @@
 		email: decodeURIComponent($page.params.email),
 	}));
 
+	if (!$user) goto('/login');
+
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 
 	$: eventMap = events.reduce(
