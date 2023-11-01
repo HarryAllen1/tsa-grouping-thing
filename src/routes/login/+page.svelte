@@ -9,8 +9,11 @@
 	import * as Card from '$lib/components/card';
 	import { Button } from '$lib/components/button';
 	import { goto } from '$app/navigation';
+	import { userStore } from 'sveltefire';
 
-	if (auth.currentUser) {
+	const user = userStore(auth);
+
+	$: if ($user) {
 		goto('/');
 	}
 
