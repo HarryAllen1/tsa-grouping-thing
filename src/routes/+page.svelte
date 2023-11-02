@@ -42,8 +42,6 @@
 		  ).sort((a, b) => a.event.localeCompare(b.event))
 		: [];
 
-	$: console.log(signedUpEvents);
-
 	$: individualEvents = signedUpEvents.filter((e) => e.maxTeamSize === 1);
 </script>
 
