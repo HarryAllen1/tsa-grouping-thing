@@ -37,10 +37,10 @@
 			on:click={async () => {
 				await setPersistence(auth, browserLocalPersistence);
 				const user = await signInWithPopup(auth, provider);
-				// if (!user.user.email?.endsWith('@lwsd.org')) {
-				// 	alert('You must use an LWSD account to log in.');
-				// 	await user.user.delete();
-				// }
+				if (!user.user.email?.endsWith('@lwsd.org')) {
+					alert('You must use an LWSD account to log in.');
+					await user.user.delete();
+				}
 				if (user.user) {
 					const params = $page.url.searchParams.get('redirect');
 					if (params) {

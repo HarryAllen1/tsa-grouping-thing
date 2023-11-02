@@ -17,11 +17,11 @@
 		if (!user && $page.url.pathname !== '/login') {
 			location.href = `/login?redirect=${$page.url.pathname}`;
 		}
-		// if (user && !user?.email?.endsWith('@lwsd.org')) {
-		// 	alert('You must use an LWSD account to log in.');
-		// 	await auth.currentUser?.delete();
-		// 	location.href = '/login';
-		// }
+		if (user && !user?.email?.endsWith('@lwsd.org')) {
+			alert('You must use an LWSD account to log in.');
+			await auth.currentUser?.delete();
+			location.href = '/login';
+		}
 	});
 
 	onDestroy(unsub);
