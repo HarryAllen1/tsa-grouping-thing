@@ -21,10 +21,7 @@
 	if (!$user) goto('/login');
 
 	const allUsers = collectionStore<UserDoc>(db, 'users');
-	const userDoc = docStore<UserDoc>(
-		db,
-		`users/${$user?.email?.toLowerCase() ?? ''}`,
-	);
+	const userDoc = docStore<UserDoc>(db, `users/${$user?.email?.toLowerCase()}`);
 
 	const events = collectionStore<EventDoc>(db, 'events');
 

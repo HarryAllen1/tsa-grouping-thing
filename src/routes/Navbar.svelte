@@ -4,14 +4,15 @@
 	import { Button } from '$lib/components/button';
 	import * as Dropdown from '$lib/components/dropdown-menu';
 	import LightSwitch from '$lib/components/light-switch/light-switch.svelte';
+	import { sleep } from '$lib/utils';
+	import { signOut } from 'firebase/auth';
+	import { collection, getDocs } from 'firebase/firestore';
 	import { Download, LogOut } from 'lucide-svelte';
+	import { onMount } from 'svelte';
 	import { userStore } from 'sveltefire';
 	import { admins } from './(protected)/admins';
 	import DesktopNav from './DesktopNav.svelte';
 	import MobileNav from './MobileNav.svelte';
-	import { onAuthStateChanged, signOut } from 'firebase/auth';
-	import { collection, getDocs } from 'firebase/firestore';
-	import { onDestroy } from 'svelte';
 
 	const user = userStore(auth);
 
@@ -50,15 +51,22 @@
 		.then((res) => res.blob())
 		.then((blob) => URL.createObjectURL(blob));
 
-	const unsub = onAuthStateChanged(auth, () => {
-		profilePhoto = fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-				'Content-Type': 'image/webp',
-			},
-		})
-			.then((res) => res.blob())
-			.then((blob) => URL.createObjectURL(blob));
+	onMount(async () => {
+		for (;;) {
+			const res = await fetch(
+				'https://graph.microsoft.com/v1.0/me/photo/$value',
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+						'Content-Type': 'image/webp',
+					},
+				},
+			);
+			const blob = await res.blob();
+			profilePhoto = Promise.resolve(URL.createObjectURL(blob));
+			if (res.status === 200) break;
+			await sleep(5000);
+		}
 	});
 
 	const downloadAsJSON = async () => {
@@ -121,8 +129,6 @@
 		URL.revokeObjectURL(url);
 		a.remove();
 	};
-
-	onDestroy(unsub);
 </script>
 
 <header

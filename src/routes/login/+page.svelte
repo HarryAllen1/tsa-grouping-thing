@@ -47,10 +47,7 @@
 					const cred = OAuthProvider.credentialFromResult(user);
 					localStorage.setItem('accessToken', cred?.accessToken ?? '');
 					const params = $page.url.searchParams.get('redirect');
-					if (params) {
-						goto(params);
-					}
-					goto('/');
+					goto(params ?? '/');
 				}
 			}}
 			class="w-full"
