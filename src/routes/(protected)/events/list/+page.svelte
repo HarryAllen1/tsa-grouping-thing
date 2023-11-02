@@ -8,20 +8,22 @@
 	const usersDoc = collectionStore<UserDoc>(db, 'users');
 </script>
 
-<Button href="/" class="mt-4">Go back to team creation page</Button>
-
-<Accordion.Root>
-	{#each $usersDoc as userDoc}
-		<Accordion.Item value={userDoc.email}>
-			<Accordion.Trigger>
-				{userDoc.name}
-			</Accordion.Trigger>
-			<Accordion.Content>
-				<Button href="/events/{encodeURIComponent(userDoc.email)}">Edit</Button>
-				{#each userDoc.events as event}
-					<p>{event}</p>
-				{/each}
-			</Accordion.Content>
-		</Accordion.Item>
-	{/each}
-</Accordion.Root>
+<div class="mt-6">
+	<Accordion.Root>
+		{#each $usersDoc as userDoc}
+			<Accordion.Item value={userDoc.email}>
+				<Accordion.Trigger>
+					{userDoc.name}
+				</Accordion.Trigger>
+				<Accordion.Content>
+					<Button href="/events/{encodeURIComponent(userDoc.email)}"
+						>Edit</Button
+					>
+					{#each userDoc.events as event}
+						<p>{event}</p>
+					{/each}
+				</Accordion.Content>
+			</Accordion.Item>
+		{/each}
+	</Accordion.Root>
+</div>

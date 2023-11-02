@@ -66,6 +66,7 @@
 	}
 </script>
 
-<Button class="mb-4" href="/admin">Back to admin page</Button>
-<ColorKey />
-<div bind:this={graph} />
+<div class="mt-6">
+	<ColorKey />
+	<div bind:this={graph} />
+</div>
