@@ -168,11 +168,55 @@
 									<Button
 										href="mailto:?cc={board.join(';')}&bcc={peopleNotInTeams
 											.map((p) => p.email)
-											.join(';')}&subject={event.event}">Email everyone</Button
+											.join(';')}&subject={event.event}"
 									>
+										Email everyone
+									</Button>
+									<Button
+										on:click={() => {
+											if (
+												confirm(
+													"Are you sure you want to remove everyone who hasn't created a team yet from this event?",
+												)
+											) {
+												peopleNotInTeams.forEach(async (person) => {
+													const userDoc = $usersDoc.find(
+														(u) =>
+															u.email?.toLowerCase() ===
+															person.email?.toLowerCase(),
+													);
+													if (userDoc) {
+														userDoc.events = userDoc.events.filter(
+															(e) => e !== event.event,
+														);
+														await setDoc(
+															doc(
+																db,
+																'users',
+																userDoc.email?.toLowerCase() ?? '',
+															),
+															userDoc,
+															{ merge: true },
+														);
+													}
+												});
+											}
+										}}
+									>
+										<Trash2 />
+									</Button>
 									<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 										{#each peopleNotInTeams as person}
-											<li>{person.name}</li>
+											<li>
+												<a
+													href="/events/{encodeURIComponent(
+														person.email.toLowerCase(),
+													)}"
+													class="underline"
+												>
+													{person.name}
+												</a>
+											</li>
 										{/each}
 									</ul>
 								</details>
@@ -183,8 +227,29 @@
 									{#each nonOverlappingEvents(event) as e}
 										<li>
 											<!-- svelte-ignore a11y-invalid-attribute -->
-											<a href="#" on:click={() => (search = e.event)}>
+											<a
+												href="#"
+												class="underline"
+												on:click={() => (search = e.event)}
+											>
 												{e.event}
+											</a>
+										</li>
+									{/each}
+								</ul>
+							</details>
+							<details>
+								<summary>Everyone in event</summary>
+								<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+									{#each event.members as person}
+										<li>
+											<a
+												href="/events/{encodeURIComponent(
+													person.email.toLowerCase(),
+												)}"
+												class="underline"
+											>
+												{person.name}
 											</a>
 										</li>
 									{/each}
