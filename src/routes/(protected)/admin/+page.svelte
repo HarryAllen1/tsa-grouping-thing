@@ -24,7 +24,7 @@
 
 	const user = userStore(auth);
 
-	$: search = decodeURIComponent($page.url.searchParams.get('q') ?? '');
+	let search = decodeURIComponent($page.url.searchParams.get('q') ?? '');
 
 	const usersDoc = collectionStore<UserDoc>(db, 'users');
 	const events = collectionStore<EventDoc>(db, 'events');
