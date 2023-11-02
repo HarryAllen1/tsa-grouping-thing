@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { auth, db, events } from '$lib';
 	import { Button } from '$lib/components/button';
 	import { Checkbox } from '$lib/components/checkbox';
