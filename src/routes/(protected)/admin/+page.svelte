@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { auth, db, type EventDoc, type Team, type UserDoc } from '$lib';
 	import { board } from '$lib/board';
 	import { Button } from '$lib/components/button';
@@ -20,7 +21,6 @@
 	import Fuse from 'fuse.js';
 	import { Crown, Mail, Minus, Plus, Trash2, UserPlus } from 'lucide-svelte';
 	import { collectionStore, userStore } from 'sveltefire';
-	import { page } from '$app/stores';
 
 	const user = userStore(auth);
 
