@@ -33,7 +33,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@material/web": "^1.0.1",
 		"@observablehq/plot": "^0.6.11",
 		"@vercel/analytics": "^1.1.1",
 		"bits-ui": "^0.9.0",

@@ -329,8 +329,5 @@
 				</div>
 			{/each}
 		</div>
-		{#if !signedUpEvents?.length}
-			<md-circular-progress indeterminate></md-circular-progress>
-		{/if}
 	{/if}
 </div>

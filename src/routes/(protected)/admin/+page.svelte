@@ -95,7 +95,7 @@
 	<h1 class="text-3xl font-bold max-w-screen-md my-4 mb-6">
 		Please don't add yourself to events that you aren't in!
 	</h1>
-	<div class="w-full mb-4 flex flex-row gap-4">
+	<div class="w-full mb-4 flex flex-col md:flex-row gap-4">
 		<Label class="flex flex-row items-center">
 			<Switch class="mr-2" bind:checked={fuseKeys.event}></Switch>
 			Search by events
@@ -581,7 +581,4 @@
 			{/if}
 		{/each}
 	</div>
-	{#if !signedUpEvents?.length}
-		<md-circular-progress indeterminate></md-circular-progress>
-	{/if}
 </div>
