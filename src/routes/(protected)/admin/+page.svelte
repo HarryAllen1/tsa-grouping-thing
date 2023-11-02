@@ -139,6 +139,18 @@
 		URL.revokeObjectURL(url);
 		a.remove();
 	};
+	const intersect = <T,>(a: Array<T>, b: Array<T>): T[] => {
+		var setB = new Set(b);
+		return [...new Set(a)].filter((x) => setB.has(x));
+	};
+	const nonOverlappingEvents = (event: (typeof eventData)[0]) =>
+		eventData.filter(
+			(e) =>
+				intersect(
+					e.members.map((m) => m.name),
+					event.members.map((m) => m.name),
+				).length === 0,
+		);
 </script>
 
 <div class="mt-8 flex flex-col items-center">
@@ -241,6 +253,19 @@
 									</ul>
 								</details>
 							{/if}
+							<details>
+								<summary>Events without member overlap</summary>
+								<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+									{#each nonOverlappingEvents(event) as e}
+										<li>
+											<!-- svelte-ignore a11y-invalid-attribute -->
+											<a href="#" on:click={() => (search = e.event)}>
+												{e.event}
+											</a>
+										</li>
+									{/each}
+								</ul>
+							</details>
 						</Card.Description>
 					</Card.Header>
 					<Card.Content class="flex flex-col gap-4">
