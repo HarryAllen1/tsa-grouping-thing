@@ -12,30 +12,24 @@
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
 	import * as Tooltip from '$lib/components/tooltip';
-	import { signOut } from 'firebase/auth';
-	import {
-		doc,
-		DocumentReference,
-		setDoc,
-		Timestamp,
-		type DocumentData,
-	} from 'firebase/firestore';
+	import { doc, setDoc, Timestamp } from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
+	import { derived } from 'svelte/store';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
-	import { admins } from './(protected)/admins';
 
-	const user = userStore(auth);
+	const user = derived(userStore(auth), ($u) => ({
+		...$u,
+		email: 's-abykov@lwsd.org',
+	}));
 
 	if (!$user) goto('/login');
 
 	const allUsers = collectionStore<UserDoc>(db, 'users');
 	const userDoc = docStore<UserDoc>(
 		db,
-		doc(db, 'users', $user?.email ?? '') as DocumentReference<
-			UserDoc,
-			DocumentData
-		>,
+		`users/${$user?.email?.toLowerCase() ?? ''}`,
 	);
+
 	const events = collectionStore<EventDoc>(db, 'events');
 
 	$: signedUpEvents = $events.length
@@ -47,6 +41,8 @@
 					.filter((e) => (e.maxTeamSize ?? 999) > 1) as EventDoc[]
 		  ).sort((a, b) => a.event.localeCompare(b.event))
 		: [];
+
+	$: console.log(signedUpEvents);
 
 	$: individualEvents = signedUpEvents.filter((e) => e.maxTeamSize === 1);
 </script>
@@ -66,12 +62,13 @@
 				href="/events">event sign up page.</a
 			>
 		</p>
-	{:else if signedUpEvents.length < 4}
-		<p class="mt-4 w-full">
-			You haven't signed up for enough events yet. Please add some more events
-			on the <a href="/events">event sign up page.</a>
-		</p>
 	{:else}
+		{#if signedUpEvents.length < 4}
+			<p class="mt-4 w-full">
+				You haven't signed up for enough events yet. Please add some more events
+				on the <a href="/events">event sign up page.</a>
+			</p>
+		{/if}
 		<Alert variant="destructive" class="mt-4 dark:brightness-200">
 			<AlertTitle>This list only includes team events.</AlertTitle>
 			<AlertDescription>
