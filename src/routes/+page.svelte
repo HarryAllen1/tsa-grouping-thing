@@ -14,13 +14,9 @@
 	import * as Tooltip from '$lib/components/tooltip';
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
-	import { derived } from 'svelte/store';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
-	const user = derived(userStore(auth), ($u) => ({
-		...$u,
-		email: 's-abykov@lwsd.org',
-	}));
+	const user = userStore(auth);
 
 	if (!$user) goto('/login');
 
