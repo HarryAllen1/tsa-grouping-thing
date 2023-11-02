@@ -40,6 +40,9 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
 			setModeCurrent(getModeOsPrefers());
 		}
 	});
+
+	let className: string = '';
+	export { className as class };
 </script>
 
 <div
@@ -54,6 +57,7 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
 	aria-checked={$modeCurrent}
 	title="Toggle {$modeCurrent === true ? 'Dark' : 'Light'} Mode"
 	tabindex="0"
+	class={className}
 >
 	<div
 		class={cn(

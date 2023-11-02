@@ -1,16 +1,16 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { auth } from '$lib';
+	import { Button } from '$lib/components/button';
+	import * as Card from '$lib/components/card';
 	import {
 		OAuthProvider,
 		browserLocalPersistence,
 		setPersistence,
 		signInWithPopup,
 	} from 'firebase/auth';
-	import { auth } from '$lib';
-	import * as Card from '$lib/components/card';
-	import { Button } from '$lib/components/button';
-	import { goto } from '$app/navigation';
 	import { userStore } from 'sveltefire';
-	import { page } from '$app/stores';
 
 	const user = userStore(auth);
 
@@ -37,11 +37,15 @@
 			on:click={async () => {
 				await setPersistence(auth, browserLocalPersistence);
 				const user = await signInWithPopup(auth, provider);
+
 				if (!user.user.email?.endsWith('@lwsd.org')) {
 					alert('You must use an LWSD account to log in.');
 					await user.user.delete();
 				}
+
 				if (user.user) {
+					const cred = OAuthProvider.credentialFromResult(user);
+					localStorage.setItem('accessToken', cred?.accessToken ?? '');
 					const params = $page.url.searchParams.get('redirect');
 					if (params) {
 						goto(params);

@@ -51,30 +51,7 @@
 	$: individualEvents = signedUpEvents.filter((e) => e.maxTeamSize === 1);
 </script>
 
-<div class="mt-8 flex flex-col items-center">
-	<Button on:click={() => signOut(auth)}>Sign out</Button>
-	<div class="w-full">
-		<h2 class="font-bold text-xl">User info</h2>
-		<p>
-			Name: {$user?.displayName}
-		</p>
-		<p>
-			Email: {$user?.email}
-		</p>
-		{#if !$user?.email || !$user?.displayName}
-			<p>
-				Something went wrong. Try refreshing the page, then logging out. If it
-				still doesn't work, contact Harry on Teams or <a
-					href="mailto:s-hallen@lwsd.org">by email</a
-				>
-			</p>
-		{/if}
-		{#if admins.includes($user?.email ?? '')}
-			<Button href="/admin">
-				Admin page (this button is only visible to admins)
-			</Button>
-		{/if}
-	</div>
+<div class="mt-8 flex flex-col items-center container">
 	<Button
 		href="/events"
 		size="lg"
@@ -116,10 +93,10 @@
 		{/if}
 		<p class="my-4 w-full">You have signed up for the following team events:</p>
 		<div
-			class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
+			class="grid items-center gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
 		>
 			{#each signedUpEvents as event}
-				<Card.Root class="w-96">
+				<Card.Root>
 					<Card.Header>
 						<Card.Title>
 							{event.event}
@@ -137,7 +114,7 @@
 						{/if}
 						{#each event.teams as team}
 							<Card.Root class="bg-blue-500 bg-opacity-20">
-								<Card.Title class="m-2 ml-4 flex flex-row gap-1">
+								<Card.Title class="m-2 ml-4 flex flex-col lg:flex-row gap-1">
 									{#if team.locked}
 										<p>
 											This team is currently locked from editing. This likely
@@ -145,125 +122,127 @@
 											change something, contact a board member.
 										</p>
 									{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
-										<Tooltip.Root>
-											<Tooltip.Trigger>
-												<Button
-													variant="destructive"
-													on:click={async () => {
-														const teamButMutable = team;
-														teamButMutable.members.splice(
-															teamButMutable.members.findIndex(
-																(e) =>
-																	e.email.toLowerCase() ===
-																	($user?.email ?? ''),
-															),
-															1,
-														);
-														teamButMutable.lastUpdatedBy = $user?.email ?? '';
-														teamButMutable.lastUpdatedTime = new Timestamp(
-															Date.now() / 1000,
-															0,
-														);
-														await setDoc(
-															doc(db, 'events', event.event ?? ''),
-															{
-																teams: correctTeamsDataType(event.teams).filter(
-																	(t) => t.members.length > 0,
+										<div>
+											<Tooltip.Root>
+												<Tooltip.Trigger>
+													<Button
+														variant="destructive"
+														on:click={async () => {
+															const teamButMutable = team;
+															teamButMutable.members.splice(
+																teamButMutable.members.findIndex(
+																	(e) =>
+																		e.email.toLowerCase() ===
+																		($user?.email ?? ''),
 																),
-															},
-															{
-																merge: true,
-															},
-														);
-													}}
-												>
-													<LogOut />
-												</Button>
-											</Tooltip.Trigger>
-											<Tooltip.Content>Leave team</Tooltip.Content>
-										</Tooltip.Root>
-										<Dialog.Root>
-											{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-												<Tooltip.Root>
-													<Tooltip.Trigger>
-														<Dialog.Trigger disabled>
-															<Button
-																class="bg-green-500 hover:bg-green-400"
-																disabled
-															>
-																<UserPlus />
-															</Button>
-														</Dialog.Trigger>
-													</Tooltip.Trigger>
-													<Tooltip.Content>
-														<p>Team is full</p>
-													</Tooltip.Content>
-												</Tooltip.Root>
-											{:else}
-												<Dialog.Trigger>
+																1,
+															);
+															teamButMutable.lastUpdatedBy = $user?.email ?? '';
+															teamButMutable.lastUpdatedTime = new Timestamp(
+																Date.now() / 1000,
+																0,
+															);
+															await setDoc(
+																doc(db, 'events', event.event ?? ''),
+																{
+																	teams: correctTeamsDataType(
+																		event.teams,
+																	).filter((t) => t.members.length > 0),
+																},
+																{
+																	merge: true,
+																},
+															);
+														}}
+													>
+														<LogOut />
+													</Button>
+												</Tooltip.Trigger>
+												<Tooltip.Content>Leave team</Tooltip.Content>
+											</Tooltip.Root>
+											<Dialog.Root>
+												{#if team.members.length >= (event.maxTeamSize ?? 9999)}
 													<Tooltip.Root>
 														<Tooltip.Trigger>
-															<Button class="bg-green-500 hover:bg-green-400">
-																<UserPlus />
-															</Button>
+															<Dialog.Trigger disabled>
+																<Button
+																	class="bg-green-500 hover:bg-green-400"
+																	disabled
+																>
+																	<UserPlus />
+																</Button>
+															</Dialog.Trigger>
 														</Tooltip.Trigger>
-														<Tooltip.Content>Add person</Tooltip.Content>
+														<Tooltip.Content>
+															<p>Team is full</p>
+														</Tooltip.Content>
 													</Tooltip.Root>
-												</Dialog.Trigger>
-											{/if}
+												{:else}
+													<Dialog.Trigger>
+														<Tooltip.Root>
+															<Tooltip.Trigger>
+																<Button class="bg-green-500 hover:bg-green-400">
+																	<UserPlus />
+																</Button>
+															</Tooltip.Trigger>
+															<Tooltip.Content>Add person</Tooltip.Content>
+														</Tooltip.Root>
+													</Dialog.Trigger>
+												{/if}
 
-											<Dialog.Content>
-												<Dialog.Title>Add People</Dialog.Title>
-												<Dialog.Description>
-													{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-														<Alert class="dark:brightness-200">
-															<AlertTitle>This team is full</AlertTitle>
-														</Alert>
-													{:else}
-														<p>People who signed up for this event:</p>
-														<ul>
-															{#each $allUsers
-																.filter((m) => m.events.includes(event.event ?? '') && !correctTeamsDataType(event.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
-																.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
-																<li class="flex flex-row items-center">
-																	{person.name}
-																	<Button
-																		on:click={async () => {
-																			const teamButMutable = team;
-																			teamButMutable.members.push({
-																				name: person.name,
-																				email: person.email,
-																			});
-																			teamButMutable.lastUpdatedBy =
-																				$user?.email ?? '';
-																			teamButMutable.lastUpdatedTime =
-																				new Timestamp(Date.now() / 1000, 0);
-																			await setDoc(
-																				doc(db, 'events', event.event ?? ''),
-																				{
-																					teams: event.teams,
-																				},
-																				{
-																					merge: true,
-																				},
-																			);
-																		}}
-																		variant="outline"
-																		size="icon"
-																		class="ml-2"><Plus /></Button
-																	>
-																</li>
-															{:else}
-																<li>
-																	No one else singed up for this event. Please
-																	see a board member for next steps.
-																</li>
-															{/each}
-														</ul>
-													{/if}
-												</Dialog.Description>
-											</Dialog.Content>
-										</Dialog.Root>
+												<Dialog.Content>
+													<Dialog.Title>Add People</Dialog.Title>
+													<Dialog.Description>
+														{#if team.members.length >= (event.maxTeamSize ?? 9999)}
+															<Alert class="dark:brightness-200">
+																<AlertTitle>This team is full</AlertTitle>
+															</Alert>
+														{:else}
+															<p>People who signed up for this event:</p>
+															<ul>
+																{#each $allUsers
+																	.filter((m) => m.events.includes(event.event ?? '') && !correctTeamsDataType(event.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
+																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
+																	<li class="flex flex-row items-center">
+																		{person.name}
+																		<Button
+																			on:click={async () => {
+																				const teamButMutable = team;
+																				teamButMutable.members.push({
+																					name: person.name,
+																					email: person.email,
+																				});
+																				teamButMutable.lastUpdatedBy =
+																					$user?.email ?? '';
+																				teamButMutable.lastUpdatedTime =
+																					new Timestamp(Date.now() / 1000, 0);
+																				await setDoc(
+																					doc(db, 'events', event.event ?? ''),
+																					{
+																						teams: event.teams,
+																					},
+																					{
+																						merge: true,
+																					},
+																				);
+																			}}
+																			variant="outline"
+																			size="icon"
+																			class="ml-2"><Plus /></Button
+																		>
+																	</li>
+																{:else}
+																	<li>
+																		No one else singed up for this event. Please
+																		see a board member for next steps.
+																	</li>
+																{/each}
+															</ul>
+														{/if}
+													</Dialog.Description>
+												</Dialog.Content>
+											</Dialog.Root>
+										</div>
 										<Button
 											on:click={async () => {
 												const teamButMutable = team;
@@ -284,6 +263,7 @@
 												);
 											}}
 											disabled={team.teamCaptain === $user?.email}
+											class="w-fit"
 										>
 											Become Team Captain
 										</Button>

@@ -80,66 +80,6 @@
 			email: string;
 		}[];
 
-	const downloadAsJSON = async () => {
-		const teamsJSON = (await getDocs(collection(db, 'events'))).docs.map(
-			(d) => ({
-				event: d.id,
-				...d.data(),
-			}),
-		);
-
-		const teamsBlob = new Blob(
-			[new TextEncoder().encode(JSON.stringify(teamsJSON, null, 2))],
-			{
-				type: 'application/json;charset=utf-8',
-			},
-		);
-
-		const url = URL.createObjectURL(teamsBlob);
-		const a = document.createElement('a');
-		a.style.display = 'none';
-		a.href = url;
-		a.download = 'teams.json';
-		document.body.append(a);
-		a.click();
-		URL.revokeObjectURL(url);
-		a.remove();
-	};
-	const downloadAsCSV = async () => {
-		const header = 'Event,Team Captain,Team Members\n';
-
-		const teamsCSV = (await getDocs(collection(db, 'events'))).docs
-			.map((d) => ({
-				event: d.id,
-				...(d.data() as { teams: Team[] }),
-			}))
-			.map((d) =>
-				d.teams
-					.map(
-						(t) =>
-							`"${d.event}","${t.teamCaptain ?? ''}","${t.members
-								.map((m) => m.name)
-								.join(';')}"`,
-					)
-					.join('\n'),
-			)
-			.join('\n')
-			.replaceAll('\n\n', '\n');
-
-		const teamsBlob = new Blob([new TextEncoder().encode(header + teamsCSV)], {
-			type: 'text/csv;charset=utf-8',
-		});
-
-		const url = URL.createObjectURL(teamsBlob);
-		const a = document.createElement('a');
-		a.style.display = 'none';
-		a.href = url;
-		a.download = 'teams.csv';
-		document.body.append(a);
-		a.click();
-		URL.revokeObjectURL(url);
-		a.remove();
-	};
 	const intersect = <T,>(a: Array<T>, b: Array<T>): T[] => {
 		var setB = new Set(b);
 		return [...new Set(a)].filter((x) => setB.has(x));
@@ -155,19 +95,11 @@
 </script>
 
 <div class="mt-8 flex flex-col items-center">
-	<Button on:click={() => signOut(auth)}>Sign out</Button>
-	<Button href="/" class="my-4">Back to regular sign up page</Button>
-	<Button href="/admin/stats/events">Event stats</Button>
-	<div>
-		<Button on:click={downloadAsJSON}>Download as JSON</Button>
-		<Button on:click={downloadAsCSV}>Download as CSV (for Excel)</Button>
-	</div>
 	<h1 class="text-3xl font-bold max-w-screen-md m-4">
 		Please don't add yourself to events that you aren't in! If people want you
 		to add them to an event they aren't in, tell them to edit their event
 		sign-up form, then message Harry so he can update this page.
 	</h1>
-	<Button href="/events/list">See signup forms</Button>
 	<div class="w-full mb-4 flex flex-row gap-4">
 		<Label class="flex flex-row items-center">
 			<Switch class="mr-2" bind:checked={fuseKeys.event}></Switch>

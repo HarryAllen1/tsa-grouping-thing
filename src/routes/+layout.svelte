@@ -6,6 +6,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { FirebaseApp, userStore } from 'sveltefire';
 	import '../app.css';
+	import Navbar from './Navbar.svelte';
 
 	const user = userStore(auth);
 
@@ -31,9 +32,13 @@
 	onDestroy(unsub);
 </script>
 
-<div class="max-w-full flex flex-col items-center pt-4">
-	<LightSwitch />
+<div class="max-w-full flex flex-col items-center">
 	<FirebaseApp {auth} firestore={db} {storage}>
+		{#if $user}
+			<Navbar />
+		{:else}
+			<LightSwitch class="mt-4" />
+		{/if}
 		<slot />
 	</FirebaseApp>
 </div>
