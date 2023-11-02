@@ -9,7 +9,7 @@
 	import { admins } from './(protected)/admins';
 	import DesktopNav from './DesktopNav.svelte';
 	import MobileNav from './MobileNav.svelte';
-	import { signOut } from 'firebase/auth';
+	import { onAuthStateChanged, signOut } from 'firebase/auth';
 	import { collection, getDocs } from 'firebase/firestore';
 
 	const user = userStore(auth);
@@ -40,17 +40,25 @@
 			  ]
 			: []),
 	];
-	const profilePhoto = fetch(
-		'https://graph.microsoft.com/v1.0/me/photo/$value',
-		{
+	let profilePhoto = fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+		headers: {
+			Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+			'Content-Type': 'image/webp',
+		},
+	})
+		.then((res) => res.blob())
+		.then((blob) => URL.createObjectURL(blob));
+
+	onAuthStateChanged(auth, () => {
+		profilePhoto = fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 				'Content-Type': 'image/webp',
 			},
-		},
-	)
-		.then((res) => res.blob())
-		.then((blob) => URL.createObjectURL(blob));
+		})
+			.then((res) => res.blob())
+			.then((blob) => URL.createObjectURL(blob));
+	});
 
 	const downloadAsJSON = async () => {
 		const teamsJSON = (await getDocs(collection(db, 'events'))).docs.map(
