@@ -1,12 +1,12 @@
 <script lang="ts" setup>
+	import { goto } from '$app/navigation';
 	import { db, type EventDoc, type UserDoc } from '$lib';
 	import { barX, plot } from '@observablehq/plot';
-	import { onMount } from 'svelte';
 	import { collectionStore } from 'sveltefire';
 	import colors from 'tailwindcss/colors';
 	import { eventError } from '../error.js';
 	import ColorKey from './ColorKey.svelte';
-	import { goto } from '$app/navigation';
+	import Button from '../../../../../lib/components/button/button.svelte';
 
 	let graph: HTMLDivElement;
 	const data = collectionStore<UserDoc>(db, 'users');
@@ -58,7 +58,7 @@
 			label.style.textDecoration = 'underline';
 			label.style.cursor = 'pointer';
 			label.addEventListener('click', async () => {
-				await goto(`/stats/${label.textContent}`);
+				await goto(`/admin?q=${encodeURIComponent(label.textContent ?? '')}`);
 			});
 		}
 		plotEl.classList.add('!bg-transparent');
@@ -66,5 +66,6 @@
 	}
 </script>
 
+<Button class="mb-4" href="/admin">Back to admin page</Button>
 <ColorKey />
 <div bind:this={graph} />

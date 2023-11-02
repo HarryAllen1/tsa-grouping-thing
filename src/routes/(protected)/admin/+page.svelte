@@ -20,10 +20,11 @@
 	import Fuse from 'fuse.js';
 	import { Crown, Mail, Minus, Plus, Trash2, UserPlus } from 'lucide-svelte';
 	import { collectionStore, userStore } from 'sveltefire';
+	import { page } from '$app/stores';
 
 	const user = userStore(auth);
 
-	let search = '';
+	$: search = decodeURIComponent($page.url.searchParams.get('q') ?? '');
 
 	const usersDoc = collectionStore<UserDoc>(db, 'users');
 	const events = collectionStore<EventDoc>(db, 'events');
