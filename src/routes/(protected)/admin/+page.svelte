@@ -186,7 +186,14 @@
 			Only show overflown events
 		</Label>
 		<Label class="flex flex-row items-center">
-			<Input type="number" bind:value={threshold} min="0" max="1" step="0.1" />
+			<Input
+				class="w-16"
+				type="number"
+				bind:value={threshold}
+				min="0"
+				max="1"
+				step="0.1"
+			/>
 			Threshold
 		</Label>
 	</div>
