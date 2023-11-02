@@ -173,6 +173,8 @@
 										Email everyone
 									</Button>
 									<Button
+										variant="destructive"
+										size="icon"
 										on:click={() => {
 											if (
 												confirm(
@@ -297,6 +299,7 @@
 									<div class="flex flex-row gap-1">
 										<Button
 											variant="destructive"
+											size="icon"
 											on:click={async () => {
 												if (
 													!confirm('Are you sure you want to delete this team?')
@@ -321,7 +324,10 @@
 										</Button>
 										<Dialog.Root>
 											<Dialog.Trigger>
-												<Button class="bg-green-500 hover:bg-green-400">
+												<Button
+													size="icon"
+													class="bg-green-500 hover:bg-green-400"
+												>
 													<UserPlus />
 												</Button>
 											</Dialog.Trigger>
