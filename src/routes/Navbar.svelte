@@ -11,6 +11,7 @@
 	import MobileNav from './MobileNav.svelte';
 	import { onAuthStateChanged, signOut } from 'firebase/auth';
 	import { collection, getDocs } from 'firebase/firestore';
+	import { onDestroy } from 'svelte';
 
 	const user = userStore(auth);
 
@@ -49,7 +50,7 @@
 		.then((res) => res.blob())
 		.then((blob) => URL.createObjectURL(blob));
 
-	onAuthStateChanged(auth, () => {
+	const unsub = onAuthStateChanged(auth, () => {
 		profilePhoto = fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -120,6 +121,8 @@
 		URL.revokeObjectURL(url);
 		a.remove();
 	};
+
+	onDestroy(unsub);
 </script>
 
 <header
