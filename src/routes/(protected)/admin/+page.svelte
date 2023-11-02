@@ -94,11 +94,9 @@
 		);
 </script>
 
-<div class="mt-8 flex flex-col items-center">
-	<h1 class="text-3xl font-bold max-w-screen-md m-4">
-		Please don't add yourself to events that you aren't in! If people want you
-		to add them to an event they aren't in, tell them to edit their event
-		sign-up form, then message Harry so he can update this page.
+<div class="mt-8 flex flex-col items-center container">
+	<h1 class="text-3xl font-bold max-w-screen-md my-4 mb-6">
+		Please don't add yourself to events that you aren't in!
 	</h1>
 	<div class="w-full mb-4 flex flex-row gap-4">
 		<Label class="flex flex-row items-center">
@@ -117,28 +115,17 @@
 			<Switch class="mr-2" bind:checked={onlyShowOverflown}></Switch>
 			Only show overflown events
 		</Label>
-		<Label class="flex flex-row items-center">
-			<Input
-				class="w-16"
-				type="number"
-				bind:value={threshold}
-				min="0"
-				max="1"
-				step="0.1"
-			/>
-			Threshold
-		</Label>
 	</div>
 	<Input class="mb-4" bind:value={search} placeholder="Search" />
 
 	<p class="mb-4">Green team: full; red team: over or underfilled</p>
 	<div
-		class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
+		class="grid items-center gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
 	>
 		{#each signedUpEvents ?? [] as event}
 			{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
 				<Card.Root
-					class="w-[350px] {eventResults.includes(event.event)
+					class="{eventResults.includes(event.event)
 						? ''
 						: 'hidden'} {onlyShowOverflown &&
 					event.teams.length <= event.perChapter
