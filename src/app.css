@@ -60,3 +60,10 @@
 			'calt' 1;
 	}
 }
+
+.dark g[aria-label='tip'] {
+	fill: theme('colors.slate.900');
+}
+g[aria-label='tip'] {
+	fill: theme('colors.white');
+}
