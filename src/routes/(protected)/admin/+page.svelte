@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { auth, db, events } from '$lib';
 	import { board } from '$lib/board';
 	import { Button } from '$lib/components/button';
@@ -22,13 +21,8 @@
 	import Fuse from 'fuse.js';
 	import { Crown, Mail, Minus, Plus, Trash2, UserPlus } from 'lucide-svelte';
 	import { Doc, collectionStore, userStore } from 'sveltefire';
-	import { admins } from '../admins';
 
 	const user = userStore(auth);
-
-	if (!$user || !admins.includes($user.email?.toLowerCase() ?? '')) {
-		goto('/');
-	}
 
 	let search = '';
 

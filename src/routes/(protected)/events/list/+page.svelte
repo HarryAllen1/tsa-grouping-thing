@@ -1,21 +1,11 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { auth, db } from '$lib';
 	import * as Accordion from '$lib/components/accordion';
 	import { Button } from '$lib/components/button';
 	import type { UserDoc } from '$lib/types';
 	import { collectionStore, userStore } from 'sveltefire';
-	import { admins } from '../../admins';
 
 	const user = userStore(auth);
-
-	if (!$user) {
-		location.href = `/login?redirect=${$page.url.pathname}`;
-	}
-	if (!admins.includes($user?.email?.toLowerCase() ?? '')) {
-		goto('/');
-	}
 
 	const usersDoc = collectionStore<UserDoc>(db, 'users');
 </script>

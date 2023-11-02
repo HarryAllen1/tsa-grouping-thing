@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { auth, db, events } from '$lib';
 	import { Button } from '$lib/components/button';
@@ -10,19 +9,8 @@
 	import { Lock } from 'lucide-svelte';
 	import { derived } from 'svelte/store';
 	import { Doc, docStore, userStore } from 'sveltefire';
-	import { admins } from '../../admins';
 
 	const actualUser = userStore(auth);
-
-	if (!$actualUser) goto(`/login?redirect=${$page.url.pathname}`);
-
-	if (
-		!$actualUser ||
-		!admins.includes($actualUser.email?.toLowerCase() ?? '')
-	) {
-		goto('/');
-	}
-
 	const user = derived(actualUser, ($u) => ({
 		...$u,
 		email: decodeURIComponent($page.params.email),

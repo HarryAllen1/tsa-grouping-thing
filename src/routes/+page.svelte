@@ -17,7 +17,7 @@
 	} from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
 	import { Doc, collectionStore, docStore, userStore } from 'sveltefire';
-	import { admins } from './admins';
+	import { admins } from './(protected)/admins';
 
 	const user = userStore(auth);
 

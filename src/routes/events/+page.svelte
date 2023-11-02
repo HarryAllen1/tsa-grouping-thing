@@ -11,8 +11,6 @@
 
 	const user = userStore(auth);
 
-	if (!$user) location.href = '/login?redirect=/events';
-
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 
 	$: eventMap = events.reduce(
