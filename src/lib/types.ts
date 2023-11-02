@@ -8,11 +8,16 @@ export const correctDocType = (data: DocumentData) => data as EventDoc;
 export interface EventDoc {
 	teams: Team[];
 	locked?: boolean;
+	event: string;
+	minTeamSize: number;
+	maxTeamSize: number;
+	perChapter: number;
 }
 
 export interface Team {
 	teamCaptain?: string;
 	members: { name: string; email: string }[];
+	locked?: boolean;
 	lastUpdatedBy?: string;
 	lastUpdatedTime?: Timestamp;
 }

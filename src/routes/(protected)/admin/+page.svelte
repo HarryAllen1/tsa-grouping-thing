@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { auth, db, events } from '$lib';
+	import { auth, db, type EventDoc, type Team, type UserDoc } from '$lib';
 	import { board } from '$lib/board';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
@@ -8,37 +8,39 @@
 	import Label from '$lib/components/label/label.svelte';
 	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
-	import { correctDocType, type Team, type UserDoc } from '$lib/types';
 	import { signOut } from 'firebase/auth';
 	import {
-		Timestamp,
 		collection,
 		doc,
 		getDocs,
 		setDoc,
+		Timestamp,
 		type DocumentData,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import { Crown, Mail, Minus, Plus, Trash2, UserPlus } from 'lucide-svelte';
-	import { Doc, collectionStore, userStore } from 'sveltefire';
+	import { collectionStore, userStore } from 'sveltefire';
 
 	const user = userStore(auth);
 
 	let search = '';
 
 	const usersDoc = collectionStore<UserDoc>(db, 'users');
+	const events = collectionStore<EventDoc>(db, 'events');
 
-	$: eventData = events
-		.map((e) => ({
-			...e,
-			members: ($usersDoc?.filter((m) => m.events.includes(e.event)) ?? []).map(
-				(m) => ({
-					name: m.name,
-					email: m.email,
-				}),
-			),
-		}))
-		.sort((a, b) => a.event.localeCompare(b.event));
+	$: eventData = $events.length
+		? $events
+				.map((e) => ({
+					...e,
+					members: (
+						$usersDoc?.filter((m) => m.events.includes(e.event)) ?? []
+					).map((m) => ({
+						name: m.name,
+						email: m.email,
+					})),
+				}))
+				.sort((a, b) => a.event.localeCompare(b.event))
+		: [];
 
 	let shouldHideIndividualEvents = false;
 	let onlyShowOverflown = false;
@@ -181,279 +183,201 @@
 		class="flex flex-col items-center gap-4 lg:grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:items-start"
 	>
 		{#each signedUpEvents ?? [] as event}
-			<Doc ref="events/{event.event}" let:data={untyped}>
-				{@const data = correctDocType(untyped)}
-				{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
-					<Card.Root
-						class="w-[350px] {eventResults.includes(event.event)
-							? ''
-							: 'hidden'} {onlyShowOverflown &&
-						data.teams.length <= event.perChapter
-							? 'hidden'
-							: ''}"
-					>
-						<Card.Header>
-							<Card.Title>{event.event}</Card.Title>
-							<Card.Description>
-								<ul>
-									<li>
-										Min {event.minTeamSize} people per team
-									</li>
-									<li>
-										Max {event.maxTeamSize} people per team
-									</li>
-									<li class:text-red-500={data.teams.length > event.perChapter}>
-										Max {event.perChapter} teams per chapter (currently {data
-											.teams.length})
-									</li>
-									<li>
-										{data.teams.reduce(
-											(acc, curr) => acc + curr.members.length,
-											0,
-										)}/{eventData.find((e) => e.event === event.event)?.members
-											.length ?? 0} people joined teams
-									</li>
-								</ul>
-								{@const peopleInTeams = data.teams.reduce(
-									(acc, curr) => [...acc, ...curr.members],
-									reallyStupidFunction([]),
-								)}
-								{@const peopleNotInTeams = $usersDoc.filter(
-									(m) =>
-										m.events.includes(event.event ?? '') &&
-										!peopleInTeams.find(
-											(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
-										),
-								)}
-								{#if peopleNotInTeams.length}
-									<details>
-										<summary>People not in teams</summary>
-										<Button
-											href="mailto:?cc={board.join(';')}&bcc={peopleNotInTeams
-												.map((p) => p.email)
-												.join(';')}&subject={event.event}"
-											>Email everyone</Button
-										>
-										<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-											{#each peopleNotInTeams as person}
-												<li>{person.name}</li>
-											{/each}
-										</ul>
-									</details>
-								{/if}
-							</Card.Description>
-						</Card.Header>
-						<Card.Content class="flex flex-col gap-4">
-							<Label class="flex flex-row items-center gap-2">
-								<Switch
-									onCheckedChange={async (checked) => {
-										const dataButMutable = data;
-										dataButMutable.locked = checked;
-										await setDoc(
-											doc(db, 'events', event.event ?? ''),
-											{
-												locked: checked,
-											},
-											{
-												merge: true,
-											},
-										);
-									}}
-									checked={data.locked ?? false}
-								/>
-								Lock event
-							</Label>
-							{#if event.event === 'Technology Bowl'}
-								<p>
-									The team for this event will be based off of a test which you
-									will take at a later date.
-								</p>
+			{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
+				<Card.Root
+					class="w-[350px] {eventResults.includes(event.event)
+						? ''
+						: 'hidden'} {onlyShowOverflown &&
+					event.teams.length <= event.perChapter
+						? 'hidden'
+						: ''}"
+				>
+					<Card.Header>
+						<Card.Title>{event.event}</Card.Title>
+						<Card.Description>
+							<ul>
+								<li>
+									Min {event.minTeamSize} people per team
+								</li>
+								<li>
+									Max {event.maxTeamSize} people per team
+								</li>
+								<li class:text-red-500={event.teams.length > event.perChapter}>
+									Max {event.perChapter} teams per chapter (currently {event
+										.teams.length})
+								</li>
+								<li>
+									{event.teams.reduce(
+										(acc, curr) => acc + curr.members.length,
+										0,
+									)}/{eventData.find((e) => e.event === event.event)?.members
+										.length ?? 0} people joined teams
+								</li>
+							</ul>
+							{@const peopleInTeams = event.teams.reduce(
+								(acc, curr) => [...acc, ...curr.members],
+								reallyStupidFunction([]),
+							)}
+							{@const peopleNotInTeams = $usersDoc.filter(
+								(m) =>
+									m.events.includes(event.event ?? '') &&
+									!peopleInTeams.find(
+										(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
+									),
+							)}
+							{#if peopleNotInTeams.length}
+								<details>
+									<summary>People not in teams</summary>
+									<Button
+										href="mailto:?cc={board.join(';')}&bcc={peopleNotInTeams
+											.map((p) => p.email)
+											.join(';')}&subject={event.event}">Email everyone</Button
+									>
+									<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+										{#each peopleNotInTeams as person}
+											<li>{person.name}</li>
+										{/each}
+									</ul>
+								</details>
 							{/if}
-							{#each data.teams as te}
-								{@const team = correctType(te)}
-								<Card.Root
-									class=" {team.members.length > event.maxTeamSize ||
-									team.members.length < event.minTeamSize
-										? 'bg-red-300 dark:bg-red-950'
-										: team.members.length === event.maxTeamSize
-										? 'bg-green-300 dark:bg-green-950'
-										: 'bg-blue-100 dark:bg-slate-900'} bg-opacity-20"
-								>
-									<Card.Title class="m-2 ml-4 flex flex-col gap-2">
-										<div class="flex flex-row gap-1">
-											<Button
-												variant="destructive"
-												on:click={async () => {
-													if (
-														!confirm(
-															'Are you sure you want to delete this team?',
-														)
-													)
-														return;
-													const teamsButMutable = data;
-													teamsButMutable.teams = data.teams.filter(
-														(t) => t !== te,
-													);
-													await setDoc(
-														doc(db, 'events', event.event ?? ''),
-														{
-															teams: data.teams,
-														},
-														{
-															merge: true,
-														},
-													);
-												}}
-											>
-												<Trash2 />
-											</Button>
-											<Dialog.Root>
-												<Dialog.Trigger>
-													<Button class="bg-green-500 hover:bg-green-400">
-														<UserPlus />
-													</Button>
-												</Dialog.Trigger>
+						</Card.Description>
+					</Card.Header>
+					<Card.Content class="flex flex-col gap-4">
+						<Label class="flex flex-row items-center gap-2">
+							<Switch
+								onCheckedChange={async (checked) => {
+									const dataButMutable = event;
+									dataButMutable.locked = checked;
+									await setDoc(
+										doc(db, 'events', event.event ?? ''),
+										{
+											locked: checked,
+										},
+										{
+											merge: true,
+										},
+									);
+								}}
+								checked={event.locked ?? false}
+							/>
+							Lock event
+						</Label>
+						{#if event.event === 'Technology Bowl'}
+							<p>
+								The team for this event will be based off of a test which you
+								will take at a later date.
+							</p>
+						{/if}
+						{#each event.teams as te}
+							{@const team = correctType(te)}
+							<Card.Root
+								class=" {team.members.length > event.maxTeamSize ||
+								team.members.length < event.minTeamSize
+									? 'bg-red-300 dark:bg-red-950'
+									: team.members.length === event.maxTeamSize
+									? 'bg-green-300 dark:bg-green-950'
+									: 'bg-blue-100 dark:bg-slate-900'} bg-opacity-20"
+							>
+								<Card.Title class="m-2 ml-4 flex flex-col gap-2">
+									<div class="flex flex-row gap-1">
+										<Button
+											variant="destructive"
+											on:click={async () => {
+												if (
+													!confirm('Are you sure you want to delete this team?')
+												)
+													return;
+												const teamsButMutable = event;
+												teamsButMutable.teams = event.teams.filter(
+													(t) => t !== te,
+												);
+												await setDoc(
+													doc(db, 'events', event.event ?? ''),
+													{
+														teams: event.teams,
+													},
+													{
+														merge: true,
+													},
+												);
+											}}
+										>
+											<Trash2 />
+										</Button>
+										<Dialog.Root>
+											<Dialog.Trigger>
+												<Button class="bg-green-500 hover:bg-green-400">
+													<UserPlus />
+												</Button>
+											</Dialog.Trigger>
 
-												<Dialog.Content class="max-h-full overflow-y-scroll">
-													<Dialog.Title>Add People</Dialog.Title>
-													<Dialog.Description>
-														<p>All people not already in a team:</p>
-														<ul>
-															{#each $usersDoc
-																.filter((p) => !data.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
-																.sort( (a, b) => a?.name?.localeCompare(b?.name), ) as person}
-																<li
-																	class:text-green-500={$usersDoc
-																		.filter((m) =>
-																			m.events.includes(event.event ?? ''),
-																		)
-																		.find(
-																			(e) => e.email === (person?.email ?? ''),
-																		)}
-																	class="flex flex-row items-center"
-																>
-																	{person.name}
-																	<Button
-																		on:click={async () => {
-																			const teamButMutable = team;
-																			teamButMutable.members.push({
-																				name: person.name,
-																				email: person.email,
-																			});
-																			teamButMutable.lastUpdatedBy =
-																				$user?.email ?? '';
-																			teamButMutable.lastUpdatedTime =
-																				new Timestamp(Date.now() / 1000, 0);
-
-																			await setDoc(
-																				doc(db, 'events', event.event ?? ''),
-																				{
-																					teams: data.teams,
-																				},
-																				{
-																					merge: true,
-																				},
-																			);
-																		}}
-																		variant="outline"
-																		size="icon"
-																		class="ml-2"><Plus /></Button
-																	>
-																</li>
-															{:else}
-																<li>
-																	No one else singed up for this event. Teams
-																	should probably be merged.
-																</li>
-															{/each}
-														</ul>
-													</Dialog.Description>
-												</Dialog.Content>
-											</Dialog.Root>
-
-											<Dialog.Root>
-												<Dialog.Trigger>
-													<Button>Team Captain</Button>
-												</Dialog.Trigger>
-												<Dialog.Content>
-													<Dialog.Title>Manage team captain</Dialog.Title>
-													<Button
-														on:click={async () => {
-															const teamButMutable = team;
-															teamButMutable.teamCaptain = '';
-															teamButMutable.lastUpdatedBy = $user?.email ?? '';
-															teamButMutable.lastUpdatedTime = new Timestamp(
-																Date.now() / 1000,
-																0,
-															);
-															await setDoc(
-																doc(db, 'events', event.event ?? ''),
-																{
-																	teams: data.teams,
-																},
-																{
-																	merge: true,
-																},
-															);
-														}}>Clear</Button
-													>
+											<Dialog.Content class="max-h-full overflow-y-scroll">
+												<Dialog.Title>Add People</Dialog.Title>
+												<Dialog.Description>
+													<p>All people not already in a team:</p>
 													<ul>
-														{#each team.members as teamMember}
-															<!-- svelte-ignore a11y-click-events-have-key-events -->
-															<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+														{#each $usersDoc
+															.filter((p) => !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
+															.sort( (a, b) => a?.name?.localeCompare(b?.name), ) as person}
 															<li
-																class="cursor-pointer"
-																on:click={async () => {
-																	const teamButMutable = team;
-																	teamButMutable.teamCaptain =
-																		teamMember?.email ?? '';
-																	teamButMutable.lastUpdatedBy =
-																		$user?.email ?? '';
-																	teamButMutable.lastUpdatedTime =
-																		new Timestamp(Date.now() / 1000, 0);
-																	await setDoc(
-																		doc(db, 'events', event.event ?? ''),
-																		{
-																			teams: data.teams,
-																		},
-																		{
-																			merge: true,
-																		},
-																	);
-																}}
+																class:text-green-500={$usersDoc
+																	.filter((m) =>
+																		m.events.includes(event.event ?? ''),
+																	)
+																	.find(
+																		(e) => e.email === (person?.email ?? ''),
+																	)}
+																class="flex flex-row items-center"
 															>
-																{teamMember.name}
-																{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
-																	<Tooltip.Root>
-																		<Tooltip.Trigger>
-																			<Crown class="h-4 w-4" />
-																		</Tooltip.Trigger>
-																		<Tooltip.Content>
-																			Team captain
-																		</Tooltip.Content>
-																	</Tooltip.Root>
-																{/if}
+																{person.name}
+																<Button
+																	on:click={async () => {
+																		const teamButMutable = team;
+																		teamButMutable.members.push({
+																			name: person.name,
+																			email: person.email,
+																		});
+																		teamButMutable.lastUpdatedBy =
+																			$user?.email ?? '';
+																		teamButMutable.lastUpdatedTime =
+																			new Timestamp(Date.now() / 1000, 0);
+
+																		await setDoc(
+																			doc(db, 'events', event.event ?? ''),
+																			{
+																				teams: event.teams,
+																			},
+																			{
+																				merge: true,
+																			},
+																		);
+																	}}
+																	variant="outline"
+																	size="icon"
+																	class="ml-2"><Plus /></Button
+																>
+															</li>
+														{:else}
+															<li>
+																No one else singed up for this event. Teams
+																should probably be merged.
 															</li>
 														{/each}
 													</ul>
-												</Dialog.Content>
-											</Dialog.Root>
-										</div>
-										<div>
-											<Button
-												href="mailto:?cc={board.join(';')}&bcc={team.members
-													.map((p) => p.email)
-													.join(';')}&subject={event.event}"
-											>
-												<Mail />
-											</Button>
-										</div>
-										<div>
-											<Label class="flex flex-row items-center gap-2">
-												<Switch
-													onCheckedChange={async (checked) => {
+												</Dialog.Description>
+											</Dialog.Content>
+										</Dialog.Root>
+
+										<Dialog.Root>
+											<Dialog.Trigger>
+												<Button>Team Captain</Button>
+											</Dialog.Trigger>
+											<Dialog.Content>
+												<Dialog.Title>Manage team captain</Dialog.Title>
+												<Button
+													on:click={async () => {
 														const teamButMutable = team;
-														teamButMutable.locked = checked;
+														teamButMutable.teamCaptain = '';
 														teamButMutable.lastUpdatedBy = $user?.email ?? '';
 														teamButMutable.lastUpdatedTime = new Timestamp(
 															Date.now() / 1000,
@@ -462,108 +386,183 @@
 														await setDoc(
 															doc(db, 'events', event.event ?? ''),
 															{
-																teams: data.teams,
+																teams: event.teams,
+															},
+															{
+																merge: true,
+															},
+														);
+													}}>Clear</Button
+												>
+												<ul>
+													{#each team.members as teamMember}
+														<!-- svelte-ignore a11y-click-events-have-key-events -->
+														<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+														<li
+															class="cursor-pointer"
+															on:click={async () => {
+																const teamButMutable = team;
+																teamButMutable.teamCaptain =
+																	teamMember?.email ?? '';
+																teamButMutable.lastUpdatedBy =
+																	$user?.email ?? '';
+																teamButMutable.lastUpdatedTime = new Timestamp(
+																	Date.now() / 1000,
+																	0,
+																);
+																await setDoc(
+																	doc(db, 'events', event.event ?? ''),
+																	{
+																		teams: event.teams,
+																	},
+																	{
+																		merge: true,
+																	},
+																);
+															}}
+														>
+															{teamMember.name}
+															{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+																<Tooltip.Root>
+																	<Tooltip.Trigger>
+																		<Crown class="h-4 w-4" />
+																	</Tooltip.Trigger>
+																	<Tooltip.Content>
+																		Team captain
+																	</Tooltip.Content>
+																</Tooltip.Root>
+															{/if}
+														</li>
+													{/each}
+												</ul>
+											</Dialog.Content>
+										</Dialog.Root>
+									</div>
+									<div>
+										<Button
+											href="mailto:?cc={board.join(';')}&bcc={team.members
+												.map((p) => p.email)
+												.join(';')}&subject={event.event}"
+										>
+											<Mail />
+										</Button>
+									</div>
+									<div>
+										<Label class="flex flex-row items-center gap-2">
+											<Switch
+												onCheckedChange={async (checked) => {
+													const teamButMutable = team;
+													teamButMutable.locked = checked;
+													teamButMutable.lastUpdatedBy = $user?.email ?? '';
+													teamButMutable.lastUpdatedTime = new Timestamp(
+														Date.now() / 1000,
+														0,
+													);
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: event.teams,
+														},
+														{
+															merge: true,
+														},
+													);
+												}}
+												checked={team.locked ?? false}
+											/>
+											Lock team
+										</Label>
+									</div>
+								</Card.Title>
+								<Card.Content>
+									<ul>
+										{#each team.members as teamMember}
+											<!-- svelte-ignore a11y-click-events-have-key-events -->
+											<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+											<li
+												class:text-green-500={$usersDoc
+													.filter((m) => m.events.includes(event.event ?? ''))
+													.find(
+														(e) =>
+															e.email?.toLowerCase() ===
+															teamMember.email.toLowerCase(),
+													)}
+												class="flex flex-row items-center gap-2"
+											>
+												<a
+													href="/events/{encodeURIComponent(teamMember.email)}"
+												>
+													{teamMember.name}
+												</a>
+												{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+													<Tooltip.Root>
+														<Tooltip.Trigger>
+															<Crown class="h-4 w-4" />
+														</Tooltip.Trigger>
+														<Tooltip.Content>Team captain</Tooltip.Content>
+													</Tooltip.Root>
+												{/if}
+												<Button
+													size="icon"
+													class="bg-transparent h-5"
+													variant="outline"
+													on:click={async () => {
+														const teamButMutable = team;
+														teamButMutable.members.splice(
+															teamButMutable.members.findIndex(
+																(e) =>
+																	e.email === (teamMember?.email ?? '') &&
+																	e.name === (teamMember?.name ?? ''),
+															),
+															1,
+														);
+														teamButMutable.lastUpdatedBy = $user?.email ?? '';
+														await setDoc(
+															doc(db, 'events', event.event ?? ''),
+															{
+																teams: event.teams,
 															},
 															{
 																merge: true,
 															},
 														);
 													}}
-													checked={team.locked ?? false}
-												/>
-												Lock team
-											</Label>
-										</div>
-									</Card.Title>
-									<Card.Content>
-										<ul>
-											{#each team.members as teamMember}
-												<!-- svelte-ignore a11y-click-events-have-key-events -->
-												<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-												<li
-													class:text-green-500={$usersDoc
-														.filter((m) => m.events.includes(event.event ?? ''))
-														.find(
-															(e) =>
-																e.email?.toLowerCase() ===
-																teamMember.email.toLowerCase(),
-														)}
-													class="flex flex-row items-center gap-2"
 												>
-													<a
-														href="/events/{encodeURIComponent(
-															teamMember.email,
-														)}"
-													>
-														{teamMember.name}
-													</a>
-													{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
-														<Tooltip.Root>
-															<Tooltip.Trigger>
-																<Crown class="h-4 w-4" />
-															</Tooltip.Trigger>
-															<Tooltip.Content>Team captain</Tooltip.Content>
-														</Tooltip.Root>
-													{/if}
-													<Button
-														size="icon"
-														class="bg-transparent h-5"
-														variant="outline"
-														on:click={async () => {
-															const teamButMutable = team;
-															teamButMutable.members.splice(
-																teamButMutable.members.findIndex(
-																	(e) =>
-																		e.email === (teamMember?.email ?? '') &&
-																		e.name === (teamMember?.name ?? ''),
-																),
-																1,
-															);
-															teamButMutable.lastUpdatedBy = $user?.email ?? '';
-															await setDoc(
-																doc(db, 'events', event.event ?? ''),
-																{
-																	teams: data.teams,
-																},
-																{
-																	merge: true,
-																},
-															);
-														}}
-													>
-														<Minus />
-													</Button>
-												</li>
-											{/each}
-										</ul>
-									</Card.Content>
-								</Card.Root>
-							{/each}
-						</Card.Content>
-						<Card.Footer>
-							<Button
-								on:click={async () => {
-									data.teams.push({
-										members: [],
-										lastUpdatedBy: $user?.email ?? '',
-									});
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											teams: data.teams,
-										},
-										{
-											merge: true,
-										},
-									);
-								}}
-							>
-								Create Team
-							</Button>
-						</Card.Footer>
-					</Card.Root>
-				{/if}
-			</Doc>
+													<Minus />
+												</Button>
+											</li>
+										{/each}
+									</ul>
+								</Card.Content>
+							</Card.Root>
+						{/each}
+					</Card.Content>
+					<Card.Footer>
+						<Button
+							on:click={async () => {
+								event.teams.push({
+									members: [],
+									lastUpdatedBy: $user?.email ?? '',
+								});
+								await setDoc(
+									doc(db, 'events', event.event ?? ''),
+									{
+										teams: event.teams,
+									},
+									{
+										merge: true,
+									},
+								);
+							}}
+						>
+							Create Team
+						</Button>
+					</Card.Footer>
+				</Card.Root>
+			{/if}
 		{/each}
 	</div>
+	{#if !signedUpEvents?.length}
+		<md-circular-progress indeterminate></md-circular-progress>
+	{/if}
 </div>

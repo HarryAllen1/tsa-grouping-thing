@@ -3,7 +3,7 @@
 	import { auth, db, storage } from '$lib';
 	import { LightSwitch } from '$lib/components/light-switch';
 	import { onAuthStateChanged } from 'firebase/auth';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { FirebaseApp, userStore } from 'sveltefire';
 	import '../app.css';
 
@@ -22,6 +22,10 @@
 			await auth.currentUser?.delete();
 			location.href = '/login';
 		}
+	});
+
+	onMount(() => {
+		import('@material/web/progress/circular-progress');
 	});
 
 	onDestroy(unsub);
