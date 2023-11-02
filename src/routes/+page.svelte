@@ -36,6 +36,19 @@
 		: [];
 
 	$: individualEvents = signedUpEvents.filter((e) => e.maxTeamSize === 1);
+	$: eventData = $events.length
+		? $events
+				.map((e) => ({
+					...e,
+					members: (
+						$allUsers?.filter((m) => m.events.includes(e.event)) ?? []
+					).map((m) => ({
+						name: m.name,
+						email: m.email,
+					})),
+				}))
+				.sort((a, b) => a.event.localeCompare(b.event))
+		: [];
 </script>
 
 <div class="mt-8 flex flex-col items-center container">
@@ -90,7 +103,25 @@
 							{event.event}
 						</Card.Title>
 						<Card.Description>
-							Max {event.maxTeamSize} people per team
+							<ul>
+								<li>
+									Min {event.minTeamSize} people per team
+								</li>
+								<li>
+									Max {event.maxTeamSize} people per team
+								</li>
+								<li class:text-red-500={event.teams.length > event.perChapter}>
+									Max {event.perChapter} teams per chapter (currently {event
+										.teams.length})
+								</li>
+								<li>
+									{event.teams.reduce(
+										(acc, curr) => acc + curr.members.length,
+										0,
+									)}/{eventData.find((e) => e.event === event.event)?.members
+										.length ?? 0} people joined teams
+								</li>
+							</ul>
 						</Card.Description>
 					</Card.Header>
 					<Card.Content class="flex flex-col gap-4">
