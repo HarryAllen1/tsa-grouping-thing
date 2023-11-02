@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { auth, db, type EventDoc, type Team, type UserDoc } from '$lib';
+	import { auth, db, type EventDoc, type UserDoc } from '$lib';
 	import { board } from '$lib/board';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
@@ -9,11 +9,8 @@
 	import Label from '$lib/components/label/label.svelte';
 	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
-	import { signOut } from 'firebase/auth';
 	import {
-		collection,
 		doc,
-		getDocs,
 		setDoc,
 		Timestamp,
 		type DocumentData,
@@ -430,8 +427,6 @@
 								<Card.Content>
 									<ul>
 										{#each team.members as teamMember}
-											<!-- svelte-ignore a11y-click-events-have-key-events -->
-											<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 											<li
 												class:text-green-500={$usersDoc
 													.filter((m) => m.events.includes(event.event ?? ''))

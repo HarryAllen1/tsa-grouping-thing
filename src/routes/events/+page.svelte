@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { EventDoc, UserDoc } from '$lib';
 	import { auth, db } from '$lib';
-	import { Button } from '$lib/components/button';
 	import { Checkbox } from '$lib/components/checkbox';
 	import { Label } from '$lib/components/label';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';

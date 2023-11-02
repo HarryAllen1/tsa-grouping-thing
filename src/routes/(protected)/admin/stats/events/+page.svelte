@@ -6,7 +6,6 @@
 	import colors from 'tailwindcss/colors';
 	import { eventError } from '../eventError.js';
 	import ColorKey from './ColorKey.svelte';
-	import Button from '../../../../../lib/components/button/button.svelte';
 
 	let graph: HTMLDivElement;
 	const data = collectionStore<UserDoc>(db, 'users');
@@ -35,7 +34,7 @@
 				barX(events, {
 					x: 'freq',
 					y: 'name',
-					fill(d: { name: string; freq: number }, i) {
+					fill(d: { name: string; freq: number }) {
 						const error = eventError(d.name, $eventsCollection, $data);
 						return error === 'errorNotEnough'
 							? colors.blue[500]
