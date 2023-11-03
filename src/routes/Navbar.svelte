@@ -70,12 +70,15 @@
 	});
 
 	const downloadAsJSON = async () => {
-		const teamsJSON = (await getDocs(collection(db, 'events'))).docs.map(
-			(d) => ({
-				event: d.id,
+		const teamsJSON = {
+			events: (await getDocs(collection(db, 'events'))).docs.map((d) => ({
 				...d.data(),
-			}),
-		);
+			})),
+			users: (await getDocs(collection(db, 'users'))).docs.map((d) => ({
+				user: d.id,
+				...d.data(),
+			})),
+		};
 
 		const teamsBlob = new Blob(
 			[new TextEncoder().encode(JSON.stringify(teamsJSON, null, 2))],
