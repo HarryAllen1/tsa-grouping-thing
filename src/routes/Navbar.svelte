@@ -28,7 +28,7 @@
 		...(admins.includes($user?.email?.toLowerCase() ?? '')
 			? [
 					{
-						title: 'Admin',
+						title: 'Admin Teams',
 						href: '/admin',
 					},
 					{
