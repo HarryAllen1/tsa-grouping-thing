@@ -77,8 +77,8 @@
 			email: string;
 		}[];
 
-	const intersect = <T,>(a: Array<T>, b: Array<T>): T[] => {
-		var setB = new Set(b);
+	const intersect = <T,>(a: T[], b: T[]): T[] => {
+		const setB = new Set(b);
 		return [...new Set(a)].filter((x) => setB.has(x));
 	};
 	const nonOverlappingEvents = (event: (typeof eventData)[0]) =>
