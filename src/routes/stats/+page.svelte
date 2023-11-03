@@ -32,6 +32,14 @@
 			);
 		const plotEl = plot({
 			grid: true,
+			x: {
+				domain: [0, Math.max(...events.map((e) => e.freq))],
+				label: 'Frequency',
+			},
+			y: {
+				domain: events.map((e) => e.name),
+				label: 'Event name',
+			},
 			marks: [
 				barX(events, {
 					x: 'freq',
