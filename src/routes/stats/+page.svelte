@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 	import { goto } from '$app/navigation';
-	import { db, type EventDoc, type UserDoc } from '$lib';
+	import { auth, db, type EventDoc, type UserDoc } from '$lib';
 	import { barX, plot } from '@observablehq/plot';
-	import { collectionStore } from 'sveltefire';
+	import { collectionStore, userStore } from 'sveltefire';
 	import colors from 'tailwindcss/colors';
 	import { eventError } from './eventError.js';
 	import ColorKey from './ColorKey.svelte';
+	import { admins } from '../(protected)/admins.js';
 
 	let graph: HTMLDivElement;
+	const user = userStore(auth);
 	const data = collectionStore<UserDoc>(db, 'users');
 	const eventsCollection = collectionStore<EventDoc>(db, 'events');
 
@@ -49,17 +51,20 @@
 				}),
 			],
 		});
-		const labels = plotEl.querySelectorAll<SVGElement>(
-			'g[aria-label="y-axis tick label"] > text',
-		);
+		if (admins.includes($user?.email?.toLowerCase() ?? '')) {
+			const labels = plotEl.querySelectorAll<SVGElement>(
+				'g[aria-label="y-axis tick label"] > text',
+			);
 
-		for (const label of labels) {
-			label.style.textDecoration = 'underline';
-			label.style.cursor = 'pointer';
-			label.addEventListener('click', async () => {
-				await goto(`/admin?q=${encodeURIComponent(label.textContent ?? '')}`);
-			});
+			for (const label of labels) {
+				label.style.textDecoration = 'underline';
+				label.style.cursor = 'pointer';
+				label.addEventListener('click', async () => {
+					await goto(`/admin?q=${encodeURIComponent(label.textContent ?? '')}`);
+				});
+			}
 		}
+
 		plotEl.classList.add('!bg-transparent');
 		graph?.replaceChildren(plotEl);
 	}
