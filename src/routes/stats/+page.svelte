@@ -4,7 +4,7 @@
 	import { barX, plot } from '@observablehq/plot';
 	import { collectionStore } from 'sveltefire';
 	import colors from 'tailwindcss/colors';
-	import { eventError } from '../eventError.js';
+	import { eventError } from './eventError.js';
 	import ColorKey from './ColorKey.svelte';
 
 	let graph: HTMLDivElement;

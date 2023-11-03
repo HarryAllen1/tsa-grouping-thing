@@ -25,6 +25,10 @@
 			title: 'Event signup',
 			href: '/events',
 		},
+		{
+			title: 'Event Stats',
+			href: '/stats',
+		},
 		...(admins.includes($user?.email?.toLowerCase() ?? '')
 			? [
 					{
@@ -34,10 +38,6 @@
 					{
 						title: 'Admin Events',
 						href: '/events/list',
-					},
-					{
-						title: 'Event Stats',
-						href: '/admin/stats/events',
 					},
 			  ]
 			: []),
