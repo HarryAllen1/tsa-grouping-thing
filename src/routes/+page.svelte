@@ -19,10 +19,21 @@
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
+	import Label from '../lib/components/label/label.svelte';
+	import Switch from '../lib/components/switch/switch.svelte';
+	import { localStorageStore } from '../lib/components/light-switch/local-storage-store';
 
 	const user = userStore(auth);
 
 	if (!$user) goto('/login');
+
+	const yellowMode = localStorageStore('yellowMode', false);
+
+	$: if ($yellowMode) {
+		document.body.classList.add('yellow');
+	} else {
+		document.body.classList.remove('yellow');
+	}
 
 	const allUsers = collectionStore<UserDoc>(db, 'users');
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email?.toLowerCase()}`);
@@ -369,4 +380,8 @@
 			{/each}
 		</div>
 	{/if}
+	<div class="flex items-center space-x-2">
+		<Switch bind:checked={$yellowMode} id="yellow" />
+		<Label for="yellow">Yellow mode</Label>
+	</div>
 </div>

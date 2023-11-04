@@ -65,3 +65,8 @@
 g[aria-label='tip'] {
 	fill: theme('colors.white');
 }
+
+body.yellow {
+	--background: 64 100% 61%;
+	--foreground: 0 0% 0%;
+}
