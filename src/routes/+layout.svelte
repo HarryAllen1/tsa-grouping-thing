@@ -36,7 +36,6 @@
 	onMount(() => {
 		if (
 			$user?.email === 's-asli@lwsd.org' ||
-			$user?.email === 's-hallen@lwsd.org' ||
 			$user?.email === 's-sliyanage@lwsd.org'
 		) {
 			const listener = async () => {
