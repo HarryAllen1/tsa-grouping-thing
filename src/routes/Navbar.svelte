@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { auth, db, type Team } from '$lib';
+	import { auth, aww, db, type Team } from '$lib';
 	import * as Avatar from '$lib/components/avatar';
 	import { Button } from '$lib/components/button';
 	import * as Dropdown from '$lib/components/dropdown-menu';
@@ -185,7 +185,12 @@
 						</Dropdown.Label>
 						<Dropdown.Label class="font-normal">{$user?.email}</Dropdown.Label>
 						<Dropdown.Separator />
-						<Dropdown.Item on:click={() => signOut(auth)}>
+						<Dropdown.Item
+							on:click={async () => {
+								signOut(auth);
+								aww.play();
+							}}
+						>
 							<LogOut class="mr-2 h-4 w-4" />
 							<span>Log out</span>
 						</Dropdown.Item>
