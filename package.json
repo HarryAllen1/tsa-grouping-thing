@@ -12,6 +12,7 @@
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
+		"@hcaptcha/types": "^1.0.3",
 		"@sveltejs/adapter-vercel": "^3.0.3",
 		"@sveltejs/kit": "^1.27.2",
 		"@types/canvas-confetti": "^1.6.2",
