@@ -34,7 +34,10 @@
 	});
 
 	onMount(() => {
-		if ($user?.email === 's-asli@lwsd.org')
+		if (
+			$user?.email === 's-asli@lwsd.org' ||
+			$user?.email === 's-sliyanage@lwsd.org'
+		)
 			mainEl.addEventListener('click', async () => {
 				if (clicksUntilCaptcha > 0) {
 					clicksUntilCaptcha--;
