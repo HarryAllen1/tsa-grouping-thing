@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { auth } from '$lib';
+	import { auth, yay } from '$lib';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
+	import confetti from 'canvas-confetti';
 	import {
 		OAuthProvider,
 		browserLocalPersistence,
@@ -47,6 +48,8 @@
 					const cred = OAuthProvider.credentialFromResult(user);
 					localStorage.setItem('accessToken', cred?.accessToken ?? '');
 					const params = $page.url.searchParams.get('redirect');
+					confetti();
+					yay.play();
 					goto(params ?? '/');
 				}
 			}}

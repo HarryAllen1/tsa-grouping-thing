@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { auth, db, type EventDoc, type UserDoc } from '$lib';
+	import { auth, db, yay, type EventDoc, type UserDoc, aww } from '$lib';
 	import { board } from '$lib/board';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
@@ -9,6 +9,7 @@
 	import Label from '$lib/components/label/label.svelte';
 	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
+	import confetti from 'canvas-confetti';
 	import {
 		doc,
 		setDoc,
@@ -318,6 +319,7 @@
 														merge: true,
 													},
 												);
+												aww.play();
 											}}
 										>
 											<Trash2 />
@@ -372,6 +374,8 @@
 																				merge: true,
 																			},
 																		);
+																		confetti();
+																		yay.play();
 																	}}
 																	variant="outline"
 																	size="icon"
@@ -545,6 +549,7 @@
 																merge: true,
 															},
 														);
+														aww.play();
 													}}
 												>
 													<Minus />

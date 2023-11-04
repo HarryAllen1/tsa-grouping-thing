@@ -4,14 +4,18 @@
 		auth,
 		correctTeamsDataType,
 		db,
+		yay,
 		type EventDoc,
 		type UserDoc,
+		aww,
+		congratulations,
 	} from '$lib';
 	import { Alert, AlertDescription, AlertTitle } from '$lib/components/alert';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
 	import * as Tooltip from '$lib/components/tooltip';
+	import confetti from 'canvas-confetti';
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
@@ -172,6 +176,7 @@
 																	merge: true,
 																},
 															);
+															aww.play();
 														}}
 													>
 														<LogOut />
@@ -244,6 +249,8 @@
 																						merge: true,
 																					},
 																				);
+																				confetti();
+																				yay.play();
 																			}}
 																			variant="outline"
 																			size="icon"
@@ -280,6 +287,7 @@
 														merge: true,
 													},
 												);
+												congratulations.play();
 											}}
 											disabled={team.teamCaptain === $user?.email}
 											class="w-fit"
