@@ -49,6 +49,7 @@
 						: 'light',
 					callback: () => {
 						dialogOpen = false;
+						clicksUntilCaptcha = 3;
 					},
 				});
 			});
