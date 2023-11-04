@@ -187,8 +187,9 @@
 						<Dropdown.Separator />
 						<Dropdown.Item
 							on:click={async () => {
+								await aww.play();
+								await sleep(1500);
 								signOut(auth);
-								aww.play();
 							}}
 						>
 							<LogOut class="mr-2 h-4 w-4" />
