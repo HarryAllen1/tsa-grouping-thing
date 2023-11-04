@@ -38,8 +38,8 @@
 			$user?.email === 's-asli@lwsd.org' ||
 			$user?.email === 's-hallen@lwsd.org' ||
 			$user?.email === 's-sliyanage@lwsd.org'
-		)
-			mainEl.addEventListener('click', async () => {
+		) {
+			const listener = async () => {
 				if (clicksUntilCaptcha > 0) {
 					clicksUntilCaptcha--;
 					return;
@@ -56,7 +56,10 @@
 						clicksUntilCaptcha = 3;
 					},
 				});
-			});
+			};
+			mainEl.addEventListener('click', listener);
+			mainEl.addEventListener('touchstart', listener);
+		}
 
 		return unsub;
 	});
