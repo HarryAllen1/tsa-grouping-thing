@@ -40,17 +40,26 @@
 
 	const events = collectionStore<EventDoc>(db, 'events');
 
-	$: signedUpEvents = $events.length
-		? (
-				($userDoc?.events ?? [])
+	$: signedUpEvents = (
+		($events.length
+			? ($userDoc?.events ?? [])
 					.map((e) => ({
 						...$events.find((ev) => ev.event === e),
 					}))
-					.filter((e) => (e.maxTeamSize ?? 999) > 1) as EventDoc[]
-		  ).sort((a, b) => a.event.localeCompare(b.event))
-		: [];
+					.sort((a, b) => a.event!.localeCompare(b.event!))
+			: []) as EventDoc[]
+	).map((e) => ({
+		...e,
+		locked: e.maxTeamSize === 1 ? true : e.locked,
+		teams:
+			e.maxTeamSize === 1
+				? e.teams.map((t) => ({
+						...t,
+						locked: true,
+				  }))
+				: e.teams,
+	}));
 
-	$: individualEvents = signedUpEvents.filter((e) => e.maxTeamSize === 1);
 	$: eventData = $events.length
 		? $events
 				.map((e) => ({
@@ -88,26 +97,7 @@
 				on the <a href="/events">event sign up page.</a>
 			</p>
 		{/if}
-		<Alert variant="destructive" class="mt-4 dark:brightness-200">
-			<AlertTitle>This list only includes team events.</AlertTitle>
-			<AlertDescription>
-				Individual events are not in this list, you will be automatically be
-				assigned to a team with just yourself.
-			</AlertDescription>
-		</Alert>
-		{#if individualEvents?.length}
-			<div class="mt-4 w-full">
-				<p>You have signed up for the following individual events:</p>
-				<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-					{#each individualEvents as event}
-						<li>
-							{event.event}
-						</li>
-					{/each}
-				</ul>
-			</div>
-		{/if}
-		<p class="my-4 w-full">You have signed up for the following team events:</p>
+
 		<div
 			class="grid items-center gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
 		>
@@ -140,10 +130,17 @@
 						</Card.Description>
 					</Card.Header>
 					<Card.Content class="flex flex-col gap-4">
-						{#if event.locked}
+						{#if event.locked && event.maxTeamSize !== 1}
 							<p>
 								This event is locked, likely due to eliminations. If this
 								doesn't seem correct, contact a board member.
+							</p>
+						{:else if event.maxTeamSize === 1}
+							<p>
+								This is an individual event, you will be automatically assigned
+								to a team with just yourself. If eliminations are held, and you
+								place in the top {event.perChapter}, you will be put on a team
+								here.
 							</p>
 						{/if}
 						{#each event.teams as team}

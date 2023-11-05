@@ -93,7 +93,7 @@
 </script>
 
 <div class="mt-8 flex flex-col items-center container">
-	<h1 class="text-3xl font-bold max-w-screen-md my-4 mb-6">
+	<h1 class="text-3xl font-bold my-4 mb-6">
 		Please don't add yourself to events that you aren't in!
 	</h1>
 	<div class="w-full mb-4 flex flex-col md:flex-row gap-4">
