@@ -2,26 +2,26 @@
 	import { goto } from '$app/navigation';
 	import {
 		auth,
+		aww,
+		congratulations,
 		correctTeamsDataType,
 		db,
 		yay,
 		type EventDoc,
 		type UserDoc,
-		aww,
-		congratulations,
 	} from '$lib';
-	import { Alert, AlertDescription, AlertTitle } from '$lib/components/alert';
+	import { Alert, AlertTitle } from '$lib/components/alert';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
+	import { Label } from '$lib/components/label';
+	import { localStorageStore } from '$lib/components/light-switch/local-storage-store';
+	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
 	import confetti from 'canvas-confetti';
-	import { doc, setDoc, Timestamp } from 'firebase/firestore';
+	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
-	import Label from '../lib/components/label/label.svelte';
-	import Switch from '../lib/components/switch/switch.svelte';
-	import { localStorageStore } from '../lib/components/light-switch/local-storage-store';
 
 	const user = userStore(auth);
 
