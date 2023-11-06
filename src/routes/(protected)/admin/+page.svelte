@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { auth, db, yay, type EventDoc, type UserDoc, aww } from '$lib';
+	import { auth, aww, db, yay, type EventDoc, type UserDoc } from '$lib';
 	import { board } from '$lib/board';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
@@ -11,13 +11,14 @@
 	import * as Tooltip from '$lib/components/tooltip';
 	import confetti from 'canvas-confetti';
 	import {
+		Timestamp,
 		doc,
 		setDoc,
-		Timestamp,
 		type DocumentData,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import { Crown, Mail, Minus, Plus, Trash2, UserPlus } from 'lucide-svelte';
+	import { flip } from 'svelte/animate';
 	import { collectionStore, userStore } from 'sveltefire';
 
 	const user = userStore(auth);
@@ -341,7 +342,7 @@
 													<ul>
 														{#each $usersDoc
 															.filter((p) => !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
-															.sort( (a, b) => a?.name?.localeCompare(b?.name), ) as person}
+															.sort( (a, b) => a?.name?.localeCompare(b?.name), ) as person (person.email)}
 															<li
 																class:text-green-500={$usersDoc
 																	.filter((m) =>
@@ -351,6 +352,9 @@
 																		(e) => e.email === (person?.email ?? ''),
 																	)}
 																class="flex flex-row items-center"
+																animate:flip={{
+																	duration: 200,
+																}}
 															>
 																{person.name}
 																<Button
@@ -501,7 +505,7 @@
 								</Card.Title>
 								<Card.Content>
 									<ul>
-										{#each team.members as teamMember}
+										{#each team.members as teamMember (teamMember.email)}
 											<li
 												class:text-green-500={$usersDoc
 													.filter((m) => m.events.includes(event.event ?? ''))
@@ -511,6 +515,9 @@
 															teamMember.email.toLowerCase(),
 													)}
 												class="flex flex-row items-center gap-2"
+												animate:flip={{
+													duration: 200,
+												}}
 											>
 												<a
 													href="/events/{encodeURIComponent(teamMember.email)}"

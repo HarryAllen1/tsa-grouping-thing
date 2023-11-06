@@ -21,6 +21,7 @@
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
+	import { flip } from 'svelte/animate';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
 	const user = userStore(auth);
@@ -234,8 +235,13 @@
 															<ul>
 																{#each $allUsers
 																	.filter((m) => m.events.includes(event.event ?? '') && !correctTeamsDataType(event.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
-																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person}
-																	<li class="flex flex-row items-center">
+																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person (person.email)}
+																	<li
+																		class="flex flex-row items-center"
+																		animate:flip={{
+																			duration: 200,
+																		}}
+																	>
 																		{person.name}
 																		<Button
 																			on:click={async () => {
