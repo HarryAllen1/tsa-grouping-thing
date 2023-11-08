@@ -53,19 +53,21 @@
 
 	onMount(async () => {
 		for (;;) {
-			const res = await fetch(
-				'https://graph.microsoft.com/v1.0/me/photo/$value',
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-						'Content-Type': 'image/webp',
+			if (localStorage.getItem('accessToken')) {
+				const res = await fetch(
+					'https://graph.microsoft.com/v1.0/me/photo/$value',
+					{
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+							'Content-Type': 'image/webp',
+						},
 					},
-				},
-			);
-			const blob = await res.blob();
-			profilePhoto = Promise.resolve(URL.createObjectURL(blob));
-			if (res.status === 200) break;
-			await sleep(5000);
+				);
+				const blob = await res.blob();
+				profilePhoto = Promise.resolve(URL.createObjectURL(blob));
+				if (res.status === 200) break;
+				await sleep(5000);
+			}
 		}
 	});
 
