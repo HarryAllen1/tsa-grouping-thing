@@ -5,6 +5,7 @@
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
 	import * as Dialog from '$lib/components/dialog';
+	import * as Collapsable from '$lib/components/collapsible';
 	import { Input } from '$lib/components/input';
 	import Label from '$lib/components/label/label.svelte';
 	import { Switch } from '$lib/components/switch';
@@ -17,7 +18,15 @@
 		type DocumentData,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import { Crown, Mail, Minus, Plus, Trash2, UserPlus } from 'lucide-svelte';
+	import {
+		ChevronsUpDown,
+		Crown,
+		Mail,
+		Minus,
+		Plus,
+		Trash2,
+		UserPlus,
+	} from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
 	import { collectionStore, userStore } from 'sveltefire';
 
@@ -134,7 +143,7 @@
 					<Card.Header>
 						<Card.Title>{event.event}</Card.Title>
 						<Card.Description>
-							<ul>
+							<ul class="mb-2">
 								<li>
 									Min {event.minTeamSize} people per team
 								</li>
@@ -165,52 +174,125 @@
 									),
 							)}
 							{#if peopleNotInTeams.length}
-								<details>
-									<summary>People not in teams</summary>
-									<Button
-										href="mailto:?cc={board.join(';')}&bcc={peopleNotInTeams
-											.map((p) => p.email)
-											.join(';')}&subject={event.event}"
-									>
-										Email everyone
-									</Button>
-									<Button
-										variant="destructive"
-										size="icon"
-										on:click={() => {
-											if (
-												confirm(
-													"Are you sure you want to remove everyone who hasn't created a team yet from this event?",
-												)
-											) {
-												peopleNotInTeams.forEach(async (person) => {
-													const userDoc = $usersDoc.find(
-														(u) =>
-															u.email?.toLowerCase() ===
-															person.email?.toLowerCase(),
-													);
-													if (userDoc) {
-														userDoc.events = userDoc.events.filter(
-															(e) => e !== event.event,
+								<Collapsable.Root>
+									<Collapsable.Trigger asChild let:builder>
+										<Button
+											builders={[builder]}
+											variant="ghost"
+											size="sm"
+											class="p-2 flex items-center w-full"
+										>
+											People not in teams
+											<div class="flex-1"></div>
+											<ChevronsUpDown />
+										</Button>
+									</Collapsable.Trigger>
+									<Collapsable.Content>
+										<Button
+											href="mailto:?cc={board.join(';')}&bcc={peopleNotInTeams
+												.map((p) => p.email)
+												.join(';')}&subject={event.event}"
+										>
+											Email everyone
+										</Button>
+										<Button
+											variant="destructive"
+											size="icon"
+											on:click={() => {
+												if (
+													confirm(
+														"Are you sure you want to remove everyone who hasn't created a team yet from this event?",
+													)
+												) {
+													peopleNotInTeams.forEach(async (person) => {
+														const userDoc = $usersDoc.find(
+															(u) =>
+																u.email?.toLowerCase() ===
+																person.email?.toLowerCase(),
 														);
-														await setDoc(
-															doc(
-																db,
-																'users',
-																userDoc.email?.toLowerCase() ?? '',
-															),
-															userDoc,
-															{ merge: true },
-														);
-													}
-												});
-											}
-										}}
+														if (userDoc) {
+															userDoc.events = userDoc.events.filter(
+																(e) => e !== event.event,
+															);
+															await setDoc(
+																doc(
+																	db,
+																	'users',
+																	userDoc.email?.toLowerCase() ?? '',
+																),
+																userDoc,
+																{ merge: true },
+															);
+														}
+													});
+												}
+											}}
+										>
+											<Trash2 />
+										</Button>
+										<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+											{#each peopleNotInTeams as person}
+												<li>
+													<a
+														href="/events/{encodeURIComponent(
+															person.email.toLowerCase(),
+														)}"
+														class="underline"
+													>
+														{person.name}
+													</a>
+												</li>
+											{/each}
+										</ul>
+									</Collapsable.Content>
+								</Collapsable.Root>
+							{/if}
+							<Collapsable.Root>
+								<Collapsable.Trigger asChild let:builder>
+									<Button
+										builders={[builder]}
+										variant="ghost"
+										size="sm"
+										class="p-2 flex items-center w-full"
 									>
-										<Trash2 />
+										Events without member overlap
+										<div class="flex-1"></div>
+										<ChevronsUpDown />
 									</Button>
+								</Collapsable.Trigger>
+								<Collapsable.Content>
 									<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-										{#each peopleNotInTeams as person}
+										{#each nonOverlappingEvents(event) as e}
+											<li>
+												<!-- svelte-ignore a11y-invalid-attribute -->
+												<a
+													href="#"
+													class="underline"
+													on:click={() => (search = e.event)}
+												>
+													{e.event}
+												</a>
+											</li>
+										{/each}
+									</ul>
+								</Collapsable.Content>
+							</Collapsable.Root>
+							<Collapsable.Root>
+								<Collapsable.Trigger asChild let:builder>
+									<Button
+										builders={[builder]}
+										variant="ghost"
+										size="sm"
+										class="p-2 flex items-center w-full"
+									>
+										Everyone in event
+										<div class="flex-1" />
+										<ChevronsUpDown />
+									</Button>
+								</Collapsable.Trigger>
+								<Collapsable.Content>
+									<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+										{#each event.members as person}
 											<li>
 												<a
 													href="/events/{encodeURIComponent(
@@ -223,42 +305,8 @@
 											</li>
 										{/each}
 									</ul>
-								</details>
-							{/if}
-							<details>
-								<summary>Events without member overlap</summary>
-								<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-									{#each nonOverlappingEvents(event) as e}
-										<li>
-											<!-- svelte-ignore a11y-invalid-attribute -->
-											<a
-												href="#"
-												class="underline"
-												on:click={() => (search = e.event)}
-											>
-												{e.event}
-											</a>
-										</li>
-									{/each}
-								</ul>
-							</details>
-							<details>
-								<summary>Everyone in event</summary>
-								<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-									{#each event.members as person}
-										<li>
-											<a
-												href="/events/{encodeURIComponent(
-													person.email.toLowerCase(),
-												)}"
-												class="underline"
-											>
-												{person.name}
-											</a>
-										</li>
-									{/each}
-								</ul>
-							</details>
+								</Collapsable.Content>
+							</Collapsable.Root>
 						</Card.Description>
 					</Card.Header>
 					<Card.Content class="flex flex-col gap-4">
