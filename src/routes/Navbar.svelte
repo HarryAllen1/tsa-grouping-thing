@@ -196,7 +196,8 @@
 									<Avatar.Image {src} />
 								{/await}
 								<Avatar.Fallback>
-									{$user?.displayName?.slice(0, 2)}
+									{@const split = $user?.displayName?.split(' ') ?? ''}
+									{split[0].slice(0, 1)}{split[1]?.slice(0, 1)}
 								</Avatar.Fallback>
 							</Avatar.Root>
 						</Button>
