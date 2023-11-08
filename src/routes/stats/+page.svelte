@@ -28,6 +28,13 @@
 				},
 				[] as { name: string; freq: number }[],
 			);
+		$eventsCollection.forEach((e) => {
+			const index = events.findIndex((event) => event.name === e.event);
+			if (index === -1) {
+				events.push({ name: e.event, freq: 0 });
+			}
+		});
+
 		const plotEl = plot({
 			grid: true,
 			x: {

@@ -5,8 +5,6 @@ export const eventError = (
 	events: EventDoc[],
 	users: UserDoc[],
 ): 'errorNotEnough' | 'errorTooMany' | 'warning' | false => {
-	console.log(event, events, users);
-
 	const eventInfo = events.find((d) => d.event === event)!;
 	const eventData = events
 		.map((e) => ({
