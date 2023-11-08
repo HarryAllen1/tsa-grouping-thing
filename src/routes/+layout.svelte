@@ -18,12 +18,20 @@
 	let dialogOpen = false;
 	let clicksUntilCaptcha = 3;
 
-	$: if (!$user && $page.url.pathname !== '/login') {
+	$: if (
+		!$user &&
+		$page.url.pathname !== '/login' &&
+		$page.url.pathname !== '/stats'
+	) {
 		location.href = `/login?redirect=${$page.url.pathname}`;
 	}
 
 	const unsub = onAuthStateChanged(auth, async (user) => {
-		if (!user && $page.url.pathname !== '/login') {
+		if (
+			!user &&
+			$page.url.pathname !== '/login' &&
+			$page.url.pathname !== '/stats'
+		) {
 			location.href = `/login?redirect=${$page.url.pathname}`;
 		}
 		if (user && !user?.email?.endsWith('@lwsd.org')) {

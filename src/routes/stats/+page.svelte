@@ -14,8 +14,6 @@
 	const eventsCollection = collectionStore<EventDoc>(db, 'events');
 
 	$: if ($data.length && $eventsCollection.length) {
-		console.log($data, $eventsCollection);
-
 		const events = $data
 			.reduce((acc, curr) => [...acc, ...curr.events], [] as string[])
 			.reduce(
