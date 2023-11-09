@@ -53,7 +53,7 @@
 				height="100%"
 				viewBox="0 0 20 20"
 				width="100%"
-				class="mr-4 bg-white p-[1px]"
+				class="mr-4 bg-white p-[1px] aspect-square"
 				preserveAspectRatio="xMidYMid meet"
 				focusable="false"
 			>
