@@ -9,7 +9,7 @@ import { docStore } from 'sveltefire';
 import type { MailDoc } from './types';
 
 const firebaseConfig = {
-	apiKey: PUBLIC_FIREBASE_API_KEY ?? 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
+	apiKey: PUBLIC_FIREBASE_API_KEY || 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
 	authDomain: 'tsa-grouping-thing.firebaseapp.com',
 	projectId: 'tsa-grouping-thing',
 	storageBucket: 'tsa-grouping-thing.appspot.com',
