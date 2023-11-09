@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { auth, aww, db, yay, type EventDoc, type UserDoc } from '$lib';
+	import {
+		auth,
+		aww,
+		db,
+		yay,
+		type EventDoc,
+		type UserDoc,
+		sendEmail,
+	} from '$lib';
 	import { board } from '$lib/board';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
@@ -33,6 +41,7 @@
 	const user = userStore(auth);
 
 	let search = decodeURIComponent($page.url.searchParams.get('q') ?? '');
+	let searchEl: Input;
 
 	const usersDoc = collectionStore<UserDoc>(db, 'users');
 	const events = collectionStore<EventDoc>(db, 'events');
@@ -102,6 +111,18 @@
 		);
 </script>
 
+<svelte:window
+	on:keydown={(e) => {
+		const el = document.querySelector('#search');
+		if (e.key === '/' && el !== document.activeElement) {
+			if (el instanceof HTMLInputElement) {
+				el.focus();
+				e.preventDefault();
+			}
+		}
+	}}
+/>
+
 <div class="mt-8 flex flex-col items-center container">
 	<h1 class="text-3xl font-bold my-4 mb-6">
 		Please don't add yourself to events that you aren't in!
@@ -124,7 +145,13 @@
 			Only show overflown events
 		</Label>
 	</div>
-	<Input class="mb-4" bind:value={search} placeholder="Search" />
+	<Input
+		class="mb-4"
+		bind:value={search}
+		type="search"
+		id="search"
+		placeholder="Search"
+	/>
 
 	<p class="mb-4">Green team: full; red team: over or underfilled</p>
 	<div
@@ -335,8 +362,7 @@
 								will take at a later date.
 							</p>
 						{/if}
-						{#each event.teams as te}
-							{@const team = correctType(te)}
+						{#each event.teams as team}
 							<Card.Root
 								class=" {team.members.length > event.maxTeamSize ||
 								team.members.length < event.minTeamSize
@@ -355,10 +381,7 @@
 													!confirm('Are you sure you want to delete this team?')
 												)
 													return;
-												const teamsButMutable = event;
-												teamsButMutable.teams = event.teams.filter(
-													(t) => t !== te,
-												);
+												event.teams = event.teams.filter((t) => t !== team);
 												await setDoc(
 													doc(db, 'events', event.event ?? ''),
 													{
@@ -382,7 +405,6 @@
 													<UserPlus />
 												</Button>
 											</Dialog.Trigger>
-
 											<Dialog.Content class="max-h-full overflow-y-scroll">
 												<Dialog.Title>Add People</Dialog.Title>
 												<Dialog.Description>
@@ -407,15 +429,15 @@
 																{person.name}
 																<Button
 																	on:click={async () => {
-																		const teamButMutable = team;
-																		teamButMutable.members.push({
+																		team.members.push({
 																			name: person.name,
 																			email: person.email,
 																		});
-																		teamButMutable.lastUpdatedBy =
-																			$user?.email ?? '';
-																		teamButMutable.lastUpdatedTime =
-																			new Timestamp(Date.now() / 1000, 0);
+																		team.lastUpdatedBy = $user?.email ?? '';
+																		team.lastUpdatedTime = new Timestamp(
+																			Date.now() / 1000,
+																			0,
+																		);
 
 																		await setDoc(
 																			doc(db, 'events', event.event ?? ''),
@@ -453,10 +475,9 @@
 												<Dialog.Title>Manage team captain</Dialog.Title>
 												<Button
 													on:click={async () => {
-														const teamButMutable = team;
-														teamButMutable.teamCaptain = '';
-														teamButMutable.lastUpdatedBy = $user?.email ?? '';
-														teamButMutable.lastUpdatedTime = new Timestamp(
+														team.teamCaptain = '';
+														team.lastUpdatedBy = $user?.email ?? '';
+														team.lastUpdatedTime = new Timestamp(
 															Date.now() / 1000,
 															0,
 														);
@@ -478,12 +499,9 @@
 														<li
 															class="cursor-pointer"
 															on:click={async () => {
-																const teamButMutable = team;
-																teamButMutable.teamCaptain =
-																	teamMember?.email ?? '';
-																teamButMutable.lastUpdatedBy =
-																	$user?.email ?? '';
-																teamButMutable.lastUpdatedTime = new Timestamp(
+																team.teamCaptain = teamMember?.email ?? '';
+																team.lastUpdatedBy = $user?.email ?? '';
+																team.lastUpdatedTime = new Timestamp(
 																	Date.now() / 1000,
 																	0,
 																);
@@ -515,8 +533,9 @@
 											</Dialog.Content>
 										</Dialog.Root>
 									</div>
-									<div>
+									<div class="flex flex-row items-center gap-1">
 										<Button
+											size="icon"
 											href="mailto:?cc={board.join(';')}&bcc={team.members
 												.map((p) => p.email)
 												.join(';')}&subject={event.event}"
@@ -528,10 +547,9 @@
 										<Label class="flex flex-row items-center gap-2">
 											<Switch
 												onCheckedChange={async (checked) => {
-													const teamButMutable = team;
-													teamButMutable.locked = checked;
-													teamButMutable.lastUpdatedBy = $user?.email ?? '';
-													teamButMutable.lastUpdatedTime = new Timestamp(
+													team.locked = checked;
+													team.lastUpdatedBy = $user?.email ?? '';
+													team.lastUpdatedTime = new Timestamp(
 														Date.now() / 1000,
 														0,
 													);
@@ -552,6 +570,182 @@
 									</div>
 								</Card.Title>
 								<Card.Content>
+									<div class="mb-4">
+										<Collapsable.Root>
+											<Collapsable.Trigger asChild let:builder>
+												<Button
+													builders={[builder]}
+													variant="ghost"
+													size="sm"
+													class="p-2 flex items-center w-full"
+												>
+													Manage Requests
+													<div class="flex-1" />
+													<ChevronsUpDown />
+												</Button>
+											</Collapsable.Trigger>
+											<Collapsable.Content class="px-2">
+												<ul>
+													{#each team.requests ?? [] as request}
+														<li class="flex flex-row">
+															{request.name}
+															<Button
+																on:click={async () => {
+																	team.members.push({
+																		name: request.name,
+																		email: request.email,
+																	});
+																	team.lastUpdatedBy = $user?.email ?? '';
+																	team.lastUpdatedTime = new Timestamp(
+																		Date.now() / 1000,
+																		0,
+																	);
+																	team.requests = team.requests?.filter(
+																		(r) =>
+																			r.email !== request.email &&
+																			r.name !== request.name,
+																	);
+																	await setDoc(
+																		doc(db, 'events', event.event ?? ''),
+																		{
+																			teams: event.teams,
+																		},
+																		{
+																			merge: true,
+																		},
+																	);
+																	confetti();
+																	yay.play();
+																}}
+																size="icon"
+																class="h-5"
+																variant="ghost"
+															>
+																<Plus />
+															</Button>
+															<Button
+																size="icon"
+																class="h-5"
+																variant="ghost"
+																on:click={async () => {
+																	team.requests = team.requests?.filter(
+																		(r) =>
+																			r.email !== request.email &&
+																			r.name !== request.name,
+																	);
+																	team.lastUpdatedBy = $user?.email ?? '';
+																	team.lastUpdatedTime = new Timestamp(
+																		Date.now() / 1000,
+																		0,
+																	);
+																	await setDoc(
+																		doc(db, 'events', event.event ?? ''),
+																		{
+																			teams: event.teams,
+																		},
+																		{
+																			merge: true,
+																		},
+																	);
+																}}
+															>
+																<Minus />
+															</Button>
+														</li>
+													{:else}
+														<li>No requests</li>
+													{/each}
+													<Dialog.Root>
+														<Dialog.Trigger>
+															<Button size="icon">
+																<Plus />
+															</Button>
+														</Dialog.Trigger>
+														<Dialog.Content
+															class="max-h-full overflow-y-scroll"
+														>
+															<Dialog.Title>Create Request</Dialog.Title>
+
+															<Dialog.Description>
+																<ul>
+																	{#each $usersDoc.filter((u) => !team.members
+																				.map((m) => m.email)
+																				.includes(u.email) && !team.requests
+																				?.map((r) => r.email)
+																				.includes(u.email)) as person (person.email)}
+																		<li
+																			class:text-green-500={$usersDoc
+																				.filter((m) =>
+																					m.events.includes(event.event ?? ''),
+																				)
+																				.find(
+																					(e) =>
+																						e.email === (person?.email ?? ''),
+																				)}
+																			class="flex flex-row items-center"
+																			animate:flip={{
+																				duration: 200,
+																			}}
+																		>
+																			{person.name}
+																			<Button
+																				on:click={async () => {
+																					team.requests = [
+																						...(team.requests ?? []),
+																						{
+																							name: person.name,
+																							email: person.email,
+																						},
+																					];
+																					team.lastUpdatedBy =
+																						$user?.email ?? '';
+																					team.lastUpdatedTime = new Timestamp(
+																						Date.now() / 1000,
+																						0,
+																					);
+																					await setDoc(
+																						doc(
+																							db,
+																							'events',
+																							event.event ?? '',
+																						),
+																						{
+																							teams: event.teams,
+																						},
+																						{
+																							merge: true,
+																						},
+																					);
+																					sendEmail(
+																						team.members.map((m) => m.email),
+																						'New team request',
+																						`${
+																							$user?.displayName ?? 'Someone'
+																						} has requested to join your team for ${
+																							event.event
+																						}. Please go to the <a href="https://tsa-grouping-thing.vercel.app">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+																					);
+																					confetti();
+																					yay.play();
+																				}}
+																				variant="outline"
+																				size="icon"
+																				class="ml-2"
+																			>
+																				<Plus />
+																			</Button>
+																		</li>
+																	{:else}
+																		<li>how tf</li>
+																	{/each}
+																</ul>
+															</Dialog.Description>
+														</Dialog.Content>
+													</Dialog.Root>
+												</ul>
+											</Collapsable.Content>
+										</Collapsable.Root>
+									</div>
 									<ul>
 										{#each team.members as teamMember (teamMember.email)}
 											<li
@@ -582,19 +776,18 @@
 												{/if}
 												<Button
 													size="icon"
-													class="bg-transparent h-5"
-													variant="outline"
+													class="h-5"
+													variant="ghost"
 													on:click={async () => {
-														const teamButMutable = team;
-														teamButMutable.members.splice(
-															teamButMutable.members.findIndex(
+														team.members.splice(
+															team.members.findIndex(
 																(e) =>
 																	e.email === (teamMember?.email ?? '') &&
 																	e.name === (teamMember?.name ?? ''),
 															),
 															1,
 														);
-														teamButMutable.lastUpdatedBy = $user?.email ?? '';
+														team.lastUpdatedBy = $user?.email ?? '';
 														await setDoc(
 															doc(db, 'events', event.event ?? ''),
 															{

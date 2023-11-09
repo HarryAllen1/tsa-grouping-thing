@@ -6,14 +6,15 @@
 		congratulations,
 		correctTeamsDataType,
 		db,
+		sendEmail,
 		yay,
 		type EventDoc,
 		type UserDoc,
-		sendEmail,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/alert';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
+	import * as Collapsable from '$lib/components/collapsible';
 	import * as Dialog from '$lib/components/dialog';
 	import { Label } from '$lib/components/label';
 	import { localStorageStore } from '$lib/components/light-switch/local-storage-store';
@@ -21,7 +22,14 @@
 	import * as Tooltip from '$lib/components/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import { Crown, LogOut, Plus, UserPlus } from 'lucide-svelte';
+	import {
+		ChevronsUpDown,
+		Crown,
+		LogOut,
+		Minus,
+		Plus,
+		UserPlus,
+	} from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
@@ -309,7 +317,7 @@
 										>
 											Become Team Captain
 										</Button>
-									{:else if !event.locked && !(event.teams.find( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) || event.event === 'Technology Bowl')}
+									{:else if !event.locked && !(event.teams.find( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) || event.event === 'Technology Bowl') && team.members.length < event.maxTeamSize}
 										{#if team.requests?.find((u) => u.email === $user?.email)}
 											<Button disabled>Requested</Button>
 										{:else}
@@ -348,6 +356,116 @@
 									{/if}
 								</Card.Title>
 								<Card.Content>
+									{#if team.requests?.length && !event.locked && !team.locked && team.members
+											.map((u) => u.email.toLowerCase())
+											.includes($user?.email?.toLowerCase() ?? '')}
+										<div class="mb-4">
+											<Collapsable.Root>
+												<Collapsable.Trigger asChild let:builder>
+													<Button
+														builders={[builder]}
+														variant="ghost"
+														size="sm"
+														class="p-2 flex items-center w-full"
+													>
+														Manage Requests
+														<div class="flex-1" />
+														<ChevronsUpDown />
+													</Button>
+												</Collapsable.Trigger>
+												<Collapsable.Content class="px-2">
+													<ul>
+														{#each team.requests ?? [] as request}
+															<li class="flex flex-row">
+																{request.name}
+																<Button
+																	on:click={async () => {
+																		team.members.push({
+																			name: request.name,
+																			email: request.email,
+																		});
+																		team.lastUpdatedBy = $user?.email ?? '';
+																		team.lastUpdatedTime = new Timestamp(
+																			Date.now() / 1000,
+																			0,
+																		);
+																		team.requests = team.requests?.filter(
+																			(r) =>
+																				r.email !== request.email &&
+																				r.name !== request.name,
+																		);
+																		await setDoc(
+																			doc(db, 'events', event.event ?? ''),
+																			{
+																				teams: event.teams,
+																			},
+																			{
+																				merge: true,
+																			},
+																		);
+																		confetti();
+																		yay.play();
+																	}}
+																	size="icon"
+																	class="h-5"
+																	variant="ghost"
+																>
+																	<Plus />
+																</Button>
+																<Button
+																	size="icon"
+																	class="h-5"
+																	variant="ghost"
+																	on:click={async () => {
+																		team.requests = team.requests?.filter(
+																			(r) =>
+																				r.email !== request.email &&
+																				r.name !== request.name,
+																		);
+																		team.lastUpdatedBy = $user?.email ?? '';
+																		team.lastUpdatedTime = new Timestamp(
+																			Date.now() / 1000,
+																			0,
+																		);
+																		let members = team.members
+																			.map((m) => m.name)
+																			.join(', ');
+																		const lastComma = members.lastIndexOf(',');
+																		if (lastComma !== -1) {
+																			members =
+																				members.slice(0, lastComma) +
+																				' and' +
+																				members.slice(lastComma + 1);
+																		}
+
+																		sendEmail(
+																			request.email,
+																			`${event.event} team request denied`,
+																			`Your request to join ${members}'s team for ${event.event} has been denied. Please contact them for more information.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+																		);
+																		await setDoc(
+																			doc(db, 'events', event.event ?? ''),
+																			{
+																				teams: event.teams,
+																			},
+																			{
+																				merge: true,
+																			},
+																		);
+																		aww.play();
+																	}}
+																>
+																	<Minus />
+																</Button>
+															</li>
+														{:else}
+															<li>No requests</li>
+														{/each}
+													</ul>
+												</Collapsable.Content>
+											</Collapsable.Root>
+										</div>
+									{/if}
 									<ul>
 										{#each team.members as teamMember}
 											<li>

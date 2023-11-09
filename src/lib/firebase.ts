@@ -1,14 +1,15 @@
 import { dev } from '$app/environment';
+import { PUBLIC_FIREBASE_API_KEY } from '$env/static/public';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { addDoc, collection, getFirestore } from 'firebase/firestore';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { getPerformance } from 'firebase/performance';
 import { getStorage } from 'firebase/storage';
 import { docStore } from 'sveltefire';
 import type { MailDoc } from './types';
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
+	apiKey: PUBLIC_FIREBASE_API_KEY ?? 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
 	authDomain: 'tsa-grouping-thing.firebaseapp.com',
 	projectId: 'tsa-grouping-thing',
 	storageBucket: 'tsa-grouping-thing.appspot.com',
@@ -29,14 +30,15 @@ export const sendEmail = async (
 	body: string,
 ) =>
 	new Promise<MailDoc>((resolve, reject) => {
-		addDoc(collection(db, 'mail'), {
+		const now = Date.now();
+		setDoc(doc(db, `mail/${now}`), {
 			to: Array.isArray(to) ? to : [to],
 			message: {
 				subject,
 				html: body,
 			},
-		}).then((d) => {
-			const doc = docStore<MailDoc>(db, `mail/${d.id}`);
+		}).then(() => {
+			const doc = docStore<MailDoc>(db, `mail/${now}`);
 			doc.subscribe((m) => {
 				if (m?.delivery?.state === 'SUCCESS') resolve(m);
 				else if (m?.delivery?.state === 'ERROR') reject(m);
