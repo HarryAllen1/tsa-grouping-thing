@@ -14,7 +14,7 @@
 	"devDependencies": {
 		"@hcaptcha/types": "^1.0.3",
 		"@sveltejs/adapter-vercel": "^3.0.3",
-		"@sveltejs/kit": "^1.27.3",
+		"@sveltejs/kit": "^1.27.4",
 		"@types/canvas-confetti": "^1.6.3",
 		"@types/d3": "^7.4.3",
 		"@typescript-eslint/eslint-plugin": "^6.10.0",
@@ -41,7 +41,7 @@
 		"canvas-confetti": "^1.9.0",
 		"clsx": "^2.0.0",
 		"d3": "^7.8.5",
-		"firebase": "^10.5.2",
+		"firebase": "^10.6.0",
 		"fuse.js": "^7.0.0",
 		"lucide-svelte": "^0.292.0",
 		"ms": "3.0.0-canary.1",
