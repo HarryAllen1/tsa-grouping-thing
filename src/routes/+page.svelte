@@ -9,6 +9,7 @@
 		yay,
 		type EventDoc,
 		type UserDoc,
+		sendEmail,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/alert';
 	import { Button } from '$lib/components/button';
@@ -308,12 +309,44 @@
 										>
 											Become Team Captain
 										</Button>
-									{:else if !event.locked}
-										<p>
-											Ask someone in this team to add you if you want to join
-											this team!
-										</p>
 									{/if}
+									<!-- {:else if !event.locked} -->
+									{#if false && team.requests?.find((u) => u.email === $user?.email)}
+										<Button disabled>Requested</Button>
+									{:else}
+										<Button
+											on:click={async () => {
+												await setDoc(
+													doc(db, 'events', event.event ?? ''),
+													{
+														teams: event.teams.map((t) => {
+															if (t === team) {
+																t.requests = t.requests ?? [];
+																t.requests.push({
+																	name: $user?.displayName ?? '',
+																	email: $user?.email ?? '',
+																});
+															}
+															return t;
+														}),
+													},
+													{
+														merge: true,
+													},
+												);
+												sendEmail(
+													team.members.map((m) => m.email),
+													'New team request',
+													`${
+														$user?.displayName ?? 'Someone'
+													} has requested to join your team for ${
+														event.event
+													}. Please go to the <a href="https://tsa-grouping-thing.vercel.app">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+												);
+											}}>Request to join</Button
+										>
+									{/if}
+									<!-- {/if} -->
 								</Card.Title>
 								<Card.Content>
 									<ul>

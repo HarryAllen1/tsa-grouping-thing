@@ -16,14 +16,36 @@ export interface EventDoc {
 
 export interface Team {
 	teamCaptain?: string;
-	members: { name: string; email: string }[];
+	members: BasicUser[];
 	locked?: boolean;
 	lastUpdatedBy?: string;
 	lastUpdatedTime?: Timestamp;
+	requests?: BasicUser[];
+}
+
+export interface BasicUser {
+	name: string;
+	email: string;
 }
 
 export interface UserDoc {
 	email: string;
 	name: string;
 	events: string[];
+}
+
+export interface MailDoc {
+	to: string[];
+	message: {
+		subject: string;
+		html?: string;
+		text?: string;
+	};
+	delivery?: {
+		attempts: number;
+		endTime?: Timestamp;
+		error?: string;
+		// ...
+		state: string;
+	};
 }
