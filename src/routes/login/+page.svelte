@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { auth, yay } from '$lib';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
@@ -20,10 +19,6 @@
 	const user = userStore(auth);
 
 	$: if ($user) {
-		const params = $page.url.searchParams.get('redirect');
-		if (params) {
-			goto(params);
-		}
 		goto('/');
 	}
 
@@ -68,10 +63,9 @@
 				if (user.user) {
 					const cred = OAuthProvider.credentialFromResult(user);
 					localStorage.setItem('accessToken', cred?.accessToken ?? '');
-					const params = $page.url.searchParams.get('redirect');
 					confetti();
 					yay.play();
-					goto(params ?? '/');
+					goto('/');
 				}
 			}}
 			class="mt-4"

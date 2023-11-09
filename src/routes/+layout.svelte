@@ -23,7 +23,7 @@
 		$page.url.pathname !== '/login' &&
 		$page.url.pathname !== '/stats'
 	) {
-		location.href = `/login?redirect=${$page.url.pathname}`;
+		location.href = `/login`;
 	}
 
 	const unsub = onAuthStateChanged(auth, async (user) => {
@@ -32,7 +32,7 @@
 			$page.url.pathname !== '/login' &&
 			$page.url.pathname !== '/stats'
 		) {
-			location.href = `/login?redirect=${$page.url.pathname}`;
+			location.href = `/login`;
 		}
 		if (user && !user?.email?.endsWith('@lwsd.org')) {
 			alert('You must use an LWSD account to log in.');
