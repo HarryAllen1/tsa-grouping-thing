@@ -10,11 +10,7 @@
 		setPersistence,
 		signInWithPopup,
 	} from 'firebase/auth';
-	import { onMount } from 'svelte';
 	import { userStore } from 'sveltefire';
-
-	let captcha: HTMLDivElement;
-	let validCaptcha = false;
 
 	const user = userStore(auth);
 
@@ -26,21 +22,6 @@
 	provider.addScope('email');
 	provider.addScope('openid');
 	provider.addScope('profile');
-
-	onMount(() => {
-		hcaptcha.render(captcha, {
-			sitekey: 'e367d4e1-b6c8-4037-a17c-4b5f5d25141a',
-			theme: document.documentElement.classList.contains('dark')
-				? 'dark'
-				: 'light',
-			callback: () => {
-				validCaptcha = true;
-			},
-			'expired-callback': () => {
-				validCaptcha = false;
-			},
-		});
-	});
 </script>
 
 <Card.Root class="mx-16 md:mx-48 lg:mx-96 mt-16 max-w-md">
@@ -48,9 +29,7 @@
 		<Card.Title>Login</Card.Title>
 	</Card.Header>
 	<Card.Content>
-		<div bind:this={captcha}></div>
 		<Button
-			disabled={!validCaptcha}
 			on:click={async () => {
 				await setPersistence(auth, browserLocalPersistence);
 				const user = await signInWithPopup(auth, provider);

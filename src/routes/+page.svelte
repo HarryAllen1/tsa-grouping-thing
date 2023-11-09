@@ -4,7 +4,6 @@
 		auth,
 		aww,
 		congratulations,
-		correctTeamsDataType,
 		db,
 		sendEmail,
 		yay,
@@ -186,9 +185,9 @@
 															await setDoc(
 																doc(db, 'events', event.event ?? ''),
 																{
-																	teams: correctTeamsDataType(
-																		event.teams,
-																	).filter((t) => t.members.length > 0),
+																	teams: event.teams.filter(
+																		(t) => t.members.length > 0,
+																	),
 																},
 																{
 																	merge: true,
@@ -243,7 +242,7 @@
 															<p>People who signed up for this event:</p>
 															<ul>
 																{#each $allUsers
-																	.filter((m) => m.events.includes(event.event ?? '') && !correctTeamsDataType(event.teams).find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
+																	.filter((m) => m.events.includes(event.event ?? '') && !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
 																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person (person.email)}
 																	<li
 																		class="flex flex-row items-center"

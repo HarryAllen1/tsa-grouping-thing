@@ -4,16 +4,16 @@
 		auth,
 		aww,
 		db,
+		sendEmail,
 		yay,
 		type EventDoc,
 		type UserDoc,
-		sendEmail,
 	} from '$lib';
 	import { board } from '$lib/board';
 	import { Button } from '$lib/components/button';
 	import * as Card from '$lib/components/card';
-	import * as Dialog from '$lib/components/dialog';
 	import * as Collapsable from '$lib/components/collapsible';
+	import * as Dialog from '$lib/components/dialog';
 	import { Input } from '$lib/components/input';
 	import Label from '$lib/components/label/label.svelte';
 	import { Switch } from '$lib/components/switch';
@@ -26,6 +26,8 @@
 		type DocumentData,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
+	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import {
 		ChevronsUpDown,
 		Crown,
@@ -38,10 +40,11 @@
 	import { flip } from 'svelte/animate';
 	import { collectionStore, userStore } from 'sveltefire';
 
+	gsap.registerPlugin(ScrollTrigger);
+
 	const user = userStore(auth);
 
 	let search = decodeURIComponent($page.url.searchParams.get('q') ?? '');
-	let searchEl: Input;
 
 	const usersDoc = collectionStore<UserDoc>(db, 'users');
 	const events = collectionStore<EventDoc>(db, 'events');

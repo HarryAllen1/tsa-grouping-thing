@@ -1,9 +1,4 @@
-import type { DocumentData, Timestamp } from 'firebase/firestore';
-
-export const correctTeamsDataType = (data: DocumentData[string]) =>
-	data as Team[];
-
-export const correctDocType = (data: DocumentData) => data as EventDoc;
+import type { Timestamp } from 'firebase/firestore';
 
 export interface EventDoc {
 	teams: Team[];
