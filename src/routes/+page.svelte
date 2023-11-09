@@ -309,44 +309,43 @@
 										>
 											Become Team Captain
 										</Button>
+									{:else if !event.locked && !(event.teams.find( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) || event.event === 'Technology Bowl')}
+										{#if team.requests?.find((u) => u.email === $user?.email)}
+											<Button disabled>Requested</Button>
+										{:else}
+											<Button
+												on:click={async () => {
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: event.teams.map((t) => {
+																if (t === team) {
+																	t.requests = t.requests ?? [];
+																	t.requests.push({
+																		name: $user?.displayName ?? '',
+																		email: $user?.email ?? '',
+																	});
+																}
+																return t;
+															}),
+														},
+														{
+															merge: true,
+														},
+													);
+													sendEmail(
+														team.members.map((m) => m.email),
+														'New team request',
+														`${
+															$user?.displayName ?? 'Someone'
+														} has requested to join your team for ${
+															event.event
+														}. Please go to the <a href="https://tsa-grouping-thing.vercel.app">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+													);
+												}}>Request to join</Button
+											>
+										{/if}
 									{/if}
-									<!-- {:else if !event.locked} -->
-									{#if false && team.requests?.find((u) => u.email === $user?.email)}
-										<Button disabled>Requested</Button>
-									{:else}
-										<Button
-											on:click={async () => {
-												await setDoc(
-													doc(db, 'events', event.event ?? ''),
-													{
-														teams: event.teams.map((t) => {
-															if (t === team) {
-																t.requests = t.requests ?? [];
-																t.requests.push({
-																	name: $user?.displayName ?? '',
-																	email: $user?.email ?? '',
-																});
-															}
-															return t;
-														}),
-													},
-													{
-														merge: true,
-													},
-												);
-												sendEmail(
-													team.members.map((m) => m.email),
-													'New team request',
-													`${
-														$user?.displayName ?? 'Someone'
-													} has requested to join your team for ${
-														event.event
-													}. Please go to the <a href="https://tsa-grouping-thing.vercel.app">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-												);
-											}}>Request to join</Button
-										>
-									{/if}
-									<!-- {/if} -->
 								</Card.Title>
 								<Card.Content>
 									<ul>
@@ -372,7 +371,7 @@
 						<Card.Footer>
 							<Button
 								disabled={!!(
-									correctTeamsDataType(event.teams).find((t) =>
+									event.teams.find((t) =>
 										t.members.find(
 											(e) => e.email.toLowerCase() === ($user?.email ?? ''),
 										),
