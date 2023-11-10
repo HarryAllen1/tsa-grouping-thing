@@ -40,8 +40,6 @@
 				}
 
 				if (user.user) {
-					const cred = OAuthProvider.credentialFromResult(user);
-					localStorage.setItem('accessToken', cred?.accessToken ?? '');
 					confetti();
 					yay.play();
 					goto('/');

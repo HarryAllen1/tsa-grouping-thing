@@ -42,34 +42,6 @@
 			  ]
 			: []),
 	];
-	let profilePhoto = fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
-		headers: {
-			Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-			'Content-Type': 'image/webp',
-		},
-	})
-		.then((res) => res.blob())
-		.then((blob) => URL.createObjectURL(blob));
-
-	onMount(async () => {
-		for (;;) {
-			if (localStorage.getItem('accessToken')) {
-				const res = await fetch(
-					'https://graph.microsoft.com/v1.0/me/photo/$value',
-					{
-						headers: {
-							Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-							'Content-Type': 'image/webp',
-						},
-					},
-				);
-				const blob = await res.blob();
-				profilePhoto = Promise.resolve(URL.createObjectURL(blob));
-				if (res.status === 200) break;
-				await sleep(5000);
-			}
-		}
-	});
 
 	const downloadAsJSON = async () => {
 		const teamsJSON = {
@@ -192,9 +164,6 @@
 					<Dropdown.Trigger asChild let:builder>
 						<Button builders={[builder]} size="icon" variant="ghost">
 							<Avatar.Root>
-								{#await profilePhoto then src}
-									<Avatar.Image {src} />
-								{/await}
 								<Avatar.Fallback>
 									{@const split = $user?.displayName?.split(' ') ?? ''}
 									{split[0].slice(0, 1)}{split[1]?.slice(0, 1)}
