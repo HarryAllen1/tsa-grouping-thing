@@ -108,8 +108,7 @@
 							.map((u) => u.email.toLowerCase())
 							.includes($user?.email?.toLowerCase() ?? ''),
 				)
-				.map((t) => t.requests ?? [])
-				.flat(),
+				.flatMap((t) => t.requests ?? []),
 		}));
 </script>
 
