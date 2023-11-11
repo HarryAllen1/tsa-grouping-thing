@@ -82,6 +82,35 @@
 				}))
 				.sort((a, b) => a.event.localeCompare(b.event))
 		: [];
+
+	$: requests = signedUpEvents
+		.filter(
+			(e) => e.teams.filter((t) => t.requests?.length).length && !e.locked,
+		)
+		.map((e) => ({
+			event: e.event,
+			team: e.teams.filter(
+				(t) =>
+					t.requests?.length &&
+					!t.locked &&
+					!e.locked &&
+					t.members
+						.map((u) => u.email.toLowerCase())
+						.includes($user?.email?.toLowerCase() ?? ''),
+			)[0],
+			requests: e.teams
+				.filter(
+					(t) =>
+						t.requests?.length &&
+						!t.locked &&
+						!e.locked &&
+						t.members
+							.map((u) => u.email.toLowerCase())
+							.includes($user?.email?.toLowerCase() ?? ''),
+				)
+				.map((t) => t.requests ?? [])
+				.flat(),
+		}));
 </script>
 
 <div class="mt-8 flex flex-col items-center container">
@@ -92,6 +121,153 @@
 	>
 		Signup/change events
 	</Button>
+
+	{#if requests.length}
+		<div class="w-full">
+			<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
+				Manage Requests
+			</h3>
+			{#each requests as request}
+				<Collapsable.Root>
+					<Collapsable.Trigger asChild let:builder>
+						<Button
+							builders={[builder]}
+							variant="ghost"
+							size="sm"
+							class="p-2 flex items-center w-full font-bold"
+						>
+							{request.event}
+							<div class="flex-1" />
+							<ChevronsUpDown />
+						</Button>
+					</Collapsable.Trigger>
+					<Collapsable.Content class="px-2">
+						<ul>
+							{#each request.requests ?? [] as r}
+								<li class="flex flex-row">
+									{r.name}
+									<Button
+										on:click={async () => {
+											const event = signedUpEvents.find(
+												(e) => e.event === request.event,
+											)?.teams;
+											const teamUserIsIn = event?.find(
+												(t) =>
+													t.members
+														.map((u) => u.email.toLowerCase())
+														.includes($user?.email?.toLowerCase() ?? '') &&
+													!t.locked,
+											) ?? {
+												members: [],
+												requests: [],
+												lastUpdatedBy: '',
+												lastUpdatedTime: new Timestamp(0, 0),
+											};
+											teamUserIsIn.members.push({
+												name: r.name,
+												email: r.email,
+											});
+											teamUserIsIn.lastUpdatedBy = $user?.email ?? '';
+											teamUserIsIn.lastUpdatedTime = new Timestamp(
+												Date.now() / 1000,
+												0,
+											);
+											teamUserIsIn.requests = teamUserIsIn.requests?.filter(
+												(u) => u.email !== r.email && u.name !== r.name,
+											);
+											await setDoc(
+												doc(db, 'events', request.event ?? ''),
+												{
+													teams: signedUpEvents.find(
+														(e) => e.event === request.event,
+													)?.teams,
+												},
+												{
+													merge: true,
+												},
+											);
+											confetti();
+											yay.play();
+										}}
+										size="icon"
+										class="h-5"
+										variant="ghost"
+									>
+										<Plus />
+									</Button>
+									<Button
+										size="icon"
+										class="h-5"
+										variant="ghost"
+										on:click={async () => {
+											const event = signedUpEvents.find(
+												(e) => e.event === request.event,
+											)?.teams;
+											const teamUserIsIn = event?.find(
+												(t) =>
+													t.members
+														.map((u) => u.email.toLowerCase())
+														.includes($user?.email?.toLowerCase() ?? '') &&
+													!t.locked,
+											) ?? {
+												members: [],
+												requests: [],
+												lastUpdatedBy: '',
+												lastUpdatedTime: new Timestamp(0, 0),
+											};
+
+											teamUserIsIn.requests = teamUserIsIn.requests?.filter(
+												(u) => u.email !== r.email && u.name !== r.name,
+											);
+											teamUserIsIn.lastUpdatedBy = $user?.email ?? '';
+											teamUserIsIn.lastUpdatedTime = new Timestamp(
+												Date.now() / 1000,
+												0,
+											);
+											let members = teamUserIsIn.members
+												.map((m) => m.name)
+												.join(', ');
+											const lastComma = members.lastIndexOf(',');
+											if (lastComma !== -1) {
+												members =
+													members.slice(0, lastComma) +
+													' and' +
+													members.slice(lastComma + 1);
+											}
+
+											sendEmail(
+												r.email,
+												`${request.event} team request denied`,
+												`Your request to join ${members}'s team for ${request.event} has been denied. Please contact them for more information.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+											);
+											await setDoc(
+												doc(db, 'events', request.event ?? ''),
+												{
+													teams: event,
+												},
+												{
+													merge: true,
+												},
+											);
+											aww.play();
+										}}
+									>
+										<Minus />
+									</Button>
+								</li>
+							{:else}
+								<li>No requests</li>
+							{/each}
+						</ul>
+					</Collapsable.Content>
+				</Collapsable.Root>
+			{/each}
+		</div>
+	{/if}
+
+	<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight w-full my-4">
+		Teams
+	</h3>
 
 	{#if !signedUpEvents || signedUpEvents.length === 0}
 		<p class="mt-4 w-full">
