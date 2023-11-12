@@ -20,9 +20,6 @@ dependencies:
   clsx:
     specifier: ^2.0.0
     version: 2.0.0
-  d3:
-    specifier: ^7.8.5
-    version: 7.8.5
   firebase:
     specifier: ^10.6.0
     version: 10.6.0
@@ -32,9 +29,6 @@ dependencies:
   lucide-svelte:
     specifier: ^0.292.0
     version: 0.292.0(svelte@4.2.3)
-  ms:
-    specifier: 3.0.0-canary.1
-    version: 3.0.0-canary.1
   sveltefire:
     specifier: ^0.4.2
     version: 0.4.2(firebase@10.6.0)(svelte@4.2.3)
@@ -2854,11 +2848,6 @@ packages:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
     dev: true
 
-  /ms@3.0.0-canary.1:
-    resolution: {integrity: sha512-kh8ARjh8rMN7Du2igDRO9QJnqCb2xYTJxyQYK7vJJS4TvLLmsbyhiKpSW+t+y26gyOyMd0riphX0GeWKU3ky5g==}
-    engines: {node: '>=12.13'}
-    dev: false
-
   /mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
     dependencies:
@@ -3538,7 +3527,7 @@ packages:
   /sveltefire@0.4.2(firebase@10.6.0)(svelte@4.2.3):
     resolution: {integrity: sha512-3kt+C8/s+DGCDoyL4nDjvxY7Pq9VEhLbmbuVVzlUW4SpAYqhfutZhitKytnJdT6AwmsahV6x6iGyX0Mwg3sZgw==}
     peerDependencies:
-      firebase: ^9.0.0
+      firebase: ^9.0.0 || ^10.0.0
       svelte: ^4.0.0
     dependencies:
       firebase: 10.6.0
