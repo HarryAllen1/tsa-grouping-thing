@@ -1,5 +1,5 @@
-import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { initializeApp } from 'firebase-admin/app';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { beforeUserCreated, HttpsError } from 'firebase-functions/v2/identity';
 
