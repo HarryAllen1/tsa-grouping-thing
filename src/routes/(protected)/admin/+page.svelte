@@ -22,8 +22,6 @@
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import { gsap } from 'gsap';
-	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import {
 		ChevronsUpDown,
 		Crown,
@@ -35,8 +33,6 @@
 	} from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
 	import { collectionStore, userStore } from 'sveltefire';
-
-	gsap.registerPlugin(ScrollTrigger);
 
 	const user = userStore(auth);
 
