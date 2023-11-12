@@ -202,7 +202,7 @@
 											class="p-2 flex items-center w-full"
 										>
 											People not in teams
-											<div class="flex-1"></div>
+											<div class="flex-1" />
 											<ChevronsUpDown />
 										</Button>
 									</Collapsable.Trigger>
