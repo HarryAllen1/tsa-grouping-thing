@@ -19,12 +19,7 @@
 	import { Switch } from '$lib/components/switch';
 	import * as Tooltip from '$lib/components/tooltip';
 	import confetti from 'canvas-confetti';
-	import {
-		Timestamp,
-		doc,
-		setDoc,
-		type DocumentData,
-	} from 'firebase/firestore';
+	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
