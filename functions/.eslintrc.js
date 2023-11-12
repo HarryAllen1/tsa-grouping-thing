@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { join } = require('node:path');
+
 module.exports = {
 	root: true,
 	env: {
@@ -13,7 +16,10 @@ module.exports = {
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
-		project: ['tsconfig.json', 'tsconfig.dev.json'],
+		project: [
+			join(__dirname, 'tsconfig.json'),
+			join(__dirname, 'tsconfig.dev.json'),
+		],
 		sourceType: 'module',
 	},
 	ignorePatterns: [
