@@ -451,8 +451,10 @@
 																			}}
 																			variant="outline"
 																			size="icon"
-																			class="ml-2"><Plus /></Button
+																			class="ml-2"
 																		>
+																			<Plus />
+																		</Button>
 																	</li>
 																{:else}
 																	<li>
@@ -698,10 +700,10 @@
 			{:else}
 				<div class="spinner">
 					<div class="left">
-						<div class="circle"></div>
+						<div class="circle" />
 					</div>
 					<div class="right">
-						<div class="circle"></div>
+						<div class="circle" />
 					</div>
 				</div>
 			{/each}

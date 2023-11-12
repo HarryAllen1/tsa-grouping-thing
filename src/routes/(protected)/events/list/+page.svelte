@@ -15,8 +15,10 @@
 				<Accordion.Trigger>
 					<span
 						class:text-red-500={userDoc.events.length < 4 ||
-							userDoc.events.length > 6}>{userDoc.name}</span
+							userDoc.events.length > 6}
 					>
+						{userDoc.name}
+					</span>
 				</Accordion.Trigger>
 				<Accordion.Content>
 					<Button href="/events/{encodeURIComponent(userDoc.email)}">

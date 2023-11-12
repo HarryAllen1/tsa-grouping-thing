@@ -83,17 +83,6 @@
 			? eventData.map((r) => r.event)
 			: fuse.search(search).map((r) => r.item.event);
 
-	const correctType = (eventData: DocumentData) =>
-		eventData as {
-			name: string;
-			members: { name: string; email: string }[];
-			teamCaptain?: string;
-			lastUpdatedBy?: string;
-			lastUpdatedTime?: Timestamp;
-			locked?: boolean;
-			[key: string]: unknown;
-		};
-
 	const reallyStupidFunction = (arr: unknown[]) =>
 		arr as {
 			name: string;
@@ -132,19 +121,19 @@
 	</h1>
 	<div class="w-full mb-4 flex flex-col md:flex-row gap-4">
 		<Label class="flex flex-row items-center">
-			<Switch class="mr-2" bind:checked={fuseKeys.event}></Switch>
+			<Switch class="mr-2" bind:checked={fuseKeys.event} />
 			Search by events
 		</Label>
 		<Label class="flex flex-row items-center">
-			<Switch class="mr-2" bind:checked={fuseKeys.members}></Switch>
+			<Switch class="mr-2" bind:checked={fuseKeys.members} />
 			Search by members
 		</Label>
 		<Label class="flex flex-row items-center">
-			<Switch class="mr-2" bind:checked={shouldHideIndividualEvents}></Switch>
+			<Switch class="mr-2" bind:checked={shouldHideIndividualEvents} />
 			Hide individual events
 		</Label>
 		<Label class="flex flex-row items-center">
-			<Switch class="mr-2" bind:checked={onlyShowOverflown}></Switch>
+			<Switch class="mr-2" bind:checked={onlyShowOverflown} />
 			Only show overflown events
 		</Label>
 	</div>
@@ -286,7 +275,7 @@
 										class="p-2 flex items-center w-full"
 									>
 										Events without member overlap
-										<div class="flex-1"></div>
+										<div class="flex-1" />
 										<ChevronsUpDown />
 									</Button>
 								</Collapsable.Trigger>
@@ -456,8 +445,10 @@
 																	}}
 																	variant="outline"
 																	size="icon"
-																	class="ml-2"><Plus /></Button
+																	class="ml-2"
 																>
+																	<Plus />
+																</Button>
 															</li>
 														{:else}
 															<li>

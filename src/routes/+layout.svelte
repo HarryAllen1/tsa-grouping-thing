@@ -88,7 +88,7 @@
 		<AlertDialog.Title>Captcha</AlertDialog.Title>
 		<AlertDialog.Description>
 			Please complete the captcha to continue.
-			<div bind:this={captcha}></div>
+			<div bind:this={captcha} />
 		</AlertDialog.Description>
 	</AlertDialog.Content>
 </AlertDialog.Root>
