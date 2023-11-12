@@ -17,6 +17,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
 	import { localStorageStore } from '$lib/components/ui/light-switch/local-storage-store';
+	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
@@ -283,7 +284,7 @@
 		{/if}
 
 		<div
-			class="grid items-center gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
+			class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
 		>
 			{#each signedUpEvents as event}
 				<Card.Root>
@@ -698,14 +699,9 @@
 					{/if}
 				</Card.Root>
 			{:else}
-				<div class="spinner">
-					<div class="left">
-						<div class="circle" />
-					</div>
-					<div class="right">
-						<div class="circle" />
-					</div>
-				</div>
+				{#each { length: 9 } as _}
+					<Skeleton class="h-[32rem] w-full" />
+				{/each}
 			{/each}
 		</div>
 	{/if}
