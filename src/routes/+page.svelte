@@ -10,15 +10,15 @@
 		type EventDoc,
 		type UserDoc,
 	} from '$lib';
-	import { Alert, AlertTitle } from '$lib/components/alert';
-	import { Button } from '$lib/components/button';
-	import * as Card from '$lib/components/card';
-	import * as Collapsable from '$lib/components/collapsible';
-	import * as Dialog from '$lib/components/dialog';
-	import { Label } from '$lib/components/label';
-	import { localStorageStore } from '$lib/components/light-switch/local-storage-store';
-	import { Switch } from '$lib/components/switch';
-	import * as Tooltip from '$lib/components/tooltip';
+	import { Alert, AlertTitle } from '$lib/components/ui/alert';
+	import { Button } from '$lib/components/ui/button';
+	import * as Card from '$lib/components/ui/card';
+	import * as Collapsable from '$lib/components/ui/collapsible';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { Label } from '$lib/components/ui/label';
+	import { localStorageStore } from '$lib/components/ui/light-switch/local-storage-store';
+	import { Switch } from '$lib/components/ui/switch';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import {

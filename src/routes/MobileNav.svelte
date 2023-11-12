@@ -1,7 +1,7 @@
 <script lang="ts">
-	import * as Sheet from '$lib/components/sheet';
+	import * as Sheet from '$lib/components/ui/sheet';
 	import { SidebarOpen } from 'lucide-svelte';
-	import { Button } from '$lib/components/button';
+	import { Button } from '$lib/components/ui/button';
 	import MobileLink from './MobileLink.svelte';
 
 	export let navItems: { href: string; title: string }[];

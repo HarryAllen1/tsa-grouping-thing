@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { auth, yay } from '$lib';
-	import { Button } from '$lib/components/button';
-	import * as Card from '$lib/components/card';
+	import { Button } from '$lib/components/ui/button';
+	import * as Card from '$lib/components/ui/card';
 	import confetti from 'canvas-confetti';
 	import {
 		OAuthProvider,

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { EventDoc, UserDoc } from '$lib';
 	import { auth, db } from '$lib';
-	import { Checkbox } from '$lib/components/checkbox';
-	import { Label } from '$lib/components/label';
+	import { Checkbox } from '$lib/components/ui/checkbox';
+	import { Label } from '$lib/components/ui/label';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
 	import { collectionStore, docStore, userStore } from 'sveltefire';

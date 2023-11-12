@@ -10,14 +10,14 @@
 		type UserDoc,
 	} from '$lib';
 	import { board } from '$lib/board';
-	import { Button } from '$lib/components/button';
-	import * as Card from '$lib/components/card';
-	import * as Collapsable from '$lib/components/collapsible';
-	import * as Dialog from '$lib/components/dialog';
-	import { Input } from '$lib/components/input';
-	import Label from '$lib/components/label/label.svelte';
-	import { Switch } from '$lib/components/switch';
-	import * as Tooltip from '$lib/components/tooltip';
+	import { Button } from '$lib/components/ui/button';
+	import * as Card from '$lib/components/ui/card';
+	import * as Collapsable from '$lib/components/ui/collapsible';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { Input } from '$lib/components/ui/input';
+	import Label from '$lib/components/ui/label/label.svelte';
+	import { Switch } from '$lib/components/ui/switch';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import Fuse from 'fuse.js';

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { auth, aww, db, type Team } from '$lib';
-	import * as Avatar from '$lib/components/avatar';
-	import { Button } from '$lib/components/button';
-	import * as Dropdown from '$lib/components/dropdown-menu';
-	import LightSwitch from '$lib/components/light-switch/light-switch.svelte';
+	import * as Avatar from '$lib/components/ui/avatar';
+	import { Button } from '$lib/components/ui/button';
+	import * as Dropdown from '$lib/components/ui/dropdown-menu';
+	import LightSwitch from '$lib/components/ui/light-switch/light-switch.svelte';
 	import { sleep } from '$lib/utils';
 	import { signOut } from 'firebase/auth';
 	import { collection, getDocs } from 'firebase/firestore';

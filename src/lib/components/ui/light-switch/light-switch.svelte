@@ -5,7 +5,7 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
 <script lang="ts">
 	import { Moon, Sun } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import { buttonVariants } from '$lib/components/button';
+	import { buttonVariants } from '$lib/components/ui/button';
 	import { cn } from '$lib/utils';
 	import {
 		getModeOsPrefers,

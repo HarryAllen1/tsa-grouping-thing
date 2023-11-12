@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { UserDoc } from '$lib';
 	import { db } from '$lib';
-	import * as Accordion from '$lib/components/accordion';
-	import { Button } from '$lib/components/button';
+	import * as Accordion from '$lib/components/ui/accordion';
+	import { Button } from '$lib/components/ui/button';
 	import { collectionStore } from 'sveltefire';
 
 	const usersDoc = collectionStore<UserDoc>(db, 'users');

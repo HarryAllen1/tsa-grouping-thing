@@ -2,8 +2,8 @@
 	import { page } from '$app/stores';
 	import type { UserDoc } from '$lib';
 	import { auth, db, type EventDoc } from '$lib';
-	import { Checkbox } from '$lib/components/checkbox';
-	import { Label } from '$lib/components/label';
+	import { Checkbox } from '$lib/components/ui/checkbox';
+	import { Label } from '$lib/components/ui/label';
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
 	import { derived } from 'svelte/store';

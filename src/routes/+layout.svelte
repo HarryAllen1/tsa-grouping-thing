@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { auth, db, storage } from '$lib';
-	import * as AlertDialog from '$lib/components/alert-dialog';
-	import { LightSwitch } from '$lib/components/light-switch';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
+	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { sleep } from '$lib/utils';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
