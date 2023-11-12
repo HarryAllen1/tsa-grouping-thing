@@ -10,8 +10,9 @@
 		type UserDoc,
 	} from '$lib';
 	import { board } from '$lib/board';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
+	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Collapsable from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
@@ -20,7 +21,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
-	import { Timestamp, doc, setDoc } from 'firebase/firestore';
+	import { Timestamp, deleteDoc, doc, setDoc } from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import {
 		ChevronsUpDown,
@@ -93,6 +94,16 @@
 					event.members.map((m) => m.name),
 				).length === 0,
 		);
+
+	const newEventStuff = {
+		event: '',
+		minTeamSize: 1,
+		maxTeamSize: 1,
+		perChapter: 1,
+		locked: false,
+	};
+
+	let newEventDialogOpen = false;
 </script>
 
 <svelte:window
@@ -137,7 +148,69 @@
 		placeholder="Search"
 	/>
 
-	<p class="mb-4">Green team: full; red team: over or underfilled</p>
+	<p class="mb-2 w-full">Green team: full; red team: over or underfilled</p>
+	<div class="w-full mb-4">
+		<Dialog.Root bind:open={newEventDialogOpen}>
+			<Dialog.Trigger class={buttonVariants()}>Create new event</Dialog.Trigger>
+			<Dialog.Content>
+				<Dialog.Title>Create new event</Dialog.Title>
+				<Dialog.Description>
+					<form
+						class="flex flex-col gap-4"
+						on:submit|preventDefault={async () => {
+							await setDoc(doc(db, 'events', newEventStuff.event), {
+								...newEventStuff,
+								teams: [],
+							});
+							newEventDialogOpen = false;
+						}}
+					>
+						<Label class="flex flex-col w-full max-w-sm gap-1.5">
+							<span>Event name</span>
+							<Input
+								bind:value={newEventStuff.event}
+								placeholder="really cool event name"
+							/>
+						</Label>
+						<Label class="flex flex-col w-full max-w-sm gap-1.5">
+							<span>Minimum team size</span>
+							<Input
+								bind:value={newEventStuff.minTeamSize}
+								type="number"
+								placeholder="1"
+							/>
+						</Label>
+						<Label class="flex flex-col w-full max-w-sm gap-1.5">
+							<span>Maximum team size</span>
+							<Input
+								bind:value={newEventStuff.maxTeamSize}
+								type="number"
+								placeholder="1"
+							/>
+						</Label>
+						<Label class="flex flex-col w-full max-w-sm gap-1.5">
+							<span>Maximum teams per chapter</span>
+							<Input
+								bind:value={newEventStuff.perChapter}
+								type="number"
+								placeholder="1"
+							/>
+						</Label>
+						<div class="flex items-center space-x-2">
+							<Checkbox
+								id="newEventLocked"
+								bind:checked={newEventStuff.locked}
+							/>
+							<Label for="newEventLocked" class="text-foreground">Lock</Label>
+						</div>
+						<div>
+							<Button type="submit">Create</Button>
+						</div>
+					</form>
+				</Dialog.Description>
+			</Dialog.Content>
+		</Dialog.Root>
+	</div>
 	<div
 		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
 	>
@@ -152,7 +225,34 @@
 						: ''}"
 				>
 					<Card.Header>
-						<Card.Title>{event.event}</Card.Title>
+						<Card.Title class="flex flex-row items-center">
+							<span>{event.event}</span>
+							<div class="flex-grow"></div>
+							<Button
+								variant="destructive"
+								size="icon"
+								on:click={async () => {
+									if (!confirm('Are you sure you want to delete this event?'))
+										return;
+									if (
+										!confirm(
+											"Are you really sure? This will delete ALL TEAMS and remove this event from everyone's sign up form.",
+										)
+									)
+										return;
+									if (
+										!prompt('Type "delete this event" to confirm.')
+											?.toLowerCase()
+											.includes('delete this event')
+									)
+										return;
+
+									await deleteDoc(doc(db, 'events', event.event ?? ''));
+								}}
+							>
+								<Trash2 />
+							</Button>
+						</Card.Title>
 						<Card.Description>
 							<ul class="mb-2">
 								<li>
