@@ -1,5 +1,5 @@
 export const board = [
-	'GSHELTON@lwsd.org',
+	'gshelton@lwsd.org',
 	'swoodcock@lwsd.org',
 	's-rgarg@lwsd.org',
 	's-wzou@lwsd.org',
