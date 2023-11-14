@@ -45,3 +45,7 @@ export interface MailDoc {
 		state: string;
 	};
 }
+
+export interface SettingsDoc {
+	enable_online_submissions: boolean;
+}

@@ -149,7 +149,7 @@
 	/>
 
 	<p class="mb-2 w-full">Green team: full; red team: over or underfilled</p>
-	<div class="w-full mb-4">
+	<div class="w-full mb-4 space-y-2">
 		<Dialog.Root bind:open={newEventDialogOpen}>
 			<Dialog.Trigger class={buttonVariants()}>Create new event</Dialog.Trigger>
 			<Dialog.Content>
@@ -210,6 +210,10 @@
 				</Dialog.Description>
 			</Dialog.Content>
 		</Dialog.Root>
+		<div class="flex items-center space-x-2">
+			<Switch id="enable-online-submissions" />
+			<Label for="enable-online-submissions">Enable online submissions</Label>
+		</div>
 	</div>
 	<div
 		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
