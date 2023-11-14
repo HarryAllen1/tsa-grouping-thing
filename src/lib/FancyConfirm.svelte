@@ -17,7 +17,6 @@
 
 			result.subscribe((r) => {
 				if (r !== null) {
-					console.log('asdf', r);
 					open.set(false);
 					result.set(null);
 
