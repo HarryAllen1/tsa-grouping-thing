@@ -8,6 +8,7 @@
 		yay,
 		type EventDoc,
 		type UserDoc,
+		fancyConfirm,
 	} from '$lib';
 	import { board } from '$lib/board';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
@@ -232,16 +233,22 @@
 								variant="destructive"
 								size="icon"
 								on:click={async () => {
-									if (!confirm('Are you sure you want to delete this event?'))
-										return;
 									if (
-										!confirm(
-											"Are you really sure? This will delete ALL TEAMS and remove this event from everyone's sign up form.",
-										)
+										!(await fancyConfirm(
+											'Are you sure?',
+											'Are you sure you want to delete this event?',
+										))
 									)
 										return;
 									if (
-										!prompt('Type "delete this event" to confirm.')
+										!(await fancyConfirm(
+											'Are you really sure?',
+											" This will delete ALL TEAMS and remove this event from everyone's sign up form.",
+										))
+									)
+										return;
+									if (
+										!prompt('Type "delete this event" to await fancyConfirm.')
 											?.toLowerCase()
 											.includes('delete this event')
 									)
@@ -309,9 +316,10 @@
 										<Button
 											variant="destructive"
 											size="icon"
-											on:click={() => {
+											on:click={async () => {
 												if (
-													confirm(
+													await fancyConfirm(
+														'Are you sure',
 														"Are you sure you want to remove everyone who hasn't created a team yet from this event?",
 													)
 												) {
@@ -462,7 +470,10 @@
 											size="icon"
 											on:click={async () => {
 												if (
-													!confirm('Are you sure you want to delete this team?')
+													!(await fancyConfirm(
+														'Are you sure',
+														'Are you sure you want to delete this team? This action is irreversible.',
+													))
 												)
 													return;
 												event.teams = event.teams.filter((t) => t !== team);

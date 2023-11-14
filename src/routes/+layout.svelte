@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { auth, db, storage } from '$lib';
+	import { FancyConfirm, auth, db, storage } from '$lib';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { sleep } from '$lib/utils';
@@ -92,3 +92,5 @@
 		</AlertDialog.Description>
 	</AlertDialog.Content>
 </AlertDialog.Root>
+
+<FancyConfirm />
