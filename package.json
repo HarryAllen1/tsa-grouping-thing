@@ -48,11 +48,11 @@
 	},
 	"volta": {
 		"node": "18.17.1",
-		"pnpm": "8.10.2"
+		"pnpm": "8.10.5"
 	},
 	"engines": {
 		"node": "18.17.1",
-		"pnpm": "8.10.2"
+		"pnpm": "8.10.5"
 	},
 	"pnpm": {
 		"peerDependencyRules": {
