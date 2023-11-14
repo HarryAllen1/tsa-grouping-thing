@@ -48,11 +48,11 @@
 		"tailwind-variants": "^0.1.18"
 	},
 	"volta": {
-		"node": "20.9.0",
+		"node": "18.18.2",
 		"pnpm": "8.10.2"
 	},
 	"engines": {
-		"node": "20.9.0",
+		"node": "18.18.2",
 		"pnpm": "8.10.2"
 	},
 	"pnpm": {
