@@ -4,11 +4,12 @@
 		auth,
 		aww,
 		db,
+		fancyConfirm,
 		sendEmail,
+		settings,
 		yay,
 		type EventDoc,
 		type UserDoc,
-		fancyConfirm,
 	} from '$lib';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -104,6 +105,8 @@
 	};
 
 	let newEventDialogOpen = false;
+
+	$: onlineSubmissions = $settings?.enableOnlineSubmissions ?? false;
 </script>
 
 <svelte:window
@@ -211,7 +214,19 @@
 			</Dialog.Content>
 		</Dialog.Root>
 		<div class="flex items-center space-x-2">
-			<Switch id="enable-online-submissions" />
+			<Switch
+				id="enable-online-submissions"
+				bind:checked={onlineSubmissions}
+				onCheckedChange={async (e) => {
+					await setDoc(
+						doc(db, 'settings', 'settings'),
+						{
+							enable_online_submissions: e,
+						},
+						{ merge: true },
+					);
+				}}
+			/>
 			<Label for="enable-online-submissions">Enable online submissions</Label>
 		</div>
 	</div>
@@ -438,8 +453,7 @@
 						<Label class="flex flex-row items-center gap-2">
 							<Switch
 								onCheckedChange={async (checked) => {
-									const dataButMutable = event;
-									dataButMutable.locked = checked;
+									event.locked = checked;
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
 										{
@@ -453,6 +467,24 @@
 								checked={event.locked ?? false}
 							/>
 							Lock event
+						</Label>
+						<Label class="flex flex-row items-center gap-2">
+							<Switch
+								onCheckedChange={async (checked) => {
+									event.onlineSubmissions = checked;
+									await setDoc(
+										doc(db, 'events', event.event ?? ''),
+										{
+											onlineSubmissions: checked,
+										},
+										{
+											merge: true,
+										},
+									);
+								}}
+								checked={event.onlineSubmissions ?? false}
+							/>
+							Online submissions
 						</Label>
 						{#if event.event === 'Technology Bowl'}
 							<p>

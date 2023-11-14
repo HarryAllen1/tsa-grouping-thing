@@ -6,6 +6,7 @@ export interface EventDoc {
 	event: string;
 	minTeamSize: number;
 	maxTeamSize: number;
+	onlineSubmissions?: boolean;
 	perChapter: number;
 }
 
@@ -47,5 +48,5 @@ export interface MailDoc {
 }
 
 export interface SettingsDoc {
-	enable_online_submissions: boolean;
+	enableOnlineSubmissions: boolean;
 }
