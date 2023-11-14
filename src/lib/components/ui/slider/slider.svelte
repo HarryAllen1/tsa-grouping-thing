@@ -11,10 +11,15 @@
 
 <SliderPrimitive.Root
 	bind:value
-	class={cn('relative flex w-full touch-none select-none items-center', className)}
+	class={cn(
+		'relative flex w-full touch-none select-none items-center',
+		className,
+	)}
 	{...$$restProps}
 >
-	<span class="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
+	<span
+		class="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary"
+	>
 		<SliderPrimitive.Range class="absolute h-full bg-primary" />
 	</span>
 	<SliderPrimitive.Thumb
