@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import {
-		auth,
+		allUsersCollection,
 		aww,
 		congratulations,
 		db,
+		eventsCollection,
 		sendEmail,
+		user,
+		userDoc,
 		yay,
 		type EventDoc,
-		type UserDoc,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
@@ -31,9 +33,6 @@
 		UserPlus,
 	} from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
-	import { collectionStore, docStore, userStore } from 'sveltefire';
-
-	const user = userStore(auth);
 
 	if (!$user) goto('/login');
 
@@ -45,16 +44,11 @@
 		document.body.classList.remove('yellow');
 	}
 
-	const allUsers = collectionStore<UserDoc>(db, 'users');
-	const userDoc = docStore<UserDoc>(db, `users/${$user?.email?.toLowerCase()}`);
-
-	const events = collectionStore<EventDoc>(db, 'events');
-
 	$: signedUpEvents = (
-		($events.length
+		($eventsCollection.length
 			? ($userDoc?.events ?? [])
 					.map((e) => ({
-						...$events.find((ev) => ev.event === e),
+						...$eventsCollection.find((ev) => ev.event === e),
 					}))
 					.sort((a, b) => a.event!.localeCompare(b.event!))
 			: []) as EventDoc[]
@@ -70,12 +64,12 @@
 				: e.teams,
 	}));
 
-	$: eventData = $events.length
-		? $events
+	$: eventData = $eventsCollection.length
+		? $eventsCollection
 				.map((e) => ({
 					...e,
 					members: (
-						$allUsers?.filter((m) => m.events.includes(e.event)) ?? []
+						$allUsersCollection?.filter((m) => m.events.includes(e.event)) ?? []
 					).map((m) => ({
 						name: m.name,
 						email: m.email,
@@ -417,7 +411,7 @@
 														{:else}
 															<p>People who signed up for this event:</p>
 															<ul>
-																{#each $allUsers
+																{#each $allUsersCollection
 																	.filter((m) => m.events.includes(event.event ?? '') && !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
 																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person (person.email)}
 																	<li

@@ -1,20 +1,15 @@
 <script lang="ts" setup>
 	import { goto } from '$app/navigation';
-	import { auth, db, type EventDoc, type UserDoc } from '$lib';
+	import { allUsersCollection, eventsCollection, userDoc } from '$lib';
 	import { barX, plot } from '@observablehq/plot';
-	import { collectionStore, userStore } from 'sveltefire';
 	import colors from 'tailwindcss/colors';
-	import { eventError } from './eventError.js';
 	import ColorKey from './ColorKey.svelte';
-	import { admins } from '../(protected)/admins.js';
+	import { eventError } from './eventError.js';
 
 	let graph: HTMLDivElement;
-	const user = userStore(auth);
-	const data = collectionStore<UserDoc>(db, 'users');
-	const eventsCollection = collectionStore<EventDoc>(db, 'events');
 
-	$: if ($data.length && $eventsCollection.length) {
-		const events = $data
+	$: if ($allUsersCollection.length && $eventsCollection.length) {
+		const events = $allUsersCollection
 			.reduce((acc, curr) => [...acc, ...curr.events], [] as string[])
 			.reduce(
 				(acc, curr) => {
@@ -48,21 +43,25 @@
 					x: 'freq',
 					y: 'name',
 					fill(d: { name: string; freq: number }) {
-						const error = eventError(d.name, $eventsCollection, $data);
+						const error = eventError(
+							d.name,
+							$eventsCollection,
+							$allUsersCollection,
+						);
 						return error === 'errorNotEnough'
 							? colors.blue[500]
 							: error === 'errorTooMany'
-							? colors.red[500]
-							: error === 'warning'
-							? colors.yellow[500]
-							: 'var(--vp-c-text-1)';
+							  ? colors.red[500]
+							  : error === 'warning'
+							    ? colors.yellow[500]
+							    : 'var(--vp-c-text-1)';
 					},
 					tip: true,
 					marginLeft: 225,
 				}),
 			],
 		});
-		if (admins.includes($user?.email?.toLowerCase() ?? '')) {
+		if ($userDoc?.admin) {
 			const labels = plotEl.querySelectorAll<SVGElement>(
 				'g[aria-label="y-axis tick label"] > text',
 			);
