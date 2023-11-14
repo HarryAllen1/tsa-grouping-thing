@@ -10,7 +10,6 @@
 		type UserDoc,
 		fancyConfirm,
 	} from '$lib';
-	import { board } from '$lib/board';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -307,7 +306,10 @@
 									</Collapsable.Trigger>
 									<Collapsable.Content>
 										<Button
-											href="mailto:?cc={board.join(';')}&bcc={peopleNotInTeams
+											href="mailto:?cc={$usersDoc
+												.filter((u) => u.admin)
+												.map((u) => u.email)
+												.join(';')}&bcc={peopleNotInTeams
 												.map((p) => p.email)
 												.join(';')}&subject={event.event}"
 										>
@@ -633,7 +635,10 @@
 									<div class="flex flex-row items-center gap-1">
 										<Button
 											size="icon"
-											href="mailto:?cc={board.join(';')}&bcc={team.members
+											href="mailto:?cc={$usersDoc
+												.filter((u) => u.admin)
+												.map((u) => u.email)
+												.join(';')}&bcc={team.members
 												.map((p) => p.email)
 												.join(';')}&subject={event.event}"
 										>
