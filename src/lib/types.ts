@@ -27,6 +27,7 @@ export interface UserDoc {
 	email: string;
 	name: string;
 	events: string[];
+	admin?: boolean;
 }
 
 export interface MailDoc {

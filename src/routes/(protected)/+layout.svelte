@@ -1,11 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { auth } from '$lib';
-	import { admins } from './admins';
+	import { auth, db, type UserDoc } from '$lib';
+	import { docStore, userStore } from 'sveltefire';
 
-	if (!admins.includes(auth.currentUser?.email?.toLowerCase() ?? '')) {
+	const user = userStore(auth);
+	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
+
+	$: if ($userDoc && !$userDoc?.admin) {
 		goto('/');
 	}
 </script>
 
-<slot />
+{#if $userDoc}
+	<slot />
+{/if}

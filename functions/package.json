@@ -11,7 +11,8 @@
 		"logs": "firebase functions:log"
 	},
 	"engines": {
-		"node": "18"
+		"node": "18",
+		"pnpm": "8.10.2"
 	},
 	"main": "lib/index.js",
 	"dependencies": {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { auth, aww, db, type Team } from '$lib';
+	import { auth, aww, db, type UserDoc, type Team } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
@@ -8,15 +8,15 @@
 	import { signOut } from 'firebase/auth';
 	import { collection, getDocs } from 'firebase/firestore';
 	import { Download, LogOut } from 'lucide-svelte';
-	import { onMount } from 'svelte';
-	import { userStore } from 'sveltefire';
-	import { admins } from './(protected)/admins';
+	import { docStore, userStore } from 'sveltefire';
 	import DesktopNav from './DesktopNav.svelte';
 	import MobileNav from './MobileNav.svelte';
 
 	const user = userStore(auth);
+	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 
-	const navItems: { title: string; href: string }[] = [
+	let navItems: { title: string; href: string }[] = [];
+	$: navItems = [
 		{
 			title: 'Teams',
 			href: '/',
@@ -29,7 +29,7 @@
 			title: 'Event Stats',
 			href: '/stats',
 		},
-		...(admins.includes($user?.email?.toLowerCase() ?? '')
+		...($userDoc?.admin
 			? [
 					{
 						title: 'Admin Teams',
@@ -122,7 +122,7 @@
 			</div>
 			<nav class="flex items-center space-x-2">
 				<!-- profile -->
-				{#if admins.includes($user?.email ?? '')}
+				{#if $userDoc?.admin}
 					<Dropdown.Root>
 						<Dropdown.Trigger asChild let:builder>
 							<Button size="icon" variant="ghost" builders={[builder]}>

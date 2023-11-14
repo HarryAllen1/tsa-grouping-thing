@@ -37,5 +37,10 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 		if (!allowedDomains.some((domain) => user.email?.endsWith(domain))) {
 			throw new HttpsError('invalid-argument', 'Unauthorized email');
 		}
+		db.doc(`users/${user.email}`).set({
+			email: user.email,
+			name: user.displayName,
+			events: [],
+		});
 	},
 );
