@@ -17,6 +17,7 @@ export interface Team {
 	lastUpdatedBy?: string;
 	lastUpdatedTime?: Timestamp;
 	requests?: BasicUser[];
+	id: string;
 }
 
 export interface BasicUser {

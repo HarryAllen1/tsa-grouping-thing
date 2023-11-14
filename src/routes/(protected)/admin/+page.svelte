@@ -953,6 +953,7 @@
 								event.teams.push({
 									members: [],
 									lastUpdatedBy: $user?.email ?? '',
+									id: crypto.randomUUID(),
 								});
 								await setDoc(
 									doc(db, 'events', event.event ?? ''),

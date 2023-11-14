@@ -14,6 +14,7 @@
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsable from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -24,6 +25,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
+	import { ref } from 'firebase/storage';
 	import {
 		ChevronsUpDown,
 		Crown,
@@ -31,8 +33,10 @@
 		Minus,
 		Plus,
 		UserPlus,
+		X,
 	} from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
+	import { StorageList } from 'sveltefire';
 
 	if (!$user) goto('/login');
 
@@ -156,6 +160,7 @@
 												requests: [],
 												lastUpdatedBy: '',
 												lastUpdatedTime: new Timestamp(0, 0),
+												id: crypto.randomUUID(),
 											};
 											teamUserIsIn.members.push({
 												name: r.name,
@@ -332,162 +337,224 @@
 											change something, contact a board member.
 										</p>
 									{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
-										<div>
-											<Tooltip.Root>
-												<Tooltip.Trigger>
-													<Button
-														variant="destructive"
-														on:click={async () => {
-															const teamButMutable = team;
-															teamButMutable.members.splice(
-																teamButMutable.members.findIndex(
-																	(e) =>
-																		e.email.toLowerCase() ===
-																		($user?.email ?? ''),
-																),
-																1,
-															);
-															teamButMutable.lastUpdatedBy = $user?.email ?? '';
-															teamButMutable.lastUpdatedTime = new Timestamp(
-																Date.now() / 1000,
-																0,
-															);
-															await setDoc(
-																doc(db, 'events', event.event ?? ''),
-																{
-																	teams: event.teams.filter(
-																		(t) => t.members.length > 0,
+										<div class="flex flex-col gap-2">
+											<div class="w-full flex flex-row gap-2">
+												<Tooltip.Root>
+													<Tooltip.Trigger>
+														<Button
+															variant="destructive"
+															on:click={async () => {
+																const teamButMutable = team;
+																teamButMutable.members.splice(
+																	teamButMutable.members.findIndex(
+																		(e) =>
+																			e.email.toLowerCase() ===
+																			($user?.email ?? ''),
 																	),
-																},
-																{
-																	merge: true,
-																},
-															);
-															aww.play();
-														}}
-													>
-														<LogOut />
-													</Button>
-												</Tooltip.Trigger>
-												<Tooltip.Content>Leave team</Tooltip.Content>
-											</Tooltip.Root>
-											<Dialog.Root>
-												{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-													<Tooltip.Root>
-														<Tooltip.Trigger>
-															<Dialog.Trigger disabled>
-																<Button
-																	class="bg-green-500 hover:bg-green-400"
-																	disabled
-																>
-																	<UserPlus />
-																</Button>
-															</Dialog.Trigger>
-														</Tooltip.Trigger>
-														<Tooltip.Content>
-															<p>Team is full</p>
-														</Tooltip.Content>
-													</Tooltip.Root>
-												{:else}
-													<Dialog.Trigger>
+																	1,
+																);
+																teamButMutable.lastUpdatedBy =
+																	$user?.email ?? '';
+																teamButMutable.lastUpdatedTime = new Timestamp(
+																	Date.now() / 1000,
+																	0,
+																);
+																await setDoc(
+																	doc(db, 'events', event.event ?? ''),
+																	{
+																		teams: event.teams.filter(
+																			(t) => t.members.length > 0,
+																		),
+																	},
+																	{
+																		merge: true,
+																	},
+																);
+																aww.play();
+															}}
+														>
+															<LogOut />
+														</Button>
+													</Tooltip.Trigger>
+													<Tooltip.Content>Leave team</Tooltip.Content>
+												</Tooltip.Root>
+												<Dialog.Root>
+													{#if team.members.length >= (event.maxTeamSize ?? 9999)}
 														<Tooltip.Root>
 															<Tooltip.Trigger>
-																<Button class="bg-green-500 hover:bg-green-400">
-																	<UserPlus />
-																</Button>
-															</Tooltip.Trigger>
-															<Tooltip.Content>Add person</Tooltip.Content>
-														</Tooltip.Root>
-													</Dialog.Trigger>
-												{/if}
-
-												<Dialog.Content>
-													<Dialog.Title>Add People</Dialog.Title>
-													<Dialog.Description>
-														{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-															<Alert class="dark:brightness-200">
-																<AlertTitle>This team is full</AlertTitle>
-															</Alert>
-														{:else}
-															<p>People who signed up for this event:</p>
-															<ul>
-																{#each $allUsersCollection
-																	.filter((m) => m.events.includes(event.event ?? '') && !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
-																	.sort( (a, b) => a.name.localeCompare(b.name), ) as person (person.email)}
-																	<li
-																		class="flex flex-row items-center"
-																		animate:flip={{
-																			duration: 200,
-																		}}
+																<Dialog.Trigger disabled>
+																	<Button
+																		class="bg-green-500 hover:bg-green-400"
+																		disabled
 																	>
-																		{person.name}
-																		<Button
-																			on:click={async () => {
-																				const teamButMutable = team;
-																				teamButMutable.members.push({
-																					name: person.name,
-																					email: person.email,
-																				});
-																				teamButMutable.lastUpdatedBy =
-																					$user?.email ?? '';
-																				teamButMutable.lastUpdatedTime =
-																					new Timestamp(Date.now() / 1000, 0);
-																				await setDoc(
-																					doc(db, 'events', event.event ?? ''),
-																					{
-																						teams: event.teams,
-																					},
-																					{
-																						merge: true,
-																					},
-																				);
-																				confetti();
-																				yay.play();
+																		<UserPlus />
+																	</Button>
+																</Dialog.Trigger>
+															</Tooltip.Trigger>
+															<Tooltip.Content>
+																<p>Team is full</p>
+															</Tooltip.Content>
+														</Tooltip.Root>
+													{:else}
+														<Dialog.Trigger>
+															<Tooltip.Root>
+																<Tooltip.Trigger>
+																	<Button
+																		class="bg-green-500 hover:bg-green-400"
+																	>
+																		<UserPlus />
+																	</Button>
+																</Tooltip.Trigger>
+																<Tooltip.Content>Add person</Tooltip.Content>
+															</Tooltip.Root>
+														</Dialog.Trigger>
+													{/if}
+
+													<Dialog.Content>
+														<Dialog.Title>Add People</Dialog.Title>
+														<Dialog.Description>
+															{#if team.members.length >= (event.maxTeamSize ?? 9999)}
+																<Alert class="dark:brightness-200">
+																	<AlertTitle>This team is full</AlertTitle>
+																</Alert>
+															{:else}
+																<p>People who signed up for this event:</p>
+																<ul>
+																	{#each $allUsersCollection
+																		.filter((m) => m.events.includes(event.event ?? '') && !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
+																		.sort( (a, b) => a.name.localeCompare(b.name), ) as person (person.email)}
+																		<li
+																			class="flex flex-row items-center"
+																			animate:flip={{
+																				duration: 200,
 																			}}
-																			variant="outline"
-																			size="icon"
-																			class="ml-2"
 																		>
-																			<Plus />
-																		</Button>
-																	</li>
-																{:else}
-																	<li>
-																		No one else singed up for this event. Please
-																		see a board member for next steps.
-																	</li>
-																{/each}
-															</ul>
-														{/if}
-													</Dialog.Description>
-												</Dialog.Content>
-											</Dialog.Root>
+																			{person.name}
+																			<Button
+																				on:click={async () => {
+																					const teamButMutable = team;
+																					teamButMutable.members.push({
+																						name: person.name,
+																						email: person.email,
+																					});
+																					teamButMutable.lastUpdatedBy =
+																						$user?.email ?? '';
+																					teamButMutable.lastUpdatedTime =
+																						new Timestamp(Date.now() / 1000, 0);
+																					await setDoc(
+																						doc(
+																							db,
+																							'events',
+																							event.event ?? '',
+																						),
+																						{
+																							teams: event.teams,
+																						},
+																						{
+																							merge: true,
+																						},
+																					);
+																					confetti();
+																					yay.play();
+																				}}
+																				variant="outline"
+																				size="icon"
+																				class="ml-2"
+																			>
+																				<Plus />
+																			</Button>
+																		</li>
+																	{:else}
+																		<li>
+																			No one else singed up for this event.
+																			Please see a board member for next steps.
+																		</li>
+																	{/each}
+																</ul>
+															{/if}
+														</Dialog.Description>
+													</Dialog.Content>
+												</Dialog.Root>
+											</div>
+											<div class="flex flex-row w-full gap-2">
+												<Button
+													on:click={async () => {
+														const teamButMutable = team;
+														teamButMutable.teamCaptain = $user?.email ?? '';
+														teamButMutable.lastUpdatedBy = $user?.email ?? '';
+														teamButMutable.lastUpdatedTime = new Timestamp(
+															Date.now() / 1000,
+															0,
+														);
+														await setDoc(
+															doc(db, 'events', event.event ?? ''),
+															{
+																teams: event.teams,
+															},
+															{
+																merge: true,
+															},
+														);
+														congratulations.play();
+													}}
+													disabled={team.teamCaptain === $user?.email}
+													class="w-fit"
+												>
+													Become Team Captain
+												</Button>
+											</div>
+											<div>
+												<Dialog.Root>
+													<Dialog.Trigger>
+														<Button>Manage Submissions</Button>
+													</Dialog.Trigger>
+													<Dialog.Content>
+														<Dialog.Title>Manage Submissions</Dialog.Title>
+														<Dialog.Description>
+															<StorageList
+																ref="submissions/{event.event}/{team.id}"
+																let:list
+															>
+																<ul>
+																	{#each list?.items ?? [] as submission}
+																		<li class="w-full flex flex-row">
+																			<span>
+																				{submission.name}
+																			</span>
+																			<div class="flex flex-grow" />
+																			<Button variant="ghost" size="icon">
+																				<X />
+																			</Button>
+																		</li>
+																	{:else}
+																		<p>No submissions</p>
+																	{/each}
+																</ul>
+															</StorageList>
+															<Button>Upload</Button>
+															<p>
+																Allowed file types: all image files, all audio
+																files, all video files, pdfs, and Word docs
+																(.doc, .docx).
+															</p>
+															<p>
+																If you need to submit a file type not listed,
+																please contact Harry (<a
+																	href="mailto:s-hallen@lwsd.org"
+																	>s-hallen@lwsd.org</a
+																>).
+															</p>
+															<input
+																class="hidden"
+																type="file"
+																multiple
+																accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
+															/>
+														</Dialog.Description>
+													</Dialog.Content>
+												</Dialog.Root>
+											</div>
 										</div>
-										<Button
-											on:click={async () => {
-												const teamButMutable = team;
-												teamButMutable.teamCaptain = $user?.email ?? '';
-												teamButMutable.lastUpdatedBy = $user?.email ?? '';
-												teamButMutable.lastUpdatedTime = new Timestamp(
-													Date.now() / 1000,
-													0,
-												);
-												await setDoc(
-													doc(db, 'events', event.event ?? ''),
-													{
-														teams: event.teams,
-													},
-													{
-														merge: true,
-													},
-												);
-												congratulations.play();
-											}}
-											disabled={team.teamCaptain === $user?.email}
-											class="w-fit"
-										>
-											Become Team Captain
-										</Button>
 									{:else if !event.locked && !(event.teams.find( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) || event.event === 'Technology Bowl') && team.members.length < event.maxTeamSize}
 										{#if team.requests?.find((u) => u.email === $user?.email)}
 											<Button disabled>Requested</Button>
@@ -675,6 +742,7 @@
 											},
 										],
 										lastUpdatedBy: $user?.email ?? '',
+										id: crypto.randomUUID(),
 									});
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
