@@ -498,8 +498,8 @@
 								team.members.length < event.minTeamSize
 									? 'bg-red-300 dark:bg-red-950'
 									: team.members.length === event.maxTeamSize
-									  ? 'bg-green-300 dark:bg-green-950'
-									  : 'bg-blue-100 dark:bg-slate-900'} bg-opacity-20"
+									? 'bg-green-300 dark:bg-green-950'
+									: 'bg-blue-100 dark:bg-slate-900'} bg-opacity-20"
 							>
 								<Card.Title class="m-2 ml-4 flex flex-col gap-2">
 									<div class="flex flex-row gap-1">
@@ -583,6 +583,7 @@
 																		);
 																		confetti();
 																		yay.play();
+																		navigator.vibrate(100);
 																	}}
 																	variant="outline"
 																	size="icon"
@@ -754,6 +755,7 @@
 																	);
 																	confetti();
 																	yay.play();
+																	navigator.vibrate(100);
 																}}
 																size="icon"
 																class="h-5"
@@ -865,6 +867,7 @@
 																					);
 																					confetti();
 																					yay.play();
+																					navigator.vibrate(100);
 																				}}
 																				variant="outline"
 																				size="icon"

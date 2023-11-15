@@ -189,6 +189,7 @@
 											);
 											confetti();
 											yay.play();
+											navigator.vibrate(100)
 										}}
 										size="icon"
 										class="h-5"
@@ -457,6 +458,7 @@
 																						},
 																					);
 																					confetti();
+																					navigator.vibrate(100)
 																					yay.play();
 																				}}
 																				variant="outline"
@@ -652,6 +654,7 @@
 																			},
 																		);
 																		confetti();
+																		navigator.vibrate(100)
 																		yay.play();
 																	}}
 																	size="icon"
