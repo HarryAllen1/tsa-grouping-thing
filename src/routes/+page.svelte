@@ -794,7 +794,7 @@
 							</Card.Root>
 						{/each}
 					</Card.Content>
-					{#if !event.locked}
+					{#if !event.locked && !event.teamCreationLocked}
 						<Card.Footer>
 							<Button
 								disabled={!!(
