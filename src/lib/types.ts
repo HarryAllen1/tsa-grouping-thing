@@ -8,6 +8,7 @@ export interface EventDoc {
 	maxTeamSize: number;
 	onlineSubmissions?: boolean;
 	perChapter: number;
+	teamCreationLocked?: boolean;
 }
 
 export interface Team {

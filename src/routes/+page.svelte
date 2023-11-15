@@ -109,6 +109,8 @@
 				)
 				.flatMap((t) => t.requests ?? []),
 		}));
+
+	let submissionsFileUpload: HTMLInputElement;
 </script>
 
 <div class="mt-8 flex flex-col items-center container">
@@ -532,7 +534,11 @@
 																		{/each}
 																	</ul>
 																</StorageList>
-																<Button>Upload</Button>
+																<Button
+																	on:click={() => submissionsFileUpload.click()}
+																>
+																	Upload
+																</Button>
 																<p>
 																	Allowed file types: all image files, all audio
 																	files, all video files, pdfs, and Word docs
@@ -546,6 +552,7 @@
 																	>).
 																</p>
 																<input
+																	bind:this={submissionsFileUpload}
 																	class="hidden"
 																	type="file"
 																	multiple
