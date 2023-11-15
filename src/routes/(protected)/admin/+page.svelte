@@ -827,12 +827,6 @@
 																		if (!e.target.files?.length) return;
 																		const files = [...e.target.files];
 																		for (const file of files) {
-																			if (file.size > 250 * 1024 * 1024) {
-																				alert(
-																					`File ${file.name} is too large.`,
-																				);
-																				continue;
-																			}
 																			if (
 																				list?.items
 																					.map((f) => f.name)
