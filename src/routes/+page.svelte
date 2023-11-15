@@ -544,6 +544,7 @@
 																	files, all video files, pdfs, and Word docs
 																	(.doc, .docx).
 																</p>
+																<p>250MB max file size.</p>
 																<p>
 																	If you need to submit a file type not listed,
 																	please contact Harry (<a
