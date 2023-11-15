@@ -503,57 +503,59 @@
 													Become Team Captain
 												</Button>
 											</div>
-											<div>
-												<Dialog.Root>
-													<Dialog.Trigger>
-														<Button>Manage Submissions</Button>
-													</Dialog.Trigger>
-													<Dialog.Content>
-														<Dialog.Title>Manage Submissions</Dialog.Title>
-														<Dialog.Description>
-															<StorageList
-																ref="submissions/{event.event}/{team.id}"
-																let:list
-															>
-																<ul>
-																	{#each list?.items ?? [] as submission}
-																		<li class="w-full flex flex-row">
-																			<span>
-																				{submission.name}
-																			</span>
-																			<div class="flex flex-grow" />
-																			<Button variant="ghost" size="icon">
-																				<X />
-																			</Button>
-																		</li>
-																	{:else}
-																		<p>No submissions</p>
-																	{/each}
-																</ul>
-															</StorageList>
-															<Button>Upload</Button>
-															<p>
-																Allowed file types: all image files, all audio
-																files, all video files, pdfs, and Word docs
-																(.doc, .docx).
-															</p>
-															<p>
-																If you need to submit a file type not listed,
-																please contact Harry (<a
-																	href="mailto:s-hallen@lwsd.org"
-																	>s-hallen@lwsd.org</a
-																>).
-															</p>
-															<input
-																class="hidden"
-																type="file"
-																multiple
-																accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
-															/>
-														</Dialog.Description>
-													</Dialog.Content>
-												</Dialog.Root>
-											</div>
+											{#if event.onlineSubmissions}
+												<div>
+													<Dialog.Root>
+														<Dialog.Trigger>
+															<Button>Manage Submissions</Button>
+														</Dialog.Trigger>
+														<Dialog.Content>
+															<Dialog.Title>Manage Submissions</Dialog.Title>
+															<Dialog.Description>
+																<StorageList
+																	ref="submissions/{event.event}/{team.id}"
+																	let:list
+																>
+																	<ul>
+																		{#each list?.items ?? [] as submission}
+																			<li class="w-full flex flex-row">
+																				<span>
+																					{submission.name}
+																				</span>
+																				<div class="flex flex-grow" />
+																				<Button variant="ghost" size="icon">
+																					<X />
+																				</Button>
+																			</li>
+																		{:else}
+																			<p>No submissions</p>
+																		{/each}
+																	</ul>
+																</StorageList>
+																<Button>Upload</Button>
+																<p>
+																	Allowed file types: all image files, all audio
+																	files, all video files, pdfs, and Word docs
+																	(.doc, .docx).
+																</p>
+																<p>
+																	If you need to submit a file type not listed,
+																	please contact Harry (<a
+																		href="mailto:s-hallen@lwsd.org"
+																		>s-hallen@lwsd.org</a
+																	>).
+																</p>
+																<input
+																	class="hidden"
+																	type="file"
+																	multiple
+																	accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
+																/>
+															</Dialog.Description>
+														</Dialog.Content>
+													</Dialog.Root>
+												</div>
+											{/if}
 										</div>
 									{:else if !event.locked && !(event.teams.find( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) || event.event === 'Technology Bowl') && team.members.length < event.maxTeamSize}
 										{#if team.requests?.find((u) => u.email === $user?.email)}
