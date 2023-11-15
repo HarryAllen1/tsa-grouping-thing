@@ -14,7 +14,6 @@
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsable from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -25,7 +24,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import { ref } from 'firebase/storage';
+	import type { UploadTaskSnapshot } from 'firebase/storage';
 	import {
 		ChevronsUpDown,
 		Crown,
@@ -36,7 +35,8 @@
 		X,
 	} from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
-	import { StorageList } from 'sveltefire';
+	import { writable, type Readable } from 'svelte/store';
+	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 
 	if (!$user) goto('/login');
 
@@ -111,6 +111,8 @@
 		}));
 
 	let submissionsFileUpload: HTMLInputElement;
+	const uploadsInProgress: Readable<UploadTaskSnapshot>[] = [];
+	const filesToUpload = writable<File[]>([]);
 </script>
 
 <div class="mt-8 flex flex-col items-center container">
@@ -189,7 +191,7 @@
 											);
 											confetti();
 											yay.play();
-											navigator.vibrate(100)
+											navigator.vibrate(100);
 										}}
 										size="icon"
 										class="h-5"
@@ -458,7 +460,7 @@
 																						},
 																					);
 																					confetti();
-																					navigator.vibrate(100)
+																					navigator.vibrate(100);
 																					yay.play();
 																				}}
 																				variant="outline"
@@ -523,9 +525,11 @@
 																	<ul>
 																		{#each list?.items ?? [] as submission}
 																			<li class="w-full flex flex-row">
-																				<span>
-																					{submission.name}
-																				</span>
+																				<DownloadURL ref={submission} let:link>
+																					<a href={link} download>
+																						{submission.name}
+																					</a>
+																				</DownloadURL>
 																				<div class="flex flex-grow" />
 																				<Button variant="ghost" size="icon">
 																					<X />
@@ -536,6 +540,36 @@
 																		{/each}
 																	</ul>
 																</StorageList>
+																{#if $filesToUpload.length}
+																	<p class="font-bold">In progress</p>
+																	<ul>
+																		{#each $filesToUpload as file}
+																			<li>
+																				<UploadTask
+																					ref="submissions/{event.event}/{team.id}/{file.name}"
+																					data={file}
+																					let:snapshot
+																					let:progress
+																				>
+																					{#if snapshot?.state === 'running'}
+																						{progress}% uploaded
+																					{/if}
+
+																					{#if snapshot?.state === 'success'}
+																						<DownloadURL
+																							ref={snapshot?.ref}
+																							let:link
+																						>
+																							<a href={link} download>
+																								{file.name}
+																							</a>
+																						</DownloadURL>
+																					{/if}
+																				</UploadTask>
+																			</li>
+																		{/each}
+																	</ul>
+																{/if}
 																<Button
 																	on:click={() => submissionsFileUpload.click()}
 																>
@@ -556,6 +590,30 @@
 																</p>
 																<input
 																	bind:this={submissionsFileUpload}
+																	on:change={(e) => {
+																		if (e.target instanceof HTMLInputElement) {
+																			if (!e.target.files?.length) return;
+																			const files = [...e.target.files];
+																			for (const file of files) {
+																				if (file.size > 250 * 1024 * 1024) {
+																					alert(
+																						`File ${file.name} is too large.`,
+																					);
+																					continue;
+																				}
+
+																				$filesToUpload.push(file);
+																				$filesToUpload = $filesToUpload;
+
+																				// const uploadTask = uploadTaskStore(
+																				// 	storage,
+																				// 	`submissions/${event.event}/${team.id}/${file.name}`,
+																				// 	file,
+																				// );
+																				// uploadsInProgress.push(uploadTask);
+																			}
+																		}
+																	}}
 																	class="hidden"
 																	type="file"
 																	multiple
@@ -654,7 +712,7 @@
 																			},
 																		);
 																		confetti();
-																		navigator.vibrate(100)
+																		navigator.vibrate(100);
 																		yay.play();
 																	}}
 																	size="icon"
