@@ -19,12 +19,13 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
 	import { localStorageStore } from '$lib/components/ui/light-switch/local-storage-store';
+	import { Progress } from '$lib/components/ui/progress';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import type { UploadTaskSnapshot } from 'firebase/storage';
+	import { deleteObject } from 'firebase/storage';
 	import {
 		ChevronsUpDown,
 		Crown,
@@ -35,7 +36,7 @@
 		X,
 	} from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
-	import { writable, type Readable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 
 	if (!$user) goto('/login');
@@ -111,8 +112,17 @@
 		}));
 
 	let submissionsFileUpload: HTMLInputElement;
-	const uploadsInProgress: Readable<UploadTaskSnapshot>[] = [];
 	const filesToUpload = writable<File[]>([]);
+
+	let dummyVariableToRerender = 0;
+	const updateStorageList = () => {
+		dummyVariableToRerender++;
+		return '';
+	};
+	const filterSubmissions = (submission: File) => {
+		$filesToUpload = $filesToUpload.filter((f) => f !== submission);
+		return '';
+	};
 </script>
 
 <div class="mt-8 flex flex-col items-center container">
@@ -511,70 +521,128 @@
 											</div>
 											{#if event.onlineSubmissions}
 												<div>
-													<Dialog.Root>
+													<Dialog.Root closeOnOutsideClick={false}>
 														<Dialog.Trigger>
 															<Button>Manage Submissions</Button>
 														</Dialog.Trigger>
 														<Dialog.Content>
 															<Dialog.Title>Manage Submissions</Dialog.Title>
 															<Dialog.Description>
-																<StorageList
-																	ref="submissions/{event.event}/{team.id}"
-																	let:list
-																>
-																	<ul>
-																		{#each list?.items ?? [] as submission}
-																			<li class="w-full flex flex-row">
-																				<DownloadURL ref={submission} let:link>
-																					<a href={link} download>
-																						{submission.name}
-																					</a>
-																				</DownloadURL>
-																				<div class="flex flex-grow" />
-																				<Button variant="ghost" size="icon">
-																					<X />
-																				</Button>
-																			</li>
-																		{:else}
-																			<p>No submissions</p>
-																		{/each}
-																	</ul>
-																</StorageList>
-																{#if $filesToUpload.length}
-																	<p class="font-bold">In progress</p>
-																	<ul>
-																		{#each $filesToUpload as file}
-																			<li>
-																				<UploadTask
-																					ref="submissions/{event.event}/{team.id}/{file.name}"
-																					data={file}
-																					let:snapshot
-																					let:progress
+																{#key dummyVariableToRerender}
+																	<StorageList
+																		ref="submissions/{event.event}/{team.id}"
+																		let:list
+																	>
+																		<ul>
+																			{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
+																				<li
+																					class="w-full flex flex-col items-center"
 																				>
-																					{#if snapshot?.state === 'running'}
-																						{progress}% uploaded
-																					{/if}
-
-																					{#if snapshot?.state === 'success'}
-																						<DownloadURL
-																							ref={snapshot?.ref}
-																							let:link
+																					{#if submission instanceof File}
+																						<UploadTask
+																							ref="submissions/{event.event}/{team.id}/{submission.name}"
+																							data={submission}
+																							let:snapshot
+																							let:progress
 																						>
-																							<a href={link} download>
-																								{file.name}
-																							</a>
-																						</DownloadURL>
+																							{#if snapshot?.state === 'success'}
+																								{filterSubmissions(submission)}
+																								{updateStorageList()}
+																							{:else}
+																								<Progress
+																									value={progress}
+																									class="w-full"
+																								/>
+
+																								<span class="w-full">
+																									{submission.name}
+																								</span>
+																							{/if}
+																						</UploadTask>
+																					{:else}
+																						<div
+																							class="flex flex-row w-full items-center"
+																						>
+																							<DownloadURL
+																								ref={submission}
+																								let:link
+																							>
+																								<a href={link} target="_blank">
+																									{submission.name}
+																								</a>
+																							</DownloadURL>
+																							<div class="flex flex-grow" />
+																							<Button
+																								variant="ghost"
+																								size="icon"
+																								on:click={async () => {
+																									if (
+																										submission instanceof File
+																									)
+																										return;
+																									await deleteObject(
+																										submission,
+																									);
+																									team.lastUpdatedBy =
+																										$user?.email ?? '';
+																									dummyVariableToRerender++;
+																								}}
+																							>
+																								<X />
+																							</Button>
+																						</div>
 																					{/if}
-																				</UploadTask>
-																			</li>
-																		{/each}
-																	</ul>
-																{/if}
-																<Button
-																	on:click={() => submissionsFileUpload.click()}
-																>
-																	Upload
-																</Button>
+																				</li>
+																			{:else}
+																				<p>No submissions</p>
+																			{/each}
+																		</ul>
+																		<Button
+																			class="mt-4"
+																			on:click={() =>
+																				submissionsFileUpload.click()}
+																		>
+																			Upload
+																		</Button>
+																		<input
+																			bind:this={submissionsFileUpload}
+																			on:change={(e) => {
+																				if (
+																					e.target instanceof HTMLInputElement
+																				) {
+																					if (!e.target.files?.length) return;
+																					const files = [...e.target.files];
+																					for (const file of files) {
+																						if (file.size > 250 * 1024 * 1024) {
+																							alert(
+																								`File ${file.name} is too large.`,
+																							);
+																							continue;
+																						}
+																						if (
+																							list?.items
+																								.map((f) => f.name)
+																								.includes(file.name)
+																						) {
+																							alert(
+																								`File ${file.name} already exists. If you want to upload this file, change the name.`,
+																							);
+																							continue;
+																						}
+
+																						$filesToUpload.push(file);
+																						$filesToUpload = $filesToUpload;
+																					}
+																				}
+																			}}
+																			class="hidden"
+																			type="file"
+																			multiple
+																			accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
+																		/>
+																	</StorageList>
+																{/key}
+
 																<p>
 																	Allowed file types: all image files, all audio
 																	files, all video files, pdfs, and Word docs
@@ -588,37 +656,6 @@
 																		>s-hallen@lwsd.org</a
 																	>).
 																</p>
-																<input
-																	bind:this={submissionsFileUpload}
-																	on:change={(e) => {
-																		if (e.target instanceof HTMLInputElement) {
-																			if (!e.target.files?.length) return;
-																			const files = [...e.target.files];
-																			for (const file of files) {
-																				if (file.size > 250 * 1024 * 1024) {
-																					alert(
-																						`File ${file.name} is too large.`,
-																					);
-																					continue;
-																				}
-
-																				$filesToUpload.push(file);
-																				$filesToUpload = $filesToUpload;
-
-																				// const uploadTask = uploadTaskStore(
-																				// 	storage,
-																				// 	`submissions/${event.event}/${team.id}/${file.name}`,
-																				// 	file,
-																				// );
-																				// uploadsInProgress.push(uploadTask);
-																			}
-																		}
-																	}}
-																	class="hidden"
-																	type="file"
-																	multiple
-																	accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
-																/>
 															</Dialog.Description>
 														</Dialog.Content>
 													</Dialog.Root>

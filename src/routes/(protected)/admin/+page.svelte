@@ -18,11 +18,13 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import Label from '$lib/components/ui/label/label.svelte';
+	import { Progress } from '$lib/components/ui/progress';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, deleteDoc, doc, setDoc } from 'firebase/firestore';
+	import { deleteObject } from 'firebase/storage';
 	import Fuse from 'fuse.js';
 	import {
 		ChevronsUpDown,
@@ -32,9 +34,17 @@
 		Plus,
 		Trash2,
 		UserPlus,
+		X,
 	} from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
-	import { collectionStore, userStore } from 'sveltefire';
+	import { writable } from 'svelte/store';
+	import {
+		DownloadURL,
+		StorageList,
+		UploadTask,
+		collectionStore,
+		userStore,
+	} from 'sveltefire';
 
 	const user = userStore(auth);
 
@@ -107,6 +117,19 @@
 	let newEventDialogOpen = false;
 
 	$: onlineSubmissions = $settings?.enableOnlineSubmissions ?? false;
+
+	let submissionsFileUpload: HTMLInputElement;
+	const filesToUpload = writable<File[]>([]);
+
+	let dummyVariableToRerender = 0;
+	const updateStorageList = () => {
+		dummyVariableToRerender++;
+		return '';
+	};
+	const filterSubmissions = (submission: File) => {
+		$filesToUpload = $filesToUpload.filter((f) => f !== submission);
+		return '';
+	};
 </script>
 
 <svelte:window
@@ -722,6 +745,133 @@
 											/>
 											Lock team
 										</Label>
+									</div>
+									<div>
+										<Dialog.Root closeOnOutsideClick={false}>
+											<Dialog.Trigger>
+												<Button>Manage Submissions</Button>
+											</Dialog.Trigger>
+											<Dialog.Content>
+												<Dialog.Title>Manage Submissions</Dialog.Title>
+												<Dialog.Description>
+													{#key dummyVariableToRerender}
+														<StorageList
+															ref="submissions/{event.event}/{team.id}"
+															let:list
+														>
+															<ul>
+																{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
+																	<li class="w-full flex flex-col items-center">
+																		{#if submission instanceof File}
+																			<UploadTask
+																				ref="submissions/{event.event}/{team.id}/{submission.name}"
+																				data={submission}
+																				let:snapshot
+																				let:progress
+																			>
+																				{#if snapshot?.state === 'success'}
+																					{filterSubmissions(submission)}
+																					{updateStorageList()}
+																				{:else}
+																					<Progress
+																						value={progress}
+																						class="w-full"
+																					/>
+
+																					<span class="w-full">
+																						{submission.name}
+																					</span>
+																				{/if}
+																			</UploadTask>
+																		{:else}
+																			<div
+																				class="flex flex-row w-full items-center"
+																			>
+																				<DownloadURL ref={submission} let:link>
+																					<a href={link} target="_blank">
+																						{submission.name}
+																					</a>
+																				</DownloadURL>
+																				<div class="flex flex-grow" />
+																				<Button
+																					variant="ghost"
+																					size="icon"
+																					on:click={async () => {
+																						if (submission instanceof File)
+																							return;
+																						await deleteObject(submission);
+																						team.lastUpdatedBy =
+																							$user?.email ?? '';
+																						dummyVariableToRerender++;
+																					}}
+																				>
+																					<X />
+																				</Button>
+																			</div>
+																		{/if}
+																	</li>
+																{:else}
+																	<p>No submissions</p>
+																{/each}
+															</ul>
+															<Button
+																class="mt-4"
+																on:click={() => submissionsFileUpload.click()}
+															>
+																Upload
+															</Button>
+															<input
+																bind:this={submissionsFileUpload}
+																on:change={(e) => {
+																	if (e.target instanceof HTMLInputElement) {
+																		if (!e.target.files?.length) return;
+																		const files = [...e.target.files];
+																		for (const file of files) {
+																			if (file.size > 250 * 1024 * 1024) {
+																				alert(
+																					`File ${file.name} is too large.`,
+																				);
+																				continue;
+																			}
+																			if (
+																				list?.items
+																					.map((f) => f.name)
+																					.includes(file.name)
+																			) {
+																				alert(
+																					`File ${file.name} already exists. If you want to upload this file, change the name.`,
+																				);
+																				continue;
+																			}
+
+																			$filesToUpload.push(file);
+																			$filesToUpload = $filesToUpload;
+																		}
+																	}
+																}}
+																class="hidden"
+																type="file"
+																multiple
+																accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
+															/>
+														</StorageList>
+													{/key}
+
+													<p>
+														Allowed file types: all image files, all audio
+														files, all video files, pdfs, and Word docs (.doc,
+														.docx).
+													</p>
+													<p>250MB max file size.</p>
+													<p>
+														If you need to submit a file type not listed, please
+														contact Harry (<a href="mailto:s-hallen@lwsd.org"
+															>s-hallen@lwsd.org</a
+														>).
+													</p>
+												</Dialog.Description>
+											</Dialog.Content>
+										</Dialog.Root>
 									</div>
 								</Card.Title>
 								<Card.Content>
