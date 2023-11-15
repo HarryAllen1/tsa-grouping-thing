@@ -239,12 +239,12 @@
 		<div class="flex items-center space-x-2">
 			<Switch
 				id="enable-online-submissions"
-				bind:checked={onlineSubmissions}
+				checked={onlineSubmissions}
 				onCheckedChange={async (e) => {
 					await setDoc(
 						doc(db, 'settings', 'settings'),
 						{
-							enable_online_submissions: e,
+							enableOnlineSubmissions: e,
 						},
 						{ merge: true },
 					);
