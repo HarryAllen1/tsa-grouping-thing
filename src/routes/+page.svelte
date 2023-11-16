@@ -50,25 +50,14 @@
 	}
 
 	$: signedUpEvents = (
-		($eventsCollection.length
+		$eventsCollection.length
 			? ($userDoc?.events ?? [])
 					.map((e) => ({
 						...$eventsCollection.find((ev) => ev.event === e),
 					}))
 					.sort((a, b) => a.event!.localeCompare(b.event!))
-			: []) as EventDoc[]
-	).map((e) => ({
-		...e,
-		locked: e.maxTeamSize === 1 ? true : e.locked,
-		teams:
-			e.maxTeamSize === 1
-				? e.teams.map((t) => ({
-						...t,
-						locked: true,
-				  }))
-				: e.teams,
-	}));
-
+			: []
+	) as EventDoc[];
 	$: eventData = $eventsCollection.length
 		? $eventsCollection
 				.map((e) => ({
@@ -329,17 +318,10 @@
 						</Card.Description>
 					</Card.Header>
 					<Card.Content class="flex flex-col gap-4">
-						{#if event.locked && event.maxTeamSize !== 1}
+						{#if event.locked}
 							<p>
 								This event is locked, likely due to eliminations. If this
 								doesn't seem correct, contact a board member.
-							</p>
-						{:else if event.maxTeamSize === 1}
-							<p>
-								This is an individual event, you will be automatically assigned
-								to a team with just yourself. If eliminations are held, and you
-								place in the top {event.perChapter}, you will be put on a team
-								here.
 							</p>
 						{/if}
 						{#each event.teams as team}

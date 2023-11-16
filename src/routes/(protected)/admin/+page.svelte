@@ -1110,7 +1110,7 @@
 							</Card.Root>
 						{/each}
 					</Card.Content>
-					<Card.Footer>
+					<Card.Footer class="space-x-2">
 						<Button
 							on:click={async () => {
 								event.teams.push({
@@ -1131,6 +1131,34 @@
 						>
 							Create Team
 						</Button>
+						{#if event.maxTeamSize === 1}
+							<Button
+								on:click={() => {
+									for (const member of event.members) {
+										if (
+											!event.teams.find((t) =>
+												t.members.find((m) => m.email === member.email),
+											)
+										) {
+											event.teams.push({
+												members: [member],
+												lastUpdatedBy: $user?.email ?? '',
+												id: crypto.randomUUID(),
+											});
+										}
+									}
+									setDoc(
+										doc(db, 'events', event.event ?? ''),
+										{
+											teams: event.teams,
+										},
+										{
+											merge: true,
+										},
+									);
+								}}>Create team for everyone</Button
+							>
+						{/if}
 					</Card.Footer>
 				</Card.Root>
 			{/if}
