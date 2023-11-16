@@ -45,7 +45,7 @@
 		{#each $events as event}
 			<div
 				class="flex items-center space-x-2"
-				class:text-red-500={event.teams.length > event.perChapter}
+				class:text-red-500={event.teams.length >= event.perChapter}
 			>
 				<Checkbox
 					checked={eventMap[event.event]}
