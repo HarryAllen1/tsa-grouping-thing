@@ -37,7 +37,7 @@
 					},
 					{
 						title: 'Admin Events',
-						href: '/events/list',
+						href: '/admin/events',
 					},
 			  ]
 			: []),

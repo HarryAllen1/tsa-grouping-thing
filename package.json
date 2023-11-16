@@ -14,7 +14,7 @@
 	"devDependencies": {
 		"@hcaptcha/types": "^1.0.3",
 		"@sveltejs/adapter-vercel": "^3.0.3",
-		"@sveltejs/kit": "^1.27.5",
+		"@sveltejs/kit": "^1.27.6",
 		"@types/canvas-confetti": "^1.6.3",
 		"@typescript-eslint/eslint-plugin": "^6.11.0",
 		"@typescript-eslint/parser": "^6.11.0",
@@ -36,7 +36,7 @@
 	"dependencies": {
 		"@observablehq/plot": "^0.6.11",
 		"@vercel/analytics": "^1.1.1",
-		"bits-ui": "^0.9.4",
+		"bits-ui": "^0.9.7",
 		"canvas-confetti": "^1.9.0",
 		"clsx": "^2.0.0",
 		"firebase": "^10.6.0",
