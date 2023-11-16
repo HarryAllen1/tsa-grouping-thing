@@ -4,7 +4,10 @@
 	import { Button } from '$lib/components/ui/button';
 	import MobileLink from './MobileLink.svelte';
 
-	export let navItems: { href: string; title: string }[];
+	export let navItems: (
+		| { title: string; href: string }
+		| { title: string; href: string }[]
+	)[];
 
 	let open = false;
 </script>
@@ -26,7 +29,7 @@
 		</MobileLink>
 		<div class="my-4 h-[calc(100vh-8rem)] pb-10 pl-6 overflow-auto">
 			<div class="flex flex-col space-y-3">
-				{#each navItems as navItem, index (navItem + index.toString())}
+				{#each navItems.flat() as navItem, index (navItem + index.toString())}
 					{#if navItem.href}
 						<MobileLink href={navItem.href} bind:open>
 							{navItem.title}

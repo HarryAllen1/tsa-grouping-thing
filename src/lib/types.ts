@@ -9,6 +9,13 @@ export interface EventDoc {
 	onlineSubmissions?: boolean;
 	perChapter: number;
 	teamCreationLocked?: boolean;
+	results: Result[];
+}
+
+export interface Result {
+	members: BasicUser[];
+	place: number;
+	rubricPaths: string[];
 }
 
 export interface Team {
