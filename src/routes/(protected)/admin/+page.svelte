@@ -21,6 +21,7 @@
 	import { Progress } from '$lib/components/ui/progress';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
+	import { Textarea } from '$lib/components/ui/textarea';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, deleteDoc, doc, setDoc } from 'firebase/firestore';
@@ -130,6 +131,14 @@
 		$filesToUpload = $filesToUpload.filter((f) => f !== submission);
 		return '';
 	};
+
+	const submissionDescriptions: Record<string, string> = $events.reduce(
+		(acc, curr) => ({
+			...acc,
+			[curr.event]: curr.submissionDescription ?? '',
+		}),
+		{},
+	);
 </script>
 
 <svelte:window
@@ -340,6 +349,30 @@
 										.length ?? 0} people joined teams
 								</li>
 							</ul>
+							<div class="flex flex-col gap-2">
+								<Textarea
+									placeholder="Submission description"
+									bind:value={submissionDescriptions[event.event]}
+								/>
+								<Button
+									disabled={event.submissionDescription ===
+										submissionDescriptions[event.event]}
+									on:click={() => {
+										setDoc(
+											doc(db, 'events', event.event),
+											{
+												submissionDescription:
+													submissionDescriptions[event.event],
+											},
+											{
+												merge: true,
+											},
+										);
+									}}
+								>
+									Save
+								</Button>
+							</div>
 							{@const peopleInTeams = event.teams.reduce(
 								(acc, curr) => [...acc, ...curr.members],
 								reallyStupidFunction([]),
@@ -773,6 +806,13 @@
 											<Dialog.Content>
 												<Dialog.Title>Manage Submissions</Dialog.Title>
 												<Dialog.Description>
+													{#if event.submissionDescription}
+														<h3
+															class="text-white scroll-m-20 text-2xl font-semibold tracking-tight"
+														>
+															{event.submissionDescription}
+														</h3>
+													{/if}
 													{#key dummyVariableToRerender}
 														<StorageList
 															ref="submissions/{event.event}/{team.id}"

@@ -10,6 +10,7 @@ export interface EventDoc {
 	perChapter: number;
 	teamCreationLocked?: boolean;
 	results: Result[];
+	submissionDescription?: string;
 }
 
 export interface Result {

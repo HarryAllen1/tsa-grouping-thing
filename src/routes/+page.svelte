@@ -510,6 +510,13 @@
 														<Dialog.Content>
 															<Dialog.Title>Manage Submissions</Dialog.Title>
 															<Dialog.Description>
+																{#if event.submissionDescription}
+																	<h3
+																		class="text-white scroll-m-20 text-2xl font-semibold tracking-tight"
+																	>
+																		{event.submissionDescription}
+																	</h3>
+																{/if}
 																{#key dummyVariableToRerender}
 																	<StorageList
 																		ref="submissions/{event.event}/{team.id}"
@@ -565,6 +572,7 @@
 																									await deleteObject(
 																										submission,
 																									);
+																									aww.play();
 																									team.lastUpdatedBy =
 																										$user?.email ?? '';
 																									dummyVariableToRerender++;
@@ -615,6 +623,8 @@
 																						$filesToUpload.push(file);
 																						$filesToUpload = $filesToUpload;
 																					}
+																					yay.play();
+																					confetti();
 																				}
 																			}}
 																			class="hidden"
