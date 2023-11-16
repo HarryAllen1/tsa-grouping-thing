@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { eventsCollection, user } from '$lib';
+	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Dialog from '$lib/components/ui/dialog';
 </script>
@@ -14,9 +15,7 @@
 	<div
 		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
 	>
-		{#each $eventsCollection
-			.filter((e) => e.results?.length)
-			.sort((a, b) => a.event.localeCompare(b.event)) as event}
+		{#each $eventsCollection as event}
 			<Card.Root>
 				<Card.Header>
 					<Card.Title>
@@ -32,19 +31,24 @@
 									{#if result.members
 										.map((u) => u.email.toLowerCase())
 										.includes($user.email?.toLowerCase() ?? '')}
-										<Dialog.Root>
-											<Dialog.Trigger>View Rubric</Dialog.Trigger>
-											<Dialog.Content></Dialog.Content>
-										</Dialog.Root>
+										<span class="text-gray-500"> (you)</span>
 									{/if}
 								</li>
 							{/each}
 						</ol>
+					{:else}
+						<p class="text-gray-500">No results posted yet</p>
 					{/if}
 				</Card.Content>
+				<Card.Footer>
+					<Dialog.Root>
+						<Dialog.Trigger>
+							<Button>Add</Button>
+						</Dialog.Trigger>
+						<Dialog.Content></Dialog.Content>
+					</Dialog.Root>
+				</Card.Footer>
 			</Card.Root>
-		{:else}
-			<p class="text-gray-500">No results posted yet</p>
 		{/each}
 	</div>
 </div>

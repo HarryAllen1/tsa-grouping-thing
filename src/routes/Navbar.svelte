@@ -15,7 +15,10 @@
 	const user = userStore(auth);
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 
-	let navItems: { title: string; href: string }[] = [];
+	let navItems: (
+		| { title: string; href: string }
+		| { title: string; href: string }[]
+	)[] = [];
 	$: navItems = [
 		{
 			title: 'Teams',
@@ -29,7 +32,11 @@
 			title: 'Event Stats',
 			href: '/stats',
 		},
-		...($userDoc?.admin
+		{
+			title: 'Results',
+			href: '/results',
+		},
+		$userDoc?.admin
 			? [
 					{
 						title: 'Admin Teams',
@@ -39,8 +46,12 @@
 						title: 'Admin Events',
 						href: '/admin/events',
 					},
+					{
+						title: 'Admin Results',
+						href: '/admin/results',
+					},
 			  ]
-			: []),
+			: [],
 	];
 
 	const downloadAsJSON = async () => {
