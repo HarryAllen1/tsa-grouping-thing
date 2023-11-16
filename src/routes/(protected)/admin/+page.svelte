@@ -351,6 +351,7 @@
 							</ul>
 							<div class="flex flex-col gap-2">
 								<Textarea
+									class="text-white"
 									placeholder="Submission description"
 									bind:value={submissionDescriptions[event.event]}
 								/>
