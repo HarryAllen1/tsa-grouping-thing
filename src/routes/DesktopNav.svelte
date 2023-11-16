@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { cn } from '$lib/utils';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
-	import { ChevronDown, ChevronUp } from 'lucide-svelte';
+	import { cn } from '$lib/utils';
+	import { ChevronUp } from 'lucide-svelte';
 
 	export let navItems: (
 		| { title: string; href: string }

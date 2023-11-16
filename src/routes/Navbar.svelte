@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { auth, aww, db, type UserDoc, type Team } from '$lib';
+	import { auth, aww, db, type Team, type UserDoc } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
@@ -32,10 +32,10 @@
 			title: 'Event Stats',
 			href: '/stats',
 		},
-		{
-			title: 'Results',
-			href: '/results',
-		},
+		// {
+		// 	title: 'Results',
+		// 	href: '/results',
+		// },
 		$userDoc?.admin
 			? [
 					{
