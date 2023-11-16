@@ -132,12 +132,12 @@
 		return '';
 	};
 
-	const submissionDescriptions: Record<string, string> = $events.reduce(
+	$: submissionDescriptions = $events.reduce(
 		(acc, curr) => ({
 			...acc,
 			[curr.event]: curr.submissionDescription ?? '',
 		}),
-		{},
+		{} as Record<string, string>,
 	);
 </script>
 
