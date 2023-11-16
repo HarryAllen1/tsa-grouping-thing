@@ -250,8 +250,10 @@
 							},
 						);
 					}
-				}}>Disable all team creation</Button
+				}}
 			>
+				Disable all team creation
+			</Button>
 		</div>
 		<div class="flex items-center space-x-2">
 			<Switch
