@@ -351,8 +351,6 @@
 									bind:this={submissionDescriptionElementMap[event.event]}
 								/>
 								<Button
-									disabled={event.submissionDescription ===
-										submissionDescriptionElementMap[event.event]?.value}
 									on:click={() => {
 										setDoc(
 											doc(db, 'events', event.event),
