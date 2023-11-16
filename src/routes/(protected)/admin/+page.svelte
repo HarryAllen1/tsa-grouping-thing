@@ -38,6 +38,7 @@
 		UserPlus,
 		X,
 	} from 'lucide-svelte';
+	import { setContext } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { writable } from 'svelte/store';
 	import {
@@ -345,29 +346,50 @@
 								</li>
 							</ul>
 							<div class="flex flex-col gap-2">
-								<Textarea
-									class="text-white"
-									placeholder="Submission description"
-									value={event.submissionDescription}
-									bind:this={submissionDescriptionElementMap[event.event]}
-								/>
-								<Button
-									on:click={() => {
-										setDoc(
-											doc(db, 'events', event.event),
-											{
-												submissionDescription:
-													submissionDescriptionElementMap[event.event]?.value ??
-													'',
-											},
-											{
-												merge: true,
-											},
-										);
-									}}
-								>
-									Save
-								</Button>
+								<p class="text-white">Submission description:</p>
+								<p class="text-white">
+									{event.submissionDescription ?? '(none)'}
+								</p>
+								<Dialog.Root>
+									<Dialog.Trigger>
+										<Button>Edit</Button>
+									</Dialog.Trigger>
+									<Dialog.Content>
+										<Dialog.Title>Edit submission description</Dialog.Title>
+										<Dialog.Description>
+											<Textarea
+												placeholder="Submission description"
+												class="w-full"
+												value={event.submissionDescription}
+												bind:this={submissionDescriptionElementMap[event.event]}
+											/>
+										</Dialog.Description>
+										<Dialog.Footer>
+											<Button
+												on:click={() => {
+													setDoc(
+														doc(db, 'events', event.event),
+														{
+															submissionDescription:
+																submissionDescriptionElementMap[event.event]
+																	?.value ?? '',
+														},
+														{
+															merge: true,
+														},
+													);
+
+													const el = document.querySelector(
+														'[data-melt-dialog-close]',
+													);
+													if (el instanceof HTMLButtonElement) el.click();
+												}}
+											>
+												Save
+											</Button>
+										</Dialog.Footer>
+									</Dialog.Content>
+								</Dialog.Root>
 							</div>
 							{@const peopleInTeams = event.teams.reduce(
 								(acc, curr) => [...acc, ...curr.members],
