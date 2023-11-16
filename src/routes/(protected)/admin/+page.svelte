@@ -846,7 +846,6 @@
 																class="hidden"
 																type="file"
 																multiple
-																accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
 															/>
 														</StorageList>
 													{/key}

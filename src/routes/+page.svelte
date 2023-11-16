@@ -620,15 +620,16 @@
 																			class="hidden"
 																			type="file"
 																			multiple
-																			accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
+																			accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.txt,.ppt,.pptx"
 																		/>
 																	</StorageList>
 																{/key}
 
 																<p>
 																	Allowed file types: all image files, all audio
-																	files, all video files, pdfs, and Word docs
-																	(.doc, .docx).
+																	files, all video files, pdfs, plain text
+																	files, PowerPoints (.ppt, .pptx), and Word
+																	docs (.doc, .docx).
 																</p>
 																<p>250MB max file size.</p>
 																<p>
