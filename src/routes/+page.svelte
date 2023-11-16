@@ -11,6 +11,7 @@
 		userDoc,
 		yay,
 		type EventDoc,
+		clash,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
@@ -503,7 +504,12 @@
 											</div>
 											{#if event.onlineSubmissions}
 												<div>
-													<Dialog.Root closeOnOutsideClick={false}>
+													<Dialog.Root
+														onOpenChange={(e) => {
+															if (e) clash.play();
+														}}
+														closeOnOutsideClick={false}
+													>
 														<Dialog.Trigger>
 															<Button>Manage Submissions</Button>
 														</Dialog.Trigger>
