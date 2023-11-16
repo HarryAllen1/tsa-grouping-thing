@@ -176,7 +176,7 @@
 												0,
 											);
 											teamUserIsIn.requests = teamUserIsIn.requests?.filter(
-												(u) => u.email !== r.email && u.name !== r.name,
+												(u) => u.email !== r.email,
 											);
 											await setDoc(
 												doc(db, 'events', request.event ?? ''),
@@ -221,7 +221,7 @@
 											};
 
 											teamUserIsIn.requests = teamUserIsIn.requests?.filter(
-												(u) => u.email !== r.email && u.name !== r.name,
+												(u) => u.email !== r.email,
 											);
 											teamUserIsIn.lastUpdatedBy = $user?.email ?? '';
 											teamUserIsIn.lastUpdatedTime = new Timestamp(
