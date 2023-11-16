@@ -10,6 +10,7 @@
 		yay,
 		type EventDoc,
 		type UserDoc,
+		storage,
 	} from '$lib';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -25,7 +26,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, deleteDoc, doc, setDoc } from 'firebase/firestore';
-	import { deleteObject } from 'firebase/storage';
+	import { deleteObject, listAll, ref } from 'firebase/storage';
 	import Fuse from 'fuse.js';
 	import {
 		ChevronsUpDown,
@@ -610,6 +611,16 @@
 														merge: true,
 													},
 												);
+												for (const submission of event.onlineSubmissions
+													? await listAll(
+															ref(
+																storage,
+																`submissions/${event.event}/${team.id}`,
+															),
+													  ).then((r) => r.items)
+													: []) {
+													await deleteObject(submission);
+												}
 												aww.play();
 											}}
 										>

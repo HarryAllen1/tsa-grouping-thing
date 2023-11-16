@@ -12,6 +12,7 @@
 		yay,
 		type EventDoc,
 		clash,
+		storage,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
@@ -26,7 +27,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import { deleteObject } from 'firebase/storage';
+	import { deleteObject, listAll, ref } from 'firebase/storage';
 	import {
 		ChevronsUpDown,
 		Crown,
@@ -368,6 +369,16 @@
 																		merge: true,
 																	},
 																);
+																for (const submission of event.onlineSubmissions
+																	? await listAll(
+																			ref(
+																				storage,
+																				`submissions/${event.event}/${team.id}`,
+																			),
+																	  ).then((r) => r.items)
+																	: []) {
+																	await deleteObject(submission);
+																}
 																aww.play();
 															}}
 														>
