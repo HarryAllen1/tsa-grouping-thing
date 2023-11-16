@@ -237,6 +237,23 @@
 			</Dialog.Content>
 		</Dialog.Root>
 		<div class="flex items-center space-x-2">
+			<Button
+				on:click={() => {
+					for (const event of signedUpEvents) {
+						setDoc(
+							doc(db, 'events', event.event ?? ''),
+							{
+								teamCreationLocked: true,
+							},
+							{
+								merge: true,
+							},
+						);
+					}
+				}}>Disable all team creation</Button
+			>
+		</div>
+		<div class="flex items-center space-x-2">
 			<Switch
 				id="enable-online-submissions"
 				checked={onlineSubmissions}
