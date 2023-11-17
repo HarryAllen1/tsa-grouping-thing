@@ -2,6 +2,7 @@
 	import { eventsCollection, user } from '$lib';
 	import * as Card from '$lib/components/ui/card';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import { DownloadURL } from 'sveltefire';
 </script>
 
 <div class="container my-4">
@@ -34,7 +35,36 @@
 										.includes($user.email?.toLowerCase() ?? '')}
 										<Dialog.Root>
 											<Dialog.Trigger>View Rubric</Dialog.Trigger>
-											<Dialog.Content></Dialog.Content>
+											<Dialog.Content>
+												<Dialog.Title>Rubric</Dialog.Title>
+												{#each result.rubricPaths as rubric}
+													<DownloadURL ref={rubric} let:link>
+														{#if link}
+															{@const url = new URL(link)}
+															{#if ['.jpg', '.jpeg', '.webp', '.png'].includes(url.pathname
+																	.slice(-4)
+																	.toLowerCase())}
+																<img src={link} alt="Rubric" />
+															{:else if url.pathname
+																.slice(-4)
+																.toLowerCase() === '.pdf'}
+																<iframe
+																	src={link}
+																	title="Rubric"
+																	class="w-full h-96"
+																/>
+															{:else}
+																<a
+																	href={link}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	>{url.pathname.slice(1)}</a
+																>
+															{/if}
+														{/if}
+													</DownloadURL>
+												{/each}
+											</Dialog.Content>
 										</Dialog.Root>
 									{/if}
 								</li>

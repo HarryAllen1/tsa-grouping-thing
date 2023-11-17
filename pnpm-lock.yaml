@@ -12,6 +12,9 @@ importers:
 
   .:
     dependencies:
+      '@builder.io/partytown':
+        specifier: ^0.8.1
+        version: 0.8.1
       '@observablehq/plot':
         specifier: ^0.6.11
         version: 0.6.11
@@ -27,6 +30,9 @@ importers:
       clsx:
         specifier: ^2.0.0
         version: 2.0.0
+      cmdk-sv:
+        specifier: ^0.0.7
+        version: 0.0.7(svelte@4.2.4)
       firebase:
         specifier: ^10.6.0
         version: 10.6.0
@@ -486,6 +492,12 @@ packages:
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
+
+  /@builder.io/partytown@0.8.1:
+    resolution: {integrity: sha512-p4xhEtQCPe8YFJ8e7KT9RptnT+f4lvtbmXymbp1t0bLp+USkNMTxrRMNc3Dlr2w2fpxyX7uA0CyAeU3ju84O4A==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dev: false
 
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
@@ -3225,6 +3237,16 @@ packages:
   /clsx@2.0.0:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
+    dev: false
+
+  /cmdk-sv@0.0.7(svelte@4.2.4):
+    resolution: {integrity: sha512-xe586uQnKKOAW6q0dvfuzGwWgsJzEIpA9fvAkfX6J13AH+cwFXb0uLUqPlVTJ2YLzt6Tu4DLO+mRv10DasHEWw==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      bits-ui: 0.9.8(svelte@4.2.4)
+      nanoid: 5.0.3
+      svelte: 4.2.4
     dev: false
 
   /co@4.6.0:

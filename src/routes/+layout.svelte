@@ -5,10 +5,12 @@
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { sleep } from '$lib/utils';
 	import { onAuthStateChanged } from 'firebase/auth';
+	import { partytownSnippet } from '@builder.io/partytown/integration';
 	import { onMount } from 'svelte';
 	import { FirebaseApp, userStore } from 'sveltefire';
 	import '../app.css';
 	import Navbar from './Navbar.svelte';
+	import { dev } from '$app/environment';
 
 	const user = userStore(auth);
 
@@ -71,6 +73,33 @@
 		return unsub;
 	});
 </script>
+
+<svelte:head>
+	{#if !dev}
+		<script>
+			// Forward the necessary functions to the web worker layer
+			partytown = {
+				forward: ['dataLayer.push'],
+			};
+		</script>
+
+		{@html '<script>' + partytownSnippet() + '</script>'}
+		<script
+			type="text/partytown"
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=G-V9TSZ35FNE"
+		></script>
+		<script type="text/partytown">
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+
+			gtag('config', 'G-V9TSZ35FNE');
+		</script>
+	{/if}
+</svelte:head>
 
 <div bind:this={mainEl} class="max-w-full flex flex-col items-center">
 	<FirebaseApp {auth} firestore={db} {storage}>
