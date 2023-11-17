@@ -6,6 +6,7 @@ settings:
 
 overrides:
   vite: ^5.0.0
+  picocolors: npm:colorette
 
 importers:
 
@@ -2895,7 +2896,7 @@ packages:
       caniuse-lite: 1.0.30001547
       fraction.js: 4.3.6
       normalize-range: 0.1.2
-      picocolors: 1.0.0
+      picocolors: /colorette@2.0.20
       postcss: 8.4.31
       postcss-value-parser: 4.2.0
     dev: true
@@ -3265,6 +3266,9 @@ packages:
     resolution: {integrity: sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==}
     hasBin: true
     dev: true
+
+  /colorette@2.0.20:
+    resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
 
   /commander@4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
@@ -6502,9 +6506,6 @@ packages:
       estree-walker: 3.0.3
       is-reference: 3.0.2
 
-  /picocolors@1.0.0:
-    resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
-
   /picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
@@ -6619,7 +6620,7 @@ packages:
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.6
-      picocolors: 1.0.0
+      picocolors: /colorette@2.0.20
       source-map-js: 1.0.2
 
   /prelude-ls@1.1.2:
@@ -7325,7 +7326,7 @@ packages:
       chokidar: 3.5.3
       fast-glob: 3.3.2
       import-fresh: 3.3.0
-      picocolors: 1.0.0
+      picocolors: /colorette@2.0.20
       sade: 1.8.1
       svelte: 4.2.4
       svelte-preprocess: 5.1.0(postcss@8.4.31)(svelte@4.2.4)(typescript@5.2.2)
@@ -7486,7 +7487,7 @@ packages:
       micromatch: 4.0.5
       normalize-path: 3.0.0
       object-hash: 3.0.0
-      picocolors: 1.0.0
+      picocolors: /colorette@2.0.20
       postcss: 8.4.31
       postcss-import: 15.1.0(postcss@8.4.31)
       postcss-js: 4.0.1(postcss@8.4.31)
@@ -7761,7 +7762,7 @@ packages:
     dependencies:
       browserslist: 4.22.1
       escalade: 3.1.1
-      picocolors: 1.0.0
+      picocolors: /colorette@2.0.20
     dev: true
 
   /uri-js@4.4.1:
