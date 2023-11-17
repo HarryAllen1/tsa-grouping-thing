@@ -132,13 +132,7 @@
 		return '';
 	};
 
-	$: submissionDescriptions = $events.reduce(
-		(acc, curr) => ({
-			...acc,
-			[curr.event]: curr.submissionDescription ?? '',
-		}),
-		{} as Record<string, string>,
-	);
+	const submissionDescriptionElementMap: Record<string, Textarea> = {};
 </script>
 
 <svelte:window
@@ -353,17 +347,19 @@
 								<Textarea
 									class="text-white"
 									placeholder="Submission description"
-									bind:value={submissionDescriptions[event.event]}
+									value={event.submissionDescription}
+									bind:this={submissionDescriptionElementMap[event.event]}
 								/>
 								<Button
 									disabled={event.submissionDescription ===
-										submissionDescriptions[event.event]}
+										submissionDescriptionElementMap[event.event]?.value}
 									on:click={() => {
 										setDoc(
 											doc(db, 'events', event.event),
 											{
 												submissionDescription:
-													submissionDescriptions[event.event],
+													submissionDescriptionElementMap[event.event]?.value ??
+													'',
 											},
 											{
 												merge: true,

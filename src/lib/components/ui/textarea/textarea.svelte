@@ -1,3 +1,5 @@
+<svelte:options accessors={true} />
+
 <script lang="ts">
 	import type { HTMLTextareaAttributes } from 'svelte/elements';
 	import { cn } from '$lib/utils';
