@@ -29,19 +29,10 @@ export const sendEmail = async (
 	subject: string,
 	body: string,
 ) =>
-	new Promise<MailDoc>((resolve, reject) => {
-		const now = Date.now();
-		setDoc(doc(db, `mail/${now}`), {
+		setDoc(doc(db, `mail/${Date.now()}`), {
 			to: Array.isArray(to) ? to : [to],
 			message: {
 				subject,
 				html: body,
 			},
-		}).then(() => {
-			const doc = docStore<MailDoc>(db, `mail/${now}`);
-			doc.subscribe((m) => {
-				if (m?.delivery?.state === 'SUCCESS') resolve(m);
-				else if (m?.delivery?.state === 'ERROR') reject(m);
-			});
-		});
-	});
+		})
