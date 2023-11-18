@@ -190,6 +190,21 @@
 													merge: true,
 												},
 											);
+											let members = teamUserIsIn.members
+												.map((m) => m.name)
+												.join(', ');
+											const lastComma = members.lastIndexOf(',');
+											if (lastComma !== -1) {
+												members =
+													members.slice(0, lastComma) +
+													' and' +
+													members.slice(lastComma + 1);
+											}
+											sendEmail(
+												r.email,
+												`${request.event} team request approved`,
+												`Your request to join ${members}'s team for ${request.event} has been approved.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+											);
 											confetti();
 											yay.play();
 											navigator.vibrate(100);
@@ -757,6 +772,23 @@
 																			{
 																				merge: true,
 																			},
+																		);
+
+																		let members = team.members
+																			.map((m) => m.name)
+																			.join(', ');
+																		const lastComma = members.lastIndexOf(',');
+																		if (lastComma !== -1) {
+																			members =
+																				members.slice(0, lastComma) +
+																				' and' +
+																				members.slice(lastComma + 1);
+																		}
+
+																		sendEmail(
+																			request.email,
+																			`${event.event} team request approved`,
+																			`Your request to join ${members}'s team for ${event.event} has been approved.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
 																		);
 																		confetti();
 																		navigator.vibrate(100);
