@@ -22,16 +22,18 @@
 					</Card.Title>
 				</Card.Header>
 				<Card.Content>
-					{#if event.results}
-						<ol class="my-6 ml-6 [&>li]:mt-2">
+					{#if event.results && event.results.length}
+						<ol class="my-6 ml-6 [&>li]:mt-2 list-decimal">
 							{#each event.results.sort((a, b) => a.place - b.place) as result}
 								<li>
-									{result}
-									{#if result.members
-										.map((u) => u.email.toLowerCase())
-										.includes($user.email?.toLowerCase() ?? '')}
-										<span class="text-gray-500"> (you)</span>
-									{/if}
+									{#each result.members as member, i}
+										<a href="/events/{member.email}">
+											<!-- DO NOT FORMAT -->
+											{member.name}{#if member.email === $user.email}
+												{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
+											{/if}
+										</a>
+									{/each}
 								</li>
 							{/each}
 						</ol>

@@ -23,25 +23,37 @@
 					<Card.Title>
 						{event.event}
 					</Card.Title>
+					<Card.Description>
+						Top {event.perChapter} go to state
+					</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					{#if event.results}
-						<ol class="my-6 ml-6 [&>li]:mt-2">
+						<ol class="my-6 ml-6 [&>li]:mt-2 list-decimal">
 							{#each event.results.sort((a, b) => a.place - b.place) as result}
 								<li>
-									{result}
+									{#each result.members as member, i}
+										<a href="/events/{member.email}">
+											<!-- DO NOT FORMAT -->
+											{member.name}{#if member.email === $user.email}
+												{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
+											{/if}
+										</a>
+									{/each}
 									{#if result.members
 										.map((u) => u.email.toLowerCase())
-										.includes($user.email?.toLowerCase() ?? '')}
+										.includes($user.email?.toLowerCase() ?? '') && result.rubricPaths?.length}
 										<Dialog.Root>
-											<Dialog.Trigger>View Rubric</Dialog.Trigger>
+											<Dialog.Trigger class="underline">
+												View Rubric
+											</Dialog.Trigger>
 											<Dialog.Content>
 												<Dialog.Title>Rubric</Dialog.Title>
 												{#each result.rubricPaths as rubric}
 													<DownloadURL ref={rubric} let:link>
 														{#if link}
 															{@const url = new URL(link)}
-															{#if ['.jpg', '.jpeg', '.webp', '.png'].includes(url.pathname
+															{#if ['.jpg', '.jpeg', '.webp', '.png', '.avif'].includes(url.pathname
 																	.slice(-4)
 																	.toLowerCase())}
 																<img src={link} alt="Rubric" />

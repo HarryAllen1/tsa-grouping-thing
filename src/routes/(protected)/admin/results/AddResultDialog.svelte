@@ -7,27 +7,30 @@
 		type EventDoc,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
-	import * as Dialog from '$lib/components/ui/dialog';
-	import * as Popover from '$lib/components/ui/popover';
 	import * as Command from '$lib/components/ui/command';
+	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { doc, setDoc } from 'firebase/firestore';
-	import { ref, uploadBytes } from 'firebase/storage';
-	import { tick } from 'svelte';
-	import { Check, ChevronsUpDown } from 'lucide-svelte';
+	import * as Popover from '$lib/components/ui/popover';
 	import { cn } from '$lib/utils';
+	import { doc, setDoc } from 'firebase/firestore';
+	import { getBlob, ref, uploadBytes } from 'firebase/storage';
+	import { Check, ChevronsUpDown, Minus } from 'lucide-svelte';
+	import { onMount, tick } from 'svelte';
 
 	export let event: EventDoc;
+	export let editing = false;
+	export let newPlace = (event?.results?.length ?? 0) + 1;
 
-	let newMembers: BasicUser[] = [];
-	let newPlace = 1;
+	const existingResults = event.results.find((r) => r.place === newPlace);
+
+	let newMembers: BasicUser[] =
+		editing && existingResults ? existingResults.members : [];
 	let newRubric: File[] = [];
 	let fileInput: HTMLInputElement;
-	let newResultDialogOpen = false;
 
 	$: comboboxUsers = $allUsersCollection.map((u) => ({
-		value: u.email,
+		value: `${u.email}/${u.name}`,
 		label: u.name,
 	}));
 
@@ -38,12 +41,35 @@
 		comboboxUsers.find((f) => f.value === comboboxValue)?.label ??
 		'Select a member...';
 
+	$: if (comboboxValue) {
+		const newMember = comboboxUsers.find((f) => f.value === comboboxValue);
+		newMembers = [
+			...newMembers,
+			{
+				name: newMember?.label ?? '',
+				email: newMember?.value ?? '',
+			},
+		];
+		comboboxValue = '';
+	}
+
 	function closeAndFocusTrigger(triggerId: string) {
 		comboboxOpen = false;
 		tick().then(() => {
 			document.getElementById(triggerId)?.focus();
 		});
 	}
+
+	onMount(async () => {
+		if (editing && existingResults) {
+			newRubric = await Promise.all(
+				existingResults.rubricPaths.map(
+					async (r) =>
+						new File([await getBlob(ref(storage, r))], ref(storage, r).name),
+				),
+			);
+		}
+	});
 </script>
 
 <Dialog.Root>
@@ -58,15 +84,17 @@
 		</Label>
 		<p>Members</p>
 		{#each newMembers as member}
-			<div class="flex gap-2">
+			<div class="flex gap-2 items-center">
 				<span>{member.name}</span>
 				<Button
-					variant="destructive"
+					variant="ghost"
+					class="h-6"
+					size="icon"
 					on:click={() => {
 						newMembers = newMembers.filter((m) => m.email !== member.email);
 					}}
 				>
-					Remove
+					<Minus />
 				</Button>
 			</div>
 		{/each}
@@ -124,31 +152,9 @@
 			on:change={async (e) => {
 				if (!(e.target instanceof HTMLInputElement)) return;
 				if (!e.target.files) return;
-				newRubric = Array.from(e.target.files);
+				newRubric.push(...e.target.files);
 
-				if (event.results.find((r) => r.place === newPlace)) {
-					for (const result of event.results) {
-						if (result.place >= newPlace) {
-							result.place++;
-						}
-					}
-				}
-
-				await setDoc(
-					doc(db, 'events', event.event),
-					{
-						results: [
-							...event.results,
-							{
-								place: newPlace,
-								members: newMembers,
-								rubric: newRubric.map((f) => f.name),
-							},
-						],
-					},
-					{ merge: true },
-				);
-				for (const file of newRubric) {
+				for (const file of e.target.files) {
 					await uploadBytes(
 						ref(storage, `events/${event.event}/results/${file.name}`),
 						file,
@@ -156,5 +162,46 @@
 				}
 			}}
 		/>
+		<Dialog.Footer>
+			<Button
+				on:click={async () => {
+					await setDoc(
+						doc(db, 'events', event.event),
+						{
+							results: [
+								...(event.results ?? []),
+								{
+									place: newPlace,
+									members: newMembers.map((m) => ({
+										name: m.name,
+										email: m.email.includes('/')
+											? m.email.split('/')[0]
+											: m.email,
+									})),
+									rubricPaths: newRubric.map(
+										(f) => `/events/${event.event}/results/${f.name}`,
+									),
+								},
+							],
+						},
+						{
+							merge: true,
+						},
+					);
+					if (event.results.find((r) => r.place === newPlace)) {
+						for (const result of event.results) {
+							if (result.place >= newPlace) {
+								result.place++;
+							}
+						}
+					}
+					newMembers = [];
+					newPlace++;
+					newRubric = [];
+				}}
+			>
+				Add
+			</Button>
+		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
