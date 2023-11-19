@@ -33,7 +33,7 @@
 					<Card.Content>
 						{#if event.results && event.results.length}
 							<ol class="my-6 ml-6 [&>li]:mt-2 list-decimal">
-								{#each event.results.sort((a, b) => a.place - b.place) as result}
+								{#each event.results as result}
 									<li class="">
 										<div>
 											{#each result.members as member, i}
@@ -55,16 +55,12 @@
 										/>
 										<Button
 											on:click={async () => {
-												const results = event.results
-													.filter((r) => r.place > result.place)
-													.map((r) => ({
-														...r,
-														place: r.place - 1,
-													}));
 												await setDoc(
 													doc(db, 'events', event.event),
 													{
-														results: results.filter((r) => r.id !== result.id),
+														results: event.results?.filter(
+															(r) => r.id !== result.id,
+														),
 													},
 													{
 														merge: true,

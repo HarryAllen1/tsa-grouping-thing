@@ -7,7 +7,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
 	import { Progress } from '$lib/components/ui/progress';
-	import { cn } from '$lib/utils';
+	import { cn, sleep } from '$lib/utils';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { deleteObject } from 'firebase/storage';
 	import { Check, ChevronsUpDown, Minus, Pencil, X } from 'lucide-svelte';
@@ -22,9 +22,10 @@
 
 	let open = false;
 
-	$: existingResults = event.results?.find((r) => r.id === id);
+	const existingResults = event.results?.find((r) => r.id === id)!;
+	let note = editing ? existingResults?.note ?? '' : '';
 	let newPlace = editing
-		? existingResults?.place ?? 1
+		? (event.results?.indexOf(existingResults) ?? 0) + 1
 		: (event?.results?.length ?? 0) + 1;
 
 	let newMembers: BasicUser[];
@@ -74,14 +75,19 @@
 	};
 </script>
 
-<Dialog.Root bind:open {onOpenChange}>
+<Dialog.Root
+	bind:open
+	onOpenChange={(e) => {
+		onOpenChange?.(e);
+	}}
+>
 	<Dialog.Trigger>
 		{#if editing}
 			<Button variant="ghost" size="icon" class="h-6">
 				<Pencil />
 			</Button>
 		{:else}
-			<Button>Add</Button>
+			<Button id={id.replaceAll('-', '').replace(/[0-9]/, '')}>Add</Button>
 		{/if}
 	</Dialog.Trigger>
 	<Dialog.Content>
@@ -227,6 +233,8 @@
 			</StorageList>
 		{/key}
 
+		<Input bind:value={note} placeholder="Add note..." />
+
 		<Dialog.Footer>
 			<Button variant="outline" on:click={() => fileInput.click()}>
 				Upload rubric
@@ -237,7 +245,7 @@
 						await setDoc(
 							doc(db, 'events', event.event),
 							{
-								results: event.results.map((r) =>
+								results: event.results?.map((r) =>
 									r.id === id
 										? {
 												place: newPlace,
@@ -247,6 +255,7 @@
 														? m.email.split('/')[0]
 														: m.email,
 												})),
+												note,
 												id,
 										  }
 										: r,
@@ -266,38 +275,44 @@
 			{:else}
 				<Button
 					on:click={async () => {
+						// push new result into existing results at the correct index
+						event.results = [
+							...(event.results?.slice(0, newPlace - 1) ?? []),
+							{
+								members: newMembers.map((m) => ({
+									name: m.name,
+									email: m.email.includes('/')
+										? m.email.split('/')[0]
+										: m.email,
+								})),
+								rubricPaths: $filesToUpload.map(
+									(f) => `results/${event.event}/${id}/${f.name}`,
+								),
+								note,
+								id,
+							},
+							...(event.results?.slice(newPlace - 1) ?? []),
+						];
 						await setDoc(
 							doc(db, 'events', event.event),
 							{
-								results: [
-									...(event.results ?? []),
-									{
-										place: newPlace,
-										members: newMembers.map((m) => ({
-											name: m.name,
-											email: m.email.includes('/')
-												? m.email.split('/')[0]
-												: m.email,
-										})),
-										id,
-									},
-								],
+								results: event.results,
 							},
 							{
 								merge: true,
 							},
 						);
-						if (event.results.find((r) => r.place === newPlace)) {
-							for (const result of event.results) {
-								if (result.place >= newPlace) {
-									result.place++;
-								}
-							}
-						}
+
 						newMembers = [];
 						newPlace++;
 						id = crypto.randomUUID();
 						open = false;
+						const el = document.querySelector(
+							`#${id.replaceAll('-', '').replace(/[0-9]/, '')}`,
+						);
+
+						if (el instanceof HTMLButtonElement)
+							sleep(200).then(() => el.focus());
 					}}
 				>
 					Add

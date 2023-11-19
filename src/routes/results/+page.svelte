@@ -30,26 +30,27 @@
 				<Card.Content>
 					{#if event.results}
 						<ol class="mb-2 ml-6 [&>li]:mt-2 list-decimal">
-							{#each event.results.sort((a, b) => a.place - b.place) as result}
+							{#each event.results as result}
 								<li>
 									{#each result.members as member, i}
-										<a href="/events/{member.email}">
-											<!-- DO NOT FORMAT -->
-											{member.name}{#if member.email === $user.email}
-												{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
-											{/if}
-										</a>
+										<!-- DO NOT FORMAT -->
+										{member.name}{#if member.email === $user.email}
+											{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
+										{/if}
 									{/each}
 									{#if result.members
 										.map((u) => u.email.toLowerCase())
-										.includes($user.email?.toLowerCase() ?? '') && result.rubricPaths?.length}
+										.includes($user.email?.toLowerCase() ?? '') && (result.rubricPaths?.length || result.note)}
 										<Dialog.Root>
 											<Dialog.Trigger class="underline">
 												View Rubric
 											</Dialog.Trigger>
 											<Dialog.Content>
 												<Dialog.Title>Rubric</Dialog.Title>
-												{#each result.rubricPaths as rubric}
+												{#if result.note}
+													{result.note}
+												{/if}
+												{#each result.rubricPaths ?? [] as rubric}
 													<DownloadURL ref={rubric} let:link>
 														{#if link}
 															{@const url = new URL(link)}
