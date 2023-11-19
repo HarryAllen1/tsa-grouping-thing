@@ -53,6 +53,19 @@
 			<Input bind:value={newPlace} type="number" />
 		</Label>
 		<p>Members</p>
+		{#each newMembers as member}
+			<div class="flex gap-2">
+				<span>{member.name}</span>
+				<Button
+					variant="destructive"
+					on:click={() => {
+						newMembers = newMembers.filter((m) => m.email !== member.email);
+					}}
+				>
+					Remove
+				</Button>
+			</div>
+		{/each}
 		<!-- <Command -->
 		<Button on:click={() => fileInput.click()}>Upload Rubric(s)</Button>
 		<input
