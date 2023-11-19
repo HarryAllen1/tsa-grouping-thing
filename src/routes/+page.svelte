@@ -552,6 +552,10 @@
 																		{event.submissionDescription}
 																	</h3>
 																{/if}
+																<p>
+																	Feel free to submit extra work outside of the
+																	requirements, if you want.
+																</p>
 																{#key dummyVariableToRerender}
 																	<StorageList
 																		ref="submissions/{event.event}/{team.id}"
