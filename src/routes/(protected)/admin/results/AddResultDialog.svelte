@@ -8,11 +8,15 @@
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import * as Popover from '$lib/components/ui/popover';
+	import * as Command from '$lib/components/ui/command';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { ref, uploadBytes } from 'firebase/storage';
 	import { tick } from 'svelte';
+	import { Check, ChevronsUpDown } from 'lucide-svelte';
+	import { cn } from '$lib/utils';
 
 	export let event: EventDoc;
 
@@ -22,7 +26,7 @@
 	let fileInput: HTMLInputElement;
 	let newResultDialogOpen = false;
 
-	const comboboxUsers = $allUsersCollection.map((u) => ({
+	$: comboboxUsers = $allUsersCollection.map((u) => ({
 		value: u.email,
 		label: u.name,
 	}));
@@ -66,7 +70,51 @@
 				</Button>
 			</div>
 		{/each}
-		<!-- <Command -->
+		<Popover.Root
+			positioning={{
+				placement: 'bottom',
+			}}
+			bind:open={comboboxOpen}
+			let:ids
+		>
+			<Popover.Trigger asChild let:builder>
+				<Button
+					builders={[builder]}
+					variant="outline"
+					role="combobox"
+					aria-expanded={comboboxOpen}
+					class="w-[200px] justify-between"
+				>
+					{comboboxSelectedValue}
+					<ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+				</Button>
+			</Popover.Trigger>
+			<Popover.Content class="w-[200px] max-h-32 p-0">
+				<Command.Root>
+					<Command.Input placeholder="Search members..." />
+					<Command.Empty>No framework found.</Command.Empty>
+					<Command.Group>
+						{#each comboboxUsers as user}
+							<Command.Item
+								value={user.value}
+								onSelect={(currentValue) => {
+									comboboxValue = currentValue;
+									closeAndFocusTrigger(ids.trigger);
+								}}
+							>
+								<Check
+									class={cn(
+										'mr-2 h-4 w-4',
+										comboboxSelectedValue !== user.value && 'text-transparent',
+									)}
+								/>
+								{user.label}
+							</Command.Item>
+						{/each}
+					</Command.Group>
+				</Command.Root>
+			</Popover.Content>
+		</Popover.Root>
 		<Button on:click={() => fileInput.click()}>Upload Rubric(s)</Button>
 		<input
 			bind:this={fileInput}
