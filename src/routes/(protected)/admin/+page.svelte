@@ -834,24 +834,28 @@
 									</div>
 									<div>
 										<Dialog.Root closeOnOutsideClick={false}>
-											<Dialog.Trigger>
-												<Button>Manage Submissions</Button>
-											</Dialog.Trigger>
-											<Dialog.Content>
-												<Dialog.Title>Manage Submissions</Dialog.Title>
-												<Dialog.Description>
-													{#if event.submissionDescription}
-														<h3
-															class="dark:text-white text-black scroll-m-20 text-2xl font-semibold tracking-tight"
-														>
-															{event.submissionDescription}
-														</h3>
-													{/if}
-													{#key dummyVariableToRerender}
-														<StorageList
-															ref="submissions/{event.event}/{team.id}"
-															let:list
-														>
+											{#key dummyVariableToRerender}
+												<StorageList
+													ref="submissions/{event.event}/{team.id}"
+													let:list
+												>
+													<Dialog.Trigger>
+														<Button>
+															Manage Submissions {list?.items.length
+																? `(${list.items.length})`
+																: ''}
+														</Button>
+													</Dialog.Trigger>
+													<Dialog.Content>
+														<Dialog.Title>Manage Submissions</Dialog.Title>
+														<Dialog.Description>
+															{#if event.submissionDescription}
+																<h3
+																	class="dark:text-white text-black scroll-m-20 text-2xl font-semibold tracking-tight"
+																>
+																	{event.submissionDescription}
+																</h3>
+															{/if}
 															<ul>
 																{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
 																	<li class="w-full flex flex-col items-center">
@@ -951,23 +955,24 @@
 																type="file"
 																multiple
 															/>
-														</StorageList>
-													{/key}
 
-													<p>
-														Allowed file types: all image files, all audio
-														files, all video files, pdfs, and Word docs (.doc,
-														.docx).
-													</p>
-													<p>250MB max file size.</p>
-													<p>
-														If you need to submit a file type not listed, please
-														contact Harry (<a href="mailto:s-hallen@lwsd.org"
-															>s-hallen@lwsd.org</a
-														>).
-													</p>
-												</Dialog.Description>
-											</Dialog.Content>
+															<p>
+																Allowed file types: all image files, all audio
+																files, all video files, pdfs, and Word docs
+																(.doc, .docx).
+															</p>
+															<p>250MB max file size.</p>
+															<p>
+																If you need to submit a file type not listed,
+																please contact Harry (<a
+																	href="mailto:s-hallen@lwsd.org"
+																	>s-hallen@lwsd.org</a
+																>).
+															</p>
+														</Dialog.Description>
+													</Dialog.Content>
+												</StorageList>
+											{/key}
 										</Dialog.Root>
 									</div>
 								</Card.Title>
