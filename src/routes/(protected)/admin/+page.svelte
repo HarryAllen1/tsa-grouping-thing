@@ -601,12 +601,7 @@
 							/>
 							Online submissions
 						</Label>
-						{#if event.event === 'Technology Bowl'}
-							<p>
-								The team for this event will be based off of a test which you
-								will take at a later date.
-							</p>
-						{/if}
+
 						{#each event.teams as team}
 							<Card.Root
 								class="{team.members.length > event.maxTeamSize ||
