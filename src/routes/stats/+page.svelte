@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 	import { goto } from '$app/navigation';
 	import { allUsersCollection, eventsCollection, userDoc } from '$lib';
 	import { barX, plot } from '@observablehq/plot';
