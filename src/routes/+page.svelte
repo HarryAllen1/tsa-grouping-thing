@@ -545,7 +545,7 @@
 															<Dialog.Description>
 																{#if event.submissionDescription}
 																	<h3
-																		class="text-white scroll-m-20 text-2xl font-semibold tracking-tight"
+																		class="tdark:text-white text-black scroll-m-20 text-2xl font-semibold tracking-tight"
 																	>
 																		{event.submissionDescription}
 																	</h3>

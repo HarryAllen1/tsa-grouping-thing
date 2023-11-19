@@ -18,7 +18,7 @@
 	</a>
 	<nav class="flex items-center space-x-6 text-sm font-medium">
 		{#each navItems as navItem}
-			{#if Array.isArray(navItem)}
+			{#if Array.isArray(navItem) && navItem.length}
 				<Dropdown.Root bind:open>
 					<Dropdown.Trigger
 						class="flex flex-row items-center {$page.url.pathname.includes(
@@ -52,7 +52,7 @@
 						</Dropdown.Group>
 					</Dropdown.Content>
 				</Dropdown.Root>
-			{:else}
+			{:else if !Array.isArray(navItem)}
 				<a
 					href={navItem.href}
 					class={cn(
