@@ -7,10 +7,10 @@
 		fancyConfirm,
 		sendEmail,
 		settings,
+		storage,
 		yay,
 		type EventDoc,
 		type UserDoc,
-		storage,
 	} from '$lib';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -38,7 +38,6 @@
 		UserPlus,
 		X,
 	} from 'lucide-svelte';
-	import { setContext } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { writable } from 'svelte/store';
 	import {
@@ -1219,6 +1218,7 @@
 						</Button>
 						{#if event.maxTeamSize === 1}
 							<Button
+								variant="outline"
 								on:click={() => {
 									for (const member of event.members) {
 										if (
