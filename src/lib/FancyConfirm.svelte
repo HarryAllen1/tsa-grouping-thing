@@ -3,17 +3,26 @@
 	import { writable } from 'svelte/store';
 
 	const open = writable(false);
+	const options = writable<[string, boolean][]>([]);
 
 	let alertTitle = 'test';
 	let alertMessage = 'test';
 
 	const result = writable<boolean | null>(null);
 
-	export const fancyConfirm = (title: string, message: string) =>
+	export const fancyConfirm = (
+		title: string,
+		message: string,
+		dialogOptions: [string, boolean][] = [
+			['Cancel', false],
+			['Continue', true],
+		],
+	) =>
 		new Promise<boolean>((resolve) => {
 			alertTitle = title;
 			alertMessage = message;
 			open.set(true);
+			options.set(dialogOptions);
 
 			result.subscribe((r) => {
 				if (r !== null) {
@@ -35,12 +44,17 @@
 			{alertMessage}
 		</AlertDialog.Description>
 		<AlertDialog.Footer>
-			<AlertDialog.Cancel on:click={() => ($result = false)}>
-				Cancel
-			</AlertDialog.Cancel>
-			<AlertDialog.Action on:click={() => ($result = true)}>
-				Continue
-			</AlertDialog.Action>
+			{#each $options as option}
+				{#if option[1]}
+					<AlertDialog.Action on:click={() => ($result = true)}>
+						{option[0]}
+					</AlertDialog.Action>
+				{:else}
+					<AlertDialog.Cancel on:click={() => ($result = false)}>
+						{option[0]}
+					</AlertDialog.Cancel>
+				{/if}
+			{/each}
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
