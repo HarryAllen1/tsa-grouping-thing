@@ -13,6 +13,7 @@
 		type EventDoc,
 		clash,
 		storage,
+		fancyConfirm,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
@@ -719,6 +720,11 @@
 														} has requested to join your team for ${
 															event.event
 														}. Please go to the <a href="https://tsa-grouping-thing.vercel.app">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+													);
+													fancyConfirm(
+														'Request sent',
+														"A email has also been sent to the members of this team notifying them of your request. This email has a habit of going straight to people's junk folder, so you might have to notify them of this request manually.",
+														[['OK', true]],
 													);
 												}}>Request to join</Button
 											>
