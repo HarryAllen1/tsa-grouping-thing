@@ -92,7 +92,7 @@
 			<Popover.Content class="w-[200px] max-h-32 p-0">
 				<Command.Root>
 					<Command.Input placeholder="Search members..." />
-					<Command.Empty>No framework found.</Command.Empty>
+					<Command.Empty>No members found.</Command.Empty>
 					<Command.Group>
 						{#each comboboxUsers as user}
 							<Command.Item
