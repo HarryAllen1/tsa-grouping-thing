@@ -63,7 +63,7 @@
 			}
 		},
 		"overrides": {
-			"vite": "^5.0.0",
+			"vite": "^5.0.2",
 			"picocolors": "npm:colorette"
 		}
 	}
