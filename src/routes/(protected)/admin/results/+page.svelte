@@ -25,15 +25,18 @@
 					{#if event.results && event.results.length}
 						<ol class="my-6 ml-6 [&>li]:mt-2 list-decimal">
 							{#each event.results.sort((a, b) => a.place - b.place) as result}
-								<li>
-									{#each result.members as member, i}
-										<a href="/events/{member.email}">
-											<!-- DO NOT FORMAT -->
-											{member.name}{#if member.email === $user.email}
-												{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
-											{/if}
-										</a>
-									{/each}
+								<li class="">
+									<div>
+										{#each result.members as member, i}
+											<a href="/events/{member.email}">
+												<!-- DO NOT FORMAT -->
+												{member.name}{#if member.email === $user.email}
+													{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
+												{/if}
+											</a>
+										{/each}
+									</div>
+									<AddResultDialog {event} id={result.id} editing />
 								</li>
 							{/each}
 						</ol>

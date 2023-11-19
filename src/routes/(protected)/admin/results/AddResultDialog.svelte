@@ -1,33 +1,31 @@
 <script lang="ts">
-	import {
-		allUsersCollection,
-		db,
-		storage,
-		type BasicUser,
-		type EventDoc,
-	} from '$lib';
+	import { allUsersCollection, db, type BasicUser, type EventDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Command from '$lib/components/ui/command';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
+	import { Progress } from '$lib/components/ui/progress';
 	import { cn } from '$lib/utils';
 	import { doc, setDoc } from 'firebase/firestore';
-	import { getBlob, ref, uploadBytes } from 'firebase/storage';
-	import { Check, ChevronsUpDown, Minus } from 'lucide-svelte';
-	import { onMount, tick } from 'svelte';
+	import { deleteObject } from 'firebase/storage';
+	import { Check, ChevronsUpDown, Minus, Pencil, X } from 'lucide-svelte';
+	import { tick } from 'svelte';
+	import { writable } from 'svelte/store';
+	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 
 	export let event: EventDoc;
 	export let editing = false;
-	export let newPlace = (event?.results?.length ?? 0) + 1;
+	export let id = crypto.randomUUID();
+	$: existingResults = event.results?.find((r) => r.id === id);
+	let newPlace = editing
+		? existingResults?.place ?? 1
+		: (event?.results?.length ?? 0) + 1;
 
-	const existingResults = event.results.find((r) => r.place === newPlace);
-
-	let newMembers: BasicUser[] =
-		editing && existingResults ? existingResults.members : [];
-	let newRubric: File[] = [];
+	let newMembers: BasicUser[] = editing ? existingResults?.members ?? [] : [];
 	let fileInput: HTMLInputElement;
+	const filesToUpload = writable<File[]>([]);
 
 	$: comboboxUsers = $allUsersCollection.map((u) => ({
 		value: `${u.email}/${u.name}`,
@@ -60,21 +58,26 @@
 		});
 	}
 
-	onMount(async () => {
-		if (editing && existingResults) {
-			newRubric = await Promise.all(
-				existingResults.rubricPaths.map(
-					async (r) =>
-						new File([await getBlob(ref(storage, r))], ref(storage, r).name),
-				),
-			);
-		}
-	});
+	let dummyVariableToRerender = 0;
+	const updateStorageList = () => {
+		dummyVariableToRerender++;
+		return '';
+	};
+	const filterSubmissions = (submission: File) => {
+		$filesToUpload = $filesToUpload.filter((f) => f !== submission);
+		return '';
+	};
 </script>
 
 <Dialog.Root>
 	<Dialog.Trigger>
-		<Button>Add</Button>
+		{#if editing}
+			<Button variant="ghost" size="icon" class="h-6">
+				<Pencil />
+			</Button>
+		{:else}
+			<Button>Add</Button>
+		{/if}
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<Dialog.Title>Add Results</Dialog.Title>
@@ -143,26 +146,86 @@
 				</Command.Root>
 			</Popover.Content>
 		</Popover.Root>
-		<Button on:click={() => fileInput.click()}>Upload Rubric(s)</Button>
-		<input
-			bind:this={fileInput}
-			type="file"
-			multiple
-			class="hidden"
-			on:change={async (e) => {
-				if (!(e.target instanceof HTMLInputElement)) return;
-				if (!e.target.files) return;
-				newRubric.push(...e.target.files);
+		{#key dummyVariableToRerender}
+			<StorageList ref="results/{event.event}/{id}" let:list>
+				<ul>
+					{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
+						<li class="w-full flex flex-col items-center">
+							{#if submission instanceof File}
+								<UploadTask
+									ref="results/{event.event}/{id}/{submission.name}"
+									data={submission}
+									let:snapshot
+									let:progress
+								>
+									{#if snapshot?.state === 'success'}
+										{filterSubmissions(submission)}
+										{updateStorageList()}
+									{:else}
+										<Progress value={progress} class="w-full" />
 
-				for (const file of e.target.files) {
-					await uploadBytes(
-						ref(storage, `events/${event.event}/results/${file.name}`),
-						file,
-					);
-				}
-			}}
-		/>
+										<span class="w-full">
+											{submission.name}
+										</span>
+									{/if}
+								</UploadTask>
+							{:else}
+								<div class="flex flex-row w-full items-center">
+									<DownloadURL ref={submission} let:link>
+										<a href={link} target="_blank">
+											{submission.name}
+										</a>
+									</DownloadURL>
+									<div class="flex flex-grow" />
+									<Button
+										variant="ghost"
+										size="icon"
+										on:click={async () => {
+											if (submission instanceof File) return;
+											await deleteObject(submission);
+											dummyVariableToRerender++;
+										}}
+									>
+										<X />
+									</Button>
+								</div>
+							{/if}
+						</li>
+					{:else}
+						<p>No submissions</p>
+					{/each}
+				</ul>
+
+				<input
+					bind:this={fileInput}
+					on:change={(e) => {
+						if (e.target instanceof HTMLInputElement) {
+							if (!e.target.files?.length) return;
+							const files = [...e.target.files];
+							for (const file of files) {
+								if (list?.items.map((f) => f.name).includes(file.name)) {
+									alert(
+										`File ${file.name} already exists. If you want to upload this file, change the name.`,
+									);
+									continue;
+								}
+
+								$filesToUpload.push(file);
+								$filesToUpload = $filesToUpload;
+							}
+						}
+					}}
+					class="hidden"
+					type="file"
+					multiple
+				/>
+			</StorageList>
+		{/key}
+
 		<Dialog.Footer>
+			<Button variant="outline" on:click={() => fileInput.click()}>
+				Upload rubric
+			</Button>
 			<Button
 				on:click={async () => {
 					await setDoc(
@@ -178,9 +241,6 @@
 											? m.email.split('/')[0]
 											: m.email,
 									})),
-									rubricPaths: newRubric.map(
-										(f) => `/events/${event.event}/results/${f.name}`,
-									),
 								},
 							],
 						},
@@ -197,7 +257,8 @@
 					}
 					newMembers = [];
 					newPlace++;
-					newRubric = [];
+					editing = false;
+					id = crypto.randomUUID();
 				}}
 			>
 				Add

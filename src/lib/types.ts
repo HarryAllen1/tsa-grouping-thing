@@ -17,6 +17,7 @@ export interface Result {
 	members: BasicUser[];
 	place: number;
 	rubricPaths: string[];
+	id: ReturnType<typeof crypto.randomUUID>;
 }
 
 export interface Team {
