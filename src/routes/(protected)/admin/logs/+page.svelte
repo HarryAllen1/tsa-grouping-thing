@@ -55,11 +55,25 @@
 									<Dialog.Content
 										class="overflow-y-scroll max-h-full max-w-fit"
 									>
+										<Dialog.Title>
+											{log.collection}/{log.id}
+										</Dialog.Title>
 										<!-- DO NOT MANUALLY FORMAT -->
 										<pre class="shiki" style="background-color: #2e3440"><code
-												>{@html hl.codeToHtml(JSON.stringify(log, null, 2), {
-													lang: 'json',
-												})}</code
+												>{@html hl.codeToHtml(
+													JSON.stringify(
+														Object.fromEntries(
+															Object.entries(log).filter(
+																([key]) => key !== 'ref',
+															),
+														),
+														null,
+														2,
+													),
+													{
+														lang: 'json',
+													},
+												)}</code
 											></pre>
 									</Dialog.Content>
 								</Dialog.Root>
