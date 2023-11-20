@@ -46,7 +46,7 @@
 											: 'text-foreground/60',
 									)}
 								>
-									{navItem.title}
+									{navItem.title.replace('Admin ', '')}
 								</Dropdown.Item>
 							{/each}
 						</Dropdown.Group>

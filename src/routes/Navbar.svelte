@@ -50,6 +50,10 @@
 						title: 'Admin Results',
 						href: '/admin/results',
 					},
+					{
+						title: 'Admin Logs',
+						href: '/admin/logs',
+					},
 			  ]
 			: [],
 	];
