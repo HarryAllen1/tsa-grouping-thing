@@ -10,6 +10,17 @@
 		theme: 'one-dark-pro',
 		langs: ['json'],
 	});
+
+	const removeRef = (obj: Record<string, any>) => {
+		const newObj = { ...obj };
+		delete newObj.ref;
+		for (const key in newObj) {
+			if (typeof newObj[key] === 'object') {
+				newObj[key] = removeRef(newObj[key]);
+			}
+		}
+		return newObj;
+	};
 </script>
 
 <div class="container">
@@ -59,22 +70,12 @@
 											{log.collection}/{log.id}
 										</Dialog.Title>
 										<!-- DO NOT MANUALLY FORMAT -->
-										<pre class="shiki" style="background-color: #2e3440"><code
-												>{@html hl.codeToHtml(
-													JSON.stringify(
-														Object.fromEntries(
-															Object.entries(log).filter(
-																([key]) => key !== 'ref',
-															),
-														),
-														null,
-														2,
-													),
-													{
-														lang: 'json',
-													},
-												)}</code
-											></pre>
+										{@html hl.codeToHtml(
+											JSON.stringify(removeRef(log), null, 2),
+											{
+												lang: 'json',
+											},
+										)}
 									</Dialog.Content>
 								</Dialog.Root>
 							</Table.Cell>
