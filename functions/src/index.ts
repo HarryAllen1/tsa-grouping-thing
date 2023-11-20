@@ -11,7 +11,8 @@ export const dbLogger = onDocumentWritten(
 		document: '{collection}/{id}',
 		region: 'us-west1',
 	},
-	async (event) => {
+	(event) => {
+		if (event.params.collection === 'mail' && event.data?.after.data()?.delivery.state === 'PROCESSING') return;
 		if (event.params.collection !== 'firestore_logs') {
 			const now = Timestamp.now();
 			db.doc(`firestore_logs/${now.toDate().getTime()}`).set({
