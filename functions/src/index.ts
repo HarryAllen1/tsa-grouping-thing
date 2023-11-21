@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase-admin/app';
+import { diff } from 'deep-object-diff';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { beforeUserCreated, HttpsError } from 'firebase-functions/v2/identity';
@@ -12,14 +13,21 @@ export const dbLogger = onDocumentWritten(
 		region: 'us-west1',
 	},
 	(event) => {
-		if (event.params.collection === 'mail' && event.data?.after.data()?.delivery.state === 'PROCESSING') return;
+		if (
+			event.params.collection === 'mail' &&
+			event.data?.after.data()?.delivery.state === 'PROCESSING'
+		)
+			return;
 		if (event.params.collection !== 'firestore_logs') {
 			const now = Timestamp.now();
+			const beforeData = event.data?.before.data() ?? {};
+			const afterData = event.data?.after.data() ?? {};
 			db.doc(`firestore_logs/${now.toDate().getTime()}`).set({
 				collection: event.params.collection,
 				id: event.params.id,
-				afterData: event.data?.after.data(),
-				beforeData: event.data?.before.data(),
+				afterData,
+				beforeData,
+				difference: diff(beforeData, afterData),
 				timestamp: now,
 				eventType: event.type,
 			});
