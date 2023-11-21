@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { eventsCollection, user } from '$lib';
+	import { db, eventsCollection, user } from '$lib';
+	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
+	import { X } from 'lucide-svelte';
 	import AddResultDialog from './AddResultDialog.svelte';
+	import { doc, setDoc } from 'firebase/firestore';
 
 	const rerenderMap: Record<string, number> = {};
 	const rerender = (event: string) => {
@@ -50,6 +53,26 @@
 											id={result.id}
 											editing
 										/>
+										<Button
+											on:click={async () => {
+												await setDoc(
+													doc(db, 'events', event.event),
+													{
+														results: event.results.filter(
+															(r) => r.id !== result.id,
+														),
+													},
+													{
+														merge: true,
+													},
+												);
+											}}
+											size="icon"
+											variant="ghost"
+											class="h-6"
+										>
+											<X />
+										</Button>
 									</li>
 								{/each}
 							</ol>
