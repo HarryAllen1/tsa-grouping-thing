@@ -41,7 +41,7 @@
 		"bits-ui": "^0.9.8",
 		"canvas-confetti": "^1.9.1",
 		"clsx": "^2.0.0",
-		"cmdk-sv": "^0.0.7",
+		"cmdk-sv": "^0.0.12",
 		"firebase": "^10.6.0",
 		"fuse.js": "^7.0.0",
 		"lucide-svelte": "^0.292.0",
