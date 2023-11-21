@@ -13,9 +13,13 @@
 	"engines": {
 		"node": "18"
 	},
+	"volta": {
+		"node": "18.17.1"
+	},
 	"main": "lib/index.js",
 	"dependencies": {
 		"@google-cloud/functions-framework": "^3.3.0",
+		"deep-object-diff": "^1.1.9",
 		"firebase-admin": "^11.8.0",
 		"firebase-functions": "^4.3.1"
 	},
