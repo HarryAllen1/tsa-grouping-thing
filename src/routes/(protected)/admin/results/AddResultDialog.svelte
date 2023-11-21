@@ -18,12 +18,17 @@
 	export let event: EventDoc;
 	export let editing = false;
 	export let id = crypto.randomUUID();
+	export let onOpenChange: ((open: boolean) => void) | undefined = undefined;
+
+	let open = false;
+
 	$: existingResults = event.results?.find((r) => r.id === id);
 	let newPlace = editing
 		? existingResults?.place ?? 1
 		: (event?.results?.length ?? 0) + 1;
 
-	let newMembers: BasicUser[] = editing ? existingResults?.members ?? [] : [];
+	let newMembers: BasicUser[];
+	$: newMembers = editing ? existingResults?.members ?? [] : [];
 	let fileInput: HTMLInputElement;
 	const filesToUpload = writable<File[]>([]);
 
@@ -69,7 +74,7 @@
 	};
 </script>
 
-<Dialog.Root>
+<Dialog.Root bind:open {onOpenChange}>
 	<Dialog.Trigger>
 		{#if editing}
 			<Button variant="ghost" size="icon" class="h-6">
@@ -226,43 +231,78 @@
 			<Button variant="outline" on:click={() => fileInput.click()}>
 				Upload rubric
 			</Button>
-			<Button
-				on:click={async () => {
-					await setDoc(
-						doc(db, 'events', event.event),
-						{
-							results: [
-								...(event.results ?? []),
-								{
-									place: newPlace,
-									members: newMembers.map((m) => ({
-										name: m.name,
-										email: m.email.includes('/')
-											? m.email.split('/')[0]
-											: m.email,
-									})),
-								},
-							],
-						},
-						{
-							merge: true,
-						},
-					);
-					if (event.results.find((r) => r.place === newPlace)) {
-						for (const result of event.results) {
-							if (result.place >= newPlace) {
-								result.place++;
+			{#if editing}
+				<Button
+					on:click={async () => {
+						await setDoc(
+							doc(db, 'events', event.event),
+							{
+								results: event.results.map((r) =>
+									r.id === id
+										? {
+												place: newPlace,
+												members: newMembers.map((m) => ({
+													name: m.name,
+													email: m.email.includes('/')
+														? m.email.split('/')[0]
+														: m.email,
+												})),
+												id,
+										  }
+										: r,
+								),
+							},
+							{
+								merge: true,
+							},
+						);
+						id = crypto.randomUUID();
+						open = false;
+						onOpenChange?.(false);
+					}}
+				>
+					Save
+				</Button>
+			{:else}
+				<Button
+					on:click={async () => {
+						await setDoc(
+							doc(db, 'events', event.event),
+							{
+								results: [
+									...(event.results ?? []),
+									{
+										place: newPlace,
+										members: newMembers.map((m) => ({
+											name: m.name,
+											email: m.email.includes('/')
+												? m.email.split('/')[0]
+												: m.email,
+										})),
+										id,
+									},
+								],
+							},
+							{
+								merge: true,
+							},
+						);
+						if (event.results.find((r) => r.place === newPlace)) {
+							for (const result of event.results) {
+								if (result.place >= newPlace) {
+									result.place++;
+								}
 							}
 						}
-					}
-					newMembers = [];
-					newPlace++;
-					editing = false;
-					id = crypto.randomUUID();
-				}}
-			>
-				Add
-			</Button>
+						newMembers = [];
+						newPlace++;
+						id = crypto.randomUUID();
+						open = false;
+					}}
+				>
+					Add
+				</Button>
+			{/if}
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
