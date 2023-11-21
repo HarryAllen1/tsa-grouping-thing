@@ -29,7 +29,7 @@
 				</Card.Header>
 				<Card.Content>
 					{#if event.results}
-						<ol class="my-6 ml-6 [&>li]:mt-2 list-decimal">
+						<ol class="mb-2 ml-6 [&>li]:mt-2 list-decimal">
 							{#each event.results.sort((a, b) => a.place - b.place) as result}
 								<li>
 									{#each result.members as member, i}
