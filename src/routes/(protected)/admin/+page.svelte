@@ -139,7 +139,12 @@
 <svelte:window
 	on:keydown={(e) => {
 		const el = document.querySelector('#search');
-		if (e.key === '/' && el !== document.activeElement) {
+		if (
+			e.key === '/' &&
+			el !== document.activeElement &&
+			!(document.activeElement instanceof HTMLInputElement) &&
+			!(document.activeElement instanceof HTMLTextAreaElement)
+		) {
 			if (el instanceof HTMLInputElement) {
 				el.focus();
 				e.preventDefault();
@@ -355,14 +360,12 @@
 									</Dialog.Trigger>
 									<Dialog.Content>
 										<Dialog.Title>Edit submission description</Dialog.Title>
-										<Dialog.Description>
-											<Textarea
-												placeholder="Submission description"
-												class="w-full"
-												value={event.submissionDescription}
-												bind:this={submissionDescriptionElementMap[event.event]}
-											/>
-										</Dialog.Description>
+										<Textarea
+											placeholder="Submission description"
+											class="w-full"
+											value={event.submissionDescription}
+											bind:this={submissionDescriptionElementMap[event.event]}
+										/>
 										<Dialog.Footer>
 											<Button
 												on:click={() => {

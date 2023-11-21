@@ -32,10 +32,10 @@
 			title: 'Event Stats',
 			href: '/stats',
 		},
-		// {
-		// 	title: 'Results',
-		// 	href: '/results',
-		// },
+		{
+			title: 'Results',
+			href: '/results',
+		},
 		$userDoc?.admin
 			? [
 					{
