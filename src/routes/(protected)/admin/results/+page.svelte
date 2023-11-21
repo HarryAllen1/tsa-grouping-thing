@@ -55,12 +55,16 @@
 										/>
 										<Button
 											on:click={async () => {
+												const results = event.results
+													.filter((r) => r.place > result.place)
+													.map((r) => ({
+														...r,
+														place: r.place - 1,
+													}));
 												await setDoc(
 													doc(db, 'events', event.event),
 													{
-														results: event.results.filter(
-															(r) => r.id !== result.id,
-														),
+														results: results.filter((r) => r.id !== result.id),
 													},
 													{
 														merge: true,
