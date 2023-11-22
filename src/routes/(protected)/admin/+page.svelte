@@ -11,6 +11,8 @@
 		yay,
 		type EventDoc,
 		type UserDoc,
+		StorageMetadata,
+		SimpleTooltip,
 	} from '$lib';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -879,9 +881,18 @@
 																				class="flex flex-row w-full items-center"
 																			>
 																				<DownloadURL ref={submission} let:link>
-																					<a href={link} target="_blank">
-																						{submission.name}
-																					</a>
+																					<StorageMetadata
+																						ref={submission}
+																						let:meta
+																					>
+																						<SimpleTooltip
+																							message={meta.timeCreated}
+																						>
+																							<a href={link} target="_blank">
+																								{submission.name}
+																							</a>
+																						</SimpleTooltip>
+																					</StorageMetadata>
 																				</DownloadURL>
 																				<div class="flex flex-grow" />
 																				<Button

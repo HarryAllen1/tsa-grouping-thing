@@ -14,6 +14,8 @@
 		clash,
 		storage,
 		fancyConfirm,
+		SimpleTooltip,
+		StorageMetadata,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
@@ -545,7 +547,7 @@
 															<Dialog.Description>
 																{#if event.submissionDescription}
 																	<h3
-																		class="tdark:text-white text-black scroll-m-20 text-2xl font-semibold tracking-tight"
+																		class="dark:text-white text-black scroll-m-20 text-2xl font-semibold tracking-tight"
 																	>
 																		{event.submissionDescription}
 																	</h3>
@@ -588,10 +590,23 @@
 																							<DownloadURL
 																								ref={submission}
 																								let:link
+																								let:ref
 																							>
-																								<a href={link} target="_blank">
-																									{submission.name}
-																								</a>
+																								<StorageMetadata
+																									let:meta
+																									ref={submission}
+																								>
+																									<SimpleTooltip
+																										message={meta.timeCreated}
+																									>
+																										<a
+																											href={link}
+																											target="_blank"
+																										>
+																											{submission.name}
+																										</a>
+																									</SimpleTooltip>
+																								</StorageMetadata>
 																							</DownloadURL>
 																							<div class="flex flex-grow" />
 																							<Button
