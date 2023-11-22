@@ -70,8 +70,9 @@
 																	href={link}
 																	target="_blank"
 																	rel="noopener noreferrer"
-																	>{url.pathname.slice(1)}</a
 																>
+																	{url.pathname.slice(1)}
+																</a>
 															{/if}
 														{/if}
 													</DownloadURL>
