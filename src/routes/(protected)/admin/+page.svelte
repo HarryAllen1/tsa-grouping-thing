@@ -886,7 +886,9 @@
 																						let:meta
 																					>
 																						<SimpleTooltip
-																							message={meta.timeCreated}
+																							message={new Date(
+																								meta.timeCreated,
+																							).toLocaleString()}
 																						>
 																							<a href={link} target="_blank">
 																								{submission.name}

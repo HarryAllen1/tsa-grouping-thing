@@ -590,14 +590,15 @@
 																							<DownloadURL
 																								ref={submission}
 																								let:link
-																								let:ref
 																							>
 																								<StorageMetadata
 																									let:meta
 																									ref={submission}
 																								>
 																									<SimpleTooltip
-																										message={meta.timeCreated}
+																										message={new Date(
+																											meta.timeCreated,
+																										).toLocaleString()}
 																									>
 																										<a
 																											href={link}
