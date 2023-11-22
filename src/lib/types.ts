@@ -9,15 +9,15 @@ export interface EventDoc {
 	onlineSubmissions?: boolean;
 	perChapter: number;
 	teamCreationLocked?: boolean;
-	results: Result[];
+	results?: Result[];
 	submissionDescription?: string;
 }
 
 export interface Result {
 	members: BasicUser[];
-	place: number;
 	rubricPaths: string[];
 	id: ReturnType<typeof crypto.randomUUID>;
+	note?: string;
 }
 
 export interface Team {

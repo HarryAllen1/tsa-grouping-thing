@@ -350,8 +350,10 @@
 								</li>
 							</ul>
 							<div class="flex flex-col gap-2">
-								<p class="text-white">Submission description:</p>
-								<p class="text-white">
+								<p class="dark:text-white text-black">
+									Submission description:
+								</p>
+								<p class="dark:text-white text-black">
 									{event.submissionDescription ?? '(none)'}
 								</p>
 								<Dialog.Root>
@@ -838,7 +840,7 @@
 												<Dialog.Description>
 													{#if event.submissionDescription}
 														<h3
-															class="text-white scroll-m-20 text-2xl font-semibold tracking-tight"
+															class="dark:text-white text-black scroll-m-20 text-2xl font-semibold tracking-tight"
 														>
 															{event.submissionDescription}
 														</h3>

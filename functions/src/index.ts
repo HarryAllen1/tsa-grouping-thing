@@ -41,15 +41,23 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 	{
 		region: 'us-west1',
 	},
-	(event) => {
+	async (event) => {
 		const user = event.data;
 		if (!allowedDomains.some((domain) => user.email?.endsWith(domain))) {
 			throw new HttpsError('invalid-argument', 'Unauthorized email');
 		}
-		db.doc(`users/${user.email}`).set({
-			email: user.email,
-			name: user.displayName,
-			events: [],
-		});
+		const doc = db.doc(`users/${user.email}`);
+		if (!(await doc.get()).exists) {
+			doc.set(
+				{
+					email: user.email,
+					name: user.displayName,
+					events: [],
+				},
+				{
+					merge: true,
+				},
+			);
+		}
 	},
 );
