@@ -11,7 +11,9 @@
 	>
 		Elimination Results
 	</h2>
-	<p>Eliminations completed individually might be colored incorrectly.</p>
+	<p class="pb-2">
+		Eliminations completed individually might be colored incorrectly.
+	</p>
 
 	<div
 		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
