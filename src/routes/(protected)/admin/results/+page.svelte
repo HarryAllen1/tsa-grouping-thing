@@ -29,12 +29,19 @@
 						<Card.Title>
 							{event.event}
 						</Card.Title>
+						<Card.Description>
+							Top {event.perChapter} go to state
+						</Card.Description>
 					</Card.Header>
 					<Card.Content>
 						{#if event.results && event.results.length}
 							<ol class="my-6 ml-6 [&>li]:mt-2 list-decimal">
-								{#each event.results as result}
-									<li class="">
+								{#each event.results as result, i}
+									<li
+										class={i < event.perChapter
+											? 'text-green-500 font-bold'
+											: ''}
+									>
 										<div>
 											{#each result.members as member, i}
 												<a href="/events/{member.email}">

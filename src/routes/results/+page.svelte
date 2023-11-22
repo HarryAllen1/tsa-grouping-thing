@@ -11,6 +11,7 @@
 	>
 		Elimination Results
 	</h2>
+	<p>Eliminations completed individually might be colored incorrectly.</p>
 
 	<div
 		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
@@ -24,14 +25,16 @@
 						{event.event}
 					</Card.Title>
 					<Card.Description>
-						Top {event.perChapter} go to state
+						Top {event.perChapter} teams go to state
 					</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					{#if event.results}
 						<ol class="mb-2 ml-6 [&>li]:mt-2 list-decimal">
-							{#each event.results as result}
-								<li>
+							{#each event.results as result, i}
+								<li
+									class={i < event.perChapter ? 'text-green-500 font-bold' : ''}
+								>
 									{#each result.members as member, i}
 										<!-- DO NOT FORMAT -->
 										{member.name}{#if member.email === $user.email}
