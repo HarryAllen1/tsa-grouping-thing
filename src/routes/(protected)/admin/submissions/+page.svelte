@@ -98,6 +98,37 @@
 																			</video>
 																		</Dialog.Content>
 																	</Dialog.Root>
+																{:else if meta.contentType?.startsWith('audio/')}
+																	<Dialog.Root>
+																		<Dialog.Trigger>
+																			{item.name}
+																		</Dialog.Trigger>
+																		<Dialog.Content
+																			class="p-4 grid place-items-center"
+																		>
+																			<audio controls>
+																				<source src={link} />
+																			</audio>
+																		</Dialog.Content>
+																	</Dialog.Root>
+																{:else if meta.contentType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'}
+																	<Dialog.Root>
+																		<Dialog.Trigger>
+																			{item.name}
+																		</Dialog.Trigger>
+																		<Dialog.Content
+																			class="max-w-full max-h-full p-4 grid place-items-center"
+																		>
+																			<iframe
+																				src="https://docs.google.com/viewer?url={encodeURIComponent(
+																					link ?? '',
+																				)}&embedded=true"
+																				class="h-[calc(100vh-2rem)] w-[calc(100vw-2rem)]"
+																				frameborder="0"
+																				title="A powerpoint presentation"
+																			/>
+																		</Dialog.Content>
+																	</Dialog.Root>
 																{:else}
 																	<a
 																		href={link}
