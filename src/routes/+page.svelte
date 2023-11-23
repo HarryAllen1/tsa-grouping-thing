@@ -1,21 +1,22 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import {
+		SimpleTooltip,
+		StorageMetadata,
 		allUsersCollection,
 		aww,
+		clash,
 		congratulations,
 		db,
 		eventsCollection,
+		fancyConfirm,
+		md,
 		sendEmail,
+		storage,
 		user,
 		userDoc,
 		yay,
 		type EventDoc,
-		clash,
-		storage,
-		fancyConfirm,
-		SimpleTooltip,
-		StorageMetadata,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
@@ -543,166 +544,165 @@
 															<Button>Manage Submissions</Button>
 														</Dialog.Trigger>
 														<Dialog.Content>
-															<Dialog.Title>Manage Submissions</Dialog.Title>
-															<Dialog.Description>
-																{#if event.submissionDescription}
-																	<h3
-																		class="dark:text-white text-black scroll-m-20 text-2xl font-semibold tracking-tight"
-																	>
-																		{event.submissionDescription}
-																	</h3>
-																{/if}
-																<p>
-																	Feel free to submit extra work outside of the
-																	requirements, if you want.
-																</p>
-																{#key dummyVariableToRerender}
-																	<StorageList
-																		ref="submissions/{event.event}/{team.id}"
-																		let:list
-																	>
-																		<ul>
-																			{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
-																				<li
-																					class="w-full flex flex-col items-center"
-																				>
-																					{#if submission instanceof File}
-																						<UploadTask
-																							ref="submissions/{event.event}/{team.id}/{submission.name}"
-																							data={submission}
-																							let:snapshot
-																							let:progress
-																						>
-																							{#if snapshot?.state === 'success'}
-																								{filterSubmissions(submission)}
-																								{updateStorageList()}
-																							{:else}
-																								<Progress
-																									value={progress}
-																									class="w-full"
-																								/>
+															<Dialog.Header>
+																<Dialog.Title>Manage Submissions</Dialog.Title>
+															</Dialog.Header>
+															{#if event.submissionDescription}
+																<div
+																	class="prose dark:prose-invert dark:text-white"
+																>
+																	{@html md.render(
+																		`## What needs to be submitted:\n\n${event.submissionDescription}`,
+																	)}
+																</div>
+															{/if}
+															<p>
+																Feel free to submit extra work outside of the
+																requirements, if you want.
+															</p>
+															{#key dummyVariableToRerender}
+																<StorageList
+																	ref="submissions/{event.event}/{team.id}"
+																	let:list
+																>
+																	<ul>
+																		{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
+																			<li
+																				class="w-full flex flex-col items-center"
+																			>
+																				{#if submission instanceof File}
+																					<UploadTask
+																						ref="submissions/{event.event}/{team.id}/{submission.name}"
+																						data={submission}
+																						let:snapshot
+																						let:progress
+																					>
+																						{#if snapshot?.state === 'success'}
+																							{filterSubmissions(submission)}
+																							{updateStorageList()}
+																						{:else}
+																							<Progress
+																								value={progress}
+																								class="w-full"
+																							/>
 
-																								<span class="w-full">
-																									{submission.name}
-																								</span>
-																							{/if}
-																						</UploadTask>
-																					{:else}
-																						<div
-																							class="flex flex-row w-full items-center"
+																							<span class="w-full">
+																								{submission.name}
+																							</span>
+																						{/if}
+																					</UploadTask>
+																				{:else}
+																					<div
+																						class="flex flex-row w-full items-center"
+																					>
+																						<DownloadURL
+																							ref={submission}
+																							let:link
 																						>
-																							<DownloadURL
+																							<StorageMetadata
+																								let:meta
 																								ref={submission}
-																								let:link
 																							>
-																								<StorageMetadata
-																									let:meta
-																									ref={submission}
+																								<SimpleTooltip
+																									message={new Date(
+																										meta.timeCreated,
+																									).toLocaleString()}
 																								>
-																									<SimpleTooltip
-																										message={new Date(
-																											meta.timeCreated,
-																										).toLocaleString()}
+																									<a
+																										href={link}
+																										target="_blank"
 																									>
-																										<a
-																											href={link}
-																											target="_blank"
-																										>
-																											{submission.name}
-																										</a>
-																									</SimpleTooltip>
-																								</StorageMetadata>
-																							</DownloadURL>
-																							<div class="flex flex-grow" />
-																							<Button
-																								variant="ghost"
-																								size="icon"
-																								on:click={async () => {
-																									if (
-																										submission instanceof File
-																									)
-																										return;
-																									await deleteObject(
-																										submission,
-																									);
-																									aww.play();
-																									team.lastUpdatedBy =
-																										$user?.email ?? '';
-																									dummyVariableToRerender++;
-																								}}
-																							>
-																								<X />
-																							</Button>
-																						</div>
-																					{/if}
-																				</li>
-																			{:else}
-																				<p>No submissions</p>
-																			{/each}
-																		</ul>
-																		<Button
-																			class="mt-4"
-																			on:click={() =>
-																				submissionsFileUpload.click()}
-																		>
-																			Upload
-																		</Button>
-																		<input
-																			bind:this={submissionsFileUpload}
-																			on:change={(e) => {
-																				if (
-																					e.target instanceof HTMLInputElement
-																				) {
-																					if (!e.target.files?.length) return;
-																					const files = [...e.target.files];
-																					for (const file of files) {
-																						if (file.size > 250 * 1024 * 1024) {
-																							alert(
-																								`File ${file.name} is too large.`,
-																							);
-																							continue;
-																						}
-																						if (
-																							list?.items
-																								.map((f) => f.name)
-																								.includes(file.name)
-																						) {
-																							alert(
-																								`File ${file.name} already exists. If you want to upload this file, change the name.`,
-																							);
-																							continue;
-																						}
-
-																						$filesToUpload.push(file);
-																						$filesToUpload = $filesToUpload;
+																										{submission.name}
+																									</a>
+																								</SimpleTooltip>
+																							</StorageMetadata>
+																						</DownloadURL>
+																						<div class="flex flex-grow" />
+																						<Button
+																							variant="ghost"
+																							size="icon"
+																							on:click={async () => {
+																								if (submission instanceof File)
+																									return;
+																								await deleteObject(submission);
+																								aww.play();
+																								team.lastUpdatedBy =
+																									$user?.email ?? '';
+																								dummyVariableToRerender++;
+																							}}
+																						>
+																							<X />
+																						</Button>
+																					</div>
+																				{/if}
+																			</li>
+																		{:else}
+																			<p>No submissions</p>
+																		{/each}
+																	</ul>
+																	<Button
+																		class="mt-4"
+																		on:click={() =>
+																			submissionsFileUpload.click()}
+																	>
+																		Upload
+																	</Button>
+																	<input
+																		bind:this={submissionsFileUpload}
+																		on:change={(e) => {
+																			if (
+																				e.target instanceof HTMLInputElement
+																			) {
+																				if (!e.target.files?.length) return;
+																				const files = [...e.target.files];
+																				for (const file of files) {
+																					if (file.size > 250 * 1024 * 1024) {
+																						alert(
+																							`File ${file.name} is too large.`,
+																						);
+																						continue;
 																					}
-																					yay.play();
-																					confetti();
-																				}
-																			}}
-																			class="hidden"
-																			type="file"
-																			multiple
-																			accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.txt,.ppt,.pptx"
-																		/>
-																	</StorageList>
-																{/key}
+																					if (
+																						list?.items
+																							.map((f) => f.name)
+																							.includes(file.name)
+																					) {
+																						alert(
+																							`File ${file.name} already exists. If you want to upload this file, change the name.`,
+																						);
+																						continue;
+																					}
 
-																<p>
-																	Allowed file types: all image files, all audio
-																	files, all video files, pdfs, plain text
-																	files, PowerPoints (.ppt, .pptx), and Word
-																	docs (.doc, .docx).
-																</p>
-																<p>250MB max file size.</p>
-																<p>
-																	If you need to submit a file type not listed,
-																	please contact Harry (<a
-																		href="mailto:s-hallen@lwsd.org"
-																		>s-hallen@lwsd.org</a
-																	>).
-																</p>
-															</Dialog.Description>
+																					$filesToUpload.push(file);
+																					$filesToUpload = $filesToUpload;
+																				}
+																				yay.play();
+																				confetti();
+																			}
+																		}}
+																		class="hidden"
+																		type="file"
+																		multiple
+																		accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.txt,.ppt,.pptx"
+																	/>
+																</StorageList>
+															{/key}
+
+															<p>
+																Allowed file types: all image files, all audio
+																files, all video files, pdfs, plain text files,
+																PowerPoints (.ppt, .pptx), and Word docs (.doc,
+																.docx).
+															</p>
+															<p>250MB max file size.</p>
+															<p>
+																If you need to submit a file type not listed, or
+																need to upload a file larger than 250MB, please
+																contact Harry (<a
+																	href="mailto:s-hallen@lwsd.org"
+																	>s-hallen@lwsd.org</a
+																>).
+															</p>
 														</Dialog.Content>
 													</Dialog.Root>
 												</div>

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { eventsCollection, StorageMetadata } from '$lib';
+	import { eventsCollection, md, StorageMetadata } from '$lib';
 	import * as Card from '$lib/components/ui/card';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import Label from '$lib/components/ui/label/label.svelte';
+	import Switch from '$lib/components/ui/switch/switch.svelte';
 	import { ArrowUpRight } from 'lucide-svelte';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import RotatingImage from './RotatingImage.svelte';
-	import Label from '../../../../lib/components/ui/label/label.svelte';
-	import Switch from '../../../../lib/components/ui/switch/switch.svelte';
 
 	const viewableImageTypes = [
 		'image/png',
@@ -27,7 +27,7 @@
 
 	<Label class="flex items-center space-x-2 my-2">
 		<Switch bind:checked={hideEmpty} />
-		<span>Hide empty submissions</span>
+		<span>Hide teams without submissions</span>
 	</Label>
 
 	{#each $eventsCollection as event}
@@ -37,6 +37,17 @@
 			>
 				{event.event}
 			</h2>
+			{#if event.submissionDescription}
+				<div>
+					<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+						Submission Requirements
+					</h3>
+
+					<div class="prose dark:prose-invert dark:text-white">
+						{@html md.render(event.submissionDescription)}
+					</div>
+				</div>
+			{/if}
 			<div
 				class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
 			>

@@ -2,18 +2,19 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import {
+		SimpleTooltip,
+		StorageMetadata,
 		auth,
 		aww,
 		db,
 		fancyConfirm,
+		md,
 		sendEmail,
 		settings,
 		storage,
 		yay,
 		type EventDoc,
 		type UserDoc,
-		StorageMetadata,
-		SimpleTooltip,
 	} from '$lib';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -366,8 +367,8 @@
 								<p class="dark:text-white text-black">
 									Submission description:
 								</p>
-								<p class="dark:text-white text-black">
-									{event.submissionDescription ?? '(none)'}
+								<p class="prose dark:prose-invert">
+									{@html md.render(event.submissionDescription ?? '(none)')}
 								</p>
 								<Dialog.Root>
 									<Dialog.Trigger>
@@ -375,6 +376,7 @@
 									</Dialog.Trigger>
 									<Dialog.Content>
 										<Dialog.Title>Edit submission description</Dialog.Title>
+										<p>Markdown is allowed</p>
 										<Textarea
 											placeholder="Submission description"
 											class="w-full"
@@ -856,11 +858,13 @@
 														<Dialog.Title>Manage Submissions</Dialog.Title>
 														<Dialog.Description>
 															{#if event.submissionDescription}
-																<h3
-																	class="dark:text-white text-black scroll-m-20 text-2xl font-semibold tracking-tight"
+																<div
+																	class="prose dark:prose-invert dark:text-white"
 																>
-																	{event.submissionDescription}
-																</h3>
+																	{@html md.render(
+																		`## What needs to be submitted:\n\n${event.submissionDescription}`,
+																	)}
+																</div>
 															{/if}
 															<ul>
 																{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
