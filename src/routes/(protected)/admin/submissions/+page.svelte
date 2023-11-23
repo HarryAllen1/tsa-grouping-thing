@@ -2,8 +2,8 @@
 	import { eventsCollection, md, StorageMetadata } from '$lib';
 	import * as Card from '$lib/components/ui/card';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import Label from '$lib/components/ui/label/label.svelte';
-	import Switch from '$lib/components/ui/switch/switch.svelte';
+	import { Label } from '$lib/components/ui/label';
+	import { Switch } from '$lib/components/ui/switch';
 	import { ArrowUpRight } from 'lucide-svelte';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import RotatingImage from './RotatingImage.svelte';
