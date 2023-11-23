@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import {
 		auth,
@@ -40,6 +41,7 @@
 		UserPlus,
 		X,
 	} from 'lucide-svelte';
+	import { onMount } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { writable } from 'svelte/store';
 	import {
@@ -136,6 +138,15 @@
 	};
 
 	const submissionDescriptionElementMap: Record<string, Textarea> = {};
+
+	onMount(() => {
+		if (
+			confirm(
+				'you should use the new submissions page. its really cool. do you want to go there?',
+			)
+		)
+			goto('/admin/submissions');
+	});
 </script>
 
 <svelte:window

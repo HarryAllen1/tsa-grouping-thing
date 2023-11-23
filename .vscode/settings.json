@@ -1,3 +1,7 @@
 {
-	"prettier.prettierPath": "node_modules/prettier"
+	"prettier.prettierPath": "node_modules/prettier",
+	"typescript.preferences.autoImportFileExcludePatterns": [
+		"/src/lib/**/*",
+		"/src/lib/components"
+	]
 }

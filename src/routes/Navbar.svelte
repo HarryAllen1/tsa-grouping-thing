@@ -43,6 +43,10 @@
 						href: '/admin',
 					},
 					{
+						title: 'Admin Submissions',
+						href: '/admin/submissions',
+					},
+					{
 						title: 'Admin Events',
 						href: '/admin/events',
 					},
