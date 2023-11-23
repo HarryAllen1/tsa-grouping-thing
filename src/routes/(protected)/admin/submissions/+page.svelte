@@ -8,15 +8,6 @@
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import RotatingImage from './RotatingImage.svelte';
 
-	const viewableImageTypes = [
-		'image/png',
-		'image/jpeg',
-		'image/gif',
-		'image/svg+xml',
-		'image/webp',
-		'image/bmp',
-		'image/avif',
-	];
 	let hideEmpty = false;
 </script>
 
@@ -76,7 +67,7 @@
 													<li class="w-full flex flex-row">
 														<DownloadURL ref={item.fullPath} let:link>
 															<StorageMetadata ref={item.fullPath} let:meta>
-																{#if viewableImageTypes.includes(meta.contentType ?? '')}
+																{#if meta.contentType?.startsWith('image/')}
 																	<Dialog.Root>
 																		<Dialog.Trigger>
 																			{item.name}
@@ -88,6 +79,23 @@
 																				alt={item.name}
 																				class="max-w-full max-h-full"
 																			/>
+																		</Dialog.Content>
+																	</Dialog.Root>
+																{:else if meta.contentType?.startsWith('video/')}
+																	<Dialog.Root>
+																		<Dialog.Trigger>
+																			{item.name}
+																		</Dialog.Trigger>
+																		<Dialog.Content
+																			class="max-w-full max-h-full p-4 grid place-items-center"
+																		>
+																			<!-- svelte-ignore a11y-media-has-caption -->
+																			<video
+																				controls
+																				class="max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)]"
+																			>
+																				<source src={link} />
+																			</video>
 																		</Dialog.Content>
 																	</Dialog.Root>
 																{:else}
