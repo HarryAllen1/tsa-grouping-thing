@@ -142,13 +142,13 @@
 																			{item.name}
 																		</Dialog.Trigger>
 																		<Dialog.Content
-																			class="max-w-full max-h-full p-4 grid place-items-center"
+																			class="max-w-full max-h-full p-6 grid place-items-center"
 																		>
 																			<iframe
 																				src="https://docs.google.com/viewer?url={encodeURIComponent(
 																					link ?? '',
 																				)}&embedded=true"
-																				class="h-[calc(100vh-2rem)] w-[calc(100vw-2rem)]"
+																				class="h-[calc(100vh-2rem)] w-[calc(100vw-6rem)]"
 																				frameborder="0"
 																				title="A powerpoint presentation"
 																			/>
