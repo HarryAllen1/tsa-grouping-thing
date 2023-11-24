@@ -11,6 +11,9 @@
 	import AddResultDialog from '../results/AddResultDialog.svelte';
 
 	let hideEmpty = false;
+
+	const nth = (n: number) =>
+		n + ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
 </script>
 
 <div class="container pt-8">
@@ -60,6 +63,26 @@
 											)
 											.join(', ')}
 									</Card.Title>
+									{@const resultMemberSet = new Set(
+										event.results
+											?.flatMap((r) => r.members)
+											.map((m) => m.email),
+									)}
+									{@const teamResult = team.members
+										.map((m) => m.email)
+										.filter((m) => resultMemberSet.has(m))}
+									{#if event.results && teamResult.length}
+										<Card.Description>
+											{nth(
+												event.results.findIndex(
+													(r) =>
+														r.members.map((m) => m.email).join() ===
+														teamResult.join(),
+												) + 1,
+											)}
+											place
+										</Card.Description>
+									{/if}
 								</Card.Header>
 								<Card.Content>
 									{#if ref}
