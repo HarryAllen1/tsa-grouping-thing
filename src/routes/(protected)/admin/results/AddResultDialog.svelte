@@ -19,6 +19,7 @@
 	export let editing = false;
 	export let id = crypto.randomUUID();
 	export let onOpenChange: ((open: boolean) => void) | undefined = undefined;
+	export let members: BasicUser[] | undefined = undefined;
 
 	let open = false;
 
@@ -29,7 +30,7 @@
 		: (event?.results?.length ?? 0) + 1;
 
 	let newMembers: BasicUser[];
-	$: newMembers = editing ? existingResults?.members ?? [] : [];
+	$: newMembers = members ?? (editing ? existingResults?.members ?? [] : []);
 	let fileInput: HTMLInputElement;
 	const filesToUpload = writable<File[]>([]);
 
@@ -83,9 +84,15 @@
 >
 	<Dialog.Trigger>
 		{#if editing}
-			<Button variant="ghost" size="icon" class="h-6">
-				<Pencil />
-			</Button>
+			{#if $$slots.edit}
+				<slot name="edit" />
+			{:else}
+				<Button variant="ghost" size="icon" class="h-6">
+					<Pencil />
+				</Button>
+			{/if}
+		{:else if $$slots.add}
+			<slot name="add" />
 		{:else}
 			<Button id={id.replaceAll('-', '').replace(/[0-9]/, '')}>Add</Button>
 		{/if}
@@ -275,7 +282,6 @@
 			{:else}
 				<Button
 					on:click={async () => {
-						// push new result into existing results at the correct index
 						event.results = [
 							...(event.results?.slice(0, newPlace - 1) ?? []),
 							{

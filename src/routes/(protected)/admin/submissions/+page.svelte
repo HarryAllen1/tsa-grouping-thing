@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { eventsCollection, md, StorageMetadata } from '$lib';
+	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
@@ -7,6 +8,7 @@
 	import { ArrowUpRight } from 'lucide-svelte';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import RotatingImage from './RotatingImage.svelte';
+	import AddResultDialog from '../results/AddResultDialog.svelte';
 
 	let hideEmpty = false;
 </script>
@@ -156,6 +158,32 @@
 										<p>uh oh an oopsey occurred</p>
 									{/if}
 								</Card.Content>
+								<Card.Footer>
+									{#key [event.results, team.members]}
+										{#if true}
+											{@const resultMemberSet = new Set(
+												event.results
+													?.flatMap((r) => r.members)
+													.map((m) => m.email),
+											)}
+											{#if event.results && team.members
+													.map((m) => m.email)
+													.filter((m) => resultMemberSet.has(m)).length}
+												<AddResultDialog {event} editing id={team.id}>
+													<Button slot="edit">Edit result</Button>
+												</AddResultDialog>
+											{:else}
+												<AddResultDialog
+													members={team.members}
+													id={team.id}
+													{event}
+												>
+													<Button slot="add">Add result</Button>
+												</AddResultDialog>
+											{/if}
+										{/if}
+									{/key}
+								</Card.Footer>
 							</Card.Root>
 						{/if}
 					</StorageList>
