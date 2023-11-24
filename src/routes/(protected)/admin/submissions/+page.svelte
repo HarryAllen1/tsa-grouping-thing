@@ -136,7 +136,7 @@
 																			</audio>
 																		</Dialog.Content>
 																	</Dialog.Root>
-																{:else if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'].includes(meta.contentType ?? '')}
+																{:else if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/pdf'].includes(meta.contentType ?? '')}
 																	<Dialog.Root>
 																		<Dialog.Trigger>
 																			{item.name}
