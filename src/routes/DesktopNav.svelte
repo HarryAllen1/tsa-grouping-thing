@@ -31,7 +31,7 @@
 						<ChevronUp
 							class="{open
 								? 'rotate-180'
-								: ''} transition-transform duration-150 ease-in-out h-6 w-6 ml-2"
+								: ''} transition-transform duration-150 ease-in-out h-5 w-5 ml-2"
 						/>
 					</Dropdown.Trigger>
 					<Dropdown.Content>
