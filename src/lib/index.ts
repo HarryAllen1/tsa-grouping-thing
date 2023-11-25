@@ -1,9 +1,8 @@
-export * from './Download.svelte';
-export { default as Download } from './Download.svelte';
 export * from './FancyConfirm.svelte';
 export { default as FancyConfirm } from './FancyConfirm.svelte';
 export { default as SimpleTooltip } from './SimpleTooltip.svelte';
 export { default as StorageMetadata } from './StorageMetadata.svelte';
+export * from './download';
 export * from './firebase';
 export * from './md';
 export * from './sfx';

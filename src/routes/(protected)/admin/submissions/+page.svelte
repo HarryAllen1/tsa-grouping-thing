@@ -157,7 +157,7 @@
 																					class="fixed bottom-4 right-4 lg:bottom-8 lg:right-8"
 																					size="icon"
 																					on:click={() => {
-																						downloadURL(link ?? '');
+																						downloadURL(link ?? '', item.name);
 																					}}
 																				>
 																					<Download />

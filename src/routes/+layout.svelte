@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
-	import { Download, FancyConfirm, auth, db, storage } from '$lib';
+	import { FancyConfirm, auth, db, storage } from '$lib';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { sleep } from '$lib/utils';
@@ -9,7 +10,6 @@
 	import { FirebaseApp, userStore } from 'sveltefire';
 	import '../app.css';
 	import Navbar from './Navbar.svelte';
-	import { dev } from '$app/environment';
 
 	const user = userStore(auth);
 
@@ -113,4 +113,3 @@
 </AlertDialog.Root>
 
 <FancyConfirm />
-<Download />
