@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { eventsCollection, md, StorageMetadata } from '$lib';
+	import { downloadURL, eventsCollection, md, StorageMetadata } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
-	import { ArrowUpRight } from 'lucide-svelte';
+	import { ArrowUpRight, Download } from 'lucide-svelte';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import RotatingImage from './RotatingImage.svelte';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
@@ -152,6 +152,17 @@
 																				frameborder="0"
 																				title="A powerpoint presentation"
 																			/>
+																			<Dialog.Footer>
+																				<Button
+																					class="fixed bottom-4 right-4 lg:bottom-8 lg:right-8"
+																					size="icon"
+																					on:click={() => {
+																						downloadURL(link ?? '');
+																					}}
+																				>
+																					<Download />
+																				</Button>
+																			</Dialog.Footer>
 																		</Dialog.Content>
 																	</Dialog.Root>
 																{:else}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { FancyConfirm, auth, db, storage } from '$lib';
+	import { Download, FancyConfirm, auth, db, storage } from '$lib';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { sleep } from '$lib/utils';
@@ -9,6 +9,7 @@
 	import { FirebaseApp, userStore } from 'sveltefire';
 	import '../app.css';
 	import Navbar from './Navbar.svelte';
+	import { dev } from '$app/environment';
 
 	const user = userStore(auth);
 
@@ -72,6 +73,24 @@
 	});
 </script>
 
+<svelte:head>
+	{#if !dev}
+		<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=G-V9TSZ35FNE"
+		></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+
+			gtag('config', 'G-V9TSZ35FNE');
+		</script>
+	{/if}
+</svelte:head>
+
 <div bind:this={mainEl} class="max-w-full flex flex-col items-center">
 	<FirebaseApp {auth} firestore={db} {storage}>
 		{#if $user}
@@ -94,3 +113,4 @@
 </AlertDialog.Root>
 
 <FancyConfirm />
+<Download />
