@@ -131,7 +131,6 @@
 					builders={[builder]}
 					variant="outline"
 					role="combobox"
-					aria-expanded={comboboxOpen}
 					class="w-[200px] justify-between"
 				>
 					{comboboxSelectedValue}
