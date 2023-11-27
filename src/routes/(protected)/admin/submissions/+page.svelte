@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { downloadURL, eventsCollection, md, StorageMetadata } from '$lib';
+	import { db, downloadURL, eventsCollection, md, StorageMetadata } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -9,8 +9,13 @@
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import RotatingImage from './RotatingImage.svelte';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
+	import { Textarea } from '$lib/components/ui/textarea';
+	import { doc, setDoc } from 'firebase/firestore';
 
 	let hideEmpty = false;
+
+	let editing = '';
+	const descriptions: Record<string, string> = {};
 
 	const nth = (n: number) =>
 		n + ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
@@ -39,10 +44,50 @@
 						Submission Requirements
 					</h3>
 
-					<div class="prose dark:prose-invert dark:text-white">
-						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-						{@html md.render(event.submissionDescription)}
-					</div>
+					{#if editing === event.event}
+						<Textarea
+							value={event.submissionDescription}
+							placeholder="Submit the following..."
+							style="height: {event.submissionDescription.split('\n').length *
+								1.5 +
+								1}rem;"
+							on:input={(e) => {
+								if (e.target instanceof HTMLTextAreaElement) {
+									e.target.style.height = '';
+									e.target.style.height = `${e.target.scrollHeight + 3}px`;
+									descriptions[event.event] = e.target.value;
+								}
+							}}
+						/>
+						<Button
+							class="my-4"
+							on:click={async () => {
+								await setDoc(
+									doc(db, 'events', event.event),
+									{
+										submissionDescription: descriptions[event.event],
+									},
+									{ merge: true },
+								);
+								editing = '';
+							}}
+						>
+							Save
+						</Button>
+					{:else}
+						<div class="prose dark:prose-invert dark:text-white">
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+							{@html md.render(event.submissionDescription)}
+						</div>
+						<Button
+							class="mb-4"
+							on:click={() => {
+								editing = event.event;
+							}}
+						>
+							Edit
+						</Button>
+					{/if}
 				</div>
 			{/if}
 			<div
