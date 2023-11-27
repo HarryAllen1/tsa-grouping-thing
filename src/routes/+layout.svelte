@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
-	import { FancyConfirm, auth, db, storage } from '$lib';
+	import { FancyConfirm, ProgressBar, auth, db, storage } from '$lib';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
@@ -55,6 +55,7 @@
 	{/if}
 </svelte:head>
 
+<ProgressBar class="text-blue-500" />
 <div class="max-w-full flex flex-col items-center">
 	<FirebaseApp {auth} firestore={db} {storage}>
 		{#if $user}
