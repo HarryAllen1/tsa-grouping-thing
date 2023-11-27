@@ -2,9 +2,7 @@
 	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
 	import { FancyConfirm, auth, db, storage } from '$lib';
-	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
-	import { sleep } from '$lib/utils';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
 	import { FirebaseApp, userStore } from 'sveltefire';
@@ -12,12 +10,6 @@
 	import Navbar from './Navbar.svelte';
 
 	const user = userStore(auth);
-
-	let mainEl: HTMLDivElement;
-	let captcha: HTMLDivElement;
-
-	let dialogOpen = false;
-	let clicksUntilCaptcha = 3;
 
 	$: if (
 		!$user &&
@@ -42,35 +34,7 @@
 		}
 	});
 
-	onMount(() => {
-		if (
-			$user?.email === 's-asli@lwsd.org' ||
-			$user?.email === 's-sliyanage@lwsd.org'
-		) {
-			const listener = async () => {
-				if (clicksUntilCaptcha > 0) {
-					clicksUntilCaptcha--;
-					return;
-				}
-				dialogOpen = true;
-				await sleep(100);
-				hcaptcha.render(captcha, {
-					sitekey: 'e367d4e1-b6c8-4037-a17c-4b5f5d25141a',
-					theme: document.documentElement.classList.contains('dark')
-						? 'dark'
-						: 'light',
-					callback: () => {
-						dialogOpen = false;
-						clicksUntilCaptcha = 3;
-					},
-				});
-			};
-			mainEl.addEventListener('click', listener);
-			mainEl.addEventListener('touchstart', listener);
-		}
-
-		return unsub;
-	});
+	onMount(() => unsub);
 </script>
 
 <svelte:head>
@@ -91,7 +55,7 @@
 	{/if}
 </svelte:head>
 
-<div bind:this={mainEl} class="max-w-full flex flex-col items-center">
+<div class="max-w-full flex flex-col items-center">
 	<FirebaseApp {auth} firestore={db} {storage}>
 		{#if $user}
 			<Navbar />
@@ -101,15 +65,5 @@
 		<slot />
 	</FirebaseApp>
 </div>
-
-<AlertDialog.Root bind:open={dialogOpen}>
-	<AlertDialog.Content>
-		<AlertDialog.Title>Captcha</AlertDialog.Title>
-		<AlertDialog.Description>
-			Please complete the captcha to continue.
-			<div bind:this={captcha} />
-		</AlertDialog.Description>
-	</AlertDialog.Content>
-</AlertDialog.Root>
 
 <FancyConfirm />

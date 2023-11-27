@@ -55,9 +55,6 @@ importers:
         specifier: ^0.1.18
         version: 0.1.18(tailwindcss@3.3.5)
     devDependencies:
-      '@hcaptcha/types':
-        specifier: ^1.0.3
-        version: 1.0.3
       '@sveltejs/adapter-vercel':
         specifier: ^3.1.0
         version: 3.1.0(@sveltejs/kit@1.27.6)
@@ -1606,10 +1603,6 @@ packages:
       long: 5.2.3
       protobufjs: 7.2.5
       yargs: 17.7.2
-
-  /@hcaptcha/types@1.0.3:
-    resolution: {integrity: sha512-1mbU6eSGawRrqeahRrOzZo/SVLI6oZ5/azuBpSyVrRRR96CnS3fOVDWfzxpngfxKD0/I9Rwu6c/3ITqD8rXeTQ==}
-    dev: true
 
   /@humanwhocodes/config-array@0.11.13:
     resolution: {integrity: sha512-JSBDMiDKSzQVngfRjOdFXgFfklaXI4K9nLF49Auh21lmBWRLIK3+xTErTWD4KU54pb6coM6ESE7Awz/FNU3zgQ==}

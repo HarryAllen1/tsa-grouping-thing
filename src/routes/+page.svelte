@@ -551,6 +551,7 @@
 																<div
 																	class="prose dark:prose-invert dark:text-white"
 																>
+																	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 																	{@html md.render(
 																		`## What needs to be submitted:\n\n${event.submissionDescription}`,
 																	)}
@@ -937,6 +938,7 @@
 					{/if}
 				</Card.Root>
 			{:else}
+				<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
 				{#each { length: 9 } as _}
 					<Skeleton class="h-[32rem] w-full" />
 				{/each}

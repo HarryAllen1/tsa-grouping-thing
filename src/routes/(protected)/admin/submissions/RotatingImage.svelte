@@ -5,6 +5,8 @@
 	import type { HTMLImgAttributes } from 'svelte/elements';
 
 	export let clickableImage = false;
+	let className: $$Props['class'] = undefined;
+	export { className as class };
 
 	type $$Props = HTMLImgAttributes & {
 		clickableImage?: boolean;
@@ -16,7 +18,7 @@
 		rotation % 4 === 2 && 'rotate-180',
 		rotation % 4 === 3 && '-rotate-90',
 		'transition-transform',
-		$$restProps.class,
+		className,
 	);
 </script>
 

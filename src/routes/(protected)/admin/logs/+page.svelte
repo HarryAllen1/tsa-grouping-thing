@@ -11,6 +11,7 @@
 		langs: ['json'],
 	});
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const removeRef = (obj: Record<string, any>) => {
 		const newObj = { ...obj };
 		delete newObj.ref;
@@ -69,7 +70,7 @@
 										<Dialog.Title>
 											{log.collection}/{log.id}
 										</Dialog.Title>
-										<!-- DO NOT MANUALLY FORMAT -->
+										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 										{@html hl.codeToHtml(
 											JSON.stringify(removeRef(log), null, 2),
 											{
