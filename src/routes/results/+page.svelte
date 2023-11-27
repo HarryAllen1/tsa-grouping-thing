@@ -63,14 +63,6 @@
 																	.slice(-4)
 																	.toLowerCase())}
 																<img src={link} alt="Rubric" />
-															{:else if url.pathname
-																.slice(-4)
-																.toLowerCase() === '.pdf'}
-																<iframe
-																	src={link}
-																	title="Rubric"
-																	class="w-full h-96"
-																/>
 															{:else}
 																<a
 																	href={link}

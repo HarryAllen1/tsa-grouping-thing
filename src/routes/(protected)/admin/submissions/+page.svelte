@@ -151,7 +151,11 @@
 																				class="h-[calc(100vh-2rem)] w-[calc(100vw-6rem)]"
 																				frameborder="0"
 																				title="A powerpoint presentation"
-																			/>
+																			>
+																				This document cannot be viewed. Try
+																				downloading it using the button in the
+																				bottom right.
+																			</iframe>
 																			<Dialog.Footer>
 																				<Button
 																					class="fixed bottom-4 right-4 lg:bottom-8 lg:right-8"
