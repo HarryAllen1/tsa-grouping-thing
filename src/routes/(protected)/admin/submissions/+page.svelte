@@ -40,6 +40,7 @@
 					</h3>
 
 					<div class="prose dark:prose-invert dark:text-white">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						{@html md.render(event.submissionDescription)}
 					</div>
 				</div>

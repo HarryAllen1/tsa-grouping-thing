@@ -23,11 +23,12 @@
 
 	let open = false;
 
-	const existingResults = event.results?.find((r) => r.id === id)!;
+	const existingResults = event.results?.find((r) => r.id === id);
 	let note = editing ? existingResults?.note ?? '' : '';
-	let newPlace = editing
-		? (event.results?.indexOf(existingResults) ?? 0) + 1
-		: (event?.results?.length ?? 0) + 1;
+	let newPlace =
+		editing && existingResults
+			? (event.results?.indexOf(existingResults) ?? 0) + 1
+			: (event?.results?.length ?? 0) + 1;
 
 	let newMembers: BasicUser[];
 	$: newMembers = members ?? (editing ? existingResults?.members ?? [] : []);

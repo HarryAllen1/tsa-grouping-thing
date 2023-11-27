@@ -5,8 +5,10 @@ import { getAuth } from 'firebase/auth';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { getPerformance } from 'firebase/performance';
 import { getStorage } from 'firebase/storage';
-import { docStore } from 'sveltefire';
-import type { MailDoc } from './types';
+import {
+	ReCaptchaEnterpriseProvider,
+	initializeAppCheck,
+} from 'firebase/app-check';
 
 const firebaseConfig = {
 	apiKey: PUBLIC_FIREBASE_API_KEY || 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
@@ -22,17 +24,24 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-export const perf = !dev && getPerformance(app);
+
+!dev && getPerformance(app);
+initializeAppCheck(app, {
+	provider: new ReCaptchaEnterpriseProvider(
+		'6LfGYx0pAAAAAAuvtvrjheXi6ACyJ2w1vlpIHrbj',
+	),
+	isTokenAutoRefreshEnabled: true,
+});
 
 export const sendEmail = async (
 	to: string | string[],
 	subject: string,
 	body: string,
 ) =>
-		setDoc(doc(db, `mail/${Date.now()}`), {
-			to: Array.isArray(to) ? to : [to],
-			message: {
-				subject,
-				html: body,
-			},
-		})
+	setDoc(doc(db, `mail/${Date.now()}`), {
+		to: Array.isArray(to) ? to : [to],
+		message: {
+			subject,
+			html: body,
+		},
+	});
