@@ -449,7 +449,7 @@
 																<p>People who signed up for this event:</p>
 																<ul>
 																	{#each $allUsersCollection
-																		.filter((m) => m.events.includes(event.event ?? '') && !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
+																		.filter((m) => m.events.includes(event.event ?? '') && !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ) && !event.teams.find( (t) => t.requests?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
 																		.sort( (a, b) => a.name.localeCompare(b.name), ) as person (person.email)}
 																		<li
 																			class="flex flex-row items-center"
@@ -747,8 +747,10 @@
 														"A email has also been sent to the members of this team notifying them of your request. This email has a habit of going straight to people's junk folder, so you might have to notify them of this request manually.",
 														[['OK', true]],
 													);
-												}}>Request to join</Button
+												}}
 											>
+												Request to join
+											</Button>
 										{/if}
 									{/if}
 								</Card.Title>
@@ -900,7 +902,9 @@
 							</Card.Root>
 						{/each}
 					</Card.Content>
-					{#if !event.locked && !event.teamCreationLocked}
+					{#if !event.locked && !event.teamCreationLocked && !event.teams.filter( (t) => t.requests
+									?.map((r) => r.email)
+									.includes($user?.email ?? ''), ).length}
 						<Card.Footer>
 							<Button
 								disabled={!!(
