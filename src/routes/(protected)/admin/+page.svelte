@@ -139,15 +139,6 @@
 	};
 
 	const submissionDescriptionElementMap: Record<string, Textarea> = {};
-
-	onMount(() => {
-		if (
-			confirm(
-				'you should use the new submissions page. its really cool. do you want to go there?',
-			)
-		)
-			goto('/admin/submissions');
-	});
 </script>
 
 <svelte:window
