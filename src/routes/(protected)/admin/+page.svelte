@@ -614,208 +614,127 @@
 									  ? 'bg-green-300 dark:bg-green-950'
 									  : 'bg-blue-100 dark:bg-slate-900'} bg-opacity-20"
 							>
-								<Card.Header>
-									<Card.Title>
-										Team #{team.id}
-									</Card.Title>
-									<div class="flex flex-col gap-2">
-										<div class="flex flex-row gap-1">
-											<Button
-												variant="destructive"
-												size="icon"
-												on:click={async () => {
-													if (
-														!(await fancyConfirm(
-															'Are you sure',
-															'Are you sure you want to delete this team? This action is irreversible.',
-														))
-													)
-														return;
-													event.teams = event.teams.filter((t) => t !== team);
-													await setDoc(
-														doc(db, 'events', event.event ?? ''),
-														{
-															teams: event.teams,
-														},
-														{
-															merge: true,
-														},
-													);
-													for (const submission of event.onlineSubmissions
-														? await listAll(
-																ref(
-																	storage,
-																	`submissions/${event.event}/${team.id}`,
-																),
-														  ).then((r) => r.items)
-														: []) {
-														await deleteObject(submission);
-													}
-													aww.play();
-												}}
-											>
-												<Trash2 />
-											</Button>
-											<Dialog.Root>
-												<Dialog.Trigger>
-													<Button
-														size="icon"
-														class="bg-green-500 hover:bg-green-400"
-													>
-														<UserPlus />
-													</Button>
-												</Dialog.Trigger>
-												<Dialog.Content class="max-h-full overflow-y-scroll">
-													<Dialog.Title>Add People</Dialog.Title>
-													<Dialog.Description>
-														<p>All people not already in a team:</p>
-														<ul>
-															{#each $usersDoc
-																.filter((p) => !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
-																.sort( (a, b) => a?.name?.localeCompare(b?.name), ) as person (person.email)}
-																<li
-																	class:text-green-500={$usersDoc
-																		.filter((m) =>
-																			m.events.includes(event.event ?? ''),
-																		)
-																		.find(
-																			(e) => e.email === (person?.email ?? ''),
-																		)}
-																	class="flex flex-row items-center"
-																	animate:flip={{
-																		duration: 200,
-																	}}
-																>
-																	{person.name}
-																	<Button
-																		on:click={async () => {
-																			team.members.push({
-																				name: person.name,
-																				email: person.email,
-																			});
-																			team.lastUpdatedBy = $user?.email ?? '';
-																			team.lastUpdatedTime = new Timestamp(
-																				Date.now() / 1000,
-																				0,
-																			);
-
-																			await setDoc(
-																				doc(db, 'events', event.event ?? ''),
-																				{
-																					teams: event.teams,
-																				},
-																				{
-																					merge: true,
-																				},
-																			);
-																			confetti();
-																			yay.play();
-																			navigator.vibrate(100);
-																		}}
-																		variant="outline"
-																		size="icon"
-																		class="ml-2"
-																	>
-																		<Plus />
-																	</Button>
-																</li>
-															{:else}
-																<li>
-																	No one else singed up for this event. Teams
-																	should probably be merged.
-																</li>
-															{/each}
-														</ul>
-													</Dialog.Description>
-												</Dialog.Content>
-											</Dialog.Root>
-
-											<Dialog.Root>
-												<Dialog.Trigger>
-													<Button>Team Captain</Button>
-												</Dialog.Trigger>
-												<Dialog.Content>
-													<Dialog.Title>Manage team captain</Dialog.Title>
-													<Button
-														on:click={async () => {
-															team.teamCaptain = '';
-															team.lastUpdatedBy = $user?.email ?? '';
-															team.lastUpdatedTime = new Timestamp(
-																Date.now() / 1000,
-																0,
-															);
-															await setDoc(
-																doc(db, 'events', event.event ?? ''),
-																{
-																	teams: event.teams,
-																},
-																{
-																	merge: true,
-																},
-															);
-														}}
-													>
-														Clear
-													</Button>
+								<Card.Title class="m-2 ml-4 flex flex-col gap-2">
+									<div class="flex flex-row gap-1">
+										<Button
+											variant="destructive"
+											size="icon"
+											on:click={async () => {
+												if (
+													!(await fancyConfirm(
+														'Are you sure',
+														'Are you sure you want to delete this team? This action is irreversible.',
+													))
+												)
+													return;
+												event.teams = event.teams.filter((t) => t !== team);
+												await setDoc(
+													doc(db, 'events', event.event ?? ''),
+													{
+														teams: event.teams,
+													},
+													{
+														merge: true,
+													},
+												);
+												for (const submission of event.onlineSubmissions
+													? await listAll(
+															ref(
+																storage,
+																`submissions/${event.event}/${team.id}`,
+															),
+													  ).then((r) => r.items)
+													: []) {
+													await deleteObject(submission);
+												}
+												aww.play();
+											}}
+										>
+											<Trash2 />
+										</Button>
+										<Dialog.Root>
+											<Dialog.Trigger>
+												<Button
+													size="icon"
+													class="bg-green-500 hover:bg-green-400"
+												>
+													<UserPlus />
+												</Button>
+											</Dialog.Trigger>
+											<Dialog.Content class="max-h-full overflow-y-scroll">
+												<Dialog.Title>Add People</Dialog.Title>
+												<Dialog.Description>
+													<p>All people not already in a team:</p>
 													<ul>
-														{#each team.members as teamMember}
-															<!-- svelte-ignore a11y-click-events-have-key-events -->
-															<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+														{#each $usersDoc
+															.filter((p) => !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
+															.sort( (a, b) => a?.name?.localeCompare(b?.name), ) as person (person.email)}
 															<li
-																class="cursor-pointer"
-																on:click={async () => {
-																	team.teamCaptain = teamMember?.email ?? '';
-																	team.lastUpdatedBy = $user?.email ?? '';
-																	team.lastUpdatedTime = new Timestamp(
-																		Date.now() / 1000,
-																		0,
-																	);
-																	await setDoc(
-																		doc(db, 'events', event.event ?? ''),
-																		{
-																			teams: event.teams,
-																		},
-																		{
-																			merge: true,
-																		},
-																	);
+																class:text-green-500={$usersDoc
+																	.filter((m) =>
+																		m.events.includes(event.event ?? ''),
+																	)
+																	.find(
+																		(e) => e.email === (person?.email ?? ''),
+																	)}
+																class="flex flex-row items-center"
+																animate:flip={{
+																	duration: 200,
 																}}
 															>
-																{teamMember.name}
-																{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
-																	<Tooltip.Root>
-																		<Tooltip.Trigger>
-																			<Crown class="h-4 w-4" />
-																		</Tooltip.Trigger>
-																		<Tooltip.Content>
-																			Team captain
-																		</Tooltip.Content>
-																	</Tooltip.Root>
-																{/if}
+																{person.name}
+																<Button
+																	on:click={async () => {
+																		team.members.push({
+																			name: person.name,
+																			email: person.email,
+																		});
+																		team.lastUpdatedBy = $user?.email ?? '';
+																		team.lastUpdatedTime = new Timestamp(
+																			Date.now() / 1000,
+																			0,
+																		);
+
+																		await setDoc(
+																			doc(db, 'events', event.event ?? ''),
+																			{
+																				teams: event.teams,
+																			},
+																			{
+																				merge: true,
+																			},
+																		);
+																		confetti();
+																		yay.play();
+																		navigator.vibrate(100);
+																	}}
+																	variant="outline"
+																	size="icon"
+																	class="ml-2"
+																>
+																	<Plus />
+																</Button>
+															</li>
+														{:else}
+															<li>
+																No one else singed up for this event. Teams
+																should probably be merged.
 															</li>
 														{/each}
 													</ul>
-												</Dialog.Content>
-											</Dialog.Root>
-										</div>
-										<div class="flex flex-row items-center gap-1">
-											<Button
-												size="icon"
-												href="mailto:?cc={$usersDoc
-													.filter((u) => u.admin)
-													.map((u) => u.email)
-													.join(';')}&bcc={team.members
-													.map((p) => p.email)
-													.join(';')}&subject={event.event}"
-											>
-												<Mail />
-											</Button>
-										</div>
-										<div>
-											<Label class="flex flex-row items-center gap-2">
-												<Switch
-													onCheckedChange={async (checked) => {
-														team.locked = checked;
+												</Dialog.Description>
+											</Dialog.Content>
+										</Dialog.Root>
+
+										<Dialog.Root>
+											<Dialog.Trigger>
+												<Button>Team Captain</Button>
+											</Dialog.Trigger>
+											<Dialog.Content>
+												<Dialog.Title>Manage team captain</Dialog.Title>
+												<Button
+													on:click={async () => {
+														team.teamCaptain = '';
 														team.lastUpdatedBy = $user?.email ?? '';
 														team.lastUpdatedTime = new Timestamp(
 															Date.now() / 1000,
@@ -830,165 +749,234 @@
 																merge: true,
 															},
 														);
-													}}
-													checked={team.locked ?? false}
-												/>
-												Lock team
-											</Label>
-										</div>
-										<div>
-											<Dialog.Root closeOnOutsideClick={false}>
-												{#key dummyVariableToRerender}
-													<StorageList
-														ref="submissions/{event.event}/{team.id}"
-														let:list
-													>
-														<Dialog.Trigger>
-															<Button>
-																Manage Submissions {list?.items.length
-																	? `(${list.items.length})`
-																	: ''}
-															</Button>
-														</Dialog.Trigger>
-														<Dialog.Content>
-															<Dialog.Title>Manage Submissions</Dialog.Title>
-															<Dialog.Description>
-																{#if event.submissionDescription}
-																	<div
-																		class="prose dark:prose-invert dark:text-white"
-																	>
-																		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-																		{@html md.render(
-																			`## What needs to be submitted:\n\n${event.submissionDescription}`,
-																		)}
-																	</div>
-																{/if}
-																<ul>
-																	{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
-																		<li
-																			class="w-full flex flex-col items-center"
-																		>
-																			{#if submission instanceof File}
-																				<UploadTask
-																					ref="submissions/{event.event}/{team.id}/{submission.name}"
-																					data={submission}
-																					let:snapshot
-																					let:progress
-																				>
-																					{#if snapshot?.state === 'success'}
-																						{filterSubmissions(submission)}
-																						{updateStorageList()}
-																					{:else}
-																						<Progress
-																							value={progress}
-																							class="w-full"
-																						/>
-
-																						<span class="w-full">
-																							{submission.name}
-																						</span>
-																					{/if}
-																				</UploadTask>
-																			{:else}
-																				<div
-																					class="flex flex-row w-full items-center"
-																				>
-																					<DownloadURL
-																						ref={submission}
-																						let:link
-																					>
-																						<StorageMetadata
-																							ref={submission}
-																							let:meta
-																						>
-																							<SimpleTooltip
-																								message={new Date(
-																									meta.timeCreated,
-																								).toLocaleString()}
-																							>
-																								<a href={link} target="_blank">
-																									{submission.name}
-																								</a>
-																							</SimpleTooltip>
-																						</StorageMetadata>
-																					</DownloadURL>
-																					<div class="flex flex-grow" />
-																					<Button
-																						variant="ghost"
-																						size="icon"
-																						on:click={async () => {
-																							if (submission instanceof File)
-																								return;
-																							await deleteObject(submission);
-																							team.lastUpdatedBy =
-																								$user?.email ?? '';
-																							dummyVariableToRerender++;
-																						}}
-																					>
-																						<X />
-																					</Button>
-																				</div>
-																			{/if}
-																		</li>
-																	{:else}
-																		<p>No submissions</p>
-																	{/each}
-																</ul>
-																<Button
-																	class="mt-4"
-																	on:click={() => submissionsFileUpload.click()}
-																>
-																	Upload
-																</Button>
-																<input
-																	bind:this={submissionsFileUpload}
-																	on:change={(e) => {
-																		if (e.target instanceof HTMLInputElement) {
-																			if (!e.target.files?.length) return;
-																			const files = [...e.target.files];
-																			for (const file of files) {
-																				if (
-																					list?.items
-																						.map((f) => f.name)
-																						.includes(file.name)
-																				) {
-																					alert(
-																						`File ${file.name} already exists. If you want to upload this file, change the name.`,
-																					);
-																					continue;
-																				}
-
-																				$filesToUpload.push(file);
-																				$filesToUpload = $filesToUpload;
-																			}
-																		}
-																	}}
-																	class="hidden"
-																	type="file"
-																	multiple
-																/>
-
-																<p>
-																	Allowed file types: all image files, all audio
-																	files, all video files, pdfs, and Word docs
-																	(.doc, .docx).
-																</p>
-																<p>250MB max file size.</p>
-																<p>
-																	If you need to submit a file type not listed,
-																	please contact Harry (<a
-																		href="mailto:s-hallen@lwsd.org"
-																		>s-hallen@lwsd.org</a
-																	>).
-																</p>
-															</Dialog.Description>
-														</Dialog.Content>
-													</StorageList>
-												{/key}
-											</Dialog.Root>
-										</div>
+													}}>Clear</Button
+												>
+												<ul>
+													{#each team.members as teamMember}
+														<!-- svelte-ignore a11y-click-events-have-key-events -->
+														<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+														<li
+															class="cursor-pointer"
+															on:click={async () => {
+																team.teamCaptain = teamMember?.email ?? '';
+																team.lastUpdatedBy = $user?.email ?? '';
+																team.lastUpdatedTime = new Timestamp(
+																	Date.now() / 1000,
+																	0,
+																);
+																await setDoc(
+																	doc(db, 'events', event.event ?? ''),
+																	{
+																		teams: event.teams,
+																	},
+																	{
+																		merge: true,
+																	},
+																);
+															}}
+														>
+															{teamMember.name}
+															{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+																<Tooltip.Root>
+																	<Tooltip.Trigger>
+																		<Crown class="h-4 w-4" />
+																	</Tooltip.Trigger>
+																	<Tooltip.Content>
+																		Team captain
+																	</Tooltip.Content>
+																</Tooltip.Root>
+															{/if}
+														</li>
+													{/each}
+												</ul>
+											</Dialog.Content>
+										</Dialog.Root>
 									</div>
-								</Card.Header>
+									<div class="flex flex-row items-center gap-1">
+										<Button
+											size="icon"
+											href="mailto:?cc={$usersDoc
+												.filter((u) => u.admin)
+												.map((u) => u.email)
+												.join(';')}&bcc={team.members
+												.map((p) => p.email)
+												.join(';')}&subject={event.event}"
+										>
+											<Mail />
+										</Button>
+									</div>
+									<div>
+										<Label class="flex flex-row items-center gap-2">
+											<Switch
+												onCheckedChange={async (checked) => {
+													team.locked = checked;
+													team.lastUpdatedBy = $user?.email ?? '';
+													team.lastUpdatedTime = new Timestamp(
+														Date.now() / 1000,
+														0,
+													);
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: event.teams,
+														},
+														{
+															merge: true,
+														},
+													);
+												}}
+												checked={team.locked ?? false}
+											/>
+											Lock team
+										</Label>
+									</div>
+									<div>
+										<Dialog.Root closeOnOutsideClick={false}>
+											{#key dummyVariableToRerender}
+												<StorageList
+													ref="submissions/{event.event}/{team.id}"
+													let:list
+												>
+													<Dialog.Trigger>
+														<Button>
+															Manage Submissions {list?.items.length
+																? `(${list.items.length})`
+																: ''}
+														</Button>
+													</Dialog.Trigger>
+													<Dialog.Content>
+														<Dialog.Title>Manage Submissions</Dialog.Title>
+														<Dialog.Description>
+															{#if event.submissionDescription}
+																<div
+																	class="prose dark:prose-invert dark:text-white"
+																>
+																	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+																	{@html md.render(
+																		`## What needs to be submitted:\n\n${event.submissionDescription}`,
+																	)}
+																</div>
+															{/if}
+															<ul>
+																{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
+																	<li class="w-full flex flex-col items-center">
+																		{#if submission instanceof File}
+																			<UploadTask
+																				ref="submissions/{event.event}/{team.id}/{submission.name}"
+																				data={submission}
+																				let:snapshot
+																				let:progress
+																			>
+																				{#if snapshot?.state === 'success'}
+																					{filterSubmissions(submission)}
+																					{updateStorageList()}
+																				{:else}
+																					<Progress
+																						value={progress}
+																						class="w-full"
+																					/>
+
+																					<span class="w-full">
+																						{submission.name}
+																					</span>
+																				{/if}
+																			</UploadTask>
+																		{:else}
+																			<div
+																				class="flex flex-row w-full items-center"
+																			>
+																				<DownloadURL ref={submission} let:link>
+																					<StorageMetadata
+																						ref={submission}
+																						let:meta
+																					>
+																						<SimpleTooltip
+																							message={new Date(
+																								meta.timeCreated,
+																							).toLocaleString()}
+																						>
+																							<a href={link} target="_blank">
+																								{submission.name}
+																							</a>
+																						</SimpleTooltip>
+																					</StorageMetadata>
+																				</DownloadURL>
+																				<div class="flex flex-grow" />
+																				<Button
+																					variant="ghost"
+																					size="icon"
+																					on:click={async () => {
+																						if (submission instanceof File)
+																							return;
+																						await deleteObject(submission);
+																						team.lastUpdatedBy =
+																							$user?.email ?? '';
+																						dummyVariableToRerender++;
+																					}}
+																				>
+																					<X />
+																				</Button>
+																			</div>
+																		{/if}
+																	</li>
+																{:else}
+																	<p>No submissions</p>
+																{/each}
+															</ul>
+															<Button
+																class="mt-4"
+																on:click={() => submissionsFileUpload.click()}
+															>
+																Upload
+															</Button>
+															<input
+																bind:this={submissionsFileUpload}
+																on:change={(e) => {
+																	if (e.target instanceof HTMLInputElement) {
+																		if (!e.target.files?.length) return;
+																		const files = [...e.target.files];
+																		for (const file of files) {
+																			if (
+																				list?.items
+																					.map((f) => f.name)
+																					.includes(file.name)
+																			) {
+																				alert(
+																					`File ${file.name} already exists. If you want to upload this file, change the name.`,
+																				);
+																				continue;
+																			}
+
+																			$filesToUpload.push(file);
+																			$filesToUpload = $filesToUpload;
+																		}
+																	}
+																}}
+																class="hidden"
+																type="file"
+																multiple
+															/>
+
+															<p>
+																Allowed file types: all image files, all audio
+																files, all video files, pdfs, and Word docs
+																(.doc, .docx).
+															</p>
+															<p>250MB max file size.</p>
+															<p>
+																If you need to submit a file type not listed,
+																please contact Harry (<a
+																	href="mailto:s-hallen@lwsd.org"
+																	>s-hallen@lwsd.org</a
+																>).
+															</p>
+														</Dialog.Description>
+													</Dialog.Content>
+												</StorageList>
+											{/key}
+										</Dialog.Root>
+									</div>
+								</Card.Title>
 								<Card.Content>
 									<div class="mb-4">
 										<Collapsable.Root>
@@ -1234,15 +1222,10 @@
 					<Card.Footer class="space-x-2">
 						<Button
 							on:click={async () => {
-								let lowestNotTaken = 1;
-								while (event.teams.find((t) => t.id === lowestNotTaken)) {
-									lowestNotTaken++;
-								}
-
 								event.teams.push({
 									members: [],
 									lastUpdatedBy: $user?.email ?? '',
-									id: lowestNotTaken,
+									id: crypto.randomUUID(),
 								});
 								await setDoc(
 									doc(db, 'events', event.event ?? ''),
@@ -1267,14 +1250,10 @@
 												t.members.find((m) => m.email === member.email),
 											)
 										) {
-											let lowestNotTaken = 1;
-											while (event.teams.find((t) => t.id === lowestNotTaken)) {
-												lowestNotTaken++;
-											}
 											event.teams.push({
 												members: [member],
 												lastUpdatedBy: $user?.email ?? '',
-												id: lowestNotTaken,
+												id: crypto.randomUUID(),
 											});
 										}
 									}
@@ -1287,10 +1266,8 @@
 											merge: true,
 										},
 									);
-								}}
+								}}>Create team for everyone</Button
 							>
-								Create team for everyone
-							</Button>
 						{/if}
 					</Card.Footer>
 				</Card.Root>
