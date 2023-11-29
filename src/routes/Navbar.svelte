@@ -47,8 +47,8 @@
 						href: '/admin/submissions',
 					},
 					{
-						title: 'Admin Events',
-						href: '/admin/events',
+						title: 'Admin Members',
+						href: '/admin/members',
 					},
 					{
 						title: 'Admin Results',
@@ -195,6 +195,16 @@
 							{$user?.displayName}
 						</Dropdown.Label>
 						<Dropdown.Label class="font-normal">{$user?.email}</Dropdown.Label>
+						{#if $userDoc?.nationalId}
+							<Dropdown.Label>
+								National ID: {$userDoc?.nationalId}
+							</Dropdown.Label>
+						{/if}
+						{#if $userDoc?.washingtonId}
+							<Dropdown.Label>
+								WTSA ID: {$userDoc?.washingtonId}
+							</Dropdown.Label>
+						{/if}
 						<Dropdown.Separator />
 						<Dropdown.Item
 							on:click={async () => {
