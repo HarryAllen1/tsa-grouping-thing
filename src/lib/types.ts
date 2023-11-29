@@ -27,7 +27,7 @@ export interface Team {
 	lastUpdatedBy?: string;
 	lastUpdatedTime?: Timestamp;
 	requests?: BasicUser[];
-	id: ReturnType<typeof crypto.randomUUID>;
+	id: number;
 }
 
 export interface BasicUser {
