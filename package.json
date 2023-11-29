@@ -54,7 +54,7 @@
 		"node": "18.17.1"
 	},
 	"engines": {
-		"node": "18.17.1"
+		"node": "18"
 	},
 	"pnpm": {
 		"peerDependencyRules": {

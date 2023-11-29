@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import {
 		SimpleTooltip,
@@ -42,7 +41,6 @@
 		UserPlus,
 		X,
 	} from 'lucide-svelte';
-	import { onMount } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { writable } from 'svelte/store';
 	import {
