@@ -44,8 +44,8 @@
 			{@const hash = user.email.replaceAll('@', '').replaceAll('.', '')}
 			<Card.Root>
 				<Card.Header>
-					<Card.Title
-						>{user.name}
+					<Card.Title>
+						{user.name}
 						{#if user.grade}
 							({user.grade})
 						{/if}
@@ -125,25 +125,21 @@
 					</div>
 					<div class="w-full">
 						<Collapsible.Root>
-							<div
-								class="flex items-center justify-between space-x-4 px-4 {user
-									.events.length < 4 || user.events.length > 6
-									? 'text-red-500'
-									: ''}"
-							>
-								<h4 class="text-sm font-semibold">Events</h4>
-								<Collapsible.Trigger asChild let:builder>
-									<Button
-										builders={[builder]}
-										variant="ghost"
-										size="sm"
-										class="w-9 p-0"
-									>
-										<ChevronsUpDown class="h-4 w-4" />
-										<span class="sr-only">Toggle</span>
-									</Button>
-								</Collapsible.Trigger>
-							</div>
+							<Collapsible.Trigger asChild let:builder>
+								<Button
+									builders={[builder]}
+									variant="ghost"
+									size="sm"
+									class="p-2 flex items-center w-full {user.events.length < 4 ||
+									user.events.length > 6
+										? 'text-red-500'
+										: ''}"
+								>
+									Events
+									<div class="flex-1"></div>
+									<ChevronsUpDown class="h-4 w-4" />
+								</Button>
+							</Collapsible.Trigger>
 							<Collapsible.Content>
 								<Button href="/events/{user.email}">Edit</Button>
 								{#each user.events as event}

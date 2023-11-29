@@ -925,7 +925,7 @@
 							</Card.Root>
 						{/each}
 					</Card.Content>
-					{#if !event.locked && !event.teamCreationLocked && !event.teams.filter( (t) => t.requests
+					{#if !event.locked && !(event.teamCreationLocked && event.teams.length >= event.perChapter) && !event.teams.filter( (t) => t.requests
 									?.map((r) => r.email)
 									.includes($user?.email ?? ''), ).length}
 						<Card.Footer>

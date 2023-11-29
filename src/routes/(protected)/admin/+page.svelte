@@ -584,7 +584,9 @@
 									);
 								}}
 							/>
-							<Label for="lock-team-creation">Lock team creation</Label>
+							<Label for="lock-team-creation">
+								Lock team creation when full
+							</Label>
 						</div>
 						<Label class="flex flex-row items-center gap-2">
 							<Switch
