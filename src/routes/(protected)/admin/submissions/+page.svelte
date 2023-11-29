@@ -107,7 +107,7 @@
 											.map((m) =>
 												m.email === team.teamCaptain ? `👑${m.name}👑` : m.name,
 											)
-											.join(', ')}
+											.join(', ')} ({team.teamNumber})
 									</Card.Title>
 									{@const resultMemberSet = new Set(
 										event.results

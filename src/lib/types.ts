@@ -21,6 +21,7 @@ export interface Result {
 }
 
 export interface Team {
+	teamNumber: number;
 	teamCaptain?: string;
 	members: BasicUser[];
 	locked?: boolean;
