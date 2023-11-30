@@ -11,7 +11,7 @@ export interface EventDoc {
 	teamCreationLocked?: boolean;
 	results?: Result[];
 	submissionDescription?: string;
-	wtsaId?: number;
+	id: number;
 }
 
 export interface Result {
@@ -45,6 +45,8 @@ export interface UserDoc {
 	nationalId?: number;
 	washingtonId?: number;
 	grade?: number;
+	firstName?: string;
+	lastName?: string;
 }
 
 export interface MailDoc {

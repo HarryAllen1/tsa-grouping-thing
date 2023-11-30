@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { allUsersCollection, db } from '$lib';
+	import { allUsersCollection, db, eventsCollection, fancyConfirm } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -168,6 +168,79 @@
 						</Collapsible.Root>
 					</div>
 				</Card.Content>
+				<Card.Footer>
+					<Button
+						on:click={async () => {
+							if (!user.washingtonId) {
+								fancyConfirm(
+									'Error',
+									'You must set the WTSA ID before copying the fetch request',
+								);
+								return;
+							}
+							if (!user.firstName || !user.lastName) {
+								fancyConfirm(
+									'Error',
+									'You must set the first and last name before copying the fetch request',
+								);
+								return;
+							}
+							if (!user.grade) {
+								fancyConfirm(
+									'Error',
+									'You must set the grade before copying the fetch request',
+								);
+								return;
+							}
+
+							const formData = new URLSearchParams();
+
+							// base data
+							formData.append('FirstName', user.firstName);
+							formData.append('MI', '');
+							formData.append('LastName', user.lastName);
+							formData.append('MemberID', user.washingtonId.toString());
+							// TODO: update
+							formData.append('Gender', 'M');
+							formData.append('TShirtSize', '');
+							formData.append('Grade', user.grade.toString());
+							formData.append('Status', 'S');
+							formData.append('Email', '');
+							formData.append('CellPhone', '');
+							formData.append('SpecialNeeds', '');
+
+							// event data
+							/*
+							 * How stuff is entered:
+							 * Stuff prefixed with "Old" doesn't need to be added
+							 * Sel = event id. Set only if signing up.
+							 * NoCount{event id} = False | True. wtf does this do? seems to be "False" except for Tech Bowl
+							 * TeamNo{event id} = team number. Set only if signing up. Set to -1 if individual.
+							 * AdditionalTeamNo{event id} = "" always empty
+							 * TeamCaptain{event id} = "on" | empty. Don't include if not team captain							 *
+							 */
+							for (const event of $eventsCollection) {
+								formData.append('Sel', event.id.toString());
+							}
+
+							await navigator.clipboard
+								.writeText(
+									`fetch("https://www.registermychapter.com/tsa/wa/AddRegister.asp?Save=Y&PID=${
+										user.washingtonId
+									}", {
+  "headers": {
+    "content-type": "application/x-www-form-urlencoded",
+   },
+  "body": "${formData.toString()}",
+  "method": "POST",
+});`,
+								)
+								.catch(() => {
+									fancyConfirm('Failure', 'Failed to copy fetch request');
+								});
+						}}>Copy fetch request</Button
+					>
+				</Card.Footer>
 			</Card.Root>
 		{/each}
 	</div>

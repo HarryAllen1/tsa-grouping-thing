@@ -1,0 +1,311 @@
+FirstName: Wenjuan (Nancy)
+MI: 
+LastName: Zou
+MemberID: 863061
+Gender: F
+TShirtSize: 
+Grade: 11
+Status: S
+Email: 
+CellPhone: 
+SpecialNeeds: 
+NoCount41881255: False
+OldSel41881255: 
+OldTeamNo41881255: -1
+OldAdditionalTeamNo41881255: 
+OldTeamCaptain41881255: false
+NoCount41881152: False
+OldSel41881152: 
+OldTeamNo41881152: -1
+OldAdditionalTeamNo41881152: 
+OldTeamCaptain41881152: false
+NoCount41881153: False
+OldSel41881153: 
+OldTeamNo41881153: -1
+OldAdditionalTeamNo41881153: 
+OldTeamCaptain41881153: false
+NoCount41881248: False
+OldSel41881248: 
+OldTeamNo41881248: -1
+OldAdditionalTeamNo41881248: 
+OldTeamCaptain41881248: false
+NoCount41881154: False
+OldSel41881154: 
+OldTeamNo41881154: -1
+OldAdditionalTeamNo41881154: 
+OldTeamCaptain41881154: false
+NoCount41881220: False
+OldSel41881220: 
+OldTeamNo41881220: -1
+OldAdditionalTeamNo41881220: 
+OldTeamCaptain41881220: false
+NoCount41881157: False
+OldSel41881157: 
+TeamNo41881157: -1
+OldTeamNo41881157: -1
+AdditionalTeamNo41881157: 
+OldAdditionalTeamNo41881157: 
+TeamCaptain41881157: false
+OldTeamCaptain41881157: false
+NoCount41881158: False
+OldSel41881158: 
+TeamNo41881158: -1
+OldTeamNo41881158: -1
+AdditionalTeamNo41881158: 
+OldAdditionalTeamNo41881158: 
+TeamCaptain41881158: false
+OldTeamCaptain41881158: false
+NoCount41881227: False
+OldSel41881227: 
+TeamNo41881227: -1
+OldTeamNo41881227: -1
+AdditionalTeamNo41881227: 
+OldAdditionalTeamNo41881227: 
+TeamCaptain41881227: false
+OldTeamCaptain41881227: false
+NoCount41881259: False
+OldSel41881259: 
+OldTeamNo41881259: -1
+OldAdditionalTeamNo41881259: 
+OldTeamCaptain41881259: false
+NoCount41881155: False
+OldSel41881155: 
+OldTeamNo41881155: -1
+OldAdditionalTeamNo41881155: 
+OldTeamCaptain41881155: false
+NoCount41881156: False
+OldSel41881156: 
+OldTeamNo41881156: -1
+OldAdditionalTeamNo41881156: 
+OldTeamCaptain41881156: false
+NoCount41881257: False
+OldSel41881257: 
+TeamNo41881257: -1
+OldTeamNo41881257: -1
+AdditionalTeamNo41881257: 
+OldAdditionalTeamNo41881257: 
+TeamCaptain41881257: false
+OldTeamCaptain41881257: false
+NoCount41881235: False
+OldSel41881235: 
+OldTeamNo41881235: -1
+OldAdditionalTeamNo41881235: 
+OldTeamCaptain41881235: false
+NoCount41881160: False
+OldSel41881160: 
+OldTeamNo41881160: -1
+OldAdditionalTeamNo41881160: 
+OldTeamCaptain41881160: false
+NoCount41881161: False
+OldSel41881161: 
+OldTeamNo41881161: -1
+OldAdditionalTeamNo41881161: 
+OldTeamCaptain41881161: false
+NoCount41881162: False
+OldSel41881162: 
+TeamNo41881162: -1
+OldTeamNo41881162: -1
+AdditionalTeamNo41881162: 
+OldAdditionalTeamNo41881162: 
+TeamCaptain41881162: false
+OldTeamCaptain41881162: false
+NoCount41881241: False
+OldSel41881241: 
+OldTeamNo41881241: -1
+OldAdditionalTeamNo41881241: 
+OldTeamCaptain41881241: false
+NoCount41881163: False
+OldSel41881163: 
+OldTeamNo41881163: -1
+OldAdditionalTeamNo41881163: 
+OldTeamCaptain41881163: false
+NoCount41881164: False
+OldSel41881164: 
+TeamNo41881164: -1
+OldTeamNo41881164: -1
+AdditionalTeamNo41881164: 
+OldAdditionalTeamNo41881164: 
+TeamCaptain41881164: false
+OldTeamCaptain41881164: false
+NoCount41881165: False
+OldSel41881165: 
+TeamNo41881165: -1
+OldTeamNo41881165: -1
+AdditionalTeamNo41881165: 
+OldAdditionalTeamNo41881165: 
+TeamCaptain41881165: false
+OldTeamCaptain41881165: false
+NoCount41881166: False
+OldSel41881166: 
+OldTeamNo41881166: -1
+OldAdditionalTeamNo41881166: 
+OldTeamCaptain41881166: false
+NoCount41881167: False
+OldSel41881167: 
+TeamNo41881167: -1
+OldTeamNo41881167: -1
+AdditionalTeamNo41881167: 
+OldAdditionalTeamNo41881167: 
+TeamCaptain41881167: false
+OldTeamCaptain41881167: false
+NoCount41881221: False
+OldSel41881221: 
+OldTeamNo41881221: -1
+OldAdditionalTeamNo41881221: 
+OldTeamCaptain41881221: false
+NoCount41881168: False
+OldSel41881168: 
+TeamNo41881168: -1
+OldTeamNo41881168: -1
+AdditionalTeamNo41881168: 
+OldAdditionalTeamNo41881168: 
+TeamCaptain41881168: false
+OldTeamCaptain41881168: false
+NoCount41881228: False
+OldSel41881228: 
+OldTeamNo41881228: -1
+OldAdditionalTeamNo41881228: 
+OldTeamCaptain41881228: false
+NoCount41881256: False
+OldSel41881256: 
+TeamNo41881256: -1
+OldTeamNo41881256: -1
+AdditionalTeamNo41881256: 
+OldAdditionalTeamNo41881256: 
+TeamCaptain41881256: false
+OldTeamCaptain41881256: false
+NoCount41881247: False
+OldSel41881247: 
+OldTeamNo41881247: -1
+OldAdditionalTeamNo41881247: 
+OldTeamCaptain41881247: false
+NoCount41881169: False
+OldSel41881169: 
+OldTeamNo41881169: -1
+OldAdditionalTeamNo41881169: 
+OldTeamCaptain41881169: false
+Sel: 41881170
+NoCount41881170: False
+OldSel41881170: CHECKED
+TeamNo41881170: 1
+OldTeamNo41881170: 1
+AdditionalTeamNo41881170: 
+OldAdditionalTeamNo41881170: 
+OldTeamCaptain41881170: false
+NoCount41881171: False
+OldSel41881171: 
+TeamNo41881171: -1
+OldTeamNo41881171: -1
+AdditionalTeamNo41881171: 
+OldAdditionalTeamNo41881171: 
+TeamCaptain41881171: false
+OldTeamCaptain41881171: false
+NoCount41881172: False
+OldSel41881172: 
+TeamNo41881172: -1
+OldTeamNo41881172: -1
+AdditionalTeamNo41881172: 
+OldAdditionalTeamNo41881172: 
+TeamCaptain41881172: false
+OldTeamCaptain41881172: false
+NoCount41881173: False
+OldSel41881173: 
+TeamNo41881173: -1
+OldTeamNo41881173: -1
+AdditionalTeamNo41881173: 
+OldAdditionalTeamNo41881173: 
+TeamCaptain41881173: false
+OldTeamCaptain41881173: false
+NoCount41881217: False
+OldSel41881217: 
+OldTeamNo41881217: -1
+OldAdditionalTeamNo41881217: 
+OldTeamCaptain41881217: false
+NoCount41881250: False
+OldSel41881250: 
+OldTeamNo41881250: -1
+OldAdditionalTeamNo41881250: 
+OldTeamCaptain41881250: false
+NoCount41881243: False
+OldSel41881243: 
+OldTeamNo41881243: -1
+OldAdditionalTeamNo41881243: 
+OldTeamCaptain41881243: false
+Sel: 41881175
+NoCount41881175: False
+OldSel41881175: CHECKED
+TeamNo41881175: 1
+OldTeamNo41881175: 1
+AdditionalTeamNo41881175: 
+OldAdditionalTeamNo41881175: 
+OldTeamCaptain41881175: false
+NoCount41881258: False
+OldSel41881258: 
+OldTeamNo41881258: -1
+OldAdditionalTeamNo41881258: 
+OldTeamCaptain41881258: false
+NoCount41881177: False
+OldSel41881177: 
+OldTeamNo41881177: -1
+OldAdditionalTeamNo41881177: 
+OldTeamCaptain41881177: false
+NoCount41881178: False
+OldSel41881178: 
+OldTeamNo41881178: -1
+OldAdditionalTeamNo41881178: 
+OldTeamCaptain41881178: false
+Sel: 41881180
+NoCount41881180: False
+OldSel41881180: CHECKED
+TeamNo41881180: 1
+OldTeamNo41881180: 1
+AdditionalTeamNo41881180: 
+OldAdditionalTeamNo41881180: 
+OldTeamCaptain41881180: false
+NoCount41881179: True
+OldSel41881179: 
+OldTeamNo41881179: -1
+OldAdditionalTeamNo41881179: 
+OldTeamCaptain41881179: false
+NoCount41881222: False
+OldSel41881222: 
+TeamNo41881222: -1
+OldTeamNo41881222: -1
+AdditionalTeamNo41881222: 
+OldAdditionalTeamNo41881222: 
+TeamCaptain41881222: false
+OldTeamCaptain41881222: false
+NoCount41881240: False
+OldSel41881240: 
+OldTeamNo41881240: -1
+OldAdditionalTeamNo41881240: 
+OldTeamCaptain41881240: false
+Sel: 41881181
+NoCount41881181: False
+OldSel41881181: CHECKED
+TeamNo41881181: 1
+OldTeamNo41881181: 1
+AdditionalTeamNo41881181: 
+OldAdditionalTeamNo41881181: 
+OldTeamCaptain41881181: false
+NoCount41881182: False
+OldSel41881182: 
+OldTeamNo41881182: -1
+OldAdditionalTeamNo41881182: 
+OldTeamCaptain41881182: false
+Sel: 41881249
+NoCount41881249: False
+OldSel41881249: CHECKED
+TeamNo41881249: 1
+OldTeamNo41881249: 1
+AdditionalTeamNo41881249: 
+OldAdditionalTeamNo41881249: 
+OldTeamCaptain41881249: false
+Sel: 41881183
+NoCount41881183: False
+OldSel41881183: CHECKED
+TeamNo41881183: 1
+OldTeamNo41881183: 1
+AdditionalTeamNo41881183: 
+OldAdditionalTeamNo41881183: 
+OldTeamCaptain41881183: false

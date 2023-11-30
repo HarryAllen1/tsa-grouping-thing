@@ -351,6 +351,9 @@
 									)}/{eventData.find((e) => e.event === event.event)?.members
 										.length ?? 0} people joined teams
 								</li>
+								<li>
+									ID: {event.id}
+								</li>
 							</ul>
 							<div class="flex flex-col gap-2">
 								<p class="dark:text-white text-black">
