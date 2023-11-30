@@ -151,6 +151,21 @@
 							<Save />
 						</Button>
 					</div>
+					{#if user.gender}
+						<p>
+							Gender: {user.gender}
+						</p>
+					{/if}
+					{#if user.demographic}
+						<p>
+							Demographic: {user.demographic}
+						</p>
+					{/if}
+					{#if user.tShirtSize}
+						<p>
+							Shirt Size: {user.tShirtSize}
+						</p>
+					{/if}
 					<div class="w-full">
 						<Collapsible.Root>
 							<Collapsible.Trigger asChild let:builder>

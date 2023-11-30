@@ -47,6 +47,9 @@ export interface UserDoc {
 	grade?: number;
 	firstName?: string;
 	lastName?: string;
+	gender?: string;
+	demographic?: string;
+	tShirtSize?: string;
 }
 
 export interface MailDoc {
