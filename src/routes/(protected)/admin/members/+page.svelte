@@ -8,6 +8,17 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
+	import Fuse from 'fuse.js';
+
+	let search = '';
+	$: fuse = new Fuse($allUsersCollection, {
+		keys: ['name', 'email', 'grade', 'events', 'nationalId', 'washingtonId'],
+		threshold: 0.2,
+	});
+	$: results =
+		search === ''
+			? $allUsersCollection
+			: fuse.search(search).map((r) => r.item);
 
 	const valuesMap: Record<string, Record<string, number | undefined>> = {};
 
@@ -37,10 +48,18 @@
 		</span>
 	</p>
 
+	<Input
+		class="mb-4"
+		bind:value={search}
+		type="search"
+		id="search"
+		placeholder="Search"
+	/>
+
 	<div
 		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
 	>
-		{#each $allUsersCollection as user}
+		{#each results as user}
 			{@const hash = user.email.replaceAll('@', '').replaceAll('.', '')}
 			<Card.Root>
 				<Card.Header>
