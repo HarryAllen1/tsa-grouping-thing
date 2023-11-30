@@ -59,9 +59,9 @@
 	<div
 		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
 	>
-		{#each results as user}
+		{#each $allUsersCollection as user}
 			{@const hash = user.email.replaceAll('@', '').replaceAll('.', '')}
-			<Card.Root>
+			<Card.Root class={results.includes(user) ? '' : 'hidden'}>
 				<Card.Header>
 					<Card.Title>
 						{user.name}
