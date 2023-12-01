@@ -112,6 +112,7 @@
 	let dummyVariableToRerender = 0;
 	const updateStorageList = () => {
 		dummyVariableToRerender++;
+		yay.play();
 		return '';
 	};
 	const filterSubmissions = (submission: File) => {
