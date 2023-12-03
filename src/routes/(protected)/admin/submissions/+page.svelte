@@ -26,7 +26,7 @@
 		Submissions!!!!!!!!!
 	</h1>
 
-	<Label class="flex items-center space-x-2 my-2">
+	<Label class="my-2 flex items-center space-x-2">
 		<Switch bind:checked={hideEmpty} />
 		<span>Hide teams without submissions</span>
 	</Label>
@@ -34,7 +34,7 @@
 	{#each $eventsCollection as event}
 		<div class="my-4">
 			<h2
-				class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 mb-4"
+				class="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 			>
 				{event.event}
 			</h2>
@@ -91,7 +91,7 @@
 				</div>
 			{/if}
 			<div
-				class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
+				class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 			>
 				{#each event.teams as team}
 					<StorageList
@@ -135,7 +135,7 @@
 										{#if list?.items.length}
 											<ul>
 												{#each list.items as item}
-													<li class="w-full flex flex-row">
+													<li class="flex w-full flex-row">
 														<DownloadURL ref={item.fullPath} let:link>
 															<StorageMetadata ref={item.fullPath} let:meta>
 																{#if meta.contentType?.startsWith('image/')}
@@ -148,7 +148,7 @@
 																				clickableImage
 																				src={link}
 																				alt={item.name}
-																				class="max-w-full max-h-full"
+																				class="max-h-full max-w-full"
 																			/>
 																		</Dialog.Content>
 																	</Dialog.Root>
@@ -158,7 +158,7 @@
 																			{item.name}
 																		</Dialog.Trigger>
 																		<Dialog.Content
-																			class="max-w-full max-h-full p-4 grid place-items-center"
+																			class="grid max-h-full max-w-full place-items-center p-4"
 																		>
 																			<!-- svelte-ignore a11y-media-has-caption -->
 																			<video
@@ -175,7 +175,7 @@
 																			{item.name}
 																		</Dialog.Trigger>
 																		<Dialog.Content
-																			class="p-4 grid place-items-center"
+																			class="grid place-items-center p-4"
 																		>
 																			<audio controls>
 																				<source src={link} />
@@ -188,7 +188,7 @@
 																			{item.name}
 																		</Dialog.Trigger>
 																		<Dialog.Content
-																			class="max-w-full max-h-full p-6 grid place-items-center"
+																			class="grid max-h-full max-w-full place-items-center p-6"
 																		>
 																			<iframe
 																				src="https://docs.google.com/viewer?url={encodeURIComponent(

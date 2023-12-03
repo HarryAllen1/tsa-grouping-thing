@@ -24,7 +24,7 @@
 	provider.addScope('profile');
 </script>
 
-<Card.Root class="mx-16 md:mx-48 lg:mx-96 mt-16 max-w-md">
+<Card.Root class="mx-16 mt-16 max-w-md md:mx-48 lg:mx-96">
 	<Card.Header>
 		<Card.Title>Login</Card.Title>
 	</Card.Header>
@@ -51,7 +51,7 @@
 				height="100%"
 				viewBox="0 0 20 20"
 				width="100%"
-				class="mr-4 bg-white p-[1px] aspect-square"
+				class="mr-4 aspect-square bg-white p-[1px]"
 				preserveAspectRatio="xMidYMid meet"
 				focusable="false"
 			>

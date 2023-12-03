@@ -128,7 +128,7 @@
 </script>
 
 <header
-	class="supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b bg-background/95 shadow-sm backdrop-blur"
+	class="sticky top-0 z-40 w-full border-b bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
 	<div class="container flex h-14 items-center">
 		<DesktopNav {navItems} />
@@ -171,7 +171,7 @@
 						viewBox="0 0 24 24"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="currentColor"
-						class="w-6 h-6"
+						class="h-6 w-6"
 					>
 						<title>Discord</title>
 						<path

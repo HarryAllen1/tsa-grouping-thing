@@ -54,7 +54,7 @@
 								<Dialog.Root>
 									<Dialog.Trigger>View</Dialog.Trigger>
 									<Dialog.Content
-										class="overflow-y-scroll max-h-full max-w-fit"
+										class="max-h-full max-w-fit overflow-y-scroll"
 									>
 										<Dialog.Title>
 											{log.collection}/{log.id}

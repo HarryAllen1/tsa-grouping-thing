@@ -16,7 +16,7 @@
 	</p>
 
 	<div
-		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
+		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 	>
 		{#each $eventsCollection
 			.filter((e) => e.results?.length)
@@ -32,10 +32,10 @@
 				</Card.Header>
 				<Card.Content>
 					{#if event.results}
-						<ol class="mb-2 ml-6 [&>li]:mt-2 list-decimal">
+						<ol class="mb-2 ml-6 list-decimal [&>li]:mt-2">
 							{#each event.results as result, i}
 								<li
-									class={i < event.perChapter ? 'text-green-500 font-bold' : ''}
+									class={i < event.perChapter ? 'font-bold text-green-500' : ''}
 								>
 									{#each result.members as member, i}
 										<!-- DO NOT FORMAT -->

@@ -20,7 +20,7 @@
 	</h2>
 
 	<div
-		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
+		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 	>
 		{#each $eventsCollection as event}
 			{#key rerenderMap[event.event]}
@@ -35,11 +35,11 @@
 					</Card.Header>
 					<Card.Content>
 						{#if event.results && event.results.length}
-							<ol class="my-6 ml-6 [&>li]:mt-2 list-decimal">
+							<ol class="my-6 ml-6 list-decimal [&>li]:mt-2">
 								{#each event.results as result, i}
 									<li
 										class={i < event.perChapter
-											? 'text-green-500 font-bold'
+											? 'font-bold text-green-500'
 											: ''}
 									>
 										<div>

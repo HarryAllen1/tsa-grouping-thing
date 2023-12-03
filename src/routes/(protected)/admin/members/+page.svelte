@@ -37,11 +37,11 @@
 
 <div class="container">
 	<h1
-		class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl my-4"
+		class="my-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl"
 	>
 		Members
 	</h1>
-	<p class="text-red-500 mb-4">
+	<p class="mb-4 text-red-500">
 		This is one of the few pages that doesn't update live (i was lazy).
 		<span class="text-bold">
 			Avoid editing this page at the same time as someone else.
@@ -66,7 +66,7 @@
 	/>
 
 	<div
-		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
+		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 	>
 		{#each $allUsersCollection as user}
 			{@const hash = user.email.replaceAll('@', '').replaceAll('.', '')}
@@ -97,7 +97,7 @@
 						/>
 						<Label for="{hash}admin">Admin</Label>
 					</div>
-					<div class="flex flex-col w-full max-w-sm gap-1.5">
+					<div class="flex w-full max-w-sm flex-col gap-1.5">
 						<Label for="{hash}natid">National ID</Label>
 						<Input
 							bind:value={valuesMap[user.email].nationalId}
@@ -124,7 +124,7 @@
 							<Save />
 						</Button>
 					</div>
-					<div class="flex flex-col w-full max-w-sm gap-1.5">
+					<div class="flex w-full max-w-sm flex-col gap-1.5">
 						<Label for="{hash}wtsaid">WTSA ID</Label>
 						<Input
 							bind:value={valuesMap[user.email].washingtonId}
@@ -173,7 +173,7 @@
 									builders={[builder]}
 									variant="ghost"
 									size="sm"
-									class="member-collapsable p-2 flex items-center w-full {user
+									class="member-collapsable flex w-full items-center p-2 {user
 										.events.length < 4 || user.events.length > 6
 										? 'text-red-500'
 										: ''}"

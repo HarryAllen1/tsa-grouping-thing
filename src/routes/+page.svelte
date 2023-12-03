@@ -121,18 +121,18 @@
 	};
 </script>
 
-<div class="mt-8 flex flex-col items-center container">
+<div class="container mt-8 flex flex-col items-center">
 	<Button
 		href="/events"
 		size="lg"
-		class="w-full h-24 my-4 text-3xl text-black bg-green-400 hover:bg-green-500"
+		class="my-4 h-24 w-full bg-green-400 text-3xl text-black hover:bg-green-500"
 	>
 		Signup/change events
 	</Button>
 
 	{#if requests.length}
 		<div class="w-full">
-			<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
+			<h3 class="my-4 scroll-m-20 text-2xl font-semibold tracking-tight">
 				Manage Requests
 			</h3>
 			{#each requests as request}
@@ -142,7 +142,7 @@
 							builders={[builder]}
 							variant="ghost"
 							size="sm"
-							class="p-2 flex items-center w-full font-bold"
+							class="flex w-full items-center p-2 font-bold"
 						>
 							{request.event}
 							<div class="flex-1" />
@@ -303,7 +303,7 @@
 		</div>
 	{/if}
 
-	<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight w-full my-4">
+	<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">
 		Teams
 	</h3>
 
@@ -322,7 +322,7 @@
 		{/if}
 
 		<div
-			class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
+			class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 		>
 			{#each signedUpEvents as event}
 				<Card.Root>
@@ -363,7 +363,7 @@
 							<Card.Root class="bg-blue-500 bg-opacity-20">
 								<Card.Header>
 									<Card.Title>Team #{team.teamNumber}</Card.Title>
-									<div class="flex flex-col lg:flex-row gap-1">
+									<div class="flex flex-col gap-1 lg:flex-row">
 										{#if team.locked}
 											<p>
 												This team is currently locked from editing. This likely
@@ -372,7 +372,7 @@
 											</p>
 										{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 											<div class="flex flex-col gap-2">
-												<div class="w-full flex flex-row gap-2">
+												<div class="flex w-full flex-row gap-2">
 													<Tooltip.Root>
 														<Tooltip.Trigger>
 															<Button
@@ -523,7 +523,7 @@
 														</Dialog.Content>
 													</Dialog.Root>
 												</div>
-												<div class="flex flex-row w-full gap-2">
+												<div class="flex w-full flex-row gap-2">
 													<Button
 														on:click={async () => {
 															const teamButMutable = team;
@@ -588,7 +588,7 @@
 																		<ul>
 																			{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
 																				<li
-																					class="w-full flex flex-col items-center"
+																					class="flex w-full flex-col items-center"
 																				>
 																					{#if submission instanceof File}
 																						<UploadTask
@@ -613,7 +613,7 @@
 																						</UploadTask>
 																					{:else}
 																						<div
-																							class="flex flex-row w-full items-center"
+																							class="flex w-full flex-row items-center"
 																						>
 																							<DownloadURL
 																								ref={submission}
@@ -789,7 +789,7 @@
 														builders={[builder]}
 														variant="ghost"
 														size="sm"
-														class="p-2 flex items-center w-full"
+														class="flex w-full items-center p-2"
 													>
 														Manage Requests
 														<div class="flex-1" />
@@ -981,7 +981,7 @@
 			{/each}
 		</div>
 	{/if}
-	<div class="flex items-center mt-4 space-x-2">
+	<div class="mt-4 flex items-center space-x-2">
 		<Switch bind:checked={$yellowMode} id="yellow" />
 		<Label for="yellow">Yellow mode</Label>
 	</div>

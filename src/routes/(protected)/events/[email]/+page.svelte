@@ -31,13 +31,13 @@
 
 <div class="container mt-6">
 	<h1
-		class="scroll-m-20 mt-4 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+		class="mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>
 		Changes will automatically be saved. Try to leave any teams for events you
 		are dropping.
 	</h1>
 	<h1
-		class="scroll-m-20 mt-4 mb-4 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+		class="mb-4 mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>
 		Crossed out events are locked, likely due to eliminations.
 	</h1>
@@ -50,7 +50,7 @@
 				<Checkbox
 					checked={eventMap[event.event]}
 					id={event.event}
-					class="h-6 w-6 flex items-center justify-center [&>div]:w-6 [&>div]:h-6"
+					class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
 					onCheckedChange={async () => {
 						await setDoc(
 							doc(db, 'users', $user?.email ?? ''),

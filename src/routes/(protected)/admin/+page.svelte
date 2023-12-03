@@ -155,11 +155,11 @@
 	}}
 />
 
-<div class="mt-8 flex flex-col items-center container">
-	<h1 class="text-3xl font-bold my-4 mb-6">
+<div class="container mt-8 flex flex-col items-center">
+	<h1 class="my-4 mb-6 text-3xl font-bold">
 		Please don't add yourself to events that you aren't in!
 	</h1>
-	<div class="w-full mb-4 flex flex-col md:flex-row gap-4">
+	<div class="mb-4 flex w-full flex-col gap-4 md:flex-row">
 		<Label class="flex flex-row items-center">
 			<Switch class="mr-2" bind:checked={fuseKeys.event} />
 			Search by events
@@ -186,7 +186,7 @@
 	/>
 
 	<p class="mb-2 w-full">Green team: full; red team: over or underfilled</p>
-	<div class="w-full mb-4 space-y-2">
+	<div class="mb-4 w-full space-y-2">
 		<Dialog.Root bind:open={newEventDialogOpen}>
 			<Dialog.Trigger class={buttonVariants()}>Create new event</Dialog.Trigger>
 			<Dialog.Content>
@@ -202,14 +202,14 @@
 							newEventDialogOpen = false;
 						}}
 					>
-						<Label class="flex flex-col w-full max-w-sm gap-1.5">
+						<Label class="flex w-full max-w-sm flex-col gap-1.5">
 							<span>Event name</span>
 							<Input
 								bind:value={newEventStuff.event}
 								placeholder="really cool event name"
 							/>
 						</Label>
-						<Label class="flex flex-col w-full max-w-sm gap-1.5">
+						<Label class="flex w-full max-w-sm flex-col gap-1.5">
 							<span>Minimum team size</span>
 							<Input
 								bind:value={newEventStuff.minTeamSize}
@@ -217,7 +217,7 @@
 								placeholder="1"
 							/>
 						</Label>
-						<Label class="flex flex-col w-full max-w-sm gap-1.5">
+						<Label class="flex w-full max-w-sm flex-col gap-1.5">
 							<span>Maximum team size</span>
 							<Input
 								bind:value={newEventStuff.maxTeamSize}
@@ -225,7 +225,7 @@
 								placeholder="1"
 							/>
 						</Label>
-						<Label class="flex flex-col w-full max-w-sm gap-1.5">
+						<Label class="flex w-full max-w-sm flex-col gap-1.5">
 							<span>Maximum teams per chapter</span>
 							<Input
 								bind:value={newEventStuff.perChapter}
@@ -284,7 +284,7 @@
 		</div>
 	</div>
 	<div
-		class="grid items-center w-full gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:items-start"
+		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 	>
 		{#each signedUpEvents ?? [] as event}
 			{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
@@ -355,7 +355,7 @@
 								</li>
 							</ul>
 							<div class="flex flex-col gap-2">
-								<p class="dark:text-white text-black">
+								<p class="text-black dark:text-white">
 									Submission description:
 								</p>
 								<p class="prose dark:prose-invert">
@@ -420,7 +420,7 @@
 											builders={[builder]}
 											variant="ghost"
 											size="sm"
-											class="p-2 flex items-center w-full"
+											class="flex w-full items-center p-2"
 										>
 											People not in teams
 											<div class="flex-1" />
@@ -497,7 +497,7 @@
 										builders={[builder]}
 										variant="ghost"
 										size="sm"
-										class="p-2 flex items-center w-full"
+										class="flex w-full items-center p-2"
 									>
 										Events without member overlap
 										<div class="flex-1" />
@@ -527,7 +527,7 @@
 										builders={[builder]}
 										variant="ghost"
 										size="sm"
-										class="p-2 flex items-center w-full"
+										class="flex w-full items-center p-2"
 									>
 										Everyone in event
 										<div class="flex-1" />
@@ -861,7 +861,7 @@
 																<ul>
 																	{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
 																		<li
-																			class="w-full flex flex-col items-center"
+																			class="flex w-full flex-col items-center"
 																		>
 																			{#if submission instanceof File}
 																				<UploadTask
@@ -886,7 +886,7 @@
 																				</UploadTask>
 																			{:else}
 																				<div
-																					class="flex flex-row w-full items-center"
+																					class="flex w-full flex-row items-center"
 																				>
 																					<DownloadURL
 																						ref={submission}
@@ -992,7 +992,7 @@
 													builders={[builder]}
 													variant="ghost"
 													size="sm"
-													class="p-2 flex items-center w-full"
+													class="flex w-full items-center p-2"
 												>
 													Manage Requests
 													<div class="flex-1" />

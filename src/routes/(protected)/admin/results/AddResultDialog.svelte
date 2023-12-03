@@ -106,7 +106,7 @@
 		</Label>
 		<p>Members</p>
 		{#each newMembers as member}
-			<div class="flex gap-2 items-center">
+			<div class="flex items-center gap-2">
 				<span>{member.name}</span>
 				<Button
 					variant="ghost"
@@ -138,7 +138,7 @@
 					<ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</Popover.Trigger>
-			<Popover.Content class="w-[200px] max-h-32 p-0">
+			<Popover.Content class="max-h-32 w-[200px] p-0">
 				<Command.Root>
 					<Command.Input placeholder="Search members..." />
 					<Command.Empty>No members found.</Command.Empty>
@@ -168,7 +168,7 @@
 			<StorageList ref="results/{event.event}/{id}" let:list>
 				<ul>
 					{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
-						<li class="w-full flex flex-col items-center">
+						<li class="flex w-full flex-col items-center">
 							{#if submission instanceof File}
 								<UploadTask
 									ref="results/{event.event}/{id}/{submission.name}"
@@ -188,7 +188,7 @@
 									{/if}
 								</UploadTask>
 							{:else}
-								<div class="flex flex-row w-full items-center">
+								<div class="flex w-full flex-row items-center">
 									<DownloadURL ref={submission} let:link>
 										<a href={link} target="_blank">
 											{submission.name}

@@ -56,7 +56,7 @@
 </svelte:head>
 
 <ProgressBar class="text-blue-500" />
-<div class="max-w-full flex flex-col items-center">
+<div class="flex max-w-full flex-col items-center">
 	<FirebaseApp {auth} firestore={db} {storage}>
 		{#if $user}
 			<Navbar />
