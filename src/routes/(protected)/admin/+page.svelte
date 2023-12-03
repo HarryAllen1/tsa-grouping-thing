@@ -10,7 +10,6 @@
 		md,
 		sendEmail,
 		settings,
-		storage,
 		yay,
 		type EventDoc,
 		type UserDoc,
@@ -29,7 +28,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, deleteDoc, doc, setDoc } from 'firebase/firestore';
-	import { deleteObject, listAll, ref } from 'firebase/storage';
+	import { deleteObject } from 'firebase/storage';
 	import Fuse from 'fuse.js';
 	import {
 		ChevronsUpDown,
@@ -646,16 +645,7 @@
 															merge: true,
 														},
 													);
-													for (const submission of event.onlineSubmissions
-														? await listAll(
-																ref(
-																	storage,
-																	`submissions/${event.event}/${team.id}`,
-																),
-														  ).then((r) => r.items)
-														: []) {
-														await deleteObject(submission);
-													}
+
 													aww.play();
 												}}
 											>

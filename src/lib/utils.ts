@@ -63,3 +63,15 @@ export const flyAndScale = (
 
 export const sleep = (ms: number) =>
 	new Promise((resolve) => setTimeout(resolve, ms));
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const removeRef = (obj: Record<string, any>) => {
+	const newObj = { ...obj };
+	delete newObj.ref;
+	for (const key in newObj) {
+		if (typeof newObj[key] === 'object') {
+			newObj[key] = removeRef(newObj[key]);
+		}
+	}
+	return newObj;
+};

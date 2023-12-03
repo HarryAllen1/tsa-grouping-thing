@@ -4,7 +4,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
 	import LightSwitch from '$lib/components/ui/light-switch/light-switch.svelte';
-	import { sleep } from '$lib/utils';
+	import { removeRef, sleep } from '$lib/utils';
 	import { signOut } from 'firebase/auth';
 	import { collection, getDocs } from 'firebase/firestore';
 	import { Download, LogOut } from 'lucide-svelte';
@@ -63,7 +63,7 @@
 	];
 
 	const downloadAsJSON = async () => {
-		const teamsJSON = {
+		const teamsJSON = removeRef({
 			events: (await getDocs(collection(db, 'events'))).docs.map((d) => ({
 				...d.data(),
 			})),
@@ -71,7 +71,7 @@
 				user: d.id,
 				...d.data(),
 			})),
-		};
+		});
 
 		const teamsBlob = new Blob(
 			[new TextEncoder().encode(JSON.stringify(teamsJSON, null, 2))],

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Table from '$lib/components/ui/table';
+	import { removeRef } from '$lib/utils';
 	import { Timestamp } from 'firebase/firestore';
 	import { getHighlighter, setCDN } from 'shiki';
 	import { Collection } from 'sveltefire';
@@ -10,18 +11,6 @@
 		theme: 'one-dark-pro',
 		langs: ['json'],
 	});
-
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const removeRef = (obj: Record<string, any>) => {
-		const newObj = { ...obj };
-		delete newObj.ref;
-		for (const key in newObj) {
-			if (typeof newObj[key] === 'object') {
-				newObj[key] = removeRef(newObj[key]);
-			}
-		}
-		return newObj;
-	};
 </script>
 
 <div class="container">
