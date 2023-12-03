@@ -19,6 +19,8 @@
 
 	const nth = (n: number) =>
 		n + ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
+
+	const openDialogs: Record<string, boolean> = {};
 </script>
 
 <div class="container pt-8">
@@ -183,36 +185,48 @@
 																		</Dialog.Content>
 																	</Dialog.Root>
 																{:else if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/pdf'].includes(meta.contentType ?? '')}
-																	<Dialog.Root>
+																	<Dialog.Root
+																		bind:open={openDialogs[item.name]}
+																	>
 																		<Dialog.Trigger>
 																			{item.name}
 																		</Dialog.Trigger>
 																		<Dialog.Content
-																			class="grid max-h-full max-w-full place-items-center p-6"
+																			class="grid max-h-screen max-w-full place-items-center p-6"
 																		>
-																			<iframe
-																				src="https://docs.google.com/viewer?url={encodeURIComponent(
-																					link ?? '',
-																				)}&embedded=true"
-																				class="h-[calc(100vh-2rem)] w-[calc(100vw-6rem)]"
-																				frameborder="0"
-																				title="A powerpoint presentation"
-																			>
-																				This document cannot be viewed. Try
-																				downloading it using the button in the
-																				bottom right.
-																			</iframe>
-																			<Dialog.Footer>
-																				<Button
-																					class="fixed bottom-4 right-4 lg:bottom-8 lg:right-8"
-																					size="icon"
-																					on:click={() => {
-																						downloadURL(link ?? '', item.name);
-																					}}
+																			{#key openDialogs[item.name]}
+																				<p>
+																					If the document isn't showing up,
+																					click the download button in the
+																					bottom right.
+																				</p>
+																				<iframe
+																					src="https://docs.google.com/viewer?url={encodeURIComponent(
+																						link ?? '',
+																					)}&embedded=true"
+																					class="h-[calc(100vh-6rem)] w-[calc(100vw-6rem)]"
+																					frameborder="0"
+																					title="A powerpoint presentation"
 																				>
-																					<Download />
-																				</Button>
-																			</Dialog.Footer>
+																					This document cannot be viewed. Try
+																					downloading it using the button in the
+																					bottom right.
+																				</iframe>
+																				<Dialog.Footer>
+																					<Button
+																						class="fixed bottom-4 right-4 lg:bottom-8 lg:right-8"
+																						size="icon"
+																						on:click={() => {
+																							downloadURL(
+																								link ?? '',
+																								item.name,
+																							);
+																						}}
+																					>
+																						<Download />
+																					</Button>
+																				</Dialog.Footer>
+																			{/key}
 																		</Dialog.Content>
 																	</Dialog.Root>
 																{:else}
