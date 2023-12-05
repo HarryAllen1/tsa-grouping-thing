@@ -34,7 +34,9 @@
 		Crossed out events are locked, likely due to eliminations.
 	</h1>
 	<p class="mb-2">Minimum 4 events, maximum 6 events.</p>
+	<p class="mb-4">Teams cannot be created for red events.</p>
 	<p class="mb-4">Currently {$userDoc?.events.length}/6</p>
+
 	{#if ($userDoc?.events.length ?? 1) >= 6}
 		<p class="mb-4">
 			Remove one or more events if you want to change your events.
