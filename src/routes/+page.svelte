@@ -326,7 +326,7 @@
 		<div
 			class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 		>
-			{#each signedUpEvents as event}
+			{#each signedUpEvents as event (event.event)}
 				<Card.Root>
 					<Card.Header>
 						<Card.Title>
@@ -361,7 +361,7 @@
 								doesn't seem correct, contact a board member.
 							</p>
 						{/if}
-						{#each event.teams as team}
+						{#each event.teams as team (team.id)}
 							<Card.Root class="bg-blue-500 bg-opacity-20">
 								<Card.Header>
 									<Card.Title>Team #{team.teamNumber}</Card.Title>
@@ -917,7 +917,7 @@
 										</div>
 									{/if}
 									<ul>
-										{#each team.members as teamMember}
+										{#each team.members as teamMember (teamMember.email)}
 											<li>
 												{teamMember.name}
 												{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}

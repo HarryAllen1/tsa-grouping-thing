@@ -289,7 +289,7 @@
 	<div
 		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 	>
-		{#each signedUpEvents ?? [] as event}
+		{#each signedUpEvents ?? [] as event (event.event)}
 			{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
 				<Card.Root
 					class="{eventResults.includes(event.event)
@@ -482,7 +482,7 @@
 											<Trash2 />
 										</Button>
 										<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-											{#each peopleNotInTeams as person}
+											{#each peopleNotInTeams as person (person.email)}
 												<li>
 													<a
 														href="/events/{encodeURIComponent(
@@ -513,7 +513,7 @@
 								</Collapsable.Trigger>
 								<Collapsable.Content>
 									<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-										{#each nonOverlappingEvents(event) as e}
+										{#each nonOverlappingEvents(event) as e (e.event)}
 											<li>
 												<!-- svelte-ignore a11y-invalid-attribute -->
 												<a
@@ -543,7 +543,7 @@
 								</Collapsable.Trigger>
 								<Collapsable.Content>
 									<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-										{#each event.members as person}
+										{#each event.members as person (person.email)}
 											<li>
 												<a
 													href="/events/{encodeURIComponent(
@@ -619,7 +619,7 @@
 							Online submissions
 						</Label>
 
-						{#each event.teams as team}
+						{#each event.teams as team (team.id)}
 							<Card.Root
 								class="{team.members.length > event.maxTeamSize ||
 								team.members.length < event.minTeamSize
@@ -766,7 +766,7 @@
 														Clear
 													</Button>
 													<ul>
-														{#each team.members as teamMember}
+														{#each team.members as teamMember (teamMember.email)}
 															<!-- svelte-ignore a11y-click-events-have-key-events -->
 															<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 															<li
@@ -874,7 +874,7 @@
 																	</div>
 																{/if}
 																<ul>
-																	{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
+																	{#each [...(list?.items ?? []), ...$filesToUpload] as submission (submission instanceof File ? submission.webkitRelativePath : submission.fullPath)}
 																		<li
 																			class="flex w-full flex-col items-center"
 																		>
