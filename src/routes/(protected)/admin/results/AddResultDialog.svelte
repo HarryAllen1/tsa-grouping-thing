@@ -267,6 +267,7 @@
 										  }
 										: r,
 								),
+								lastUpdatedBy: $user?.email ?? '',
 							},
 							{
 								merge: true,
@@ -303,6 +304,7 @@
 							doc(db, 'events', event.event),
 							{
 								results: event.results,
+								lastUpdatedBy: $user?.email ?? '',
 							},
 							{
 								merge: true,

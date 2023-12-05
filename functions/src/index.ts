@@ -30,6 +30,7 @@ export const dbLogger = onDocumentWritten(
 				difference: diff(beforeData, afterData),
 				timestamp: now,
 				eventType: event.type,
+				updatedBy: afterData.lastUpdatedBy,
 			});
 		}
 	},

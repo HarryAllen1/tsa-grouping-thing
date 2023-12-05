@@ -198,6 +198,7 @@
 							await setDoc(doc(db, 'events', newEventStuff.event), {
 								...newEventStuff,
 								teams: [],
+								lastUpdatedBy: $user?.email ?? '',
 							});
 							newEventDialogOpen = false;
 						}}
@@ -255,6 +256,7 @@
 							doc(db, 'events', event.event ?? ''),
 							{
 								teamCreationLocked: true,
+								lastUpdatedBy: $user?.email ?? '',
 							},
 							{
 								merge: true,
@@ -275,6 +277,7 @@
 						doc(db, 'settings', 'settings'),
 						{
 							enableOnlineSubmissions: e,
+							lastUpdatedBy: $user?.email ?? '',
 						},
 						{ merge: true },
 					);
@@ -384,6 +387,7 @@
 															submissionDescription:
 																submissionDescriptionElementMap[event.event]
 																	?.value ?? '',
+															lastUpdatedBy: $user?.email ?? '',
 														},
 														{
 															merge: true,
@@ -464,7 +468,10 @@
 																	'users',
 																	userDoc.email?.toLowerCase() ?? '',
 																),
-																userDoc,
+																{
+																	...userDoc,
+																	lastUpdatedBy: $user?.email ?? '',
+																},
 																{ merge: true },
 															);
 														}
@@ -562,6 +569,7 @@
 										doc(db, 'events', event.event ?? ''),
 										{
 											locked: checked,
+											lastUpdatedBy: $user?.email ?? '',
 										},
 										{
 											merge: true,
@@ -581,6 +589,7 @@
 										doc(db, 'events', event.event),
 										{
 											teamCreationLocked: e,
+											lastUpdatedBy: $user?.email ?? '',
 										},
 										{ merge: true },
 									);
@@ -598,6 +607,7 @@
 										doc(db, 'events', event.event ?? ''),
 										{
 											onlineSubmissions: checked,
+											lastUpdatedBy: $user?.email ?? '',
 										},
 										{
 											merge: true,
@@ -640,6 +650,7 @@
 														doc(db, 'events', event.event ?? ''),
 														{
 															teams: event.teams,
+															lastUpdatedBy: $user?.email ?? '',
 														},
 														{
 															merge: true,
@@ -698,6 +709,7 @@
 																				doc(db, 'events', event.event ?? ''),
 																				{
 																					teams: event.teams,
+																					lastUpdatedBy: $user?.email ?? '',
 																				},
 																				{
 																					merge: true,
@@ -743,6 +755,7 @@
 																doc(db, 'events', event.event ?? ''),
 																{
 																	teams: event.teams,
+																	lastUpdatedBy: $user?.email ?? '',
 																},
 																{
 																	merge: true,
@@ -769,6 +782,7 @@
 																		doc(db, 'events', event.event ?? ''),
 																		{
 																			teams: event.teams,
+																			lastUpdatedBy: $user?.email ?? '',
 																		},
 																		{
 																			merge: true,
@@ -820,6 +834,7 @@
 															doc(db, 'events', event.event ?? ''),
 															{
 																teams: event.teams,
+																lastUpdatedBy: $user?.email ?? '',
 															},
 															{
 																merge: true,
@@ -1024,6 +1039,7 @@
 																		doc(db, 'events', event.event ?? ''),
 																		{
 																			teams: event.teams,
+																			lastUpdatedBy: $user?.email ?? '',
 																		},
 																		{
 																			merge: true,
@@ -1058,6 +1074,7 @@
 																		doc(db, 'events', event.event ?? ''),
 																		{
 																			teams: event.teams,
+																			lastUpdatedBy: $user?.email ?? '',
 																		},
 																		{
 																			merge: true,
@@ -1127,6 +1144,7 @@
 																						),
 																						{
 																							teams: event.teams,
+																							lastUpdatedBy: $user?.email ?? '',
 																						},
 																						{
 																							merge: true,
@@ -1209,6 +1227,7 @@
 															doc(db, 'events', event.event ?? ''),
 															{
 																teams: event.teams,
+																lastUpdatedBy: $user?.email ?? '',
 															},
 															{
 																merge: true,
@@ -1246,6 +1265,7 @@
 									doc(db, 'events', event.event ?? ''),
 									{
 										teams: event.teams,
+										lastUpdatedBy: $user?.email ?? '',
 									},
 									{
 										merge: true,
@@ -1283,6 +1303,7 @@
 										doc(db, 'events', event.event ?? ''),
 										{
 											teams: event.teams,
+											lastUpdatedBy: $user?.email ?? '',
 										},
 										{
 											merge: true,

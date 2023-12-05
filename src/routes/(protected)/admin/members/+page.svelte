@@ -90,7 +90,7 @@
 							onCheckedChange={async (e) => {
 								await setDoc(
 									doc(db, 'users', user.email),
-									{ admin: e },
+									{ admin: e, lastUpdatedBy: $user?.email ?? '' },
 									{ merge: true },
 								);
 							}}
@@ -116,6 +116,7 @@
 										nationalId: parseInt(
 											(valuesMap[user.email].nationalId ?? 0).toString(),
 										),
+										lastUpdatedBy: $user?.email ?? '',
 									},
 									{ merge: true },
 								);
@@ -143,6 +144,7 @@
 										washingtonId: (
 											valuesMap[user.email].washingtonId ?? 0
 										).toString(),
+										lastUpdatedBy: $user?.email ?? '',
 									},
 									{ merge: true },
 								);

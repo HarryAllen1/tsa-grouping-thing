@@ -68,6 +68,7 @@
 														results: event.results?.filter(
 															(r) => r.id !== result.id,
 														),
+														lastUpdatedBy: $user?.email ?? '',
 													},
 													{
 														merge: true,

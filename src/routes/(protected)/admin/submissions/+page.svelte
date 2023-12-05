@@ -68,6 +68,7 @@
 									doc(db, 'events', event.event),
 									{
 										submissionDescription: descriptions[event.event],
+										lastUpdatedBy: $user?.email ?? '',
 									},
 									{ merge: true },
 								);

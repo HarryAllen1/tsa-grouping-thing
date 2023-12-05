@@ -203,6 +203,7 @@
 													teams: signedUpEvents.find(
 														(e) => e.event === request.event,
 													)?.teams,
+													lastUpdatedBy: $user?.email ?? '',
 												},
 												{
 													merge: true,
@@ -282,6 +283,7 @@
 												doc(db, 'events', request.event ?? ''),
 												{
 													teams: event,
+													lastUpdatedBy: $user?.email ?? '',
 												},
 												{
 													merge: true,
@@ -397,6 +399,7 @@
 																			teams: event.teams.filter(
 																				(t) => t.members.length > 0,
 																			),
+																			lastUpdatedBy: $user?.email ?? '',
 																		},
 																		{
 																			merge: true,
@@ -494,6 +497,8 @@
 																							),
 																							{
 																								teams: event.teams,
+																								lastUpdatedBy:
+																									$user?.email ?? '',
 																							},
 																							{
 																								merge: true,
@@ -537,6 +542,7 @@
 																doc(db, 'events', event.event ?? ''),
 																{
 																	teams: event.teams,
+																	lastUpdatedBy: $user?.email ?? '',
 																},
 																{
 																	merge: true,
@@ -751,6 +757,7 @@
 																	}
 																	return t;
 																}),
+																lastUpdatedBy: $user?.email ?? '',
 															},
 															{
 																merge: true,
@@ -821,6 +828,7 @@
 																			doc(db, 'events', event.event ?? ''),
 																			{
 																				teams: event.teams,
+																				lastUpdatedBy: $user?.email ?? '',
 																			},
 																			{
 																				merge: true,
@@ -888,6 +896,7 @@
 																			doc(db, 'events', event.event ?? ''),
 																			{
 																				teams: event.teams,
+																				lastUpdatedBy: $user?.email ?? '',
 																			},
 																			{
 																				merge: true,
@@ -961,6 +970,7 @@
 										doc(db, 'events', event.event ?? ''),
 										{
 											teams: event.teams,
+											lastUpdatedBy: $user?.email ?? '',
 										},
 										{
 											merge: true,
