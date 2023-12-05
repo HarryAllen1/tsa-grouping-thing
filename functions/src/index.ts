@@ -25,9 +25,9 @@ export const dbLogger = onDocumentWritten(
 			db.doc(`firestore_logs/${now.toDate().getTime()}`).set({
 				collection: event.params.collection,
 				id: event.params.id,
+				difference: diff(beforeData, afterData),
 				afterData,
 				beforeData,
-				difference: diff(beforeData, afterData),
 				timestamp: now,
 				eventType: event.type,
 				updatedBy: afterData.lastUpdatedBy,
