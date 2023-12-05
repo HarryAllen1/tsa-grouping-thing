@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { allUsersCollection, db, type BasicUser, type EventDoc } from '$lib';
+	import {
+		allUsersCollection,
+		db,
+		type BasicUser,
+		type EventDoc,
+		user,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Command from '$lib/components/ui/command';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -120,13 +126,7 @@
 				</Button>
 			</div>
 		{/each}
-		<Popover.Root
-			positioning={{
-				placement: 'bottom',
-			}}
-			bind:open={comboboxOpen}
-			let:ids
-		>
+		<Popover.Root bind:open={comboboxOpen} let:ids>
 			<Popover.Trigger asChild let:builder>
 				<Button
 					builders={[builder]}

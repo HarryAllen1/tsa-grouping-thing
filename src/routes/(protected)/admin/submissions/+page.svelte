@@ -1,16 +1,23 @@
 <script lang="ts">
-	import { db, downloadURL, eventsCollection, md, StorageMetadata } from '$lib';
+	import {
+		db,
+		downloadURL,
+		eventsCollection,
+		md,
+		StorageMetadata,
+		user,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
-	import { ArrowUpRight, Download } from 'lucide-svelte';
-	import { DownloadURL, StorageList } from 'sveltefire';
-	import RotatingImage from './RotatingImage.svelte';
-	import AddResultDialog from '../results/AddResultDialog.svelte';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { doc, setDoc } from 'firebase/firestore';
+	import { ArrowUpRight, Download } from 'lucide-svelte';
+	import { DownloadURL, StorageList } from 'sveltefire';
+	import AddResultDialog from '../results/AddResultDialog.svelte';
+	import RotatingImage from './RotatingImage.svelte';
 
 	let hideEmpty = false;
 
