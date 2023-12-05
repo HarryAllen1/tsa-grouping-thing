@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { allUsersCollection, db, eventsCollection } from '$lib';
+	import {
+		allUsersCollection,
+		db,
+		eventsCollection,
+		user as userStore,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -90,7 +95,7 @@
 							onCheckedChange={async (e) => {
 								await setDoc(
 									doc(db, 'users', user.email),
-									{ admin: e, lastUpdatedBy: $user?.email ?? '' },
+									{ admin: e, lastUpdatedBy: $userStore?.email ?? '' },
 									{ merge: true },
 								);
 							}}
@@ -116,7 +121,7 @@
 										nationalId: parseInt(
 											(valuesMap[user.email].nationalId ?? 0).toString(),
 										),
-										lastUpdatedBy: $user?.email ?? '',
+										lastUpdatedBy: $userStore?.email ?? '',
 									},
 									{ merge: true },
 								);
@@ -144,7 +149,7 @@
 										washingtonId: (
 											valuesMap[user.email].washingtonId ?? 0
 										).toString(),
-										lastUpdatedBy: $user?.email ?? '',
+										lastUpdatedBy: $userStore?.email ?? '',
 									},
 									{ merge: true },
 								);
