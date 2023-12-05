@@ -136,6 +136,8 @@
 	};
 
 	const submissionDescriptionElementMap: Record<string, Textarea> = {};
+
+	const openTeamNumberDialogs: Record<string, boolean> = {};
 </script>
 
 <svelte:window
@@ -631,6 +633,52 @@
 								<Card.Header>
 									<Card.Title>
 										Team #{team.teamNumber}
+										<Dialog.Root bind:open={openTeamNumberDialogs[team.id]}>
+											<Dialog.Trigger>
+												<Button>Edit</Button>
+											</Dialog.Trigger>
+											<Dialog.Content>
+												<Dialog.Title>Edit team number</Dialog.Title>
+												<div class="flex w-full max-w-sm flex-col gap-1.5">
+													<Label for="teamNumber">Team Number</Label>
+													<Input
+														type="email"
+														id="teamNumber"
+														placeholder="1"
+														value={team.teamNumber}
+													/>
+												</div>
+												<Dialog.Footer>
+													<Button
+														on:click={async () => {
+															const el = document.querySelector('#teamNumber');
+															if (el instanceof HTMLInputElement) {
+																await setDoc(
+																	doc(db, 'events', event.event ?? ''),
+																	{
+																		teams: event.teams.map((t) =>
+																			t.id === team.id
+																				? {
+																						...t,
+																						teamNumber: el.value,
+																				  }
+																				: t,
+																		),
+																		lastUpdatedBy: $user?.email ?? '',
+																	},
+																	{
+																		merge: true,
+																	},
+																);
+																openTeamNumberDialogs[team.id] = false;
+															}
+														}}
+													>
+														Save
+													</Button>
+												</Dialog.Footer>
+											</Dialog.Content>
+										</Dialog.Root>
 									</Card.Title>
 									<div class="flex flex-col gap-2">
 										<div class="flex flex-row gap-1">
