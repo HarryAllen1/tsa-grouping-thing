@@ -132,8 +132,13 @@
 											{nth(
 												event.results.findIndex(
 													(r) =>
-														r.members.map((m) => m.email).join() ===
-														teamResult.join(),
+														r.members
+															.map((m) => m.email)
+															.sort((a, b) => a.localeCompare(b))
+															.join() ===
+														teamResult
+															.sort((a, b) => a.localeCompare(b))
+															.join(),
 												) + 1,
 											)}
 											place
