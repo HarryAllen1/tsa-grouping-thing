@@ -13,6 +13,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { doc, setDoc } from 'firebase/firestore';
 	import Fuse from 'fuse.js';
+	import * as Select from '$lib/components/ui/select';
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
 
 	let search = '';
@@ -22,7 +23,7 @@
 	});
 	$: results =
 		search === ''
-			? $allUsersCollection
+			? $allUsersCollection.toSorted((a, b) => a.name.localeCompare(b.name))
 			: fuse.search(search).map((r) => r.item);
 
 	const valuesMap: Record<string, Record<string, number | undefined>> = {};
@@ -73,7 +74,7 @@
 	<div
 		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 	>
-		{#each $allUsersCollection as user}
+		{#each $allUsersCollection.toSorted( (a, b) => a.name.localeCompare(b.name), ) as user}
 			{@const hash = user.email.replaceAll('@', '').replaceAll('.', '')}
 			<Card.Root class={results.includes(user) ? '' : 'hidden'}>
 				<Card.Header>
@@ -104,65 +105,93 @@
 					</div>
 					<div class="flex w-full max-w-sm flex-col gap-1.5">
 						<Label for="{hash}natid">National ID</Label>
-						<Input
-							bind:value={valuesMap[user.email].nationalId}
-							type="number"
-							id="{hash}natid"
-							placeholder="123456"
-						/>
-						<Button
-							disabled={valuesMap[user.email].nationalId?.toString() ===
-								user.nationalId?.toString()}
-							size="icon"
-							on:click={async () => {
-								await setDoc(
-									doc(db, 'users', user.email),
-									{
-										nationalId: parseInt(
-											(valuesMap[user.email].nationalId ?? 0).toString(),
-										),
-										lastUpdatedBy: $userStore?.email ?? '',
-									},
-									{ merge: true },
-								);
-							}}
-						>
-							<Save />
-						</Button>
+						<div class="flex flex-row gap-2">
+							<Input
+								bind:value={valuesMap[user.email].nationalId}
+								type="number"
+								id="{hash}natid"
+								placeholder="123456"
+							/>
+							<Button
+								disabled={valuesMap[user.email].nationalId?.toString() ===
+									user.nationalId?.toString()}
+								size="icon"
+								on:click={async () => {
+									await setDoc(
+										doc(db, 'users', user.email),
+										{
+											nationalId: parseInt(
+												(valuesMap[user.email].nationalId ?? 0).toString(),
+											),
+											lastUpdatedBy: $userStore?.email ?? '',
+										},
+										{ merge: true },
+									);
+								}}
+							>
+								<Save />
+							</Button>
+						</div>
 					</div>
 					<div class="flex w-full max-w-sm flex-col gap-1.5">
 						<Label for="{hash}wtsaid">WTSA ID</Label>
-						<Input
-							bind:value={valuesMap[user.email].washingtonId}
-							type="number"
-							id="{hash}wtsaid"
-							placeholder="123456"
-						/>
-						<Button
-							disabled={valuesMap[user.email].washingtonId?.toString() ===
-								user.washingtonId?.toString()}
-							size="icon"
-							on:click={async () => {
-								await setDoc(
-									doc(db, 'users', user.email),
-									{
-										washingtonId: (
-											valuesMap[user.email].washingtonId ?? 0
-										).toString(),
-										lastUpdatedBy: $userStore?.email ?? '',
-									},
-									{ merge: true },
-								);
+						<div class="flex flex-row gap-2">
+							<Input
+								bind:value={valuesMap[user.email].washingtonId}
+								type="number"
+								id="{hash}wtsaid"
+								placeholder="123456"
+							/>
+							<Button
+								disabled={valuesMap[user.email].washingtonId?.toString() ===
+									user.washingtonId?.toString()}
+								size="icon"
+								on:click={async () => {
+									await setDoc(
+										doc(db, 'users', user.email),
+										{
+											washingtonId: (
+												valuesMap[user.email].washingtonId ?? 0
+											).toString(),
+											lastUpdatedBy: $userStore?.email ?? '',
+										},
+										{ merge: true },
+									);
+								}}
+							>
+								<Save />
+							</Button>
+						</div>
+					</div>
+					<Label>
+						<span class="mb-2"> Gender </span>
+						<Select.Root
+							selected={user.gender
+								? { value: user.gender, label: user.gender }
+								: { value: 'null', label: 'Unspecified' }}
+							onSelectedChange={async (s) => {
+								if (s)
+									await setDoc(
+										doc(db, 'users', user.email),
+										{
+											gender: s.value,
+										},
+										{ merge: true },
+									);
 							}}
 						>
-							<Save />
-						</Button>
-					</div>
-					{#if user.gender}
-						<p>
-							Gender: {user.gender}
-						</p>
-					{/if}
+							<Select.Trigger class="mt-2 w-full">
+								<Select.Value placeholder="Gender" />
+							</Select.Trigger>
+							<Select.Content>
+								<Select.Item value="Male">Male</Select.Item>
+								<Select.Item value="Female">Female</Select.Item>
+								<Select.Item value="Non-Binary">Non-Binary</Select.Item>
+								<Select.Item value="null">Unspecified</Select.Item>
+							</Select.Content>
+						</Select.Root>
+					</Label>
+
 					{#if user.demographic}
 						<p>
 							Demographic: {user.demographic}
