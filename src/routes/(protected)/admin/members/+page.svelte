@@ -107,6 +107,9 @@
 		</span>
 	</p>
 
+	<p>Red = not enough events</p>
+	<p>Yellow = doesn't have a team for all events</p>
+
 	<Button
 		class="mb-4"
 		on:click={() => {
@@ -265,10 +268,21 @@
 									class="member-collapsable flex w-full items-center p-2 {user
 										.events.length < 4 || user.events.length > 6
 										? 'text-red-500'
-										: ''}"
+										: user.events
+													.map(
+														(e) =>
+															$eventsCollection
+																.find((ev) => ev.event === e)
+																?.teams.find((t) =>
+																	t.members.find((m) => m.email === user.email),
+																) ?? null,
+													)
+													.filter((t) => t).length < user.events.length
+										  ? 'text-yellow-500'
+										  : ''}"
 								>
 									Events
-									<div class="flex-1"></div>
+									<div class="flex-1" />
 									<ChevronsUpDown class="h-4 w-4" />
 								</Button>
 							</Collapsible.Trigger>
@@ -280,7 +294,7 @@
 										?.teams.find((t) =>
 											t.members.find((m) => m.email === user.email),
 										)}
-									<p>
+									<p class:text-red-500={!maybeTeam}>
 										{event}
 
 										{#if maybeTeam}
