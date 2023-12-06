@@ -38,7 +38,7 @@
 	"dependencies": {
 		"@observablehq/plot": "^0.6.11",
 		"@vercel/analytics": "^1.1.1",
-		"bits-ui": "^0.11.2",
+		"bits-ui": "^0.11.3",
 		"canvas-confetti": "^1.9.2",
 		"clsx": "^2.0.0",
 		"cmdk-sv": "^0.0.12",

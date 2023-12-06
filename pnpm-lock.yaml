@@ -19,8 +19,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       bits-ui:
-        specifier: ^0.11.2
-        version: 0.11.2(svelte@4.2.8)
+        specifier: ^0.11.3
+        version: 0.11.3(svelte@4.2.8)
       canvas-confetti:
         specifier: ^1.9.2
         version: 1.9.2
@@ -1491,6 +1491,12 @@ packages:
       '@floating-ui/utils': 0.1.6
     dev: false
 
+  /@floating-ui/core@1.5.2:
+    resolution: {integrity: sha512-Ii3MrfY/GAIN3OhXNzpCKaLxHQfJF9qvwq/kEJYdqDxeIHa01K8sldugal6TmeeXl+WMvhv9cnVzUTaFFJF09A==}
+    dependencies:
+      '@floating-ui/utils': 0.1.6
+    dev: false
+
   /@floating-ui/dom@1.5.3:
     resolution: {integrity: sha512-ClAbQnEqJAKCJOEbbLo5IUlZHkNszqhuxS4fHAVxRPXPya6Ysf2G8KypnYcOTpx6I8xcgF9bbHb6g/2KpbV8qA==}
     dependencies:
@@ -1935,7 +1941,7 @@ packages:
     peerDependencies:
       svelte: '>=3 <5'
     dependencies:
-      '@floating-ui/core': 1.5.1
+      '@floating-ui/core': 1.5.2
       '@floating-ui/dom': 1.5.3
       '@internationalized/date': 3.5.0
       dequal: 2.0.3
@@ -3118,8 +3124,8 @@ packages:
       file-uri-to-path: 1.0.0
     dev: true
 
-  /bits-ui@0.11.2(svelte@4.2.8):
-    resolution: {integrity: sha512-Gj+jUEtO52pVdszf+OOWiqA6QueDiq+pIyKXZrFPN9FpmbUFU2erB1zZdCpTjtmHRzK8gvLpOyy52L0tl6kflw==}
+  /bits-ui@0.11.3(svelte@4.2.8):
+    resolution: {integrity: sha512-WV8XCkLW1u9vStdifgAiCmz5UW3u65Jm05SLuj0SOxQP6pkZIwnt1Nq61QOWsOEUeqYcQrp2VZsX1bhMuTVNpg==}
     peerDependencies:
       svelte: ^4.0.0
     dependencies:
@@ -3219,7 +3225,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001566
-      electron-to-chromium: 1.4.604
+      electron-to-chromium: 1.4.605
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
     dev: true
@@ -3928,8 +3934,8 @@ packages:
     resolution: {integrity: sha512-gpXfJslSi4hYDkA0mTLEpYKRv9siAgSUgZ+UWyk+J5Cttpd1ThCVwdclzIwQSclz3hYn049+M2fgrP1WpvF8xg==}
     dev: true
 
-  /electron-to-chromium@1.4.604:
-    resolution: {integrity: sha512-JAJ4lyLJYudlgJPYJicimU9R+qZ/3iyeyQS99bfT7PWi7psYWeN84lPswTjpHxQueU34PKxM/IJzQS6poYlovQ==}
+  /electron-to-chromium@1.4.605:
+    resolution: {integrity: sha512-V52j+P5z6cdRqTjPR/bYNxx7ETCHIkm5VIGuyCy3CMrfSnbEpIlLnk5oHmZo7gYvDfh2TfHeanB6rawyQ23ktg==}
     dev: true
 
   /emittery@0.13.1:

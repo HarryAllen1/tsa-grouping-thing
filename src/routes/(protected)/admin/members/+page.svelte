@@ -39,6 +39,59 @@
 			};
 		});
 	});
+
+	// const stuff: {
+	// 	email: string;
+	// 	waId: number;
+	// 	natId: number;
+	// 	events: {
+	// 		eventId: number;
+	// 		teamNumber: number;
+	// 		isCaptain: boolean;
+	// 		event: string;
+	// 		isTeamEvent: boolean;
+	// 	}[];
+	// }[] = [];
+
+	// let logged = false;
+	// $: if ($allUsersCollection.length && $eventsCollection.length && !logged) {
+	// 	for (const u of $allUsersCollection) {
+	// 		const events: {
+	// 			eventId: number;
+	// 			teamNumber: number;
+	// 			isCaptain: boolean;
+	// 			event: string;
+	// 			isTeamEvent: boolean;
+	// 		}[] = [];
+	// 		for (const event of u.events) {
+	// 			const team = $eventsCollection
+	// 				.find((e) => e.event === event)
+	// 				?.teams.find((t) => t.members.find((m) => m.email === u.email));
+	// 			const eventInfo = $eventsCollection.find((e) => e.event === event);
+
+	// 			if (team && eventInfo) {
+	// 				events.push({
+	// 					event: eventInfo.event,
+	// 					eventId: eventInfo.id,
+	// 					teamNumber: team.teamNumber,
+	// 					isTeamEvent: eventInfo.maxTeamSize > 1,
+	// 					isCaptain:
+	// 						team.teamCaptain?.toLowerCase() === u.email?.toLowerCase(),
+	// 				});
+	// 			}
+	// 		}
+
+	// 		stuff.push({
+	// 			email: u.email,
+	// 			waId: u.washingtonId ?? 0,
+	// 			natId: u.nationalId ?? 0,
+	// 			events,
+	// 		});
+	// 	}
+
+	// 	console.log(stuff);
+	// 	logged = true;
+	// }
 </script>
 
 <div class="container">
