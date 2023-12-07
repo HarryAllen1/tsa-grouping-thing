@@ -1,21 +1,21 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
-	import { FancyConfirm, ProgressBar, auth, db, storage } from '$lib';
+	import { FancyConfirm, ProgressBar, auth, db, storage, user } from '$lib';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
-	import { FirebaseApp, SignedIn, SignedOut } from 'sveltefire';
+	import { FirebaseApp } from 'sveltefire';
 	import '../app.css';
 	import Navbar from './Navbar.svelte';
 
-	// $: if (
-	// 	!$user &&
-	// 	$page.url.pathname !== '/login' &&
-	// 	$page.url.pathname !== '/stats'
-	// ) {
-	// 	location.href = `/login`;
-	// }
+	$: if (
+		!$user &&
+		$page.url.pathname !== '/login' &&
+		$page.url.pathname !== '/stats'
+	) {
+		location.href = `/login`;
+	}
 
 	const unsub = onAuthStateChanged(auth, async (user) => {
 		if (
@@ -56,16 +56,12 @@
 <ProgressBar class="text-blue-500" />
 <div class="flex max-w-full flex-col items-center">
 	<FirebaseApp {auth} firestore={db} {storage}>
-		<SignedIn let:user>
+		{#if $user}
 			<Navbar />
-			{#key user}
-				<slot />
-			{/key}
-		</SignedIn>
-		<SignedOut>
+		{:else}
 			<LightSwitch class="mt-4" />
-			<slot />
-		</SignedOut>
+		{/if}
+		<slot />
 	</FirebaseApp>
 </div>
 
