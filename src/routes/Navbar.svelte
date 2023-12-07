@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { auth, aww, db, type Team, type UserDoc } from '$lib';
+	import { auth, aww, db, type UserDoc } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
@@ -74,7 +74,25 @@
 		});
 
 		const teamsBlob = new Blob(
-			[new TextEncoder().encode(JSON.stringify(teamsJSON, null, 2))],
+			[
+				new TextEncoder().encode(
+					JSON.stringify(
+						teamsJSON,
+						(k, v) =>
+							[
+								'members',
+								'events',
+								'users',
+								'teams',
+								'results',
+								'requests',
+							].includes(k)
+								? Object.values(v)
+								: v,
+						2,
+					),
+				),
+			],
 			{
 				type: 'application/json;charset=utf-8',
 			},
@@ -85,41 +103,6 @@
 		a.style.display = 'none';
 		a.href = url;
 		a.download = 'teams.json';
-		document.body.append(a);
-		a.click();
-		URL.revokeObjectURL(url);
-		a.remove();
-	};
-	const downloadAsCSV = async () => {
-		const header = 'Event,Team Captain,Team Members\n';
-
-		const teamsCSV = (await getDocs(collection(db, 'events'))).docs
-			.map((d) => ({
-				event: d.id,
-				...(d.data() as { teams: Team[] }),
-			}))
-			.map((d) =>
-				d.teams
-					.map(
-						(t) =>
-							`"${d.event}","${t.teamCaptain ?? ''}","${t.members
-								.map((m) => m.name)
-								.join(';')}"`,
-					)
-					.join('\n'),
-			)
-			.join('\n')
-			.replaceAll('\n\n', '\n');
-
-		const teamsBlob = new Blob([new TextEncoder().encode(header + teamsCSV)], {
-			type: 'text/csv;charset=utf-8',
-		});
-
-		const url = URL.createObjectURL(teamsBlob);
-		const a = document.createElement('a');
-		a.style.display = 'none';
-		a.href = url;
-		a.download = 'teams.csv';
 		document.body.append(a);
 		a.click();
 		URL.revokeObjectURL(url);
@@ -142,21 +125,9 @@
 			<nav class="flex items-center space-x-2">
 				<!-- profile -->
 				{#if $userDoc?.admin}
-					<Dropdown.Root>
-						<Dropdown.Trigger asChild let:builder>
-							<Button size="icon" variant="ghost" builders={[builder]}>
-								<Download />
-							</Button>
-						</Dropdown.Trigger>
-						<Dropdown.Content>
-							<Dropdown.Item on:click={downloadAsJSON}>
-								Download as JSON
-							</Dropdown.Item>
-							<Dropdown.Item on:click={downloadAsCSV}>
-								Download as CSV
-							</Dropdown.Item>
-						</Dropdown.Content>
-					</Dropdown.Root>
+					<Button size="icon" variant="ghost" on:click={downloadAsJSON}>
+						<Download />
+					</Button>
 				{/if}
 				<LightSwitch />
 				<Button
