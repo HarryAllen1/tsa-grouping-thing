@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import {
 		SimpleTooltip,
 		StorageMetadata,
@@ -44,8 +43,6 @@
 	import { flip } from 'svelte/animate';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
-
-	if (!$user) goto('/login');
 
 	const yellowMode = localStorageStore('yellowMode', false);
 

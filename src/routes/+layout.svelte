@@ -5,19 +5,17 @@
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
-	import { FirebaseApp, userStore } from 'sveltefire';
+	import { FirebaseApp, SignedIn, SignedOut } from 'sveltefire';
 	import '../app.css';
 	import Navbar from './Navbar.svelte';
 
-	const user = userStore(auth);
-
-	$: if (
-		!$user &&
-		$page.url.pathname !== '/login' &&
-		$page.url.pathname !== '/stats'
-	) {
-		location.href = `/login`;
-	}
+	// $: if (
+	// 	!$user &&
+	// 	$page.url.pathname !== '/login' &&
+	// 	$page.url.pathname !== '/stats'
+	// ) {
+	// 	location.href = `/login`;
+	// }
 
 	const unsub = onAuthStateChanged(auth, async (user) => {
 		if (
@@ -58,12 +56,16 @@
 <ProgressBar class="text-blue-500" />
 <div class="flex max-w-full flex-col items-center">
 	<FirebaseApp {auth} firestore={db} {storage}>
-		{#if $user}
+		<SignedIn let:user>
 			<Navbar />
-		{:else}
+			{#key user}
+				<slot />
+			{/key}
+		</SignedIn>
+		<SignedOut>
 			<LightSwitch class="mt-4" />
-		{/if}
-		<slot />
+			<slot />
+		</SignedOut>
 	</FirebaseApp>
 </div>
 
