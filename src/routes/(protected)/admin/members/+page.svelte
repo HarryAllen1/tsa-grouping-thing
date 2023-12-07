@@ -113,11 +113,15 @@
 	<Button
 		class="mb-4"
 		on:click={() => {
-			document.querySelectorAll('.member-collapsable').forEach((el) => {
-				if (el instanceof HTMLButtonElement) el.click();
-			});
-		}}>Expand all events</Button
+			document
+				.querySelectorAll('.member-collapsable:not([data-state="open"])')
+				.forEach((el) => {
+					if (el instanceof HTMLButtonElement) el.click();
+				});
+		}}
 	>
+		Expand all events
+	</Button>
 
 	<Input
 		class="mb-4"
@@ -277,9 +281,22 @@
 																	t.members.find((m) => m.email === user.email),
 																) ?? null,
 													)
-													.filter((t) => t).length < user.events.length
-										  ? 'text-yellow-500'
-										  : ''}"
+													.filter((t) => t).length < 4
+										  ? 'text-orange-500'
+										  : user.events
+														.map(
+															(e) =>
+																$eventsCollection
+																	.find((ev) => ev.event === e)
+																	?.teams.find((t) =>
+																		t.members.find(
+																			(m) => m.email === user.email,
+																		),
+																	) ?? null,
+														)
+														.filter((t) => t).length < user.events.length
+										    ? 'text-yellow-500'
+										    : ''}"
 								>
 									Events
 									<div class="flex-1" />
