@@ -363,12 +363,8 @@
 								<Card.Header>
 									<Card.Title>Team #{team.teamNumber}</Card.Title>
 									<div class="flex flex-col gap-1 lg:flex-row">
-										{#if team.locked}
-											<p>
-												This team is currently locked from editing. This likely
-												due to eliminations. If this is unexpected, or you want
-												to change something, contact a board member.
-											</p>
+										{#if team.locked || event.locked}
+											<p>This team is currently locked from editing.</p>
 										{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 											<div class="flex flex-col gap-2">
 												<div class="flex w-full flex-row gap-2">
