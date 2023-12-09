@@ -12,6 +12,7 @@ export interface EventDoc {
 	results?: Result[];
 	submissionDescription?: string;
 	id: number;
+	allowGenderMixing?: boolean;
 }
 
 export interface Result {
@@ -70,4 +71,5 @@ export interface MailDoc {
 
 export interface SettingsDoc {
 	enableOnlineSubmissions: boolean;
+	enableRooming: boolean;
 }

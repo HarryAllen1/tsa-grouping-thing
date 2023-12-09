@@ -12,13 +12,15 @@
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 	const events = collectionStore<EventDoc>(db, 'events');
 
-	$: eventMap = $events.reduce(
-		(acc, curr) => ({
-			...acc,
-			[curr.event]: $userDoc?.events.includes(curr.event) ?? false,
-		}),
-		{} as { [event: string]: boolean },
-	);
+	$: eventMap = $events
+		.filter((e) => e.event !== '*Rooming')
+		.reduce(
+			(acc, curr) => ({
+				...acc,
+				[curr.event]: $userDoc?.events.includes(curr.event) ?? false,
+			}),
+			{} as { [event: string]: boolean },
+		);
 </script>
 
 <div class="container mt-6">
@@ -44,7 +46,7 @@
 	{/if}
 
 	<div class="flex flex-col gap-2">
-		{#each $events as event}
+		{#each $events.filter((e) => e.event !== '*Rooming') as event (event.event)}
 			<div
 				class="flex items-center space-x-2"
 				class:text-red-500={event.teams.length >= event.perChapter}
