@@ -120,8 +120,6 @@
 
 	let newEventDialogOpen = false;
 
-	$: onlineSubmissions = $settings?.enableOnlineSubmissions ?? false;
-
 	let submissionsFileUpload: HTMLInputElement;
 	const filesToUpload = writable<File[]>([]);
 
@@ -273,7 +271,7 @@
 		<div class="flex items-center space-x-2">
 			<Switch
 				id="enable-online-submissions"
-				checked={onlineSubmissions}
+				checked={$settings?.enableOnlineSubmissions ?? false}
 				onCheckedChange={async (e) => {
 					await setDoc(
 						doc(db, 'settings', 'settings'),
@@ -286,6 +284,23 @@
 				}}
 			/>
 			<Label for="enable-online-submissions">Enable online submissions</Label>
+		</div>
+		<div class="flex items-center space-x-2">
+			<Switch
+				id="enable-rooming"
+				checked={$settings?.enableRooming ?? false}
+				onCheckedChange={async (e) => {
+					await setDoc(
+						doc(db, 'settings', 'settings'),
+						{
+							enableRooming: e,
+							lastUpdatedBy: $user?.email ?? '',
+						},
+						{ merge: true },
+					);
+				}}
+			/>
+			<Label for="enable-rooming">Enable rooming</Label>
 		</div>
 	</div>
 	<div

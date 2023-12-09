@@ -15,6 +15,7 @@
 		user,
 		userDoc,
 		yay,
+		settings,
 		type EventDoc,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
@@ -53,13 +54,21 @@
 	}
 
 	$: signedUpEvents = (
-		$eventsCollection.length
-			? ($userDoc?.events ?? [])
-					.map((e) => ({
-						...$eventsCollection.find((ev) => ev.event === e),
-					}))
-					.sort((a, b) => a.event!.localeCompare(b.event!))
-			: []
+		$settings?.enableRooming
+			? $eventsCollection.length
+				? ($userDoc?.events ? [...$userDoc.events, '*Rooming'] : [])
+						.map((e) => ({
+							...$eventsCollection.find((ev) => ev.event === e),
+						}))
+						.sort((a, b) => a.event!.localeCompare(b.event!))
+				: []
+			: $eventsCollection.length
+			  ? ($userDoc?.events ?? [])
+						.map((e) => ({
+							...$eventsCollection.find((ev) => ev.event === e),
+						}))
+						.sort((a, b) => a.event!.localeCompare(b.event!))
+			  : []
 	) as EventDoc[];
 	$: eventData = $eventsCollection.length
 		? $eventsCollection
@@ -332,21 +341,31 @@
 						<Card.Description>
 							<ul>
 								<li>
-									Min {event.minTeamSize} people per team
+									Min {event.minTeamSize} people per {event.event === '*Rooming'
+										? 'room'
+										: 'team'}
 								</li>
 								<li>
-									Max {event.maxTeamSize} people per team
+									Max {event.maxTeamSize} people per {event.event === '*Rooming'
+										? 'room'
+										: 'team'}
 								</li>
 								<li class:text-red-500={event.teams.length > event.perChapter}>
-									Max {event.perChapter} teams per chapter (currently {event
-										.teams.length})
+									Max {event.perChapter}
+									{event.event === '*Rooming' ? 'rooms' : 'teams'} per chapter (currently
+									{event.teams.length})
 								</li>
 								<li>
 									{event.teams.reduce(
 										(acc, curr) => acc + curr.members.length,
 										0,
-									)}/{eventData.find((e) => e.event === event.event)?.members
-										.length ?? 0} people joined teams
+									)}/{event.event === '*Rooming'
+										? $allUsersCollection.filter((u) => u.events.length > 0)
+												.length
+										: eventData.find((e) => e.event === event.event)?.members
+												.length ?? 0} people joined {event.event === '*Rooming'
+										? 'room'
+										: 'teams'}
 								</li>
 							</ul>
 						</Card.Description>
@@ -361,7 +380,9 @@
 						{#each event.teams as team (team.id)}
 							<Card.Root class="bg-blue-500 bg-opacity-20">
 								<Card.Header>
-									<Card.Title>Team #{team.teamNumber}</Card.Title>
+									<Card.Title>
+										{event.event === '*Rooming' ? 'Room' : 'Team'} #{team.teamNumber}
+									</Card.Title>
 									<div class="flex flex-col gap-1 lg:flex-row">
 										{#if team.locked || event.locked}
 											<p>This team is currently locked from editing.</p>
@@ -448,18 +469,38 @@
 															</Dialog.Trigger>
 														{/if}
 
-														<Dialog.Content>
+														<Dialog.Content
+															class="max-h-screen overflow-y-scroll"
+														>
 															<Dialog.Title>Add People</Dialog.Title>
 															<Dialog.Description>
 																{#if team.members.length >= (event.maxTeamSize ?? 9999)}
 																	<Alert class="dark:brightness-200">
-																		<AlertTitle>This team is full</AlertTitle>
+																		<AlertTitle>
+																			This {event.event === '*Rooming'
+																				? 'room'
+																				: 'team'} is full</AlertTitle
+																		>
 																	</Alert>
 																{:else}
-																	<p>People who signed up for this event:</p>
+																	{#if event.event === '*Rooming'}
+																		<Alert
+																			variant="destructive"
+																			class="dark:brightness-200"
+																		>
+																			<AlertTitle>
+																				You can only be in rooms with people of
+																				the same gender (this is district
+																				policy)
+																			</AlertTitle>
+																			If something seems wrong, contact a board member.
+																		</Alert>
+																	{:else}
+																		<p>People who signed up for this event:</p>
+																	{/if}
 																	<ul>
 																		{#each $allUsersCollection
-																			.filter((m) => m.events.includes(event.event ?? '') && !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ) && !event.teams.find( (t) => t.requests?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
+																			.filter((m) => /* signed up for event and also include gender check */ (event.event === '*Rooming' ? m.gender === $userDoc?.gender || m.gender === 'Non-Binary' : m.events.includes(event.event ?? '')) && /* not already in team */ !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ) && /* didn't request to be part of another team */ !event.teams.find( (t) => t.requests?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
 																			.sort( (a, b) => a.name.localeCompare(b.name), ) as person (person.email)}
 																			<li
 																				class="flex flex-row items-center"
@@ -521,34 +562,37 @@
 														</Dialog.Content>
 													</Dialog.Root>
 												</div>
-												<div class="flex w-full flex-row gap-2">
-													<Button
-														on:click={async () => {
-															const teamButMutable = team;
-															teamButMutable.teamCaptain = $user?.email ?? '';
-															teamButMutable.lastUpdatedBy = $user?.email ?? '';
-															teamButMutable.lastUpdatedTime = new Timestamp(
-																Date.now() / 1000,
-																0,
-															);
-															await setDoc(
-																doc(db, 'events', event.event ?? ''),
-																{
-																	teams: event.teams,
-																	lastUpdatedBy: $user?.email ?? '',
-																},
-																{
-																	merge: true,
-																},
-															);
-															congratulations.play();
-														}}
-														disabled={team.teamCaptain === $user?.email}
-														class="w-fit"
-													>
-														Become Team Captain
-													</Button>
-												</div>
+												{#if event.event !== '*Rooming'}
+													<div class="flex w-full flex-row gap-2">
+														<Button
+															on:click={async () => {
+																const teamButMutable = team;
+																teamButMutable.teamCaptain = $user?.email ?? '';
+																teamButMutable.lastUpdatedBy =
+																	$user?.email ?? '';
+																teamButMutable.lastUpdatedTime = new Timestamp(
+																	Date.now() / 1000,
+																	0,
+																);
+																await setDoc(
+																	doc(db, 'events', event.event ?? ''),
+																	{
+																		teams: event.teams,
+																		lastUpdatedBy: $user?.email ?? '',
+																	},
+																	{
+																		merge: true,
+																	},
+																);
+																congratulations.play();
+															}}
+															disabled={team.teamCaptain === $user?.email}
+															class="w-fit"
+														>
+															Become Team Captain
+														</Button>
+													</div>
+												{/if}
 												{#if event.onlineSubmissions}
 													<div>
 														<Dialog.Root
@@ -971,7 +1015,7 @@
 									);
 								}}
 							>
-								Create Team
+								Create {event.event === '*Rooming' ? 'Room' : 'Team'}
 							</Button>
 						</Card.Footer>
 					{/if}
