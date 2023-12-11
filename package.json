@@ -64,7 +64,7 @@
 			}
 		},
 		"overrides": {
-			"vite": "^5.0.2",
+			"vite": "^5.0.7",
 			"picocolors": "npm:colorette"
 		}
 	}
