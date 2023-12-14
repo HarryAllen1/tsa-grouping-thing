@@ -63,12 +63,12 @@
 						.sort((a, b) => a.event!.localeCompare(b.event!))
 				: []
 			: $eventsCollection.length
-			  ? ($userDoc?.events ?? [])
+				? ($userDoc?.events ?? [])
 						.map((e) => ({
 							...$eventsCollection.find((ev) => ev.event === e),
 						}))
 						.sort((a, b) => a.event!.localeCompare(b.event!))
-			  : []
+				: []
 	) as EventDoc[];
 	$: eventData = $eventsCollection.length
 		? $eventsCollection
@@ -425,7 +425,7 @@
 																					storage,
 																					`submissions/${event.event}/${team.id}`,
 																				),
-																		  ).then((r) => r.items)
+																			).then((r) => r.items)
 																		: []) {
 																		await deleteObject(submission);
 																	}

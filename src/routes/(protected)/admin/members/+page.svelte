@@ -282,8 +282,8 @@
 																) ?? null,
 													)
 													.filter((t) => t).length < 4
-										  ? 'text-orange-500'
-										  : user.events
+											? 'text-orange-500'
+											: user.events
 														.map(
 															(e) =>
 																$eventsCollection
@@ -295,8 +295,8 @@
 																	) ?? null,
 														)
 														.filter((t) => t).length < user.events.length
-										    ? 'text-yellow-500'
-										    : ''}"
+												? 'text-yellow-500'
+												: ''}"
 								>
 									Events
 									<div class="flex-1" />
