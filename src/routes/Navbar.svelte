@@ -29,7 +29,7 @@
 			href: '/events',
 		},
 		{
-			title: 'Event Stats',
+			title: 'Stats',
 			href: '/stats',
 		},
 		{
@@ -58,7 +58,7 @@
 						title: 'Admin Logs',
 						href: '/admin/logs',
 					},
-			  ]
+				]
 			: [],
 	];
 

@@ -5,6 +5,8 @@
 	import colors from 'tailwindcss/colors';
 	import ColorKey from './ColorKey.svelte';
 	import { eventError } from './eventError.js';
+	import Demographics from './Demographics.svelte';
+	import Gender from './Gender.svelte';
 
 	let graph: HTMLDivElement;
 
@@ -51,10 +53,10 @@
 						return error === 'errorNotEnough'
 							? colors.blue[500]
 							: error === 'errorTooMany'
-							  ? colors.red[500]
-							  : error === 'warning'
-							    ? colors.yellow[500]
-							    : 'var(--vp-c-text-1)';
+								? colors.red[500]
+								: error === 'warning'
+									? colors.yellow[500]
+									: 'var(--vp-c-text-1)';
 					},
 					tip: true,
 					marginLeft: 225,
@@ -83,4 +85,7 @@
 <div class="mt-6">
 	<ColorKey />
 	<div bind:this={graph} />
+
+	<Demographics />
+	<Gender />
 </div>
