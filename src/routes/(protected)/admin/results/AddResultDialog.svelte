@@ -264,7 +264,7 @@
 												})),
 												note,
 												id,
-										  }
+											}
 										: r,
 								),
 								lastUpdatedBy: $user?.email ?? '',
