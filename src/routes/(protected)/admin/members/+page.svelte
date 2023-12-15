@@ -282,8 +282,8 @@
 																) ?? null,
 													)
 													.filter((t) => t).length < 4
-										  ? 'text-orange-500'
-										  : user.events
+											? 'text-orange-500'
+											: user.events
 														.map(
 															(e) =>
 																$eventsCollection
@@ -295,10 +295,10 @@
 																	) ?? null,
 														)
 														.filter((t) => t).length < user.events.length
-										    ? 'text-yellow-500'
-										    : ''}"
+												? 'text-yellow-500'
+												: ''}"
 								>
-									Events
+									Events ({user.events.length})
 									<div class="flex-1" />
 									<ChevronsUpDown class="h-4 w-4" />
 								</Button>

@@ -71,6 +71,9 @@
 				user: d.id,
 				...d.data(),
 			})),
+			settings: (await getDocs(collection(db, 'settings'))).docs.map((d) => ({
+				...d.data(),
+			})),
 		});
 
 		const teamsBlob = new Blob(
