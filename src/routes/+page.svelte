@@ -17,6 +17,7 @@
 		yay,
 		settings,
 		type EventDoc,
+		toast,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
@@ -34,6 +35,7 @@
 	import { deleteObject, listAll, ref } from 'firebase/storage';
 	import {
 		ChevronsUpDown,
+		Copy,
 		Crown,
 		LogOut,
 		Minus,
@@ -309,6 +311,49 @@
 				</Collapsable.Root>
 			{/each}
 		</div>
+	{/if}
+
+	{#if $userDoc?.washingtonId}
+		<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">
+			Submission site login information
+		</h3>
+		<p class="flex w-full flex-row items-center">
+			Username: {$userDoc.washingtonId}
+			<Button
+				variant="ghost"
+				size="icon"
+				class="m-0 h-8 w-8 p-0"
+				on:click={async () => {
+					await navigator.clipboard.writeText(
+						$userDoc?.washingtonId?.toString() ?? '',
+					);
+					toast({
+						data: {
+							title: 'Copied username to clipboard',
+						},
+					});
+				}}
+			>
+				<Copy class="h-4 w-4" />
+			</Button>
+		</p>
+		<p class="flex w-full flex-row items-center">
+			Password: wTSA2024Jan <Button
+				variant="ghost"
+				size="icon"
+				class="m-0 h-8 w-8 p-0"
+				on:click={async () => {
+					await navigator.clipboard.writeText('wTSA2024Jan');
+					toast({
+						data: {
+							title: 'Copied password to clipboard',
+						},
+					});
+				}}
+			>
+				<Copy class="h-4 w-4" />
+			</Button>
+		</p>
 	{/if}
 
 	<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">

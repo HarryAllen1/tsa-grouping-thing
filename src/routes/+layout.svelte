@@ -1,7 +1,15 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
-	import { FancyConfirm, ProgressBar, auth, db, storage, user } from '$lib';
+	import {
+		FancyConfirm,
+		ProgressBar,
+		Toaster,
+		auth,
+		db,
+		storage,
+		user,
+	} from '$lib';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
@@ -66,3 +74,4 @@
 </div>
 
 <FancyConfirm />
+<Toaster />

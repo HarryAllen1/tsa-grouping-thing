@@ -3,6 +3,8 @@ export { default as FancyConfirm } from './FancyConfirm.svelte';
 export { default as ProgressBar } from './ProgressBar.svelte';
 export { default as SimpleTooltip } from './SimpleTooltip.svelte';
 export { default as StorageMetadata } from './StorageMetadata.svelte';
+export * from './Toaster.svelte';
+export { default as Toaster } from './Toaster.svelte';
 export * from './download';
 export * from './firebase';
 export * from './md';
