@@ -1,42 +1,18 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import { page } from '$app/stores';
-	import {
-		FancyConfirm,
-		ProgressBar,
-		Toaster,
-		auth,
-		db,
-		storage,
-		user,
-	} from '$lib';
+	import { FancyConfirm, ProgressBar, Toaster, auth, db, storage } from '$lib';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
-	import { FirebaseApp } from 'sveltefire';
+	import { FirebaseApp, SignedIn, SignedOut } from 'sveltefire';
 	import '../app.css';
+	import Login from './Login.svelte';
 	import Navbar from './Navbar.svelte';
 
-	$: if (
-		!$user &&
-		$page.url.pathname !== '/login' &&
-		$page.url.pathname !== '/stats'
-	) {
-		location.href = `/login`;
-	}
-
 	const unsub = onAuthStateChanged(auth, async (user) => {
-		if (
-			!user &&
-			$page.url.pathname !== '/login' &&
-			$page.url.pathname !== '/stats'
-		) {
-			location.href = `/login`;
-		}
 		if (user && !user?.email?.endsWith('@lwsd.org')) {
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
-			location.href = '/login';
 		}
 	});
 
@@ -64,12 +40,15 @@
 <ProgressBar class="text-blue-500" />
 <div class="flex max-w-full flex-col items-center">
 	<FirebaseApp {auth} firestore={db} {storage}>
-		{#if $user}
+		<SignedIn>
 			<Navbar />
-		{:else}
+
+			<slot />
+		</SignedIn>
+		<SignedOut>
 			<LightSwitch class="mt-4" />
-		{/if}
-		<slot />
+			<Login />
+		</SignedOut>
 	</FirebaseApp>
 </div>
 

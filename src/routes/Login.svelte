@@ -42,7 +42,6 @@
 				if (user.user) {
 					confetti();
 					yay.play();
-					goto('/');
 				}
 			}}
 			class="mt-4"

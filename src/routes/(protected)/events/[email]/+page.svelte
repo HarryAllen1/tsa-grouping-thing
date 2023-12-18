@@ -15,8 +15,6 @@
 		email: decodeURIComponent($page.params.email),
 	}));
 
-	if (!$user) location.href = '/login';
-
 	const userDoc = docStore<UserDoc>(db, `users/${$user.email}`);
 	const events = collectionStore<EventDoc>(db, 'events');
 
