@@ -56,7 +56,7 @@
 	}
 
 	$: signedUpEvents = (
-		$settings?.enableRooming
+		$settings?.enableRooming && $user
 			? $eventsCollection.length
 				? ($userDoc?.events ? [...$userDoc.events, '*Rooming'] : [])
 						.map((e) => ({
