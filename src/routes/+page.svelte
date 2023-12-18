@@ -72,19 +72,21 @@
 						.sort((a, b) => a.event!.localeCompare(b.event!))
 				: []
 	) as EventDoc[];
-	$: eventData = $eventsCollection.length
-		? $eventsCollection
-				.map((e) => ({
-					...e,
-					members: (
-						$allUsersCollection?.filter((m) => m.events.includes(e.event)) ?? []
-					).map((m) => ({
-						name: m.name,
-						email: m.email,
-					})),
-				}))
-				.sort((a, b) => a.event.localeCompare(b.event))
-		: [];
+	$: eventData =
+		$eventsCollection.length && $user
+			? $eventsCollection
+					.map((e) => ({
+						...e,
+						members: (
+							$allUsersCollection?.filter((m) => m.events.includes(e.event)) ??
+							[]
+						).map((m) => ({
+							name: m.name,
+							email: m.email,
+						})),
+					}))
+					.sort((a, b) => a.event.localeCompare(b.event))
+			: [];
 
 	$: requests = signedUpEvents
 		.filter(
