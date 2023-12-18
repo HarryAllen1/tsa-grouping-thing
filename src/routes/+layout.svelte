@@ -9,6 +9,8 @@
 	import Login from './Login.svelte';
 	import Navbar from './Navbar.svelte';
 
+	const isAuthReady = auth.authStateReady();
+
 	const unsub = onAuthStateChanged(auth, async (user) => {
 		if (user && !user?.email?.endsWith('@lwsd.org')) {
 			alert('You must use an LWSD account to log in.');
@@ -39,17 +41,19 @@
 
 <ProgressBar class="text-blue-500" />
 <div class="flex max-w-full flex-col items-center">
-	<FirebaseApp {auth} firestore={db} {storage}>
-		<SignedIn>
-			<Navbar />
+	{#await isAuthReady then}
+		<FirebaseApp {auth} firestore={db} {storage}>
+			<SignedIn>
+				<Navbar />
 
-			<slot />
-		</SignedIn>
-		<SignedOut>
-			<LightSwitch class="mt-4" />
-			<Login />
-		</SignedOut>
-	</FirebaseApp>
+				<slot />
+			</SignedIn>
+			<SignedOut>
+				<LightSwitch class="mt-4" />
+				<Login />
+			</SignedOut>
+		</FirebaseApp>
+	{/await}
 </div>
 
 <FancyConfirm />
