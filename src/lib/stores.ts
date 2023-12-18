@@ -17,9 +17,11 @@ export let allUsersCollection: ReturnType<typeof collectionStore<UserDoc>>;
 export let eventsCollection: ReturnType<typeof collectionStore<EventDoc>>;
 export let settings: ReturnType<typeof docStore<SettingsDoc>>;
 
-user.subscribe(($u) => {
-	userDoc = docStore<UserDoc>(db, `users/${$u?.email}`);
-	allUsersCollection = collectionStore<UserDoc>(db, 'users');
-	eventsCollection = collectionStore<EventDoc>(db, 'events');
-	settings = docStore<SettingsDoc>(db, 'settings/settings');
+auth.authStateReady().then(() => {
+	user.subscribe(($u) => {
+		userDoc = docStore<UserDoc>(db, `users/${$u?.email}`);
+		allUsersCollection = collectionStore<UserDoc>(db, 'users');
+		eventsCollection = collectionStore<EventDoc>(db, 'events');
+		settings = docStore<SettingsDoc>(db, 'settings/settings');
+	});
 });
