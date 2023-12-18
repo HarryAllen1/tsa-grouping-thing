@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import { FancyConfirm, ProgressBar, Toaster, auth, db, storage } from '$lib';
+	import {
+		FancyConfirm,
+		ProgressBar,
+		Toaster,
+		auth,
+		db,
+		storage,
+		user,
+	} from '$lib';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
@@ -45,8 +53,9 @@
 		<FirebaseApp {auth} firestore={db} {storage}>
 			<SignedIn>
 				<Navbar />
-
-				<slot />
+				{#key $user}
+					<slot />
+				{/key}
 			</SignedIn>
 			<SignedOut>
 				<LightSwitch class="mt-4" />
