@@ -30,7 +30,7 @@
 
 	let updated = false;
 	allUsersCollection.subscribe((users) => {
-		if (updated || !users.length) return;
+		if (updated || users.length < 2) return;
 		updated = true;
 		users.forEach((user) => {
 			valuesMap[user.email] = {
@@ -136,153 +136,143 @@
 	>
 		{#each $allUsersCollection.toSorted( (a, b) => a.name.localeCompare(b.name), ) as user}
 			{@const hash = user.email.replaceAll('@', '').replaceAll('.', '')}
-			<Card.Root class={results.includes(user) ? '' : 'hidden'}>
-				<Card.Header>
-					<Card.Title>
-						{user.name}
-						{#if user.grade}
-							({user.grade})
-						{/if}
-					</Card.Title>
-					<Card.Description>
-						<a href="mailto:{user.email}" class="underline">{user.email}</a>
-					</Card.Description>
-				</Card.Header>
-				<Card.Content class="flex flex-col gap-4">
-					<div class="flex items-center space-x-2">
-						<Switch
-							id="{hash}admin"
-							checked={user.admin}
-							onCheckedChange={async (e) => {
-								await setDoc(
-									doc(db, 'users', user.email),
-									{ admin: e, lastUpdatedBy: $userStore?.email ?? '' },
-									{ merge: true },
-								);
-							}}
-						/>
-						<Label for="{hash}admin">Admin</Label>
-					</div>
-					<div class="flex w-full max-w-sm flex-col gap-1.5">
-						<Label for="{hash}natid">National ID</Label>
-						<div class="flex flex-row gap-2">
-							<Input
-								bind:value={valuesMap[user.email].nationalId}
-								type="number"
-								id="{hash}natid"
-								placeholder="123456"
-							/>
-							<Button
-								disabled={valuesMap[user.email].nationalId?.toString() ===
-									user.nationalId?.toString()}
-								size="icon"
-								on:click={async () => {
+			{#if valuesMap[user.email]}
+				<Card.Root class={results.includes(user) ? '' : 'hidden'}>
+					<Card.Header>
+						<Card.Title>
+							{user.name}
+							{#if user.grade}
+								({user.grade})
+							{/if}
+						</Card.Title>
+						<Card.Description>
+							<a href="mailto:{user.email}" class="underline">{user.email}</a>
+						</Card.Description>
+					</Card.Header>
+					<Card.Content class="flex flex-col gap-4">
+						<div class="flex items-center space-x-2">
+							<Switch
+								id="{hash}admin"
+								checked={user.admin}
+								onCheckedChange={async (e) => {
 									await setDoc(
 										doc(db, 'users', user.email),
-										{
-											nationalId: parseInt(
-												(valuesMap[user.email].nationalId ?? 0).toString(),
-											),
-											lastUpdatedBy: $userStore?.email ?? '',
-										},
+										{ admin: e, lastUpdatedBy: $userStore?.email ?? '' },
 										{ merge: true },
 									);
 								}}
-							>
-								<Save />
-							</Button>
-						</div>
-					</div>
-					<div class="flex w-full max-w-sm flex-col gap-1.5">
-						<Label for="{hash}wtsaid">WTSA ID</Label>
-						<div class="flex flex-row gap-2">
-							<Input
-								bind:value={valuesMap[user.email].washingtonId}
-								type="number"
-								id="{hash}wtsaid"
-								placeholder="123456"
 							/>
-							<Button
-								disabled={valuesMap[user.email].washingtonId?.toString() ===
-									user.washingtonId?.toString()}
-								size="icon"
-								on:click={async () => {
-									await setDoc(
-										doc(db, 'users', user.email),
-										{
-											washingtonId: (
-												valuesMap[user.email].washingtonId ?? 0
-											).toString(),
-											lastUpdatedBy: $userStore?.email ?? '',
-										},
-										{ merge: true },
-									);
-								}}
-							>
-								<Save />
-							</Button>
+							<Label for="{hash}admin">Admin</Label>
 						</div>
-					</div>
-					<Label>
-						<span class="mb-2"> Gender </span>
-						<Select.Root
-							selected={user.gender
-								? { value: user.gender, label: user.gender }
-								: { value: 'null', label: 'Unspecified' }}
-							onSelectedChange={async (s) => {
-								if (s)
-									await setDoc(
-										doc(db, 'users', user.email),
-										{
-											gender: s.value,
-										},
-										{ merge: true },
-									);
-							}}
-						>
-							<Select.Trigger class="mt-2 w-full">
-								<Select.Value placeholder="Gender" />
-							</Select.Trigger>
-							<Select.Content>
-								<Select.Item value="Male">Male</Select.Item>
-								<Select.Item value="Female">Female</Select.Item>
-								<Select.Item value="Non-Binary">Non-Binary</Select.Item>
-								<Select.Item value="null">Unspecified</Select.Item>
-							</Select.Content>
-						</Select.Root>
-					</Label>
-
-					{#if user.demographic}
-						<p>
-							Demographic: {user.demographic}
-						</p>
-					{/if}
-					{#if user.tShirtSize}
-						<p>
-							Shirt Size: {user.tShirtSize}
-						</p>
-					{/if}
-					<div class="w-full">
-						<Collapsible.Root>
-							<Collapsible.Trigger asChild let:builder>
+						<div class="flex w-full max-w-sm flex-col gap-1.5">
+							<Label for="{hash}natid">National ID</Label>
+							<div class="flex flex-row gap-2">
+								<Input
+									bind:value={valuesMap[user.email].nationalId}
+									type="number"
+									id="{hash}natid"
+									placeholder="123456"
+								/>
 								<Button
-									builders={[builder]}
-									variant="ghost"
-									size="sm"
-									class="member-collapsable flex w-full items-center p-2 {user
-										.events.length < 4 || user.events.length > 6
-										? 'text-red-500'
-										: user.events
-													.map(
-														(e) =>
-															$eventsCollection
-																.find((ev) => ev.event === e)
-																?.teams.find((t) =>
-																	t.members.find((m) => m.email === user.email),
-																) ?? null,
-													)
-													.filter((t) => t).length < 4
-											? 'text-orange-500'
+									disabled={valuesMap[user.email].nationalId?.toString() ===
+										user.nationalId?.toString()}
+									size="icon"
+									on:click={async () => {
+										await setDoc(
+											doc(db, 'users', user.email),
+											{
+												nationalId: parseInt(
+													(valuesMap[user.email].nationalId ?? 0).toString(),
+												),
+												lastUpdatedBy: $userStore?.email ?? '',
+											},
+											{ merge: true },
+										);
+									}}
+								>
+									<Save />
+								</Button>
+							</div>
+						</div>
+						<div class="flex w-full max-w-sm flex-col gap-1.5">
+							<Label for="{hash}wtsaid">WTSA ID</Label>
+							<div class="flex flex-row gap-2">
+								<Input
+									bind:value={valuesMap[user.email].washingtonId}
+									type="number"
+									id="{hash}wtsaid"
+									placeholder="123456"
+								/>
+								<Button
+									disabled={valuesMap[user.email].washingtonId?.toString() ===
+										user.washingtonId?.toString()}
+									size="icon"
+									on:click={async () => {
+										await setDoc(
+											doc(db, 'users', user.email),
+											{
+												washingtonId: (
+													valuesMap[user.email].washingtonId ?? 0
+												).toString(),
+												lastUpdatedBy: $userStore?.email ?? '',
+											},
+											{ merge: true },
+										);
+									}}
+								>
+									<Save />
+								</Button>
+							</div>
+						</div>
+						<Label>
+							<span class="mb-2"> Gender </span>
+							<Select.Root
+								selected={user.gender
+									? { value: user.gender, label: user.gender }
+									: { value: 'null', label: 'Unspecified' }}
+								onSelectedChange={async (s) => {
+									if (s)
+										await setDoc(
+											doc(db, 'users', user.email),
+											{
+												gender: s.value,
+											},
+											{ merge: true },
+										);
+								}}
+							>
+								<Select.Trigger class="mt-2 w-full">
+									<Select.Value placeholder="Gender" />
+								</Select.Trigger>
+								<Select.Content>
+									<Select.Item value="Male">Male</Select.Item>
+									<Select.Item value="Female">Female</Select.Item>
+									<Select.Item value="Non-Binary">Non-Binary</Select.Item>
+									<Select.Item value="null">Unspecified</Select.Item>
+								</Select.Content>
+							</Select.Root>
+						</Label>
+
+						{#if user.demographic}
+							<p>
+								Demographic: {user.demographic}
+							</p>
+						{/if}
+						{#if user.tShirtSize}
+							<p>
+								Shirt Size: {user.tShirtSize}
+							</p>
+						{/if}
+						<div class="w-full">
+							<Collapsible.Root>
+								<Collapsible.Trigger asChild let:builder>
+									<Button
+										builders={[builder]}
+										variant="ghost"
+										size="sm"
+										class="member-collapsable flex w-full items-center p-2 {user
+											.events.length < 4 || user.events.length > 6
+											? 'text-red-500'
 											: user.events
 														.map(
 															(e) =>
@@ -294,36 +284,50 @@
 																		),
 																	) ?? null,
 														)
-														.filter((t) => t).length < user.events.length
-												? 'text-yellow-500'
-												: ''}"
-								>
-									Events ({user.events.length})
-									<div class="flex-1" />
-									<ChevronsUpDown class="h-4 w-4" />
-								</Button>
-							</Collapsible.Trigger>
-							<Collapsible.Content>
-								<Button href="/events/{user.email}">Edit</Button>
-								{#each user.events as event}
-									{@const maybeTeam = $eventsCollection
-										.find((e) => e.event === event)
-										?.teams.find((t) =>
-											t.members.find((m) => m.email === user.email),
-										)}
-									<p class:text-red-500={!maybeTeam}>
-										{event}
+														.filter((t) => t).length < 4
+												? 'text-orange-500'
+												: user.events
+															.map(
+																(e) =>
+																	$eventsCollection
+																		.find((ev) => ev.event === e)
+																		?.teams.find((t) =>
+																			t.members.find(
+																				(m) => m.email === user.email,
+																			),
+																		) ?? null,
+															)
+															.filter((t) => t).length < user.events.length
+													? 'text-yellow-500'
+													: ''}"
+									>
+										Events ({user.events.length})
+										<div class="flex-1" />
+										<ChevronsUpDown class="h-4 w-4" />
+									</Button>
+								</Collapsible.Trigger>
+								<Collapsible.Content>
+									<Button href="/events/{user.email}">Edit</Button>
+									{#each user.events as event}
+										{@const maybeTeam = $eventsCollection
+											.find((e) => e.event === event)
+											?.teams.find((t) =>
+												t.members.find((m) => m.email === user.email),
+											)}
+										<p class:text-red-500={!maybeTeam}>
+											{event}
 
-										{#if maybeTeam}
-											({maybeTeam.teamNumber}{#if maybeTeam.teamCaptain?.toLowerCase() === user.email?.toLowerCase()}👑{/if})
-										{/if}
-									</p>
-								{/each}
-							</Collapsible.Content>
-						</Collapsible.Root>
-					</div>
-				</Card.Content>
-			</Card.Root>
+											{#if maybeTeam}
+												({maybeTeam.teamNumber}{#if maybeTeam.teamCaptain?.toLowerCase() === user.email?.toLowerCase()}👑{/if})
+											{/if}
+										</p>
+									{/each}
+								</Collapsible.Content>
+							</Collapsible.Root>
+						</div>
+					</Card.Content>
+				</Card.Root>
+			{/if}
 		{/each}
 	</div>
 </div>

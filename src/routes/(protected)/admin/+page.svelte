@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { page } from '$app/stores';
 	import {
 		SimpleTooltip,
@@ -13,6 +14,7 @@
 		yay,
 		type EventDoc,
 		type UserDoc,
+		allUsersCollection,
 	} from '$lib';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -49,6 +51,7 @@
 		collectionStore,
 		userStore,
 	} from 'sveltefire';
+	import UserCard from './UserCard.svelte';
 
 	const user = userStore(auth);
 
@@ -501,14 +504,19 @@
 										<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 											{#each peopleNotInTeams as person (person.email)}
 												<li>
-													<a
-														href="/events/{encodeURIComponent(
-															person.email.toLowerCase(),
-														)}"
-														class="underline"
-													>
-														{person.name}
-													</a>
+													<HoverCard.Root>
+														<HoverCard.Trigger
+															href="/events/{encodeURIComponent(
+																person.email.toLowerCase(),
+															)}"
+															class="underline"
+														>
+															{person.name}
+														</HoverCard.Trigger>
+														<HoverCard.Content>
+															<UserCard user={person} />
+														</HoverCard.Content>
+													</HoverCard.Root>
 												</li>
 											{/each}
 										</ul>
@@ -562,14 +570,23 @@
 									<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 										{#each event.members as person (person.email)}
 											<li>
-												<a
-													href="/events/{encodeURIComponent(
-														person.email.toLowerCase(),
-													)}"
-													class="underline"
-												>
-													{person.name}
-												</a>
+												<HoverCard.Root>
+													<HoverCard.Trigger
+														href="/events/{encodeURIComponent(
+															person.email.toLowerCase(),
+														)}"
+														class="underline"
+													>
+														{person.name}
+													</HoverCard.Trigger>
+													<HoverCard.Content>
+														<UserCard
+															user={$allUsersCollection.find(
+																(u) => u.email === person.email,
+															) ?? { email: '', events: [], name: '' }}
+														/>
+													</HoverCard.Content>
+												</HoverCard.Root>
 											</li>
 										{/each}
 									</ul>
@@ -755,7 +772,14 @@
 																		duration: 200,
 																	}}
 																>
-																	{person.name}
+																	<HoverCard.Root>
+																		<HoverCard.Trigger
+																			>{person.name}</HoverCard.Trigger
+																		>
+																		<HoverCard.Content>
+																			<UserCard user={person} />
+																		</HoverCard.Content>
+																	</HoverCard.Root>
 																	<Button
 																		on:click={async () => {
 																			team.members.push({
@@ -853,7 +877,18 @@
 																	);
 																}}
 															>
-																{teamMember.name}
+																<HoverCard.Root>
+																	<HoverCard.Trigger
+																		>{teamMember.name}</HoverCard.Trigger
+																	>
+																	<HoverCard.Content>
+																		<UserCard
+																			user={$allUsersCollection.find(
+																				(u) => u.email === teamMember.email,
+																			) ?? { email: '', events: [], name: '' }}
+																		/>
+																	</HoverCard.Content>
+																</HoverCard.Root>
 																{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 																	<Tooltip.Root>
 																		<Tooltip.Trigger>
@@ -1081,7 +1116,18 @@
 												<ul>
 													{#each team.requests ?? [] as request}
 														<li class="flex flex-row">
-															{request.name}
+															<HoverCard.Root>
+																<HoverCard.Trigger
+																	>{request.name}</HoverCard.Trigger
+																>
+																<HoverCard.Content>
+																	<UserCard
+																		user={$allUsersCollection.find(
+																			(u) => u.email === request.email,
+																		) ?? { email: '', events: [], name: '' }}
+																	/>
+																</HoverCard.Content>
+															</HoverCard.Root>
 															<Button
 																on:click={async () => {
 																	team.members.push({
@@ -1183,7 +1229,14 @@
 																				duration: 200,
 																			}}
 																		>
-																			{person.name}
+																			<HoverCard.Root>
+																				<HoverCard.Trigger>
+																					{person.name}
+																				</HoverCard.Trigger>
+																				<HoverCard.Content>
+																					<UserCard user={person} />
+																				</HoverCard.Content>
+																			</HoverCard.Root>
 																			<Button
 																				on:click={async () => {
 																					team.requests = [
@@ -1259,11 +1312,21 @@
 													duration: 200,
 												}}
 											>
-												<a
-													href="/events/{encodeURIComponent(teamMember.email)}"
-												>
-													{teamMember.name}
-												</a>
+												<HoverCard.Root>
+													<HoverCard.Trigger
+														href="/events/{encodeURIComponent(
+															teamMember.email,
+														)}">{teamMember.name}</HoverCard.Trigger
+													>
+													<HoverCard.Content>
+														<UserCard
+															user={$allUsersCollection.find(
+																(u) => u.email === teamMember.email,
+															) ?? { email: '', events: [], name: '' }}
+														/>
+													</HoverCard.Content>
+												</HoverCard.Root>
+
 												{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 													<Tooltip.Root>
 														<Tooltip.Trigger>
