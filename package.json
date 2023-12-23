@@ -13,7 +13,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^4.0.3",
-		"@sveltejs/kit": "^2.0.4",
+		"@sveltejs/kit": "^2.0.6",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@tailwindcss/typography": "^0.5.10",
 		"@types/canvas-confetti": "^1.6.4",
@@ -37,7 +37,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@melt-ui/svelte": "^0.66.0",
+		"@melt-ui/svelte": "^0.66.2",
 		"@observablehq/plot": "^0.6.13",
 		"@vercel/analytics": "^1.1.1",
 		"bits-ui": "^0.11.8",
@@ -46,11 +46,11 @@
 		"cmdk-sv": "^0.0.12",
 		"firebase": "^10.7.1",
 		"fuse.js": "^7.0.0",
-		"lucide-svelte": "^0.298.0",
+		"lucide-svelte": "^0.300.0",
 		"markdown-it": "^14.0.0",
 		"shiki": "^0.14.7",
 		"sveltefire": "^0.4.3",
-		"tailwind-merge": "^2.1.0",
+		"tailwind-merge": "^2.2.0",
 		"tailwind-variants": "^0.1.19"
 	},
 	"volta": {
