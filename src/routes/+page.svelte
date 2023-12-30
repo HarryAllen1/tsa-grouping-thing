@@ -324,7 +324,7 @@
 				href="https://judgepro.registermychapter.com/org/jpwa-tsastate/conf/jpwa-tsastate/student"
 				class="underline"
 			>
-				https://judgepro.registermychapter.com/org/jpwa-tsastate/conf/jpwa-tsastate/student
+				Judge Pro
 			</a>
 		</p>
 		<p class="flex w-full flex-row items-center">
