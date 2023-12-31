@@ -432,7 +432,9 @@
 							<Card.Root class="bg-blue-500 bg-opacity-20">
 								<Card.Header>
 									<Card.Title>
-										{event.event === '*Rooming' ? 'Room' : 'Team'} #{team.teamNumber}
+										{event.event === '*Rooming'
+											? 'Room #'
+											: 'Team 2082-'}{team.teamNumber}
 									</Card.Title>
 									<div class="flex flex-col gap-1 lg:flex-row">
 										{#if team.locked || event.locked}

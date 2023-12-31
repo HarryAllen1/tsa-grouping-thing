@@ -664,7 +664,7 @@
 							>
 								<Card.Header>
 									<Card.Title>
-										Team #{team.teamNumber}
+										Team 2082-{team.teamNumber}
 										<Dialog.Root bind:open={openTeamNumberDialogs[team.id]}>
 											<Dialog.Trigger>
 												<Button>Edit</Button>
