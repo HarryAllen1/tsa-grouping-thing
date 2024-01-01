@@ -319,6 +319,13 @@
 		<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">
 			Submission site login information (open 1 January to 11 January at 5:00pm)
 		</h3>
+		<p class="flex w-full">
+			Submission site: <a
+				href="https://judgepro.registermychapter.com/org/jpwa-tsastate/conf/jpwa-tsastate/student"
+			>
+				https://judgepro.registermychapter.com/org/jpwa-tsastate/conf/jpwa-tsastate/student
+			</a>
+		</p>
 		<p class="flex w-full flex-row items-center">
 			Username: {$userDoc.washingtonId}
 			<Button
