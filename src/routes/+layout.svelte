@@ -1,18 +1,21 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
+	import { page } from '$app/stores';
 	import {
 		FancyConfirm,
 		ProgressBar,
 		Toaster,
+		analytics,
 		auth,
 		db,
+		rtdb,
 		storage,
 		user,
 	} from '$lib';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
-	import { FirebaseApp, SignedIn, SignedOut } from 'sveltefire';
+	import { FirebaseApp, PageView, SignedIn, SignedOut } from 'sveltefire';
 	import '../app.css';
 	import Login from './Login.svelte';
 	import Navbar from './Navbar.svelte';
@@ -50,7 +53,10 @@
 <ProgressBar class="text-blue-500" />
 <div class="flex max-w-full flex-col items-center">
 	{#await isAuthReady then}
-		<FirebaseApp {auth} firestore={db} {storage}>
+		<FirebaseApp {rtdb} {analytics} {auth} firestore={db} {storage}>
+			{#key $page.route.id}
+				<PageView />
+			{/key}
 			<SignedIn>
 				<Navbar />
 				{#key $user}
