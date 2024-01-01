@@ -320,8 +320,9 @@
 			Submission site login information (open 1 January to 11 January at 5:00pm)
 		</h3>
 		<p class="flex w-full">
-			Submission site: <a
+			Submission site:&nbsp;<a
 				href="https://judgepro.registermychapter.com/org/jpwa-tsastate/conf/jpwa-tsastate/student"
+				class="underline"
 			>
 				https://judgepro.registermychapter.com/org/jpwa-tsastate/conf/jpwa-tsastate/student
 			</a>
