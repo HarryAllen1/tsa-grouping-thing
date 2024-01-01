@@ -54,9 +54,11 @@
 <div class="flex max-w-full flex-col items-center">
 	{#await isAuthReady then}
 		<FirebaseApp {rtdb} {analytics} {auth} firestore={db} {storage}>
-			{#key $page.route.id}
-				<PageView />
-			{/key}
+			{#if !dev}
+				{#key $page.route.id}
+					<PageView />
+				{/key}
+			{/if}
 			<SignedIn>
 				<Navbar />
 				{#key $user}
