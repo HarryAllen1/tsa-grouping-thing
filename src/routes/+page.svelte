@@ -340,7 +340,10 @@
 			</Button>
 		</p>
 		<p class="flex w-full flex-row items-center">
-			Password: wTSA2024Jan <Button
+			Password:&nbsp;<span class="bg-white hover:bg-opacity-0">
+				wTSA2024Jan
+			</span>
+			<Button
 				variant="ghost"
 				size="icon"
 				class="m-0 h-8 w-8 p-0"
@@ -355,6 +358,7 @@
 			>
 				<Copy class="h-4 w-4" />
 			</Button>
+			(hover to see password)
 		</p>
 	{/if}
 
