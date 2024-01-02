@@ -17,8 +17,8 @@
 		yay,
 		settings,
 		type EventDoc,
-		toast,
 	} from '$lib';
+	import { toast } from 'svelte-sonner';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -337,11 +337,7 @@
 					await navigator.clipboard.writeText(
 						$userDoc?.washingtonId?.toString() ?? '',
 					);
-					toast({
-						data: {
-							title: 'Copied username to clipboard',
-						},
-					});
+					toast.success('Copied username to clipboard');
 				}}
 			>
 				<Copy class="h-4 w-4" />
@@ -357,11 +353,7 @@
 				class="m-0 h-8 w-8 p-0"
 				on:click={async () => {
 					await navigator.clipboard.writeText('wTSA2024Jan');
-					toast({
-						data: {
-							title: 'Copied password to clipboard',
-						},
-					});
+					toast.success('Copied password to clipboard');
 				}}
 			>
 				<Copy class="h-4 w-4" />

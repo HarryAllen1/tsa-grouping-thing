@@ -4,7 +4,6 @@
 	import {
 		FancyConfirm,
 		ProgressBar,
-		Toaster,
 		analytics,
 		auth,
 		db,
@@ -13,6 +12,7 @@
 		user,
 	} from '$lib';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
+	import { Toaster } from '$lib/components/ui/sonner';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onMount } from 'svelte';
 	import { FirebaseApp, PageView, SignedIn, SignedOut } from 'sveltefire';

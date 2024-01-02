@@ -48,6 +48,9 @@ importers:
       shiki:
         specifier: ^0.14.7
         version: 0.14.7
+      svelte-sonner:
+        specifier: ^0.3.9
+        version: 0.3.9(svelte@4.2.8)
       sveltefire:
         specifier: ^0.4.4
         version: 0.4.4(firebase@10.7.1)(svelte@4.2.8)
@@ -7708,6 +7711,14 @@ packages:
       svelte: 4.2.8
       typescript: 5.3.3
     dev: true
+
+  /svelte-sonner@0.3.9(svelte@4.2.8):
+    resolution: {integrity: sha512-uwTidxYTZ5Sp8UjGu7N150gLG8EV2SS81rXd8deXpFDMTCKHGxE22UHV0WJxw64SdJHNfXRKorkR5wWZDkh/nA==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      svelte: 4.2.8
+    dev: false
 
   /svelte@4.2.8:
     resolution: {integrity: sha512-hU6dh1MPl8gh6klQZwK/n73GiAHiR95IkFsesLPbMeEZi36ydaXL/ZAb4g9sayT0MXzpxyZjR28yderJHxcmYA==}
