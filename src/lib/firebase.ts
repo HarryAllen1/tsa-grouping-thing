@@ -3,7 +3,6 @@ import { PUBLIC_FIREBASE_API_KEY } from '$env/static/public';
 import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getDatabase } from 'firebase/database';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { getPerformance } from 'firebase/performance';
 import { getStorage } from 'firebase/storage';
@@ -23,7 +22,6 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const analytics = getAnalytics(app);
-export const rtdb = getDatabase(app);
 
 !dev && getPerformance(app);
 

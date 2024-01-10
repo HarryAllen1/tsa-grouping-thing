@@ -7,7 +7,6 @@
 		analytics,
 		auth,
 		db,
-		rtdb,
 		storage,
 		user,
 	} from '$lib';
@@ -53,7 +52,7 @@
 <ProgressBar class="text-blue-500" />
 <div class="flex max-w-full flex-col items-center">
 	{#await isAuthReady then}
-		<FirebaseApp {rtdb} {analytics} {auth} firestore={db} {storage}>
+		<FirebaseApp {analytics} {auth} firestore={db} {storage}>
 			{#if !dev}
 				{#key $page.route.id}
 					<PageView />
