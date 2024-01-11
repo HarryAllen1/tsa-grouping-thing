@@ -13,8 +13,8 @@ importers:
   .:
     dependencies:
       '@melt-ui/svelte':
-        specifier: ^0.68.0
-        version: 0.68.0(svelte@4.2.8)
+        specifier: ^0.69.0
+        version: 0.69.0(svelte@4.2.8)
       '@observablehq/plot':
         specifier: ^0.6.13
         version: 0.6.13
@@ -40,8 +40,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       lucide-svelte:
-        specifier: ^0.308.0
-        version: 0.308.0(svelte@4.2.8)
+        specifier: ^0.309.0
+        version: 0.309.0(svelte@4.2.8)
       markdown-it:
         specifier: ^14.0.0
         version: 14.0.0
@@ -63,10 +63,10 @@ importers:
     devDependencies:
       '@sveltejs/adapter-vercel':
         specifier: ^4.0.4
-        version: 4.0.4(@sveltejs/kit@2.2.0)
+        version: 4.0.4(@sveltejs/kit@2.3.0)
       '@sveltejs/kit':
-        specifier: ^2.2.0
-        version: 2.2.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
+        specifier: ^2.3.0
+        version: 2.3.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.0
         version: 3.0.1(svelte@4.2.8)(vite@5.0.11)
@@ -1805,6 +1805,20 @@ packages:
       svelte: 4.2.8
     dev: false
 
+  /@melt-ui/svelte@0.69.0(svelte@4.2.8):
+    resolution: {integrity: sha512-I8Dkq5KH7zw08m/MHqP+CNUMfcXLqMwaBp/ePpgnseMuuFY+9t3zLQEGTT48kGWDLsWXaCseyfApQCookPzVFg==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      '@floating-ui/core': 1.5.3
+      '@floating-ui/dom': 1.5.4
+      '@internationalized/date': 3.5.1
+      dequal: 2.0.3
+      focus-trap: 7.5.4
+      nanoid: 5.0.4
+      svelte: 4.2.8
+    dev: false
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -2003,12 +2017,12 @@ packages:
       '@sinonjs/commons': 3.0.0
     dev: true
 
-  /@sveltejs/adapter-vercel@4.0.4(@sveltejs/kit@2.2.0):
+  /@sveltejs/adapter-vercel@4.0.4(@sveltejs/kit@2.3.0):
     resolution: {integrity: sha512-2MMThT6eROTqAGmx81Xv+tafhpetQfRUDIsboFiGgkFoaxcmoTzW4t9GyXZdMY8xl1YOdvAnZXcCgacYzmVWVw==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
-      '@sveltejs/kit': 2.2.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
+      '@sveltejs/kit': 2.3.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
       '@vercel/nft': 0.26.1
       esbuild: 0.19.11
     transitivePeerDependencies:
@@ -2016,8 +2030,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit@2.2.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11):
-    resolution: {integrity: sha512-A5VvfynqKBVWib/k/g1+6TIRgq6EsHQe7Xte8QgLssk79DZDGHWn3IB1McHFzGbPVkcC4dhf43CfzB20y4dUEA==}
+  /@sveltejs/kit@2.3.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11):
+    resolution: {integrity: sha512-A6/aQTVFONDDv8nRLINNiXrERq6VeAdHT+/gHPBUSDt4+b6oBKTEF3oiGzNmxspcWDgHzBpypFO7NWtkoUK67g==}
     engines: {node: '>=18.13'}
     hasBin: true
     requiresBuild: true
@@ -3123,7 +3137,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001576
-      electron-to-chromium: 1.4.626
+      electron-to-chromium: 1.4.628
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
     dev: true
@@ -3839,8 +3853,8 @@ packages:
     resolution: {integrity: sha512-gpXfJslSi4hYDkA0mTLEpYKRv9siAgSUgZ+UWyk+J5Cttpd1ThCVwdclzIwQSclz3hYn049+M2fgrP1WpvF8xg==}
     dev: true
 
-  /electron-to-chromium@1.4.626:
-    resolution: {integrity: sha512-f7/be56VjRRQk+Ric6PmIrEtPcIqsn3tElyAu9Sh6egha2VLJ82qwkcOdcnT06W+Pb6RUulV1ckzrGbKzVcTHg==}
+  /electron-to-chromium@1.4.628:
+    resolution: {integrity: sha512-2k7t5PHvLsufpP6Zwk0nof62yLOsCf032wZx7/q0mv8gwlXjhcxI3lz6f0jBr0GrnWKcm3burXzI3t5IrcdUxw==}
     dev: true
 
   /emittery@0.13.1:
@@ -6047,8 +6061,8 @@ packages:
       lodash.clonedeep: 4.5.0
       lru-cache: 4.0.2
 
-  /lucide-svelte@0.308.0(svelte@4.2.8):
-    resolution: {integrity: sha512-REknOvkuvSYAmNYFtMvqD96K8AHtE7J8MUIMJ/SxkrryGNcYmnUQt4GlNBk/+MGgAh+MePGRQR86aw+z6U5JvA==}
+  /lucide-svelte@0.309.0(svelte@4.2.8):
+    resolution: {integrity: sha512-+t85+5Y696FVDoJHiiMhJGalv+UiWUX46gMudOQfYrVGjsyC2MGSZRNAGAHkdykA4RJSh/wUtSgnTgCmd0Swvw==}
     peerDependencies:
       svelte: '>=3 <5'
     dependencies:

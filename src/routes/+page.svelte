@@ -114,7 +114,8 @@
 							.includes($user?.email?.toLowerCase() ?? ''),
 				)
 				.flatMap((t) => t.requests ?? []),
-		}));
+		}))
+		.filter((r) => r.requests.length);
 
 	let submissionsFileUpload: HTMLInputElement;
 	const filesToUpload = writable<File[]>([]);
@@ -141,6 +142,9 @@
 	</Button>
 
 	{#if requests.length}
+		{#key requests}
+			{console.log(requests)}
+		{/key}
 		<div class="w-full">
 			<h3 class="my-4 scroll-m-20 text-2xl font-semibold tracking-tight">
 				Manage Requests
