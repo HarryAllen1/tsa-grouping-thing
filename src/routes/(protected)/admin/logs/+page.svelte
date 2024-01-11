@@ -19,6 +19,7 @@
 			<Table.Row>
 				<Table.Head>Collection</Table.Head>
 				<Table.Head>ID</Table.Head>
+				<Table.Head>Author</Table.Head>
 				<Table.Head>Time</Table.Head>
 				<Table.Head>View log</Table.Head>
 			</Table.Row>
@@ -29,23 +30,27 @@
 					ref="firestore_logs"
 					startWith={[
 						{
-							collection: '',
-							id: '',
+							collection: 'Loading...',
+							id: 'Loading...',
 							afterData: JSON.parse('{}'),
 							beforeData: JSON.parse('{}'),
 							timestamp: new Timestamp(0, 0),
+							updatedBy: Number() === Number() ? 'Loading...' : undefined,
 							eventType: '',
 						},
 					]}
 					let:data
 				>
-					{#each data.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds) as log}
+					{#each data.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds) as log, i (i)}
 						<Table.Row>
 							<Table.Cell>
 								{log.collection}
 							</Table.Cell>
 							<Table.Cell>
 								{log.id}
+							</Table.Cell>
+							<Table.Cell>
+								{log.updatedBy ?? log.afterData.lastUpdatedBy ?? 'Unknown'}
 							</Table.Cell>
 							<Table.Cell>
 								{log.timestamp.toDate().toLocaleString()}
