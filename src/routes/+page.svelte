@@ -345,7 +345,7 @@
 			</Button>
 		</p>
 		<p class="flex w-full flex-row items-center">
-			Password:&nbsp;<span class="bg-secondary-foreground hover:bg-opacity-0">
+			Password:&nbsp;<span class="bg-secondary-foreground hover:bg-inherit">
 				wTSA2024Jan
 			</span>
 			<Button
