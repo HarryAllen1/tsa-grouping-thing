@@ -142,9 +142,6 @@
 	</Button>
 
 	{#if requests.length}
-		{#key requests}
-			{console.log(requests)}
-		{/key}
 		<div class="w-full">
 			<h3 class="my-4 scroll-m-20 text-2xl font-semibold tracking-tight">
 				Manage Requests
