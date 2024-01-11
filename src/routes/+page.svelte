@@ -562,7 +562,7 @@
 																	{/if}
 																	<ul>
 																		{#each $allUsersCollection
-																			.filter((m) => /* signed up for event and also include gender check */ (event.event === '*Rooming' ? m.gender === $userDoc?.gender || m.gender === 'Non-Binary' : m.events.includes(event.event ?? '')) && /* not already in team */ !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ) && /* didn't request to be part of another team */ !event.teams.find( (t) => t.requests?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
+																			.filter((m) => /* signed up for event and also include gender check */ (event.event === '*Rooming' ? (m.gender === $userDoc?.gender && m.events.length) || (m.gender === 'Non-Binary' && m.events.length) : m.events.includes(event.event ?? '')) && /* not already in team */ !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ) && /* didn't request to be part of another team */ !event.teams.find( (t) => t.requests?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
 																			.sort( (a, b) => a.name.localeCompare(b.name), ) as person (person.email)}
 																			<li
 																				class="flex flex-row items-center"
