@@ -1054,7 +1054,7 @@
 									event.teams.push({
 										members: [
 											{
-												name: $user?.displayName ?? '',
+												name: $userDoc?.name ?? '',
 												email: $user?.email ?? '',
 											},
 										],
