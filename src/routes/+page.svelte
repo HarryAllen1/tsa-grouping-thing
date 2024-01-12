@@ -11,14 +11,13 @@
 		fancyConfirm,
 		md,
 		sendEmail,
+		settings,
 		storage,
 		user,
 		userDoc,
 		yay,
-		settings,
 		type EventDoc,
 	} from '$lib';
-	import { toast } from 'svelte-sonner';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -35,7 +34,6 @@
 	import { deleteObject, listAll, ref } from 'firebase/storage';
 	import {
 		ChevronsUpDown,
-		Copy,
 		Crown,
 		LogOut,
 		Minus,
