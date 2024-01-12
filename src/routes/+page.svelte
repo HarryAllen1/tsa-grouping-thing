@@ -316,7 +316,7 @@
 		</div>
 	{/if}
 
-	{#if $userDoc?.washingtonId}
+	<!-- {#if $userDoc?.washingtonId}
 		<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">
 			Submission site login information (open 1 January to 11 January at 5:00pm)
 		</h3>
@@ -361,7 +361,7 @@
 			</Button>
 			(hover to see password)
 		</p>
-	{/if}
+	{/if} -->
 
 	<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">
 		Teams
