@@ -892,7 +892,9 @@
 														size="sm"
 														class="flex w-full items-center p-2"
 													>
-														Manage Requests
+														Manage Requests {#if team.requests?.length}
+															({team.requests.length})
+														{/if}
 														<div class="flex-1" />
 														<ChevronsUpDown />
 													</Button>
