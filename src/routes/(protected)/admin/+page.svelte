@@ -303,7 +303,7 @@
 					);
 				}}
 			/>
-			<Label for="enable-rooming">Enable rooming</Label>
+			<Label for="enable-rooming">Show rooming</Label>
 		</div>
 	</div>
 	<div
@@ -370,73 +370,91 @@
 									{event.teams.reduce(
 										(acc, curr) => acc + curr.members.length,
 										0,
-									)}/{eventData.find((e) => e.event === event.event)?.members
-										.length ?? 0} people joined teams
+									)}/{event.event === '*Rooming'
+										? $allUsersCollection.filter((u) => u.events.length > 0)
+												.length
+										: eventData.find((e) => e.event === event.event)?.members
+												.length ?? 0} people joined {event.event === '*Rooming'
+										? 'rooms'
+										: 'teams'}
 								</li>
 								<li>
 									ID: {event.id}
 								</li>
 							</ul>
-							<div class="flex flex-col gap-2">
-								<p class="text-black dark:text-white">
-									Submission description:
-								</p>
-								<p class="prose dark:prose-invert">
-									<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-									{@html md.render(event.submissionDescription ?? '(none)')}
-								</p>
-								<Dialog.Root>
-									<Dialog.Trigger>
-										<Button>Edit</Button>
-									</Dialog.Trigger>
-									<Dialog.Content>
-										<Dialog.Title>Edit submission description</Dialog.Title>
-										<p>Markdown is allowed</p>
-										<Textarea
-											placeholder="Submission description"
-											class="w-full"
-											value={event.submissionDescription}
-											bind:this={submissionDescriptionElementMap[event.event]}
-										/>
-										<Dialog.Footer>
-											<Button
-												on:click={() => {
-													setDoc(
-														doc(db, 'events', event.event),
-														{
-															submissionDescription:
-																submissionDescriptionElementMap[event.event]
-																	?.value ?? '',
-															lastUpdatedBy: $user?.email ?? '',
-														},
-														{
-															merge: true,
-														},
-													);
+							{#if event.event !== '*Rooming'}
+								<div class="flex flex-col gap-2">
+									<p class="text-black dark:text-white">
+										Submission description:
+									</p>
+									<p class="prose dark:prose-invert">
+										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+										{@html md.render(event.submissionDescription ?? '(none)')}
+									</p>
+									<Dialog.Root>
+										<Dialog.Trigger>
+											<Button>Edit</Button>
+										</Dialog.Trigger>
+										<Dialog.Content>
+											<Dialog.Title>Edit submission description</Dialog.Title>
+											<p>Markdown is allowed</p>
+											<Textarea
+												placeholder="Submission description"
+												class="w-full"
+												value={event.submissionDescription}
+												bind:this={submissionDescriptionElementMap[event.event]}
+											/>
+											<Dialog.Footer>
+												<Button
+													on:click={() => {
+														setDoc(
+															doc(db, 'events', event.event),
+															{
+																submissionDescription:
+																	submissionDescriptionElementMap[event.event]
+																		?.value ?? '',
+																lastUpdatedBy: $user?.email ?? '',
+															},
+															{
+																merge: true,
+															},
+														);
 
-													const el = document.querySelector(
-														'[data-melt-dialog-close]',
-													);
-													if (el instanceof HTMLButtonElement) el.click();
-												}}
-											>
-												Save
-											</Button>
-										</Dialog.Footer>
-									</Dialog.Content>
-								</Dialog.Root>
-							</div>
+														const el = document.querySelector(
+															'[data-melt-dialog-close]',
+														);
+														if (el instanceof HTMLButtonElement) el.click();
+													}}
+												>
+													Save
+												</Button>
+											</Dialog.Footer>
+										</Dialog.Content>
+									</Dialog.Root>
+								</div>
+							{/if}
 							{@const peopleInTeams = event.teams.reduce(
 								(acc, curr) => [...acc, ...curr.members],
 								reallyStupidFunction([]),
 							)}
-							{@const peopleNotInTeams = $usersDoc.filter(
-								(m) =>
-									m.events.includes(event.event ?? '') &&
-									!peopleInTeams.find(
-										(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
-									),
-							)}
+							{@const peopleNotInTeams =
+								event.event === '*Rooming'
+									? $usersDoc.filter(
+											(m) =>
+												m.events.length &&
+												!peopleInTeams.find(
+													(e) =>
+														e.email?.toLowerCase() === m.email?.toLowerCase(),
+												),
+										)
+									: $usersDoc.filter(
+											(m) =>
+												m.events.includes(event.event ?? '') &&
+												!peopleInTeams.find(
+													(e) =>
+														e.email?.toLowerCase() === m.email?.toLowerCase(),
+												),
+										)}
 							{#if peopleNotInTeams.length}
 								<Collapsable.Root>
 									<Collapsable.Trigger asChild let:builder>
@@ -446,7 +464,9 @@
 											size="sm"
 											class="flex w-full items-center p-2"
 										>
-											People not in teams
+											People not in {event.event === '*Rooming'
+												? 'rooms'
+												: 'teams'}
 											<div class="flex-1" />
 											<ChevronsUpDown />
 										</Button>
@@ -462,45 +482,47 @@
 										>
 											Email everyone
 										</Button>
-										<Button
-											variant="destructive"
-											size="icon"
-											on:click={async () => {
-												if (
-													await fancyConfirm(
-														'Are you sure',
-														"Are you sure you want to remove everyone who hasn't created a team yet from this event?",
-													)
-												) {
-													peopleNotInTeams.forEach(async (person) => {
-														const userDoc = $usersDoc.find(
-															(u) =>
-																u.email?.toLowerCase() ===
-																person.email?.toLowerCase(),
-														);
-														if (userDoc) {
-															userDoc.events = userDoc.events.filter(
-																(e) => e !== event.event,
+										{#if event.event !== '*Rooming'}
+											<Button
+												variant="destructive"
+												size="icon"
+												on:click={async () => {
+													if (
+														await fancyConfirm(
+															'Are you sure',
+															"Are you sure you want to remove everyone who hasn't created a team yet from this event?",
+														)
+													) {
+														peopleNotInTeams.forEach(async (person) => {
+															const userDoc = $usersDoc.find(
+																(u) =>
+																	u.email?.toLowerCase() ===
+																	person.email?.toLowerCase(),
 															);
-															await setDoc(
-																doc(
-																	db,
-																	'users',
-																	userDoc.email?.toLowerCase() ?? '',
-																),
-																{
-																	...userDoc,
-																	lastUpdatedBy: $user?.email ?? '',
-																},
-																{ merge: true },
-															);
-														}
-													});
-												}
-											}}
-										>
-											<Trash2 />
-										</Button>
+															if (userDoc) {
+																userDoc.events = userDoc.events.filter(
+																	(e) => e !== event.event,
+																);
+																await setDoc(
+																	doc(
+																		db,
+																		'users',
+																		userDoc.email?.toLowerCase() ?? '',
+																	),
+																	{
+																		...userDoc,
+																		lastUpdatedBy: $user?.email ?? '',
+																	},
+																	{ merge: true },
+																);
+															}
+														});
+													}
+												}}
+											>
+												<Trash2 />
+											</Button>
+										{/if}
 										<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 											{#each peopleNotInTeams as person (person.email)}
 												<li>
@@ -523,75 +545,77 @@
 									</Collapsable.Content>
 								</Collapsable.Root>
 							{/if}
-							<Collapsable.Root>
-								<Collapsable.Trigger asChild let:builder>
-									<Button
-										builders={[builder]}
-										variant="ghost"
-										size="sm"
-										class="flex w-full items-center p-2"
-									>
-										Events without member overlap
-										<div class="flex-1" />
-										<ChevronsUpDown />
-									</Button>
-								</Collapsable.Trigger>
-								<Collapsable.Content>
-									<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-										{#each nonOverlappingEvents(event) as e (e.event)}
-											<li>
-												<!-- svelte-ignore a11y-invalid-attribute -->
-												<a
-													href="#"
-													class="underline"
-													on:click={() => (search = e.event)}
-												>
-													{e.event}
-												</a>
-											</li>
-										{/each}
-									</ul>
-								</Collapsable.Content>
-							</Collapsable.Root>
-							<Collapsable.Root>
-								<Collapsable.Trigger asChild let:builder>
-									<Button
-										builders={[builder]}
-										variant="ghost"
-										size="sm"
-										class="flex w-full items-center p-2"
-									>
-										Everyone in event
-										<div class="flex-1" />
-										<ChevronsUpDown />
-									</Button>
-								</Collapsable.Trigger>
-								<Collapsable.Content>
-									<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-										{#each event.members as person (person.email)}
-											<li>
-												<HoverCard.Root>
-													<HoverCard.Trigger
-														href="/events/{encodeURIComponent(
-															person.email.toLowerCase(),
-														)}"
+							{#if event.event !== '*Rooming'}
+								<Collapsable.Root>
+									<Collapsable.Trigger asChild let:builder>
+										<Button
+											builders={[builder]}
+											variant="ghost"
+											size="sm"
+											class="flex w-full items-center p-2"
+										>
+											Events without member overlap
+											<div class="flex-1" />
+											<ChevronsUpDown />
+										</Button>
+									</Collapsable.Trigger>
+									<Collapsable.Content>
+										<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+											{#each nonOverlappingEvents(event) as e (e.event)}
+												<li>
+													<!-- svelte-ignore a11y-invalid-attribute -->
+													<a
+														href="#"
 														class="underline"
+														on:click={() => (search = e.event)}
 													>
-														{person.name}
-													</HoverCard.Trigger>
-													<HoverCard.Content>
-														<UserCard
-															user={$allUsersCollection.find(
-																(u) => u.email === person.email,
-															) ?? { email: '', events: [], name: '' }}
-														/>
-													</HoverCard.Content>
-												</HoverCard.Root>
-											</li>
-										{/each}
-									</ul>
-								</Collapsable.Content>
-							</Collapsable.Root>
+														{e.event}
+													</a>
+												</li>
+											{/each}
+										</ul>
+									</Collapsable.Content>
+								</Collapsable.Root>
+								<Collapsable.Root>
+									<Collapsable.Trigger asChild let:builder>
+										<Button
+											builders={[builder]}
+											variant="ghost"
+											size="sm"
+											class="flex w-full items-center p-2"
+										>
+											Everyone in event
+											<div class="flex-1" />
+											<ChevronsUpDown />
+										</Button>
+									</Collapsable.Trigger>
+									<Collapsable.Content>
+										<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+											{#each event.members as person (person.email)}
+												<li>
+													<HoverCard.Root>
+														<HoverCard.Trigger
+															href="/events/{encodeURIComponent(
+																person.email.toLowerCase(),
+															)}"
+															class="underline"
+														>
+															{person.name}
+														</HoverCard.Trigger>
+														<HoverCard.Content>
+															<UserCard
+																user={$allUsersCollection.find(
+																	(u) => u.email === person.email,
+																) ?? { email: '', events: [], name: '' }}
+															/>
+														</HoverCard.Content>
+													</HoverCard.Root>
+												</li>
+											{/each}
+										</ul>
+									</Collapsable.Content>
+								</Collapsable.Root>
+							{/if}
 						</Card.Description>
 					</Card.Header>
 					<Card.Content class="flex flex-col gap-4">
@@ -612,46 +636,48 @@
 								}}
 								checked={event.locked ?? false}
 							/>
-							Lock event
+							Lock {event.event === '*Rooming' ? 'rooming' : 'event'}
 						</Label>
-						<div class="flex items-center space-x-2">
-							<Switch
-								id="lock-team-creation"
-								bind:checked={event.teamCreationLocked}
-								onCheckedChange={async (e) => {
-									await setDoc(
-										doc(db, 'events', event.event),
-										{
-											teamCreationLocked: e,
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{ merge: true },
-									);
-								}}
-							/>
-							<Label for="lock-team-creation">
-								Lock team creation when full
+						{#if event.event !== '*Rooming'}
+							<div class="flex items-center space-x-2">
+								<Switch
+									id="lock-team-creation"
+									bind:checked={event.teamCreationLocked}
+									onCheckedChange={async (e) => {
+										await setDoc(
+											doc(db, 'events', event.event),
+											{
+												teamCreationLocked: e,
+												lastUpdatedBy: $user?.email ?? '',
+											},
+											{ merge: true },
+										);
+									}}
+								/>
+								<Label for="lock-team-creation">
+									Lock team creation when full
+								</Label>
+							</div>
+							<Label class="flex flex-row items-center gap-2">
+								<Switch
+									onCheckedChange={async (checked) => {
+										event.onlineSubmissions = checked;
+										await setDoc(
+											doc(db, 'events', event.event ?? ''),
+											{
+												onlineSubmissions: checked,
+												lastUpdatedBy: $user?.email ?? '',
+											},
+											{
+												merge: true,
+											},
+										);
+									}}
+									checked={event.onlineSubmissions ?? false}
+								/>
+								Online submissions
 							</Label>
-						</div>
-						<Label class="flex flex-row items-center gap-2">
-							<Switch
-								onCheckedChange={async (checked) => {
-									event.onlineSubmissions = checked;
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											onlineSubmissions: checked,
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{
-											merge: true,
-										},
-									);
-								}}
-								checked={event.onlineSubmissions ?? false}
-							/>
-							Online submissions
-						</Label>
+						{/if}
 
 						{#each event.teams as team (team.id)}
 							<Card.Root
@@ -664,7 +690,11 @@
 							>
 								<Card.Header>
 									<Card.Title>
-										Team 2082-{team.teamNumber}
+										{#if event.event === '*Rooming'}
+											Room #{team.teamNumber}
+										{:else}
+											Team 2082-{team.teamNumber}
+										{/if}
 										<Dialog.Root bind:open={openTeamNumberDialogs[team.id]}>
 											<Dialog.Trigger>
 												<Button>Edit</Button>
@@ -944,157 +974,165 @@
 												Lock team
 											</Label>
 										</div>
-										<div>
-											<Dialog.Root closeOnOutsideClick={false}>
-												{#key dummyVariableToRerender}
-													<StorageList
-														ref="submissions/{event.event}/{team.id}"
-														let:list
-													>
-														<Dialog.Trigger>
-															<Button>
-																Manage Submissions {list?.items.length
-																	? `(${list.items.length})`
-																	: ''}
-															</Button>
-														</Dialog.Trigger>
-														<Dialog.Content>
-															<Dialog.Title>Manage Submissions</Dialog.Title>
-															<Dialog.Description>
-																{#if event.submissionDescription}
-																	<div
-																		class="prose dark:prose-invert dark:text-white"
-																	>
-																		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-																		{@html md.render(
-																			`## What needs to be submitted:\n\n${event.submissionDescription}`,
-																		)}
-																	</div>
-																{/if}
-																<ul>
-																	{#each [...(list?.items ?? []), ...$filesToUpload] as submission (submission instanceof File ? submission.webkitRelativePath : submission.fullPath)}
-																		<li
-																			class="flex w-full flex-col items-center"
-																		>
-																			{#if submission instanceof File}
-																				<UploadTask
-																					ref="submissions/{event.event}/{team.id}/{submission.name}"
-																					data={submission}
-																					let:snapshot
-																					let:progress
-																				>
-																					{#if snapshot?.state === 'success'}
-																						{filterSubmissions(submission)}
-																						{updateStorageList()}
-																					{:else}
-																						<Progress
-																							value={progress}
-																							class="w-full"
-																						/>
-
-																						<span class="w-full">
-																							{submission.name}
-																						</span>
-																					{/if}
-																				</UploadTask>
-																			{:else}
-																				<div
-																					class="flex w-full flex-row items-center"
-																				>
-																					<DownloadURL
-																						ref={submission}
-																						let:link
-																					>
-																						<StorageMetadata
-																							ref={submission}
-																							let:meta
-																						>
-																							<SimpleTooltip
-																								message={new Date(
-																									meta.timeCreated,
-																								).toLocaleString()}
-																							>
-																								<a href={link} target="_blank">
-																									{submission.name}
-																								</a>
-																							</SimpleTooltip>
-																						</StorageMetadata>
-																					</DownloadURL>
-																					<div class="flex flex-grow" />
-																					<Button
-																						variant="ghost"
-																						size="icon"
-																						on:click={async () => {
-																							if (submission instanceof File)
-																								return;
-																							await deleteObject(submission);
-																							team.lastUpdatedBy =
-																								$user?.email ?? '';
-																							dummyVariableToRerender++;
-																						}}
-																					>
-																						<X />
-																					</Button>
-																				</div>
-																			{/if}
-																		</li>
-																	{:else}
-																		<p>No submissions</p>
-																	{/each}
-																</ul>
-																<Button
-																	class="mt-4"
-																	on:click={() => submissionsFileUpload.click()}
-																>
-																	Upload
+										{#if event.event !== '*Rooming'}
+											<div>
+												<Dialog.Root closeOnOutsideClick={false}>
+													{#key dummyVariableToRerender}
+														<StorageList
+															ref="submissions/{event.event}/{team.id}"
+															let:list
+														>
+															<Dialog.Trigger>
+																<Button>
+																	Manage Submissions {list?.items.length
+																		? `(${list.items.length})`
+																		: ''}
 																</Button>
-																<input
-																	bind:this={submissionsFileUpload}
-																	on:change={(e) => {
-																		if (e.target instanceof HTMLInputElement) {
-																			if (!e.target.files?.length) return;
-																			const files = [...e.target.files];
-																			for (const file of files) {
-																				if (
-																					list?.items
-																						.map((f) => f.name)
-																						.includes(file.name)
-																				) {
-																					alert(
-																						`File ${file.name} already exists. If you want to upload this file, change the name.`,
-																					);
-																					continue;
+															</Dialog.Trigger>
+															<Dialog.Content>
+																<Dialog.Title>Manage Submissions</Dialog.Title>
+																<Dialog.Description>
+																	{#if event.submissionDescription}
+																		<div
+																			class="prose dark:prose-invert dark:text-white"
+																		>
+																			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+																			{@html md.render(
+																				`## What needs to be submitted:\n\n${event.submissionDescription}`,
+																			)}
+																		</div>
+																	{/if}
+																	<ul>
+																		{#each [...(list?.items ?? []), ...$filesToUpload] as submission (submission instanceof File ? submission.webkitRelativePath : submission.fullPath)}
+																			<li
+																				class="flex w-full flex-col items-center"
+																			>
+																				{#if submission instanceof File}
+																					<UploadTask
+																						ref="submissions/{event.event}/{team.id}/{submission.name}"
+																						data={submission}
+																						let:snapshot
+																						let:progress
+																					>
+																						{#if snapshot?.state === 'success'}
+																							{filterSubmissions(submission)}
+																							{updateStorageList()}
+																						{:else}
+																							<Progress
+																								value={progress}
+																								class="w-full"
+																							/>
+
+																							<span class="w-full">
+																								{submission.name}
+																							</span>
+																						{/if}
+																					</UploadTask>
+																				{:else}
+																					<div
+																						class="flex w-full flex-row items-center"
+																					>
+																						<DownloadURL
+																							ref={submission}
+																							let:link
+																						>
+																							<StorageMetadata
+																								ref={submission}
+																								let:meta
+																							>
+																								<SimpleTooltip
+																									message={new Date(
+																										meta.timeCreated,
+																									).toLocaleString()}
+																								>
+																									<a
+																										href={link}
+																										target="_blank"
+																									>
+																										{submission.name}
+																									</a>
+																								</SimpleTooltip>
+																							</StorageMetadata>
+																						</DownloadURL>
+																						<div class="flex flex-grow" />
+																						<Button
+																							variant="ghost"
+																							size="icon"
+																							on:click={async () => {
+																								if (submission instanceof File)
+																									return;
+																								await deleteObject(submission);
+																								team.lastUpdatedBy =
+																									$user?.email ?? '';
+																								dummyVariableToRerender++;
+																							}}
+																						>
+																							<X />
+																						</Button>
+																					</div>
+																				{/if}
+																			</li>
+																		{:else}
+																			<p>No submissions</p>
+																		{/each}
+																	</ul>
+																	<Button
+																		class="mt-4"
+																		on:click={() =>
+																			submissionsFileUpload.click()}
+																	>
+																		Upload
+																	</Button>
+																	<input
+																		bind:this={submissionsFileUpload}
+																		on:change={(e) => {
+																			if (
+																				e.target instanceof HTMLInputElement
+																			) {
+																				if (!e.target.files?.length) return;
+																				const files = [...e.target.files];
+																				for (const file of files) {
+																					if (
+																						list?.items
+																							.map((f) => f.name)
+																							.includes(file.name)
+																					) {
+																						alert(
+																							`File ${file.name} already exists. If you want to upload this file, change the name.`,
+																						);
+																						continue;
+																					}
+
+																					$filesToUpload.push(file);
+																					$filesToUpload = $filesToUpload;
 																				}
-
-																				$filesToUpload.push(file);
-																				$filesToUpload = $filesToUpload;
 																			}
-																		}
-																	}}
-																	class="hidden"
-																	type="file"
-																	multiple
-																/>
+																		}}
+																		class="hidden"
+																		type="file"
+																		multiple
+																	/>
 
-																<p>
-																	Allowed file types: all image files, all audio
-																	files, all video files, pdfs, and Word docs
-																	(.doc, .docx).
-																</p>
-																<p>250MB max file size.</p>
-																<p>
-																	If you need to submit a file type not listed,
-																	please contact Harry (<a
-																		href="mailto:s-hallen@lwsd.org"
-																		>s-hallen@lwsd.org</a
-																	>).
-																</p>
-															</Dialog.Description>
-														</Dialog.Content>
-													</StorageList>
-												{/key}
-											</Dialog.Root>
-										</div>
+																	<p>
+																		Allowed file types: all image files, all
+																		audio files, all video files, pdfs, and Word
+																		docs (.doc, .docx).
+																	</p>
+																	<p>250MB max file size.</p>
+																	<p>
+																		If you need to submit a file type not
+																		listed, please contact Harry (<a
+																			href="mailto:s-hallen@lwsd.org"
+																			>s-hallen@lwsd.org</a
+																		>).
+																	</p>
+																</Dialog.Description>
+															</Dialog.Content>
+														</StorageList>
+													{/key}
+												</Dialog.Root>
+											</div>
+										{/if}
 									</div>
 								</Card.Header>
 								<Card.Content>
