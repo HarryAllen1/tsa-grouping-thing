@@ -704,7 +704,7 @@
 												<div class="flex w-full max-w-sm flex-col gap-1.5">
 													<Label for="teamNumber">Team Number</Label>
 													<Input
-														type="email"
+														type="number"
 														id="teamNumber"
 														placeholder="1"
 														value={team.teamNumber}
