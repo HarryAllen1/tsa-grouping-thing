@@ -1,9 +1,9 @@
 <script lang="ts">
-	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { page } from '$app/stores';
 	import {
 		SimpleTooltip,
 		StorageMetadata,
+		allUsersCollection,
 		auth,
 		aww,
 		db,
@@ -14,13 +14,13 @@
 		yay,
 		type EventDoc,
 		type UserDoc,
-		allUsersCollection,
 	} from '$lib';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Collapsable from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import { Progress } from '$lib/components/ui/progress';
@@ -1334,6 +1334,132 @@
 														</Dialog.Content>
 													</Dialog.Root>
 												</ul>
+											</Collapsable.Content>
+										</Collapsable.Root>
+										<Collapsable.Root>
+											{@const hash = `files-${team.id}`}
+											<Collapsable.Trigger asChild let:builder>
+												<Button
+													builders={[builder]}
+													variant="ghost"
+													size="sm"
+													class="flex w-full items-center p-2"
+												>
+													Manage Files
+													<div class="flex-1" />
+													<ChevronsUpDown />
+												</Button>
+											</Collapsable.Trigger>
+											<Collapsable.Content class="px-2">
+												{#key dummyVariableToRerender}
+													<StorageList
+														ref="files/{event.event}/{team.id}"
+														let:list
+													>
+														{#if list === null}
+															<p>Loading...</p>
+														{:else}
+															<ul>
+																{#each [...(list?.items ?? []), ...($filesToUpload[0] ? [$filesToUpload[0]] : [])] as file}
+																	<li class="flex w-full flex-col items-center">
+																		{#if file instanceof File}
+																			<UploadTask
+																				ref="files/{event.event}/{team.id}/{file.name}"
+																				data={file}
+																				let:snapshot
+																				let:progress
+																			>
+																				{#if snapshot?.state === 'success'}
+																					{updateStorageList()}
+																					{filterSubmissions(file)}
+																				{:else}
+																					<Progress
+																						value={progress}
+																						class="w-full"
+																					/>
+
+																					<span class="w-full">
+																						{file.name}
+																					</span>
+																				{/if}
+																			</UploadTask>
+																		{:else}
+																			<div
+																				class="flex w-full flex-row items-center"
+																			>
+																				<DownloadURL ref={file} let:link>
+																					<StorageMetadata ref={file} let:meta>
+																						<SimpleTooltip
+																							message={new Date(
+																								meta.timeCreated,
+																							).toLocaleString()}
+																						>
+																							<a href={link} target="_blank">
+																								{file.name}
+																							</a>
+																						</SimpleTooltip>
+																					</StorageMetadata>
+																				</DownloadURL>
+																				<div class="flex flex-grow" />
+																				<Button
+																					variant="ghost"
+																					size="icon"
+																					on:click={async () => {
+																						if (file instanceof File) return;
+																						await deleteObject(file);
+																						team.lastUpdatedBy =
+																							$user?.email ?? '';
+																						dummyVariableToRerender++;
+																					}}
+																				>
+																					<X />
+																				</Button>
+																			</div>
+																		{/if}
+																	</li>
+																{:else}
+																	<p>No files</p>
+																{/each}
+															</ul>
+															<Button
+																class="mt-4"
+																on:click={() => {
+																	const el = document.querySelector(`#${hash}`);
+																	el instanceof HTMLInputElement && el.click();
+																}}
+															>
+																Upload
+															</Button>
+															<input
+																id={hash}
+																on:change={(e) => {
+																	if (e.target instanceof HTMLInputElement) {
+																		if (!e.target.files?.length) return;
+																		const files = [...e.target.files];
+																		for (const file of files) {
+																			if (
+																				list?.items
+																					.map((f) => f.name)
+																					.includes(file.name)
+																			) {
+																				alert(
+																					`File ${file.name} already exists. If you want to upload this file, change the name.`,
+																				);
+																				continue;
+																			}
+
+																			$filesToUpload.push(file);
+																			$filesToUpload = $filesToUpload;
+																		}
+																	}
+																}}
+																class="hidden"
+																type="file"
+																multiple
+															/>
+														{/if}
+													</StorageList>
+												{/key}
 											</Collapsable.Content>
 										</Collapsable.Root>
 									</div>
