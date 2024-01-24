@@ -890,138 +890,162 @@
 									</div>
 								</Card.Header>
 								<Card.Content>
-									{#if team.requests?.length && !event.locked && !team.locked && team.members
-											.map((u) => u.email.toLowerCase())
-											.includes($user?.email?.toLowerCase() ?? '')}
-										<div class="mb-4">
-											<Collapsable.Root>
-												<Collapsable.Trigger asChild let:builder>
-													<Button
-														builders={[builder]}
-														variant="ghost"
-														size="sm"
-														class="flex w-full items-center p-2"
-													>
-														Manage Requests {#if team.requests?.length}
-															({team.requests.length})
-														{/if}
-														<div class="flex-1" />
-														<ChevronsUpDown />
-													</Button>
-												</Collapsable.Trigger>
-												<Collapsable.Content class="px-2">
-													<ul>
-														{#each team.requests ?? [] as request}
-															<li class="flex flex-row">
-																{request.name}
-																<Button
-																	on:click={async () => {
-																		team.members.push({
-																			name: request.name,
-																			email: request.email,
-																		});
-																		team.lastUpdatedBy = $user?.email ?? '';
-																		team.lastUpdatedTime = new Timestamp(
-																			Date.now() / 1000,
-																			0,
-																		);
-																		team.requests = team.requests?.filter(
-																			(r) =>
-																				r.email !== request.email &&
-																				r.name !== request.name,
-																		);
-																		await setDoc(
-																			doc(db, 'events', event.event ?? ''),
-																			{
-																				teams: event.teams,
-																				lastUpdatedBy: $user?.email ?? '',
-																			},
-																			{
-																				merge: true,
-																			},
-																		);
+									<div class="has-[*]:mb-4">
+										{#if !event.locked && !team.locked && team.members
+												.map((u) => u.email.toLowerCase())
+												.includes($user?.email?.toLowerCase() ?? '')}
+											<StorageList ref="files/{event.event}/{team.id}" let:list>
+												{#if list?.items.length}
+													<Collapsable.Root>
+														<Collapsable.Trigger asChild let:builder>
+															<Button
+																builders={[builder]}
+																variant="ghost"
+																size="sm"
+																class="flex w-full items-center p-2"
+															>
+																Files ({list.items.length})
+																<div class="flex-1" />
+																<ChevronsUpDown />
+															</Button>
+														</Collapsable.Trigger>
+														<Collapsable.Content class="px-2"
+														></Collapsable.Content>
+													</Collapsable.Root>
+												{/if}
+											</StorageList>
+											{#if team.requests?.length}
+												<Collapsable.Root>
+													<Collapsable.Trigger asChild let:builder>
+														<Button
+															builders={[builder]}
+															variant="ghost"
+															size="sm"
+															class="flex w-full items-center p-2"
+														>
+															Manage Requests {#if team.requests?.length}
+																({team.requests.length})
+															{/if}
+															<div class="flex-1" />
+															<ChevronsUpDown />
+														</Button>
+													</Collapsable.Trigger>
+													<Collapsable.Content class="px-2">
+														<ul>
+															{#each team.requests ?? [] as request}
+																<li class="flex flex-row">
+																	{request.name}
+																	<Button
+																		on:click={async () => {
+																			team.members.push({
+																				name: request.name,
+																				email: request.email,
+																			});
+																			team.lastUpdatedBy = $user?.email ?? '';
+																			team.lastUpdatedTime = new Timestamp(
+																				Date.now() / 1000,
+																				0,
+																			);
+																			team.requests = team.requests?.filter(
+																				(r) =>
+																					r.email !== request.email &&
+																					r.name !== request.name,
+																			);
+																			await setDoc(
+																				doc(db, 'events', event.event ?? ''),
+																				{
+																					teams: event.teams,
+																					lastUpdatedBy: $user?.email ?? '',
+																				},
+																				{
+																					merge: true,
+																				},
+																			);
 
-																		let members = team.members
-																			.map((m) => m.name)
-																			.join(', ');
-																		const lastComma = members.lastIndexOf(',');
-																		if (lastComma !== -1) {
-																			members =
-																				members.slice(0, lastComma) +
-																				' and' +
-																				members.slice(lastComma + 1);
-																		}
+																			let members = team.members
+																				.map((m) => m.name)
+																				.join(', ');
+																			const lastComma =
+																				members.lastIndexOf(',');
+																			if (lastComma !== -1) {
+																				members =
+																					members.slice(0, lastComma) +
+																					' and' +
+																					members.slice(lastComma + 1);
+																			}
 
-																		sendEmail(
-																			request.email,
-																			`${event.event} team request approved`,
-																			`Your request to join ${members}'s team for ${event.event} has been approved.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-																		);
-																		confetti();
-																		navigator.vibrate(100);
-																		yay.play();
-																	}}
-																	size="icon"
-																	class="h-5"
-																	variant="ghost"
-																>
-																	<Plus />
-																</Button>
-																<Button
-																	size="icon"
-																	class="h-5"
-																	variant="ghost"
-																	on:click={async () => {
-																		team.requests = team.requests?.filter(
-																			(r) =>
-																				r.email !== request.email &&
-																				r.name !== request.name,
-																		);
-																		team.lastUpdatedBy = $user?.email ?? '';
-																		team.lastUpdatedTime = new Timestamp(
-																			Date.now() / 1000,
-																			0,
-																		);
-																		let members = team.members
-																			.map((m) => m.name)
-																			.join(', ');
-																		const lastComma = members.lastIndexOf(',');
-																		if (lastComma !== -1) {
-																			members =
-																				members.slice(0, lastComma) +
-																				' and' +
-																				members.slice(lastComma + 1);
-																		}
+																			sendEmail(
+																				request.email,
+																				`${event.event} team request approved`,
+																				`Your request to join ${members}'s team for ${event.event} has been approved.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+																			);
+																			confetti();
+																			navigator.vibrate(100);
+																			yay.play();
+																		}}
+																		size="icon"
+																		class="h-5"
+																		variant="ghost"
+																	>
+																		<Plus />
+																	</Button>
+																	<Button
+																		size="icon"
+																		class="h-5"
+																		variant="ghost"
+																		on:click={async () => {
+																			team.requests = team.requests?.filter(
+																				(r) =>
+																					r.email !== request.email &&
+																					r.name !== request.name,
+																			);
+																			team.lastUpdatedBy = $user?.email ?? '';
+																			team.lastUpdatedTime = new Timestamp(
+																				Date.now() / 1000,
+																				0,
+																			);
+																			let members = team.members
+																				.map((m) => m.name)
+																				.join(', ');
+																			const lastComma =
+																				members.lastIndexOf(',');
+																			if (lastComma !== -1) {
+																				members =
+																					members.slice(0, lastComma) +
+																					' and' +
+																					members.slice(lastComma + 1);
+																			}
 
-																		sendEmail(
-																			request.email,
-																			`${event.event} team request denied`,
-																			`Your request to join ${members}'s team for ${event.event} has been denied. Please contact them for more information.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-																		);
-																		await setDoc(
-																			doc(db, 'events', event.event ?? ''),
-																			{
-																				teams: event.teams,
-																				lastUpdatedBy: $user?.email ?? '',
-																			},
-																			{
-																				merge: true,
-																			},
-																		);
-																		aww.play();
-																	}}
-																>
-																	<Minus />
-																</Button>
-															</li>
-														{:else}
-															<li>No requests</li>
-														{/each}
-													</ul>
-												</Collapsable.Content>
-											</Collapsable.Root>
-										</div>
-									{/if}
+																			sendEmail(
+																				request.email,
+																				`${event.event} team request denied`,
+																				`Your request to join ${members}'s team for ${event.event} has been denied. Please contact them for more information.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+																			);
+																			await setDoc(
+																				doc(db, 'events', event.event ?? ''),
+																				{
+																					teams: event.teams,
+																					lastUpdatedBy: $user?.email ?? '',
+																				},
+																				{
+																					merge: true,
+																				},
+																			);
+																			aww.play();
+																		}}
+																	>
+																		<Minus />
+																	</Button>
+																</li>
+															{:else}
+																<li>No requests</li>
+															{/each}
+														</ul>
+													</Collapsable.Content>
+												</Collapsable.Root>
+											{/if}
+										{/if}
+									</div>
 									<ul>
 										{#each team.members as teamMember (teamMember.email)}
 											<li>
