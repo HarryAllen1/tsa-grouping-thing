@@ -35,6 +35,7 @@
 	import {
 		ChevronsUpDown,
 		Crown,
+		Download,
 		Mail,
 		Minus,
 		Plus,
@@ -322,7 +323,35 @@
 					<Card.Header>
 						<Card.Title class="flex flex-row items-center">
 							<span>{event.event}</span>
-							<div class="flex-grow"></div>
+							<div class="flex-grow" />
+							{#if event.event === '*Rooming'}
+								<Button
+									size="icon"
+									class="mr-2"
+									on:click={() => {
+										let csv = `Room number,member 1,member 2,member 3,member 4\n`;
+										for (const team of event.teams) {
+											csv += `${team.teamNumber},${team.members
+												.map((m) => `"${m.name}"`)
+												.join(',')}\n`;
+										}
+										const blob = new Blob([csv], {
+											type: 'text/csv;charset=utf-8;',
+										});
+										const url = URL.createObjectURL(blob);
+										const link = document.createElement('a');
+										link.setAttribute('href', url);
+										link.setAttribute('download', 'rooming.csv');
+										link.style.visibility = 'hidden';
+										document.body.appendChild(link);
+										link.click();
+										document.body.removeChild(link);
+										URL.revokeObjectURL(url);
+									}}
+								>
+									<Download />
+								</Button>
+							{/if}
 							<Button
 								variant="destructive"
 								size="icon"

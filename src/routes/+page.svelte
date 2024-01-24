@@ -314,6 +314,16 @@
 		</div>
 	{/if}
 
+	<h3 class="tracking-light my-4 w-full scroll-m-20 text-2xl font-semibold">
+		Rooming will close 1 February
+	</h3>
+	<p class="flex w-full">
+		If your room is not full (4 people), we will randomly assign the remaining
+		people to your room. If you are not in a room, we will randomly assign you
+		to a room. The more full your room is, the more likely that it won't be
+		split up.
+	</p>
+
 	<!-- {#if $userDoc?.washingtonId}
 		<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">
 			Submission site login information (open 1 January to 11 January at 5:00pm)
