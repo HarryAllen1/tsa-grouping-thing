@@ -31,7 +31,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import { deleteObject, listAll, ref } from 'firebase/storage';
+	import { deleteObject, getDownloadURL, listAll, ref } from 'firebase/storage';
 	import {
 		ChevronsUpDown,
 		Crown,
@@ -909,8 +909,27 @@
 																<ChevronsUpDown />
 															</Button>
 														</Collapsable.Trigger>
-														<Collapsable.Content class="px-2"
-														></Collapsable.Content>
+														<Collapsable.Content class="px-2">
+															{#if !list.items.length}
+																<p>No files</p>
+															{:else}
+																<ul>
+																	{#each list.items as file}
+																		<li>
+																			{#await getDownloadURL(file) then dlUrl}
+																				<a
+																					href={dlUrl}
+																					target="_blank"
+																					rel="noreferrer"
+																				>
+																					{file.name}
+																				</a>
+																			{/await}
+																		</li>
+																	{/each}
+																</ul>
+															{/if}
+														</Collapsable.Content>
 													</Collapsable.Root>
 												{/if}
 											</StorageList>
