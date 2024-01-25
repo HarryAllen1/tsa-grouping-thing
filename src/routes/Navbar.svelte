@@ -55,6 +55,10 @@
 						href: '/admin/results',
 					},
 					{
+						title: 'Admin Files',
+						href: '/admin/files',
+					},
+					{
 						title: 'Admin Logs',
 						href: '/admin/logs',
 					},
