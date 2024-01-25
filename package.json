@@ -46,7 +46,7 @@
 		"cmdk-sv": "^0.0.13",
 		"firebase": "^10.7.2",
 		"fuse.js": "^7.0.0",
-		"lucide-svelte": "^0.314.0",
+		"lucide-svelte": "^0.315.0",
 		"markdown-it": "^14.0.0",
 		"shiki": "^0.14.7",
 		"svelte-sonner": "^0.3.11",
