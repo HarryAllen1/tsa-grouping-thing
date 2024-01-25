@@ -10,5 +10,20 @@ export default defineConfig({
 		esbuildOptions: {
 			target: 'es2022',
 		},
+		include: [
+			'fuse.js',
+			'@zip.js/zip.js',
+			'shiki',
+			'cmdk-sv',
+			'tailwindcss/colors',
+			'@observablehq/plot',
+			'lucide-svelte',
+			'svelte-sonner',
+			'@vercel/analytics',
+			'sveltefire',
+			'firebase/app',
+			'firebase/firestore',
+			'firebase/storage',
+		],
 	},
 });
