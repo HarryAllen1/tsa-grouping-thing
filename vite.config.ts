@@ -22,6 +22,7 @@ export default defineConfig({
 			'@vercel/analytics',
 			'sveltefire',
 			'firebase/app',
+			'firebase/auth',
 			'firebase/firestore',
 			'firebase/storage',
 		],
