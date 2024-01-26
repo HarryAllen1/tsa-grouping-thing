@@ -22,14 +22,27 @@
 	$: files, showPreview();
 
 	const showPreview = async () => {
-		if (!files?.length) return;
+		if (!files?.length) {
+			ruleViolated = true;
+			return;
+		}
+		fileTreeData.label = files[0].name;
+		if (!files[0].name.endsWith('.zip')) {
+			ruleViolated = true;
+			return;
+		}
 		entries = await new ZipReader(new BlobReader(files[0])).getEntries();
 
 		if (!entries.length) return;
+
 		for (const entry of entries) {
 			if (!entry.filename.includes('/')) {
 				ruleViolated = true;
-				continue;
+				return;
+			}
+			if (!entry.filename.includes('J')) {
+				ruleViolated = true;
+				return;
 			}
 			const fullPath = entry.filename.split('/');
 			const fileName = fullPath.pop();
@@ -120,6 +133,6 @@
 		{:else if files?.length && fileTreeData}
 			<TreeView tree={fileTreeData} />
 		{/if}
-		<Button disabled={!files?.length}>Distribute</Button>
+		<Button disabled={!files?.length || ruleViolated}>Distribute</Button>
 	</div>
 </div>
