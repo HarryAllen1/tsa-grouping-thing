@@ -751,7 +751,7 @@
 																			t.id === team.id
 																				? {
 																						...t,
-																						teamNumber: el.value,
+																						teamNumber: el.valueAsNumber,
 																					}
 																				: t,
 																		),
