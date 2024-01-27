@@ -410,6 +410,17 @@
 								<li>
 									ID: {event.id}
 								</li>
+								{#if event.event === '*Rooming'}
+									<li>
+										{event.teams.length} rooms
+									</li>
+									<li>
+										{event.teams
+											.filter((t) => t.members.length < event.minTeamSize)
+											.reduce((acc, curr) => (acc += curr.members.length), 0)} people
+										in unfilled rooms
+									</li>
+								{/if}
 							</ul>
 							{#if event.event !== '*Rooming'}
 								<div class="flex flex-col gap-2">
@@ -495,7 +506,7 @@
 										>
 											People not in {event.event === '*Rooming'
 												? 'rooms'
-												: 'teams'}
+												: 'teams'} ({peopleNotInTeams.length})
 											<div class="flex-1" />
 											<ChevronsUpDown />
 										</Button>
