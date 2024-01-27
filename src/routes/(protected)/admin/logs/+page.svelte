@@ -3,14 +3,8 @@
 	import * as Table from '$lib/components/ui/table';
 	import { removeRef } from '$lib/utils';
 	import { Timestamp } from 'firebase/firestore';
-	import { getHighlighter, setCDN } from 'shiki';
+	import { codeToHtml } from 'shiki/bundle/web';
 	import { Collection } from 'sveltefire';
-
-	setCDN('https://esm.sh/shiki@0.14.5/');
-	const highlighter = getHighlighter({
-		theme: 'one-dark-pro',
-		langs: ['json'],
-	});
 </script>
 
 <div class="container">
@@ -25,59 +19,52 @@
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#await highlighter then hl}
-				<Collection
-					ref="firestore_logs"
-					startWith={[
-						{
-							collection: 'Loading...',
-							id: 'Loading...',
-							afterData: JSON.parse('{}'),
-							beforeData: JSON.parse('{}'),
-							timestamp: new Timestamp(0, 0),
-							updatedBy: Number() === Number() ? 'Loading...' : undefined,
-							eventType: '',
-						},
-					]}
-					let:data
-				>
-					{#each data.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds) as log, i (i)}
-						<Table.Row>
-							<Table.Cell>
-								{log.collection}
-							</Table.Cell>
-							<Table.Cell>
-								{log.id}
-							</Table.Cell>
-							<Table.Cell>
-								{log.updatedBy ?? log.afterData.lastUpdatedBy ?? 'Unknown'}
-							</Table.Cell>
-							<Table.Cell>
-								{log.timestamp.toDate().toLocaleString()}
-							</Table.Cell>
-							<Table.Cell>
-								<Dialog.Root>
-									<Dialog.Trigger>View</Dialog.Trigger>
-									<Dialog.Content
-										class="max-h-full max-w-fit overflow-y-scroll"
-									>
-										<Dialog.Title>
-											{log.collection}/{log.id}
-										</Dialog.Title>
+			<Collection
+				ref="firestore_logs"
+				startWith={[
+					{
+						collection: 'Loading...',
+						id: 'Loading...',
+						afterData: JSON.parse('{}'),
+						beforeData: JSON.parse('{}'),
+						timestamp: new Timestamp(0, 0),
+						updatedBy: Number() === Number() ? 'Loading...' : undefined,
+						eventType: '',
+					},
+				]}
+				let:data
+			>
+				{#each data.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds) as log, i (i)}
+					<Table.Row>
+						<Table.Cell>
+							{log.collection}
+						</Table.Cell>
+						<Table.Cell>
+							{log.id}
+						</Table.Cell>
+						<Table.Cell>
+							{log.updatedBy ?? log.afterData.lastUpdatedBy ?? 'Unknown'}
+						</Table.Cell>
+						<Table.Cell>
+							{log.timestamp.toDate().toLocaleString()}
+						</Table.Cell>
+						<Table.Cell>
+							<Dialog.Root>
+								<Dialog.Trigger>View</Dialog.Trigger>
+								<Dialog.Content class="max-h-full max-w-fit overflow-y-scroll">
+									<Dialog.Title>
+										{log.collection}/{log.id}
+									</Dialog.Title>
+									{#await codeToHtml( JSON.stringify(removeRef(log), null, 2), { lang: 'json', theme: 'one-dark-pro' }, ) then code}
 										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-										{@html hl.codeToHtml(
-											JSON.stringify(removeRef(log), null, 2),
-											{
-												lang: 'json',
-											},
-										)}
-									</Dialog.Content>
-								</Dialog.Root>
-							</Table.Cell>
-						</Table.Row>
-					{/each}
-				</Collection>
-			{/await}
+										{@html code}
+									{/await}
+								</Dialog.Content>
+							</Dialog.Root>
+						</Table.Cell>
+					</Table.Row>
+				{/each}
+			</Collection>
 		</Table.Body>
 	</Table.Root>
 </div>
