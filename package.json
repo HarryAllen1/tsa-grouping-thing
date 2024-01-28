@@ -14,7 +14,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^5.1.0",
 		"@sveltejs/kit": "^2.5.0",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@sveltejs/vite-plugin-svelte": "^3.0.2",
 		"@tailwindcss/typography": "^0.5.10",
 		"@types/canvas-confetti": "^1.6.4",
 		"@types/markdown-it": "^13.0.7",
@@ -37,10 +37,10 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@melt-ui/svelte": "^0.70.0",
+		"@melt-ui/svelte": "^0.71.0",
 		"@observablehq/plot": "^0.6.13",
 		"@vercel/analytics": "^1.1.2",
-		"@zip.js/zip.js": "^2.7.32",
+		"@zip.js/zip.js": "^2.7.33",
 		"bits-ui": "^0.15.1",
 		"canvas-confetti": "^1.9.2",
 		"clsx": "^2.1.0",
