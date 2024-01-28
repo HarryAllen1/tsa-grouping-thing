@@ -11,10 +11,12 @@
 		md,
 		sendEmail,
 		settings,
+		storage,
 		yay,
 		type EventDoc,
 		type UserDoc,
 	} from '$lib';
+	import * as Alert from '$lib/components/ui/alert';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -30,12 +32,14 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, deleteDoc, doc, setDoc } from 'firebase/firestore';
-	import { deleteObject } from 'firebase/storage';
+	import { deleteObject, ref, uploadBytes } from 'firebase/storage';
 	import Fuse from 'fuse.js';
 	import {
 		ChevronsUpDown,
 		Crown,
 		Download,
+		FileUp,
+		Lightbulb,
 		Mail,
 		Minus,
 		Plus,
@@ -43,6 +47,7 @@
 		UserPlus,
 		X,
 	} from 'lucide-svelte';
+	import { toast } from 'svelte-sonner';
 	import { flip } from 'svelte/animate';
 	import { writable } from 'svelte/store';
 	import {
@@ -140,6 +145,39 @@
 	const submissionDescriptionElementMap: Record<string, Textarea> = {};
 
 	const openTeamNumberDialogs: Record<string, boolean> = {};
+
+	let currentDropzone = '';
+
+	const handleFileDrop = (e: DragEvent, event: string, team: string) => {
+		e.preventDefault();
+		currentDropzone = '';
+		console.log(e.dataTransfer?.files);
+		console.log(e.dataTransfer?.items);
+		toast.promise(
+			async () =>
+				new Promise((res, rej) => {
+					const data = e.dataTransfer;
+					if (!data) return rej('No data');
+					const { files } = data;
+					const refs = [...files].map(
+						(f) =>
+							[ref(storage, `files/${event}/${team}/${f.name}`), f] as const,
+					);
+					Promise.all(refs.map((r) => uploadBytes(r[0], r[1])))
+						.then(() => {
+							res('Uploaded!');
+						})
+						.catch((e) => {
+							rej(String(e));
+						});
+				}),
+			{
+				loading: 'Uploading...',
+				success: 'Uploaded!',
+				error: (d) => (typeof d === 'string' ? d : 'Failed to upload'),
+			},
+		);
+	};
 </script>
 
 <svelte:window
@@ -718,16 +756,35 @@
 								Online submissions
 							</Label>
 						{/if}
-
+						<!-- teams loop -->
 						{#each event.teams as team (team.id)}
 							<Card.Root
+								on:drop={(e) => {
+									console.log('test');
+									handleFileDrop(e, event.event, team.id);
+								}}
+								on:dragover={(e) => {
+									e.preventDefault();
+									currentDropzone = team.id;
+								}}
+								on:dragleave={(e) => {
+									e.preventDefault();
+									currentDropzone = '';
+								}}
 								class="{team.members.length > event.maxTeamSize ||
 								team.members.length < event.minTeamSize
 									? 'bg-red-300 dark:bg-red-950'
 									: team.members.length === event.maxTeamSize
 										? 'bg-green-300 dark:bg-green-950'
-										: 'bg-blue-100 dark:bg-slate-900'} bg-opacity-20"
+										: 'bg-blue-100 dark:bg-slate-900'} relative bg-opacity-20"
 							>
+								{#if currentDropzone === team.id}
+									<div
+										class="pointer-events-none absolute flex h-full w-full items-center justify-center rounded-md border-2 border-dashed bg-black/20 p-4 py-8"
+									>
+										<FileUp class="h-16 w-16" />
+									</div>
+								{/if}
 								<Card.Header>
 									<Card.Title>
 										{#if event.event === '*Rooming'}
@@ -1392,6 +1449,14 @@
 											</Collapsable.Trigger>
 											<Collapsable.Content class="px-2">
 												{#key dummyVariableToRerender}
+													<Alert.Root>
+														<Lightbulb />
+														<Alert.Title>Tip</Alert.Title>
+														<Alert.Description>
+															You can drag and drop files onto the team card to
+															upload them.
+														</Alert.Description>
+													</Alert.Root>
 													<StorageList
 														ref="files/{event.event}/{team.id}"
 														let:list

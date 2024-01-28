@@ -40,7 +40,6 @@
 		"@melt-ui/svelte": "^0.71.0",
 		"@observablehq/plot": "^0.6.13",
 		"@vercel/analytics": "^1.1.2",
-		"@zip.js/zip.js": "^2.7.33",
 		"bits-ui": "^0.15.1",
 		"canvas-confetti": "^1.9.2",
 		"clsx": "^2.1.0",

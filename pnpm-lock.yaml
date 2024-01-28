@@ -21,9 +21,6 @@ importers:
       '@vercel/analytics':
         specifier: ^1.1.2
         version: 1.1.2
-      '@zip.js/zip.js':
-        specifier: ^2.7.33
-        version: 2.7.33
       bits-ui:
         specifier: ^0.15.1
         version: 0.15.1(svelte@4.2.9)
@@ -2660,11 +2657,6 @@ packages:
       - encoding
       - supports-color
     dev: true
-
-  /@zip.js/zip.js@2.7.33:
-    resolution: {integrity: sha512-3Ct8eoIkvkflNEyL3wD3GwJ2ORMobGTGO4v9giq6a4vCBcVmk1qFXtfDN2P9hJ9Eibd4zPKMiRCca4lVu+56Ig==}
-    engines: {bun: '>=0.7.0', deno: '>=1.0.0', node: '>=16.5.0'}
-    dev: false
 
   /abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
