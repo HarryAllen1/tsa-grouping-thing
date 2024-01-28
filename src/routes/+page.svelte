@@ -21,7 +21,7 @@
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
-	import * as Collapsable from '$lib/components/ui/collapsible';
+	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
 	import { localStorageStore } from '$lib/components/ui/light-switch/local-storage-store';
@@ -145,8 +145,8 @@
 				Manage Requests
 			</h3>
 			{#each requests as request}
-				<Collapsable.Root>
-					<Collapsable.Trigger asChild let:builder>
+				<Collapsible.Root>
+					<Collapsible.Trigger asChild let:builder>
 						<Button
 							builders={[builder]}
 							variant="ghost"
@@ -157,8 +157,8 @@
 							<div class="flex-1" />
 							<ChevronsUpDown />
 						</Button>
-					</Collapsable.Trigger>
-					<Collapsable.Content class="px-2">
+					</Collapsible.Trigger>
+					<Collapsible.Content class="px-2">
 						<ul>
 							{#each request.requests ?? [] as r}
 								<li class="flex flex-row">
@@ -308,8 +308,8 @@
 								<li>No requests</li>
 							{/each}
 						</ul>
-					</Collapsable.Content>
-				</Collapsable.Root>
+					</Collapsible.Content>
+				</Collapsible.Root>
 			{/each}
 		</div>
 	{/if}
@@ -896,8 +896,8 @@
 												.includes($user?.email?.toLowerCase() ?? '')}
 											<StorageList ref="files/{event.event}/{team.id}" let:list>
 												{#if list?.items.length}
-													<Collapsable.Root>
-														<Collapsable.Trigger asChild let:builder>
+													<Collapsible.Root>
+														<Collapsible.Trigger asChild let:builder>
 															<Button
 																builders={[builder]}
 																variant="ghost"
@@ -908,8 +908,8 @@
 																<div class="flex-1" />
 																<ChevronsUpDown />
 															</Button>
-														</Collapsable.Trigger>
-														<Collapsable.Content class="px-2">
+														</Collapsible.Trigger>
+														<Collapsible.Content class="px-2">
 															{#if !list.items.length}
 																<p>No files</p>
 															{:else}
@@ -929,13 +929,13 @@
 																	{/each}
 																</ul>
 															{/if}
-														</Collapsable.Content>
-													</Collapsable.Root>
+														</Collapsible.Content>
+													</Collapsible.Root>
 												{/if}
 											</StorageList>
 											{#if team.requests?.length}
-												<Collapsable.Root>
-													<Collapsable.Trigger asChild let:builder>
+												<Collapsible.Root>
+													<Collapsible.Trigger asChild let:builder>
 														<Button
 															builders={[builder]}
 															variant="ghost"
@@ -948,8 +948,8 @@
 															<div class="flex-1" />
 															<ChevronsUpDown />
 														</Button>
-													</Collapsable.Trigger>
-													<Collapsable.Content class="px-2">
+													</Collapsible.Trigger>
+													<Collapsible.Content class="px-2">
 														<ul>
 															{#each team.requests ?? [] as request}
 																<li class="flex flex-row">
@@ -1060,8 +1060,8 @@
 																<li>No requests</li>
 															{/each}
 														</ul>
-													</Collapsable.Content>
-												</Collapsable.Root>
+													</Collapsible.Content>
+												</Collapsible.Root>
 											{/if}
 										{/if}
 									</div>

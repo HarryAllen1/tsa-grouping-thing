@@ -12,7 +12,6 @@ export default defineConfig({
 		},
 		include: [
 			'fuse.js',
-			'@zip.js/zip.js',
 			'shiki',
 			'cmdk-sv',
 			'tailwindcss/colors',

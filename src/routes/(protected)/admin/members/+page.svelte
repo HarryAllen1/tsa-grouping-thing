@@ -114,7 +114,7 @@
 		class="mb-4"
 		on:click={() => {
 			document
-				.querySelectorAll('.member-collapsable:not([data-state="open"])')
+				.querySelectorAll('.member-collapsible:not([data-state="open"])')
 				.forEach((el) => {
 					if (el instanceof HTMLButtonElement) el.click();
 				});
@@ -270,7 +270,7 @@
 										builders={[builder]}
 										variant="ghost"
 										size="sm"
-										class="member-collapsable flex w-full items-center p-2 {user
+										class="member-collapsible flex w-full items-center p-2 {user
 											.events.length < 4 || user.events.length > 6
 											? 'text-red-500'
 											: user.events
