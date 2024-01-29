@@ -90,8 +90,6 @@
 					) => {
 						if (entryIsFile(item)) {
 							item.file((file) => {
-								console.log(file);
-
 								files.push(file);
 							});
 						} else if (entryIsDir(item)) {
@@ -106,10 +104,7 @@
 					};
 
 					for (const item of items) {
-						console.log(item);
-
 						const entry = item.webkitGetAsEntry();
-						console.log(entry);
 
 						if (entry) {
 							traverseFileTree(entry);
