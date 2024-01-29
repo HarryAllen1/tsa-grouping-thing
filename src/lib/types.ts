@@ -73,3 +73,7 @@ export interface SettingsDoc {
 	enableOnlineSubmissions: boolean;
 	enableRooming: boolean;
 }
+
+export interface EventData extends EventDoc {
+	members: BasicUser[];
+}
