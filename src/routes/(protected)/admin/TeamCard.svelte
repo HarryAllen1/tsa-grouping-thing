@@ -159,7 +159,7 @@
 >
 	{#if currentDropzone === team.id}
 		<div
-			class="pointer-events-none absolute flex h-full w-full items-center justify-center rounded-md border-2 border-dashed bg-black/20 p-4 py-8"
+			class="pointer-events-none absolute z-50 flex h-full w-full items-center justify-center rounded-md border-2 border-dashed bg-black/20 p-4 py-8"
 		>
 			<FileUp class="h-16 w-16" />
 		</div>
