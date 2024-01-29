@@ -12,7 +12,7 @@ export default defineConfig({
 		},
 		include: [
 			'fuse.js',
-			'shiki',
+			'shiki/bundle/web',
 			'cmdk-sv',
 			'tailwindcss/colors',
 			'@observablehq/plot',

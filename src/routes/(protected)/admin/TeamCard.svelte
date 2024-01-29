@@ -256,7 +256,8 @@
 							<ul>
 								{#each $allUsersCollection
 									.filter((p) => !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
-									.sort( (a, b) => a?.name?.localeCompare(b?.name), ) as person (person.email)}
+									.sort((a, b) => a?.name?.localeCompare(b?.name))
+									.filter( (m) => (event.event === '*Rooming' ? m.events.length > 0 : true), ) as person (person.email)}
 									<li
 										class:text-green-500={$allUsersCollection
 											.filter((m) => m.events.includes(event.event ?? ''))
