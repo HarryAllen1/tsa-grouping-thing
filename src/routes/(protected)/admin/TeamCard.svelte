@@ -45,6 +45,7 @@
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import UserCard from './UserCard.svelte';
+	import { sleep } from '$lib/utils';
 
 	export let team: Team;
 	export let event: EventDoc;
@@ -114,18 +115,19 @@
 							traverseFileTree(entry);
 						}
 					}
-					console.log(files);
-					const refs = files.map(
-						(f) =>
-							[ref(storage, `files/${event}/${team}/${f.name}`), f] as const,
-					);
-					Promise.all(refs.map((r) => uploadBytes(r[0], r[1])))
-						.then(() => {
-							res('Uploaded!');
-						})
-						.catch((e) => {
-							rej(String(e));
-						});
+					sleep(1000).then(() => {
+						const refs = files.map(
+							(f) =>
+								[ref(storage, `files/${event}/${team}/${f.name}`), f] as const,
+						);
+						Promise.all(refs.map((r) => uploadBytes(r[0], r[1])))
+							.then(() => {
+								res('Uploaded!');
+							})
+							.catch((e) => {
+								rej(String(e));
+							});
+					});
 				}),
 			{
 				loading: 'Uploading...',
@@ -875,8 +877,9 @@
 					<HoverCard.Root>
 						<HoverCard.Trigger
 							href="/events/{encodeURIComponent(teamMember.email)}"
-							>{teamMember.name}</HoverCard.Trigger
 						>
+							{teamMember.name}
+						</HoverCard.Trigger>
 						<HoverCard.Content>
 							<UserCard
 								user={$allUsersCollection.find(
