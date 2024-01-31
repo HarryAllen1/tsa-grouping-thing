@@ -29,22 +29,32 @@
 	let eventData: EventData[] = [];
 	$: eventData = $eventsCollection.length
 		? $eventsCollection
-				.map((e) => ({
-					...e,
-					members: (
-						$allUsersCollection?.filter((m) => m.events.includes(e.event)) ?? []
-					).map((m) => ({
-						name: m.name,
-						email: m.email,
-					})),
-				}))
+				.map((e) => {
+					const allMembers =
+						$allUsersCollection?.filter((m) => m.events.includes(e.event)) ??
+						[];
+					return {
+						...e,
+						members: allMembers.map((m) => ({
+							name: m.name,
+							email: m.email,
+						})),
+						teamNumbers: e.teams.map((t) => `2082-${t.teamNumber}`),
+						waId: allMembers.map((m) => m.washingtonId).filter((m) => m),
+					};
+				})
 				.sort((a, b) => a.event.localeCompare(b.event))
 		: [];
 
 	let shouldHideIndividualEvents = false;
 	let onlyShowOverflown = false;
 
-	const fuseKeys = { event: true, members: true };
+	const fuseKeys = {
+		event: true,
+		members: true,
+		waId: true,
+		teamNumbers: true,
+	};
 	let threshold = 0.2;
 	$: fuse = new Fuse(
 		eventData.map((e) => ({ ...e, members: e.members.map((m) => m.name) })),
