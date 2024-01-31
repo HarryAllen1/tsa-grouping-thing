@@ -369,6 +369,62 @@
 						</ul>
 					</Collapsible.Content>
 				</Collapsible.Root>
+			{:else}
+				{@const peopleInUnfilledRooms = event.teams
+					.filter((t) => t.members.length < event.minTeamSize)
+					.reduce(
+						(acc, curr) => [...acc, ...curr.members],
+						reallyStupidFunction([]),
+					)}
+				<Collapsible.Root>
+					<Collapsible.Trigger asChild let:builder>
+						<Button
+							builders={[builder]}
+							variant="ghost"
+							size="sm"
+							class="flex w-full items-center p-2"
+						>
+							People in unfilled rooms ({peopleInUnfilledRooms.length})
+							<div class="flex-1" />
+							<ChevronsUpDown />
+						</Button>
+					</Collapsible.Trigger>
+					<Collapsible.Content>
+						<Button
+							href={`mailto:?cc=${$allUsersCollection
+								.filter((u) => u.admin)
+								.map((u) => u.email)
+								.join(';')}&bcc=${peopleInUnfilledRooms
+								.map((p) => p.email)
+								.join(';')}&subject=${event.event}`}
+						>
+							Email these people
+						</Button>
+						<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+							{#each peopleInUnfilledRooms as person (person.email)}
+								<li>
+									<HoverCard.Root>
+										<HoverCard.Trigger
+											href="/events/{encodeURIComponent(
+												person.email.toLowerCase(),
+											)}"
+											class="underline"
+										>
+											{person.name}
+										</HoverCard.Trigger>
+										<HoverCard.Content>
+											<UserCard
+												user={$allUsersCollection.find(
+													(u) => u.email === person.email,
+												) ?? { email: '', events: [], name: '' }}
+											/>
+										</HoverCard.Content>
+									</HoverCard.Root>
+								</li>
+							{/each}
+						</ul>
+					</Collapsible.Content>
+				</Collapsible.Root>
 			{/if}
 		</Card.Description>
 	</Card.Header>
