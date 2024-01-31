@@ -163,6 +163,10 @@
 		<Card.Title>
 			{#if event.event === '*Rooming'}
 				Room #{team.teamNumber}
+			{:else if event.maxTeamSize === 1 && team.members.length === 1}
+				Team {$allUsersCollection.find(
+					(u) => u.email.toLowerCase() === team.members[0].email.toLowerCase(),
+				)?.washingtonId}
 			{:else}
 				Team 2082-{team.teamNumber}
 			{/if}
