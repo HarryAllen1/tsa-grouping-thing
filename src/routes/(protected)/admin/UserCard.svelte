@@ -29,7 +29,7 @@
 				Gender: {user.gender}
 			</p>
 		{/if}
-		<p>Events:</p>
+		<p>Events ({user.events.length}):</p>
 		<div class="flex flex-col">
 			{#each user.events as event}
 				<a href="/admin?q={encodeURIComponent(event)}" class="underline">
