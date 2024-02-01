@@ -344,6 +344,16 @@
 						</Button>
 					</Collapsible.Trigger>
 					<Collapsible.Content>
+						<Button
+							href="mailto:?cc={$allUsersCollection
+								.filter((u) => u.admin)
+								.map((u) => u.email)
+								.join(';')}&bcc={event.members
+								.map((p) => p.email)
+								.join(';')}&subject={event.event}"
+						>
+							Email everyone
+						</Button>
 						<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 							{#each event.members as person (person.email)}
 								<li>
