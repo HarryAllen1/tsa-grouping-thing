@@ -7,7 +7,6 @@
 		db,
 		fancyConfirm,
 		md,
-		sendEmail,
 		storage,
 		user,
 		yay,
@@ -25,6 +24,7 @@
 	import { Progress } from '$lib/components/ui/progress';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { sleep } from '$lib/utils';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { deleteObject, ref, uploadBytes } from 'firebase/storage';
@@ -45,7 +45,6 @@
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import UserCard from './UserCard.svelte';
-	import { sleep } from '$lib/utils';
 
 	export let team: Team;
 	export let event: EventDoc;
@@ -709,15 +708,7 @@
 																merge: true,
 															},
 														);
-														sendEmail(
-															team.members.map((m) => m.email),
-															'New team request',
-															`${
-																person.name ?? 'Someone'
-															} has requested to join your team for ${
-																event.event
-															}. Please go to the <a href="https://tsa-grouping-thing.vercel.app">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-														);
+
 														confetti();
 														yay.play();
 														navigator.vibrate(100);
