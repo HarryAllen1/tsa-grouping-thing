@@ -89,6 +89,7 @@
 								'teams',
 								'results',
 								'requests',
+								'settings',
 							].includes(k)
 								? Object.values(v)
 								: v,

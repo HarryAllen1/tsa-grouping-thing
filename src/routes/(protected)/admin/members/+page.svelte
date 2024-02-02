@@ -17,13 +17,20 @@
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
 
 	let search = '';
+	let hidePeopleWithoutEvents = false;
+	let sortBy = {
+		value: 'firstName',
+		label: 'First Name',
+	};
 	$: fuse = new Fuse($allUsersCollection, {
 		keys: ['name', 'email', 'grade', 'events', 'nationalId', 'washingtonId'],
 		threshold: 0.2,
 	});
 	$: results =
 		search === ''
-			? $allUsersCollection.toSorted((a, b) => a.name.localeCompare(b.name))
+			? $allUsersCollection
+					.toSorted((a, b) => a.name.localeCompare(b.name))
+					.filter((u) => !hidePeopleWithoutEvents || u.events.length > 0)
 			: fuse.search(search).map((r) => r.item);
 
 	const valuesMap: Record<string, Record<string, number | undefined>> = {};
@@ -123,6 +130,28 @@
 		Expand all events
 	</Button>
 
+	<div class="mb-2 flex items-center space-x-2">
+		<Switch bind:checked={hidePeopleWithoutEvents} id="hide-people" />
+		<Label for="hide-people">Hide people without events</Label>
+	</div>
+	<div class="mb-2 flex items-center space-x-2">
+		<Select.Root bind:selected={sortBy}>
+			<Select.Trigger class="w-[180px]">
+				<Select.Value placeholder="Sort by..." />
+			</Select.Trigger>
+			<Select.Content>
+				<Select.Group>
+					{#each [{ value: 'firstName', label: 'First Name' }, { value: 'lastName', label: 'Last Name' }] as { value, label }}
+						<Select.Item {value} {label}>
+							{label}
+						</Select.Item>
+					{/each}
+				</Select.Group>
+			</Select.Content>
+			<Select.Input name="favoriteFruit" />
+		</Select.Root>
+	</div>
+
 	<Input
 		class="mb-4"
 		bind:value={search}
@@ -134,7 +163,7 @@
 	<div
 		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 	>
-		{#each $allUsersCollection.toSorted( (a, b) => a.name.localeCompare(b.name), ) as user}
+		{#each $allUsersCollection.toSorted( (a, b) => (sortBy.value === 'firstName' ? a.name : a.lastName ?? '').localeCompare(sortBy.value === 'firstName' ? b.name : b.lastName ?? ''), ) as user (user.email)}
 			{@const hash = user.email.replaceAll('@', '').replaceAll('.', '')}
 			{#if valuesMap[user.email]}
 				<Card.Root class={results.includes(user) ? '' : 'hidden'}>
@@ -163,6 +192,23 @@
 								}}
 							/>
 							<Label for="{hash}admin">Admin</Label>
+						</div>
+						<div class="flex items-center space-x-2">
+							<Switch
+								id="{hash}random"
+								checked={user.random ?? false}
+								onCheckedChange={async (e) => {
+									await setDoc(
+										doc(db, 'users', user.email),
+										{
+											random: e,
+											lastUpdatedBy: $userStore?.email ?? '',
+										},
+										{ merge: true },
+									);
+								}}
+							/>
+							<Label for="{hash}random">Random switch</Label>
 						</div>
 						<div class="flex w-full max-w-sm flex-col gap-1.5">
 							<Label for="{hash}natid">National ID</Label>

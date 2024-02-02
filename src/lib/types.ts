@@ -47,6 +47,7 @@ export interface UserDoc {
 	washingtonId?: number;
 	grade?: number;
 	firstName?: string;
+	random?: boolean;
 	lastName?: string;
 	gender?: string;
 	demographic?: string;
