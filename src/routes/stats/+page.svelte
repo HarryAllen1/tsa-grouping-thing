@@ -4,9 +4,10 @@
 	import { barX, plot } from '@observablehq/plot';
 	import colors from 'tailwindcss/colors';
 	import ColorKey from './ColorKey.svelte';
-	import { eventError } from './eventError.js';
 	import Demographics from './Demographics.svelte';
 	import Gender from './Gender.svelte';
+	import TShirt from './TShirt.svelte';
+	import { eventError } from './eventError.js';
 
 	let graph: HTMLDivElement;
 
@@ -88,4 +89,5 @@
 
 	<Demographics />
 	<Gender />
+	<TShirt />
 </div>

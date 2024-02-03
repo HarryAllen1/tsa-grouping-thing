@@ -45,13 +45,13 @@ export interface UserDoc {
 	admin?: boolean;
 	nationalId?: number;
 	washingtonId?: number;
+	tShirtSize?: 'WXS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
 	grade?: number;
 	firstName?: string;
 	random?: boolean;
 	lastName?: string;
 	gender?: string;
 	demographic?: string;
-	tShirtSize?: string;
 }
 
 export interface MailDoc {

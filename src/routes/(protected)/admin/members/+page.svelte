@@ -10,10 +10,10 @@
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import { doc, setDoc } from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import * as Select from '$lib/components/ui/select';
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
 
 	let search = '';
@@ -210,6 +210,38 @@
 							/>
 							<Label for="{hash}random">Random switch</Label>
 						</div>
+						<Label>
+							<span class="mb-2"> T-shirt size </span>
+							<Select.Root
+								selected={user.tShirtSize
+									? { value: user.tShirtSize, label: user.tShirtSize }
+									: { value: 'null', label: 'Unspecified' }}
+								onSelectedChange={async (s) => {
+									if (s)
+										await setDoc(
+											doc(db, 'users', user.email),
+											{
+												tShirtSize: s.value,
+											},
+											{ merge: true },
+										);
+								}}
+							>
+								<Select.Trigger class="mt-2 w-full">
+									<Select.Value placeholder="T-shirt size" />
+								</Select.Trigger>
+								<Select.Content>
+									<Select.Item value="WXS">WXS</Select.Item>
+									<Select.Item value="S">S</Select.Item>
+									<Select.Item value="M">M</Select.Item>
+									<Select.Item value="L">L</Select.Item>
+									<Select.Item value="XL">XL</Select.Item>
+									<Select.Item value="XXL">XXL</Select.Item>
+									<Select.Item value="XXXL">XXXL</Select.Item>
+									<Select.Item value="null">Unspecified</Select.Item>
+								</Select.Content>
+							</Select.Root>
+						</Label>
 						<div class="flex w-full max-w-sm flex-col gap-1.5">
 							<Label for="{hash}natid">National ID</Label>
 							<div class="flex flex-row gap-2">
@@ -304,11 +336,7 @@
 								Demographic: {user.demographic}
 							</p>
 						{/if}
-						{#if user.tShirtSize}
-							<p>
-								Shirt Size: {user.tShirtSize}
-							</p>
-						{/if}
+
 						<div class="w-full">
 							<Collapsible.Root>
 								<Collapsible.Trigger asChild let:builder>
