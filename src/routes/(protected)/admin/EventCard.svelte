@@ -56,10 +56,15 @@
 					size="icon"
 					class="mr-2"
 					on:click={() => {
-						let csv = `Room number,member 1,member 2,member 3,member 4\n`;
+						let csv = `Room number,first1,last1,first2,last2,first3,last3,first4,last4\n`;
 						for (const team of event.teams) {
 							csv += `${team.teamNumber},${team.members
-								.map((m) => `"${m.name}"`)
+								.map((m) => {
+									const person = $allUsersCollection.find(
+										(u) => u.email.toLowerCase() === m.email.toLowerCase(),
+									);
+									return `"${person?.firstName}","${person?.lastName}"`;
+								})
 								.join(',')}\n`;
 						}
 						const blob = new Blob([csv], {

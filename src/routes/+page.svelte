@@ -315,13 +315,12 @@
 	{/if}
 
 	<h3 class="tracking-light my-4 w-full scroll-m-20 text-2xl font-semibold">
-		Rooming will close 1 February
+		Everything is finalized
 	</h3>
-	<p class="flex w-full">
-		If your room is not full (4 people), we will randomly assign the remaining
-		people to your room. If you are not in a room, we will randomly assign you
-		to a room. The more full your room is, the more likely that it won't be
-		split up.
+	<p class="w-full">
+		The events and teams you see here are the events that you are registered
+		for. If you see an event that you didn't sign up for, we put you in a team
+		to make up for people who left TSA. <strong>No changes can be made.</strong>
 	</p>
 
 	<!-- {#if $userDoc?.washingtonId}

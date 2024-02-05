@@ -56,6 +56,8 @@
 	// 	email: string;
 	// 	waId: number;
 	// 	natId: number;
+	// 	gender: string;
+	// 	tShirt: string;
 	// 	events: {
 	// 		eventId: number;
 	// 		teamNumber: number;
@@ -67,7 +69,7 @@
 
 	// let logged = false;
 	// $: if ($allUsersCollection.length && $eventsCollection.length && !logged) {
-	// 	for (const u of $allUsersCollection) {
+	// 	for (const u of $allUsersCollection.filter((u) => u.events.length > 0)) {
 	// 		const events: {
 	// 			eventId: number;
 	// 			teamNumber: number;
@@ -97,6 +99,8 @@
 	// 			email: u.email,
 	// 			waId: u.washingtonId ?? 0,
 	// 			natId: u.nationalId ?? 0,
+	// 			tShirt: u.tShirtSize ?? 'Unspecified',
+	// 			gender: u.gender ?? 'Non-Binary',
 	// 			events,
 	// 		});
 	// 	}
