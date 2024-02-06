@@ -320,7 +320,10 @@
 	<p class="w-full">
 		The events and teams you see here are the events that you are registered
 		for. If you see an event that you didn't sign up for, we put you in a team
-		to make up for people who left TSA. <strong>No changes can be made.</strong>
+		to make up for people who left TSA. <strong>
+			As registration is final, no changes can be made, even if there is a
+			mistake.
+		</strong>
 	</p>
 
 	<!-- {#if $userDoc?.washingtonId}
