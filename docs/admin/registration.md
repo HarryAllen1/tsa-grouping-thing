@@ -10,7 +10,7 @@ So, to help streamline the transferring of events and other data, I've made a to
 
 This tool is hosted on GitHub, and must be download and ran on your computer.
 
-This tool relies on NodeJS, [so download that first.](https://nodejs.org/en). Verify it works by opening the Command Prompt app and typing `node -v` followed by enter. You should se something similar to the following (the exact numbers might differ):
+This tool relies on NodeJS, [so download that first](https://nodejs.org/en). Verify it works by opening the Command Prompt app and typing `node -v` followed by enter. You should see something similar to the following (the exact numbers might differ):
 
 ```
 v20.9.0
