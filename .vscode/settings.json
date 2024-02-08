@@ -3,6 +3,5 @@
 	"typescript.preferences.autoImportFileExcludePatterns": [
 		"/src/lib/**/*",
 		"/src/lib/components"
-	],
-	"deno.enable": true
+	]
 }
