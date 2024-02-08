@@ -229,23 +229,6 @@
 			/>
 			<Label for="enable-online-submissions">Enable online submissions</Label>
 		</div>
-		<div class="flex items-center space-x-2">
-			<Switch
-				id="enable-rooming"
-				checked={$settings?.enableRooming ?? false}
-				onCheckedChange={async (e) => {
-					await setDoc(
-						doc(db, 'settings', 'settings'),
-						{
-							enableRooming: e,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{ merge: true },
-					);
-				}}
-			/>
-			<Label for="enable-rooming">Show rooming</Label>
-		</div>
 	</div>
 	<div
 		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"

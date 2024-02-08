@@ -320,76 +320,81 @@
 					</Dialog.Content>
 				</Dialog.Root>
 
-				<Dialog.Root>
-					<Dialog.Trigger>
-						<Button>Team Captain</Button>
-					</Dialog.Trigger>
-					<Dialog.Content>
-						<Dialog.Title>Manage team captain</Dialog.Title>
-						<Button
-							on:click={async () => {
-								team.teamCaptain = '';
-								team.lastUpdatedBy = $user?.email ?? '';
-								team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-								await setDoc(
-									doc(db, 'events', event.event ?? ''),
-									{
-										teams: event.teams,
-										lastUpdatedBy: $user?.email ?? '',
-									},
-									{
-										merge: true,
-									},
-								);
-							}}
-						>
-							Clear
-						</Button>
-						<ul>
-							{#each team.members as teamMember (teamMember.email)}
-								<!-- svelte-ignore a11y-click-events-have-key-events -->
-								<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-								<li
-									class="cursor-pointer"
-									on:click={async () => {
-										team.teamCaptain = teamMember?.email ?? '';
-										team.lastUpdatedBy = $user?.email ?? '';
-										team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-										await setDoc(
-											doc(db, 'events', event.event ?? ''),
-											{
-												teams: event.teams,
-												lastUpdatedBy: $user?.email ?? '',
-											},
-											{
-												merge: true,
-											},
-										);
-									}}
-								>
-									<HoverCard.Root>
-										<HoverCard.Trigger>{teamMember.name}</HoverCard.Trigger>
-										<HoverCard.Content>
-											<UserCard
-												user={$allUsersCollection.find(
-													(u) => u.email === teamMember.email,
-												) ?? { email: '', events: [], name: '' }}
-											/>
-										</HoverCard.Content>
-									</HoverCard.Root>
-									{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
-										<Tooltip.Root>
-											<Tooltip.Trigger>
-												<Crown class="h-4 w-4" />
-											</Tooltip.Trigger>
-											<Tooltip.Content>Team captain</Tooltip.Content>
-										</Tooltip.Root>
-									{/if}
-								</li>
-							{/each}
-						</ul>
-					</Dialog.Content>
-				</Dialog.Root>
+				{#if event.event !== '*Rooming'}
+					<Dialog.Root>
+						<Dialog.Trigger>
+							<Button>Team Captain</Button>
+						</Dialog.Trigger>
+						<Dialog.Content>
+							<Dialog.Title>Manage team captain</Dialog.Title>
+							<Button
+								on:click={async () => {
+									team.teamCaptain = '';
+									team.lastUpdatedBy = $user?.email ?? '';
+									team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+									await setDoc(
+										doc(db, 'events', event.event ?? ''),
+										{
+											teams: event.teams,
+											lastUpdatedBy: $user?.email ?? '',
+										},
+										{
+											merge: true,
+										},
+									);
+								}}
+							>
+								Clear
+							</Button>
+							<ul>
+								{#each team.members as teamMember (teamMember.email)}
+									<!-- svelte-ignore a11y-click-events-have-key-events -->
+									<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+									<li
+										class="cursor-pointer"
+										on:click={async () => {
+											team.teamCaptain = teamMember?.email ?? '';
+											team.lastUpdatedBy = $user?.email ?? '';
+											team.lastUpdatedTime = new Timestamp(
+												Date.now() / 1000,
+												0,
+											);
+											await setDoc(
+												doc(db, 'events', event.event ?? ''),
+												{
+													teams: event.teams,
+													lastUpdatedBy: $user?.email ?? '',
+												},
+												{
+													merge: true,
+												},
+											);
+										}}
+									>
+										<HoverCard.Root>
+											<HoverCard.Trigger>{teamMember.name}</HoverCard.Trigger>
+											<HoverCard.Content>
+												<UserCard
+													user={$allUsersCollection.find(
+														(u) => u.email === teamMember.email,
+													) ?? { email: '', events: [], name: '' }}
+												/>
+											</HoverCard.Content>
+										</HoverCard.Root>
+										{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+											<Tooltip.Root>
+												<Tooltip.Trigger>
+													<Crown class="h-4 w-4" />
+												</Tooltip.Trigger>
+												<Tooltip.Content>Team captain</Tooltip.Content>
+											</Tooltip.Root>
+										{/if}
+									</li>
+								{/each}
+							</ul>
+						</Dialog.Content>
+					</Dialog.Root>
+				{/if}
 			</div>
 			<div class="flex flex-row items-center gap-1">
 				<Button
