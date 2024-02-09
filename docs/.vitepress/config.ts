@@ -17,6 +17,10 @@ export default defineConfig({
 				text: 'Member Pages',
 				items: [
 					{
+						text: 'Signing In',
+						link: '/member/signing-in',
+					},
+					{
 						text: 'Teams',
 						link: '/member/teams',
 					},
