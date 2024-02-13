@@ -15,6 +15,7 @@
 	import { doc, setDoc } from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
+	import CopyButton from './CopyButton.svelte';
 	import TableView from './TableView.svelte';
 
 	let search = '';
@@ -27,6 +28,14 @@
 		value: 'grid',
 		label: 'Grid',
 	};
+	let showRandomSwitch: {
+		label: string;
+		value: 'null' | 'false' | 'true';
+	} = {
+		label: 'everybody',
+		value: 'null',
+	};
+
 	$: fuse = new Fuse($allUsersCollection, {
 		keys: ['name', 'email', 'grade', 'events', 'nationalId', 'washingtonId'],
 		threshold: 0.2,
@@ -51,63 +60,6 @@
 			};
 		});
 	});
-
-	// const stuff: {
-	// 	email: string;
-	// 	waId: number;
-	// 	natId: number;
-	// 	gender: string;
-	// 	tShirt: string;
-	// 	events: {
-	// 		eventId: number;
-	// 		teamNumber: number;
-	// 		isCaptain: boolean;
-	// 		event: string;
-	// 		isTeamEvent: boolean;
-	// 	}[];
-	// }[] = [];
-
-	// let logged = false;
-	// $: if ($allUsersCollection.length && $eventsCollection.length && !logged) {
-	// 	for (const u of $allUsersCollection.filter((u) => u.events.length > 0)) {
-	// 		const events: {
-	// 			eventId: number;
-	// 			teamNumber: number;
-	// 			isCaptain: boolean;
-	// 			event: string;
-	// 			isTeamEvent: boolean;
-	// 		}[] = [];
-	// 		for (const event of u.events) {
-	// 			const team = $eventsCollection
-	// 				.find((e) => e.event === event)
-	// 				?.teams.find((t) => t.members.find((m) => m.email === u.email));
-	// 			const eventInfo = $eventsCollection.find((e) => e.event === event);
-
-	// 			if (team && eventInfo) {
-	// 				events.push({
-	// 					event: eventInfo.event,
-	// 					eventId: eventInfo.id,
-	// 					teamNumber: team.teamNumber,
-	// 					isTeamEvent: eventInfo.maxTeamSize > 1,
-	// 					isCaptain:
-	// 						team.teamCaptain?.toLowerCase() === u.email?.toLowerCase(),
-	// 				});
-	// 			}
-	// 		}
-
-	// 		stuff.push({
-	// 			email: u.email,
-	// 			waId: u.washingtonId ?? 0,
-	// 			natId: u.nationalId ?? 0,
-	// 			tShirt: u.tShirtSize ?? 'Unspecified',
-	// 			gender: u.gender ?? 'Non-Binary',
-	// 			events,
-	// 		});
-	// 	}
-
-	// 	console.log(stuff);
-	// 	logged = true;
-	// }
 </script>
 
 <div class="container">
@@ -123,18 +75,22 @@
 		</span>
 	</p>
 
-	<Button
-		class="mb-4"
-		on:click={() => {
-			document
-				.querySelectorAll('.member-collapsible:not([data-state="open"])')
-				.forEach((el) => {
-					if (el instanceof HTMLButtonElement) el.click();
-				});
-		}}
-	>
-		Expand all events
-	</Button>
+	<div class="flex flex-row gap-2">
+		<Button
+			class="mb-4"
+			on:click={() => {
+				document
+					.querySelectorAll('.member-collapsible:not([data-state="open"])')
+					.forEach((el) => {
+						if (el instanceof HTMLButtonElement) el.click();
+					});
+			}}
+		>
+			Expand all events
+		</Button>
+
+		<CopyButton />
+	</div>
 
 	<div class="mb-2 flex items-center space-x-2">
 		<Switch bind:checked={hidePeopleWithoutEvents} id="hide-people" />
@@ -173,6 +129,28 @@
 			<Select.Input name="favoriteFruit" />
 		</Select.Root>
 	</div>
+
+	<Label for="randomSwitch">See...</Label>
+	<div id="randomSwitch" class="mb-2 flex items-center space-x-2">
+		<Select.Root bind:selected={showRandomSwitch}>
+			<Select.Trigger class="w-[180px]">
+				<Select.Value placeholder="everybody" />
+			</Select.Trigger>
+			<Select.Content>
+				<Select.Group>
+					<Select.Item label="everybody" value="null">everybody</Select.Item>
+					<Select.Item label="people without random switch" value="false">
+						people without random switch
+					</Select.Item>
+					<Select.Item label="people with random switch" value="true">
+						people with random switch
+					</Select.Item>
+				</Select.Group>
+			</Select.Content>
+			<Select.Input name="randomSwitch" />
+		</Select.Root>
+	</div>
+
 	<Input
 		class="mb-4"
 		bind:value={search}
@@ -194,7 +172,17 @@
 			{#each $allUsersCollection.toSorted( (a, b) => (sortBy.value === 'firstName' ? a.name : a.lastName ?? '').localeCompare(sortBy.value === 'firstName' ? b.name : b.lastName ?? ''), ) as user (user.email)}
 				{@const hash = user.email.replaceAll('@', '').replaceAll('.', '')}
 				{#if valuesMap[user.email]}
-					<Card.Root class={results.includes(user) ? '' : 'hidden'}>
+					<Card.Root
+						class="{results.includes(user)
+							? ''
+							: 'hidden'} {(showRandomSwitch.value === 'false' &&
+							!user.random) ||
+						(showRandomSwitch.value === 'true' && user.random)
+							? ''
+							: showRandomSwitch.value === 'null'
+								? ''
+								: 'hidden'}"
+					>
 						<Card.Header>
 							<Card.Title>
 								{user.name}
