@@ -73,6 +73,7 @@ export interface MailDoc {
 export interface SettingsDoc {
 	enableOnlineSubmissions: boolean;
 	enableRooming: boolean;
+	alert: string;
 }
 
 export interface EventData extends EventDoc {

@@ -19,6 +19,7 @@
 	import Fuse from 'fuse.js';
 	import { userStore } from 'sveltefire';
 	import EventCard from './EventCard.svelte';
+	import Alert from './Alert.svelte';
 
 	const user = userStore(auth);
 
@@ -211,6 +212,9 @@
 			>
 				Disable all team creation
 			</Button>
+		</div>
+		<div class="flex items-center space-x-2">
+			<Alert />
 		</div>
 		<div class="flex items-center space-x-2">
 			<Switch

@@ -314,64 +314,21 @@
 		</div>
 	{/if}
 
-	<h3 class="tracking-light my-4 w-full scroll-m-20 text-2xl font-semibold">
-		Everything is finalized
-	</h3>
-	<p class="w-full">
-		The events and teams you see here are the events that you are registered
-		for. If you see an event that you didn't sign up for, we put you in a team
-		to make up for people who left TSA. <strong>
-			As registration is final, no changes can be made, even if there is a
-			mistake.
-		</strong>
-	</p>
-
-	<!-- {#if $userDoc?.washingtonId}
-		<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">
-			Submission site login information (open 1 January to 11 January at 5:00pm)
-		</h3>
-		<p class="flex w-full">
-			Submission site:&nbsp;<a
-				href="https://judgepro.registermychapter.com/org/jpwa-tsastate/conf/jpwa-tsastate/student"
-				class="underline"
-			>
-				Judge Pro
-			</a>
-		</p>
-		<p class="flex w-full flex-row items-center">
-			Username: {$userDoc.washingtonId}
-			<Button
-				variant="ghost"
-				size="icon"
-				class="m-0 h-8 w-8 p-0"
-				on:click={async () => {
-					await navigator.clipboard.writeText(
+	{#if $settings?.alert}
+		<div class="prose max-w-full dark:prose-invert dark:text-white">
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+			{@html md.render(
+				$settings.alert
+					.replaceAll(
+						'{{washingtonId}}',
 						$userDoc?.washingtonId?.toString() ?? '',
-					);
-					toast.success('Copied username to clipboard');
-				}}
-			>
-				<Copy class="h-4 w-4" />
-			</Button>
-		</p>
-		<p class="flex w-full flex-row items-center">
-			Password:&nbsp;<span class="bg-secondary-foreground hover:bg-inherit">
-				wTSA2024Jan
-			</span>
-			<Button
-				variant="ghost"
-				size="icon"
-				class="m-0 h-8 w-8 p-0"
-				on:click={async () => {
-					await navigator.clipboard.writeText('wTSA2024Jan');
-					toast.success('Copied password to clipboard');
-				}}
-			>
-				<Copy class="h-4 w-4" />
-			</Button>
-			(hover to see password)
-		</p>
-	{/if} -->
+					)
+					.replaceAll('{{nationalId}}', $userDoc?.nationalId?.toString() ?? '')
+					.replaceAll('{{firstName}}', $userDoc?.name.split(' ')[0] ?? '')
+					.replaceAll('{{lastName}}', $userDoc?.name.split(' ')[1] ?? ''),
+			)}
+		</div>
+	{/if}
 
 	<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">
 		Teams
