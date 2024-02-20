@@ -324,8 +324,8 @@
 						$userDoc?.washingtonId?.toString() ?? '',
 					)
 					.replaceAll('{{nationalId}}', $userDoc?.nationalId?.toString() ?? '')
-					.replaceAll('{{firstName}}', $userDoc?.name.split(' ')[0] ?? '')
-					.replaceAll('{{lastName}}', $userDoc?.name.split(' ')[1] ?? ''),
+					.replaceAll('{{firstName}}', $userDoc?.firstName ?? '')
+					.replaceAll('{{lastName}}', $userDoc?.lastName ?? ''),
 			)}
 		</div>
 	{/if}
