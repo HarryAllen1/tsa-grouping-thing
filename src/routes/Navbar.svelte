@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { auth, aww, db, type UserDoc } from '$lib';
+	import { allUsersCollection, auth, aww, db, type UserDoc } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import LightSwitch from '$lib/components/ui/light-switch/light-switch.svelte';
 	import { removeRef, sleep } from '$lib/utils';
 	import { signOut } from 'firebase/auth';
@@ -112,6 +113,29 @@
 		URL.revokeObjectURL(url);
 		a.remove();
 	};
+
+	const downloadAsCSV = async () => {
+		let csv =
+			'Full Name,First Name,Last Name,Email,Grade,Events,Gender,Demographic,National ID,WTSA ID\n';
+
+		for (const userData of $allUsersCollection.filter((u) => u.events.length)) {
+			csv += `${userData.name},${userData.firstName},${userData.lastName},${userData.email},${userData.grade},"${userData.events.join(', ')}",${userData.gender},${userData.demographic},${userData.nationalId},${userData.washingtonId}\n`;
+		}
+
+		const csvBlob = new Blob([new TextEncoder().encode(csv)], {
+			type: 'text/csv',
+		});
+
+		const url = URL.createObjectURL(csvBlob);
+		const a = document.createElement('a');
+		a.style.display = 'none';
+		a.href = url;
+		a.download = 'members.csv';
+		document.body.append(a);
+		a.click();
+		URL.revokeObjectURL(url);
+		a.remove();
+	};
 </script>
 
 <header
@@ -129,9 +153,21 @@
 			<nav class="flex items-center space-x-2">
 				<!-- profile -->
 				{#if $userDoc?.admin}
-					<Button size="icon" variant="ghost" on:click={downloadAsJSON}>
-						<Download />
-					</Button>
+					<DropdownMenu.Root>
+						<DropdownMenu.Trigger>
+							<Button size="icon" variant="ghost">
+								<Download />
+							</Button>
+						</DropdownMenu.Trigger>
+						<DropdownMenu.Content>
+							<DropdownMenu.Item on:click={downloadAsJSON}>
+								JSON
+							</DropdownMenu.Item>
+							<DropdownMenu.Item on:click={downloadAsCSV}>
+								CSV
+							</DropdownMenu.Item>
+						</DropdownMenu.Content>
+					</DropdownMenu.Root>
 				{/if}
 				<LightSwitch />
 				<Button

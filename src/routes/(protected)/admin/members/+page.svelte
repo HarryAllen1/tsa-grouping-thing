@@ -17,6 +17,7 @@
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
 	import CopyButton from './CopyButton.svelte';
 	import TableView from './TableView.svelte';
+	import { onMount } from 'svelte';
 
 	let search = '';
 	let hidePeopleWithoutEvents = false;
@@ -60,6 +61,17 @@
 			};
 		});
 	});
+
+	onMount(() => {
+		let csv =
+			'Full Name,First Name,Last Name,Email,Grade,Events,Gender,Demographic,National ID,WTSA ID\n';
+
+		for (const user of $allUsersCollection.filter((u) => u.events.length)) {
+			csv += `${user.name},${user.firstName},${user.lastName},${user.email},${user.grade},"${user.events.join(', ')}",${user.gender},${user.demographic},${user.nationalId},${user.washingtonId}\n`;
+		}
+
+		console.log(csv);
+	});
 </script>
 
 <div class="container">
@@ -69,10 +81,7 @@
 		Members
 	</h1>
 	<p class="mb-4 text-red-500">
-		This is one of the few pages that doesn't update live (i was lazy).
-		<span class="text-bold">
-			Avoid editing this page at the same time as someone else.
-		</span>
+		The National ID and WTSA ID fields do not update live
 	</p>
 
 	<div class="flex flex-row gap-2">
