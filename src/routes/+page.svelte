@@ -44,8 +44,27 @@
 	import { flip } from 'svelte/animate';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
+	import Copyable from './Copyable.svelte';
 
 	const yellowMode = localStorageStore('yellowMode', false);
+	let alertEl: HTMLDivElement;
+
+	const addAlertStuff = (el: HTMLDivElement) => {
+		if (!el) return;
+
+		const copyables = el.querySelectorAll('.copyable');
+
+		for (const copyable of copyables) {
+			new Copyable({
+				target: copyable,
+				props: {
+					text: copyable.textContent ?? '',
+				},
+			});
+		}
+	};
+
+	$: addAlertStuff(alertEl);
 
 	$: if ($yellowMode) {
 		document.body.classList.add('yellow');
@@ -315,7 +334,10 @@
 	{/if}
 
 	{#if $settings?.alert}
-		<div class="prose max-w-full dark:prose-invert dark:text-white">
+		<div
+			class="prose max-w-full dark:prose-invert dark:text-white"
+			bind:this={alertEl}
+		>
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			{@html md.render(
 				$settings.alert

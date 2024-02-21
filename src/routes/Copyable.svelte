@@ -1,0 +1,19 @@
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { Copy } from 'lucide-svelte';
+	import { toast } from 'svelte-sonner';
+
+	export let text: string;
+</script>
+
+<Button
+	variant="ghost"
+	size="icon"
+	class="m-0 h-8 w-8 p-0"
+	on:click={async () => {
+		await navigator.clipboard.writeText(text);
+		toast.success('Copied text to clipboard');
+	}}
+>
+	<Copy class="h-4 w-4" />
+</Button>
