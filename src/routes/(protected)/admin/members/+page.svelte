@@ -17,7 +17,6 @@
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
 	import CopyButton from './CopyButton.svelte';
 	import TableView from './TableView.svelte';
-	import { onMount } from 'svelte';
 
 	let search = '';
 	let hidePeopleWithoutEvents = false;
@@ -60,17 +59,6 @@
 				washingtonId: user.washingtonId,
 			};
 		});
-	});
-
-	onMount(() => {
-		let csv =
-			'Full Name,First Name,Last Name,Email,Grade,Events,Gender,Demographic,National ID,WTSA ID\n';
-
-		for (const user of $allUsersCollection.filter((u) => u.events.length)) {
-			csv += `${user.name},${user.firstName},${user.lastName},${user.email},${user.grade},"${user.events.join(', ')}",${user.gender},${user.demographic},${user.nationalId},${user.washingtonId}\n`;
-		}
-
-		console.log(csv);
 	});
 </script>
 
