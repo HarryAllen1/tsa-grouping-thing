@@ -2,17 +2,19 @@ import type { Timestamp } from 'firebase/firestore';
 
 export interface EventDoc {
 	teams: Team[];
-	locked?: boolean;
+	id: number;
 	event: string;
 	minTeamSize: number;
 	maxTeamSize: number;
-	onlineSubmissions?: boolean;
 	perChapter: number;
+	locked?: boolean;
+	onlineSubmissions?: boolean;
 	teamCreationLocked?: boolean;
 	results?: Result[];
 	submissionDescription?: string;
-	id: number;
 	allowGenderMixing?: boolean;
+	showToEveryone?: boolean;
+	hideInSignup?: boolean;
 }
 
 export interface Result {
@@ -31,6 +33,7 @@ export interface Team {
 	lastUpdatedTime?: Timestamp;
 	requests?: BasicUser[];
 	id: ReturnType<typeof crypto.randomUUID>;
+	cardboardBoatOnlyPeopleInBoat?: BasicUser[];
 }
 
 export interface BasicUser {

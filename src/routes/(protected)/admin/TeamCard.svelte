@@ -399,13 +399,7 @@
 			<div class="flex flex-row items-center gap-1">
 				<Button
 					size="icon"
-					href="mailto:{team.members
-						.map((p) => p.email)
-						.join(
-							';',
-						)}?subject={event.event}%2011%20Jan%20Feedback&cc=s-sliyanage@lwsd.org&body={encodeURI(
-						`Hello,\n\nHere is the feedback we received from your 11 January submission for ${event.event}. If you have any questions, feel free to reply to this email.\n\n\n- Harry Allen o/b/o JHS TSA Board`,
-					)}"
+					href="mailto:{team.members.map((p) => p.email).join(';')}"
 				>
 					<Mail />
 				</Button>

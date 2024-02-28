@@ -17,6 +17,7 @@
 		userDoc,
 		yay,
 		type EventDoc,
+		type UserDoc,
 	} from '$lib';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
@@ -75,7 +76,15 @@
 	$: signedUpEvents = (
 		$settings?.enableRooming && $user
 			? $eventsCollection.length
-				? ($userDoc?.events ? [...$userDoc.events, '*Rooming'] : [])
+				? ($userDoc?.events
+						? [
+								...$userDoc.events,
+								...$eventsCollection
+									.filter((e) => e.showToEveryone)
+									.map((e) => e.event),
+							]
+						: []
+					)
 						.map((e) => ({
 							...$eventsCollection.find((ev) => ev.event === e),
 						}))
@@ -147,6 +156,36 @@
 		$filesToUpload = $filesToUpload.filter((f) => f !== submission);
 		return '';
 	};
+
+	const getPeopleWhoCanBeAddedToEvent = (
+		event: EventDoc,
+		allUsers: UserDoc[],
+	) =>
+		allUsers
+			.filter(
+				(m) =>
+					// signed up for event and also include gender check
+					// DO NOT CHANGE TO `!event.allowGenderMixing`
+					(event.allowGenderMixing === false
+						? (m.gender === $userDoc?.gender && m.events.length) ||
+							(m.gender === 'Non-Binary' && m.events.length)
+						: event.showToEveryone
+							? m.events.length
+							: m.events.includes(event.event ?? '')) &&
+					// not already in team
+					!event.teams.find((t) =>
+						t.members?.find(
+							(e) => e.email.toLowerCase() === m.email.toLowerCase(),
+						),
+					) &&
+					// didn't request to be part of another team
+					!event.teams.find((t) =>
+						t.requests?.find(
+							(e) => e.email.toLowerCase() === m.email.toLowerCase(),
+						),
+					),
+			)
+			.sort((a, b) => a.name.localeCompare(b.name));
 </script>
 
 <div class="container mt-8 flex flex-col items-center">
@@ -547,9 +586,7 @@
 																		<p>People who signed up for this event:</p>
 																	{/if}
 																	<ul>
-																		{#each $allUsersCollection
-																			.filter((m) => /* signed up for event and also include gender check */ (event.event === '*Rooming' ? (m.gender === $userDoc?.gender && m.events.length) || (m.gender === 'Non-Binary' && m.events.length) : m.events.includes(event.event ?? '')) && /* not already in team */ !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ) && /* didn't request to be part of another team */ !event.teams.find( (t) => t.requests?.find((e) => e.email.toLowerCase() === m.email.toLowerCase()), ))
-																			.sort( (a, b) => a.name.localeCompare(b.name), ) as person (person.email)}
+																		{#each getPeopleWhoCanBeAddedToEvent(event, $allUsersCollection) as person (person.email)}
 																			<li
 																				class="flex flex-row items-center"
 																				animate:flip={{

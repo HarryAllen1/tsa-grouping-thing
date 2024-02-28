@@ -13,7 +13,7 @@
 	const events = collectionStore<EventDoc>(db, 'events');
 
 	$: eventMap = $events
-		.filter((e) => e.event !== '*Rooming')
+		.filter((e) => !e.hideInSignup)
 		.reduce(
 			(acc, curr) => ({
 				...acc,
@@ -46,7 +46,7 @@
 	{/if}
 
 	<div class="flex flex-col gap-2">
-		{#each $events.filter((e) => e.event !== '*Rooming') as event (event.event)}
+		{#each $events.filter((e) => !e.hideInSignup) as event (event.event)}
 			<div
 				class="flex items-center space-x-2"
 				class:text-red-500={event.teams.length >= event.perChapter}

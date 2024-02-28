@@ -136,61 +136,56 @@
 			<Dialog.Trigger class={buttonVariants()}>Create new event</Dialog.Trigger>
 			<Dialog.Content>
 				<Dialog.Title>Create new event</Dialog.Title>
-				<Dialog.Description>
-					<form
-						class="flex flex-col gap-4"
-						on:submit|preventDefault={async () => {
-							await setDoc(doc(db, 'events', newEventStuff.event), {
-								...newEventStuff,
-								teams: [],
-								lastUpdatedBy: $user?.email ?? '',
-							});
-							newEventDialogOpen = false;
-						}}
-					>
-						<Label class="flex w-full max-w-sm flex-col gap-1.5">
-							<span>Event name</span>
-							<Input
-								bind:value={newEventStuff.event}
-								placeholder="really cool event name"
-							/>
-						</Label>
-						<Label class="flex w-full max-w-sm flex-col gap-1.5">
-							<span>Minimum team size</span>
-							<Input
-								bind:value={newEventStuff.minTeamSize}
-								type="number"
-								placeholder="1"
-							/>
-						</Label>
-						<Label class="flex w-full max-w-sm flex-col gap-1.5">
-							<span>Maximum team size</span>
-							<Input
-								bind:value={newEventStuff.maxTeamSize}
-								type="number"
-								placeholder="1"
-							/>
-						</Label>
-						<Label class="flex w-full max-w-sm flex-col gap-1.5">
-							<span>Maximum teams per chapter</span>
-							<Input
-								bind:value={newEventStuff.perChapter}
-								type="number"
-								placeholder="1"
-							/>
-						</Label>
-						<div class="flex items-center space-x-2">
-							<Checkbox
-								id="newEventLocked"
-								bind:checked={newEventStuff.locked}
-							/>
-							<Label for="newEventLocked" class="text-foreground">Lock</Label>
-						</div>
-						<div>
-							<Button type="submit">Create</Button>
-						</div>
-					</form>
-				</Dialog.Description>
+				<form
+					class="flex flex-col gap-4"
+					on:submit|preventDefault={async () => {
+						await setDoc(doc(db, 'events', newEventStuff.event), {
+							...newEventStuff,
+							teams: [],
+							lastUpdatedBy: $user?.email ?? '',
+						});
+						newEventDialogOpen = false;
+					}}
+				>
+					<Label class="flex w-full max-w-sm flex-col gap-1.5">
+						<span>Event name</span>
+						<Input
+							bind:value={newEventStuff.event}
+							placeholder="really cool event name"
+						/>
+					</Label>
+					<Label class="flex w-full max-w-sm flex-col gap-1.5">
+						<span>Minimum team size</span>
+						<Input
+							bind:value={newEventStuff.minTeamSize}
+							type="number"
+							placeholder="1"
+						/>
+					</Label>
+					<Label class="flex w-full max-w-sm flex-col gap-1.5">
+						<span>Maximum team size</span>
+						<Input
+							bind:value={newEventStuff.maxTeamSize}
+							type="number"
+							placeholder="1"
+						/>
+					</Label>
+					<Label class="flex w-full max-w-sm flex-col gap-1.5">
+						<span>Maximum teams per chapter</span>
+						<Input
+							bind:value={newEventStuff.perChapter}
+							type="number"
+							placeholder="1"
+						/>
+					</Label>
+					<div class="flex items-center space-x-2">
+						<Checkbox id="newEventLocked" bind:checked={newEventStuff.locked} />
+						<Label for="newEventLocked" class="text-foreground">Lock</Label>
+					</div>
+					<div>
+						<Button type="submit">Create</Button>
+					</div>
+				</form>
 			</Dialog.Content>
 		</Dialog.Root>
 		<div class="flex items-center space-x-2">

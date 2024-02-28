@@ -4,7 +4,6 @@
 		db,
 		fancyConfirm,
 		md,
-		settings,
 		user,
 		type EventData,
 	} from '$lib';
@@ -445,25 +444,42 @@
 		</Card.Description>
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-4">
-		{#if event.event === '*Rooming'}
-			<div class="flex items-center space-x-2">
-				<Switch
-					id="enable-rooming"
-					checked={$settings?.enableRooming ?? false}
-					onCheckedChange={async (e) => {
-						await setDoc(
-							doc(db, 'settings', 'settings'),
-							{
-								enableRooming: e,
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{ merge: true },
-						);
-					}}
-				/>
-				<Label for="enable-rooming">Show rooming</Label>
-			</div>
-		{/if}
+		<div class="flex items-center space-x-2">
+			<Switch
+				id="show-event-to-everyone"
+				checked={event.showToEveryone ?? false}
+				onCheckedChange={async (e) => {
+					await setDoc(
+						doc(db, 'events', event.event),
+						{
+							showToEveryone: e,
+							lastUpdatedBy: $user?.email ?? '',
+						},
+						{ merge: true },
+					);
+				}}
+			/>
+			<Label for="show-event-to-everyone">
+				Show {event.event === '*Rooming' ? 'rooming' : 'event'} to everyone
+			</Label>
+		</div>
+		<div class="flex items-center space-x-2">
+			<Switch
+				id="show-in-signup"
+				checked={event.hideInSignup ?? false}
+				onCheckedChange={async (e) => {
+					await setDoc(
+						doc(db, 'events', event.event),
+						{
+							hideInSignup: e,
+							lastUpdatedBy: $user?.email ?? '',
+						},
+						{ merge: true },
+					);
+				}}
+			/>
+			<Label for="show-in-signup">Hide in signup page</Label>
+		</div>
 		<Label class="flex flex-row items-center gap-2">
 			<Switch
 				onCheckedChange={async (checked) => {
