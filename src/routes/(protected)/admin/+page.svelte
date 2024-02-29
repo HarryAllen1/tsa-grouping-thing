@@ -139,6 +139,8 @@
 				<form
 					class="flex flex-col gap-4"
 					on:submit|preventDefault={async () => {
+						newEventStuff.maxTeamSize = Number(newEventStuff.maxTeamSize);
+						newEventStuff.minTeamSize = Number(newEventStuff.minTeamSize);
 						await setDoc(doc(db, 'events', newEventStuff.event), {
 							...newEventStuff,
 							teams: [],
