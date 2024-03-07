@@ -45,6 +45,7 @@
 	import { flip } from 'svelte/animate';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
+	import CardboardBoatDialog from './CardboardBoatDialog.svelte';
 	import Copyable from './Copyable.svelte';
 
 	const yellowMode = localStorageStore('yellowMode', false);
@@ -468,7 +469,11 @@
 									<Card.Title>
 										{event.event === '*Rooming'
 											? 'Room #'
-											: 'Team 2082-'}{team.teamNumber}
+											: event.event === '*Cardboard Boat'
+												? ''
+												: 'Team 2082-'}{event.event === '*Cardboard Boat'
+											? team.teamName || '(no team name)'
+											: team.teamNumber}
 									</Card.Title>
 									<div class="flex flex-col gap-1 lg:flex-row">
 										{#if team.locked || event.locked}
@@ -647,7 +652,9 @@
 														</Dialog.Content>
 													</Dialog.Root>
 												</div>
-												{#if event.event !== '*Rooming'}
+												{#if event.event === '*Cardboard Boat'}
+													<CardboardBoatDialog teamId={team.id} {event} />
+												{:else if event.event !== '*Rooming'}
 													<div class="flex w-full flex-row gap-2">
 														<Button
 															on:click={async () => {

@@ -45,6 +45,7 @@
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import UserCard from './UserCard.svelte';
+	import CardboardBoatDialog from '../../CardboardBoatDialog.svelte';
 
 	export let team: Team;
 	export let event: EventDoc;
@@ -162,6 +163,8 @@
 		<Card.Title>
 			{#if event.event === '*Rooming'}
 				Room #{team.teamNumber}
+			{:else if event.event === '*Cardboard Boat'}
+				{team.teamName || '(no team name)'}
 			{:else if event.maxTeamSize === 1 && team.members.length === 1}
 				Team {$allUsersCollection.find(
 					(u) => u.email.toLowerCase() === team.members[0].email.toLowerCase(),
@@ -320,7 +323,9 @@
 					</Dialog.Content>
 				</Dialog.Root>
 
-				{#if event.event !== '*Rooming'}
+				{#if event.event === '*Cardboard Boat'}
+					<CardboardBoatDialog teamId={team.id} {event} />
+				{:else if event.event !== '*Rooming'}
 					<Dialog.Root>
 						<Dialog.Trigger>
 							<Button>Team Captain</Button>

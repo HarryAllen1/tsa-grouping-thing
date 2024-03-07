@@ -34,6 +34,7 @@ export interface Team {
 	requests?: BasicUser[];
 	id: ReturnType<typeof crypto.randomUUID>;
 	cardboardBoatOnlyPeopleInBoat?: BasicUser[];
+	teamName?: string;
 }
 
 export interface BasicUser {
