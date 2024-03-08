@@ -5,24 +5,26 @@
 	let graph: HTMLDivElement;
 
 	$: if ($allUsersCollection.length) {
-		const data = $allUsersCollection.reduce(
-			(acc, curr) =>
-				curr.gender
-					? acc.map((d) => {
-							if (d.name === curr.tShirtSize) {
-								return { name: d.name, value: d.value + 1 };
-							}
-							return d;
-						})
-					: acc,
-			['WXS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((d) => ({
-				name: d,
-				value: 0,
-			})) as {
-				name: string;
-				value: number;
-			}[],
-		);
+		const data = $allUsersCollection
+			.filter((e) => e.events.length)
+			.reduce(
+				(acc, curr) =>
+					curr.gender
+						? acc.map((d) => {
+								if (d.name === curr.tShirtSize) {
+									return { name: d.name, value: d.value + 1 };
+								}
+								return d;
+							})
+						: acc,
+				['WXS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((d) => ({
+					name: d,
+					value: 0,
+				})) as {
+					name: string;
+					value: number;
+				}[],
+			);
 
 		const plotEl = plot({
 			grid: true,

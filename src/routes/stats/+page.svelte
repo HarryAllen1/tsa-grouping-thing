@@ -13,6 +13,7 @@
 
 	$: if ($allUsersCollection.length && $eventsCollection.length) {
 		const events = $allUsersCollection
+			.filter((u) => u.events)
 			.reduce((acc, curr) => [...acc, ...curr.events], [] as string[])
 			.reduce(
 				(acc, curr) => {
@@ -49,7 +50,7 @@
 						const error = eventError(
 							d.name,
 							$eventsCollection,
-							$allUsersCollection,
+							$allUsersCollection.filter((e) => e.events),
 						);
 						return error === 'errorNotEnough'
 							? colors.blue[500]

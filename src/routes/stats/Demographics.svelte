@@ -5,30 +5,32 @@
 	let graph: HTMLDivElement;
 
 	$: if ($allUsersCollection.length) {
-		const data = $allUsersCollection.reduce(
-			(acc, curr) =>
-				curr.demographic
-					? acc.map((d) => {
-							if (d.name === curr.demographic) {
-								return { name: d.name, value: d.value + 1 };
-							}
-							return d;
-						})
-					: acc,
-			[
-				'American Indian/Alaskan Native',
-				'Asian/Asian-American/Pacific Islander',
-				'Black/African-American',
-				'Hispanic/Latino',
-				'Mixed Race',
-				'White/Caucasian',
-				'Non-disclosed',
-				'Opt-out',
-			].map((d) => ({ name: d, value: 0 })) as {
-				name: string;
-				value: number;
-			}[],
-		);
+		const data = $allUsersCollection
+			.filter((e) => e.events.length)
+			.reduce(
+				(acc, curr) =>
+					curr.demographic
+						? acc.map((d) => {
+								if (d.name === curr.demographic) {
+									return { name: d.name, value: d.value + 1 };
+								}
+								return d;
+							})
+						: acc,
+				[
+					'American Indian/Alaskan Native',
+					'Asian/Asian-American/Pacific Islander',
+					'Black/African-American',
+					'Hispanic/Latino',
+					'Mixed Race',
+					'White/Caucasian',
+					'Non-disclosed',
+					'Opt-out',
+				].map((d) => ({ name: d, value: 0 })) as {
+					name: string;
+					value: number;
+				}[],
+			);
 
 		const plotEl = plot({
 			grid: true,
