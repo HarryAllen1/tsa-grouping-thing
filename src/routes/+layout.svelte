@@ -7,9 +7,11 @@
 		analytics,
 		auth,
 		db,
+		eventsCollection,
 		storage,
 		user,
 	} from '$lib';
+	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import * as Popover from '$lib/components/ui/popover';
@@ -33,6 +35,29 @@
 		}
 	});
 
+	$: teams =
+		($eventsCollection ?? [])
+			.filter((e) =>
+				e.teams.filter((t) =>
+					t.members.find(
+						(e) => e.email.toLowerCase() === $user.email?.toLowerCase(),
+					),
+				),
+			)
+			.flatMap((e) =>
+				e.teams
+					.filter((t) => t.members.find((m) => m.email === $user.email))
+					.map((t) => ({ ...t, event: e })),
+			) ?? [];
+
+	$: unreadCount = teams.reduce(
+		(acc, team) =>
+			acc +
+			(team.messages?.filter(
+				(m) => !m.readBy.find((r) => r.email === $user.email),
+			).length ?? 0),
+		0,
+	);
 	onMount(() => unsub);
 </script>
 
@@ -73,10 +98,17 @@
 								if (e) $selected = null;
 							}}
 						>
-							<Popover.Trigger>
+							<Popover.Trigger class="relative">
 								<Button size="icon" class="size-16">
 									<MessageSquare class="size-8" />
 								</Button>
+								{#if unreadCount}
+									<div class="absolute -right-4 -top-4">
+										<Badge variant="destructive">
+											{unreadCount}
+										</Badge>
+									</div>
+								{/if}
 							</Popover.Trigger>
 							<Popover.Content class="transition-all">
 								<MessagesPopover />
