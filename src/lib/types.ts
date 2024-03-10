@@ -35,6 +35,16 @@ export interface Team {
 	id: ReturnType<typeof crypto.randomUUID>;
 	cardboardBoatOnlyPeopleInBoat?: BasicUser[];
 	teamName?: string;
+	messages?: Message[];
+}
+
+export interface Message {
+	sender: BasicUser;
+	id: ReturnType<typeof crypto.randomUUID>;
+	content: string;
+	time: Timestamp;
+	reactions: (BasicUser & { reaction: string })[];
+	readBy: BasicUser[];
 }
 
 export interface BasicUser {

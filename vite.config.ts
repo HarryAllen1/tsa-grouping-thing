@@ -16,7 +16,6 @@ export default defineConfig({
 			'cmdk-sv',
 			'tailwindcss/colors',
 			'@observablehq/plot',
-			'lucide-svelte',
 			'svelte-sonner',
 			'@vercel/analytics',
 			'sveltefire',

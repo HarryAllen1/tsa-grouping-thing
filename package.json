@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^5.1.0",
-		"@sveltejs/kit": "^2.5.2",
+		"@sveltejs/kit": "^2.5.3",
 		"@sveltejs/vite-plugin-svelte": "^3.0.2",
 		"@tailwindcss/typography": "^0.5.10",
 		"@types/canvas-confetti": "^1.6.4",
@@ -50,7 +50,7 @@
 		"cmdk-sv": "^0.0.15",
 		"firebase": "^10.8.1",
 		"fuse.js": "^7.0.0",
-		"lucide-svelte": "^0.349.0",
+		"lucide-svelte": "^0.354.0",
 		"markdown-it": "^14.0.0",
 		"shiki": "1.1.7",
 		"svelte-sonner": "^0.3.19",

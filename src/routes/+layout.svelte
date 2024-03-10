@@ -10,14 +10,19 @@
 		storage,
 		user,
 	} from '$lib';
+	import { Button } from '$lib/components/ui/button';
 	import { LightSwitch } from '$lib/components/ui/light-switch';
+	import * as Popover from '$lib/components/ui/popover';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { onAuthStateChanged } from 'firebase/auth';
+	import MessageSquare from 'lucide-svelte/icons/message-square';
 	import { onMount } from 'svelte';
 	import { FirebaseApp, PageView, SignedIn, SignedOut } from 'sveltefire';
 	import '../app.css';
 	import Login from './Login.svelte';
+	import MessagesPopover from './MessagesPopover.svelte';
 	import Navbar from './Navbar.svelte';
+	import { selected } from './messages';
 
 	const isAuthReady = auth.authStateReady();
 
@@ -62,6 +67,22 @@
 				<Navbar />
 				{#key $user}
 					<slot />
+					<div class="fixed bottom-8 right-8">
+						<Popover.Root
+							onOpenChange={(e) => {
+								if (e) $selected = null;
+							}}
+						>
+							<Popover.Trigger>
+								<Button size="icon" class="size-16">
+									<MessageSquare class="size-8" />
+								</Button>
+							</Popover.Trigger>
+							<Popover.Content class="transition-all">
+								<MessagesPopover />
+							</Popover.Content>
+						</Popover.Root>
+					</div>
 				{/key}
 			</SignedIn>
 			<SignedOut>
