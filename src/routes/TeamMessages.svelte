@@ -63,13 +63,13 @@
 		`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
 </h3>
 
-<ScrollArea id="messages" class="my-4 h-80">
+<ScrollArea id="messages" class="mb-4 h-80">
 	{#each team.messages ?? [] as message, i (i)}
 		{@const timeSent = new Timestamp(
 			message.time.seconds,
 			message.time.nanoseconds,
 		).toDate()}
-		<div class="flex space-x-2">
+		<div class="mt-4 flex space-x-2">
 			<div class="flex flex-col">
 				<p>
 					<strong>{message.sender.name}</strong>
@@ -83,7 +83,7 @@
 			</div>
 		</div>
 	{:else}
-		<p class="opacity-80">No messages!</p>
+		<p class="opacity-80 mt-8 w-full text-center">No messages!</p>
 	{/each}
 </ScrollArea>
 
