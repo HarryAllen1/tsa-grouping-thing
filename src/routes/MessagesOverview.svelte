@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { eventsCollection, user } from '$lib';
+	import { eventsCollection, noHtmlMd, user } from '$lib';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Separator } from '$lib/components/ui/separator';
 	import { selected } from './messages';
@@ -49,10 +49,11 @@
 				{/if}
 			</div>
 			<p
-				class="block max-w-60 overflow-hidden text-ellipsis whitespace-nowrap opacity-80"
+				class="prose block max-w-60 overflow-hidden text-ellipsis whitespace-nowrap opacity-80"
 			>
-				{team.messages?.at(-1)
-					? `${team.messages?.at(-1)?.sender.name}: ${team.messages?.at(-1)?.content}`
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				{@html team.messages?.at(-1)
+					? `${team.messages?.at(-1)?.sender.name}: ${noHtmlMd.render(team.messages?.at(-1)?.content ?? '')}`
 					: 'No messages'}
 			</p>
 		</div>

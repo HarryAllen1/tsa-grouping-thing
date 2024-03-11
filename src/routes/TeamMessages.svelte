@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { db, eventsCollection, userDoc } from '$lib';
+	import { db, eventsCollection, noHtmlMd, userDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
@@ -79,7 +79,8 @@
 							: timeSent.toLocaleDateString()}
 					</span>
 				</p>
-				<p>{message.content}</p>
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				<p class="prose">{@html noHtmlMd.render(message.content)}</p>
 			</div>
 		</div>
 	{:else}
