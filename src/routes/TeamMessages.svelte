@@ -11,6 +11,8 @@
 
 	export let teamId: string;
 
+	let messagesBox: HTMLDivElement;
+
 	$: team = $eventsCollection
 		.flatMap((e) => e.teams.map((t) => ({ ...t, event: e })))
 		.find((t) => t.id === teamId)!;
@@ -18,6 +20,9 @@
 	let newMessage = '';
 
 	onMount(() => {
+		messagesBox = document.querySelector<HTMLDivElement>(
+			'#messages [data-melt-scroll-area-viewport]',
+		)!;
 		document.querySelector<HTMLInputElement>('#newMessageInput')?.focus();
 		if (
 			team.messages?.filter(
@@ -42,6 +47,7 @@
 				{ merge: true },
 			);
 		}
+		messagesBox.scrollTop = messagesBox.scrollHeight;
 	});
 </script>
 
@@ -53,11 +59,22 @@
 		`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
 </h3>
 
-<ScrollArea class="h-72">
+<ScrollArea id="messages" class="my-4 h-80">
 	{#each team.messages ?? [] as message, i (i)}
+		{@const timeSent = new Timestamp(
+			message.time.seconds,
+			message.time.nanoseconds,
+		).toDate()}
 		<div class="flex space-x-2">
 			<div class="flex flex-col">
-				<strong>{message.sender.name}</strong>
+				<p>
+					<strong>{message.sender.name}</strong>
+					<span class="opacity-80">
+						{Date.now() - timeSent.getTime() < 1000 * 60 * 60 * 24
+							? timeSent.toLocaleTimeString()
+							: timeSent.toLocaleDateString()}
+					</span>
+				</p>
 				<p>{message.content}</p>
 			</div>
 		</div>
@@ -100,6 +117,7 @@
 		);
 
 		newMessage = '';
+		messagesBox.scrollTop = messagesBox.scrollHeight;
 	}}
 >
 	<Input
