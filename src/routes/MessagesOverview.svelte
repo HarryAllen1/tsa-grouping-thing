@@ -33,18 +33,29 @@
 			$selected = team.id;
 		}}
 	>
-		<strong>
-			{team.teamName ??
-				`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
-		</strong>
-		<div class="flex-1" />
-		{#if team.messages?.filter((m) => !m.readBy.find((r) => r.email === $user.email)).length}
-			<Badge variant="destructive">
-				{team.messages?.filter(
-					(m) => !m.readBy.find((r) => r.email === $user.email),
-				).length}
-			</Badge>
-		{/if}
+		<div class="flex max-w-fit flex-col">
+			<div class="flex flex-row">
+				<strong>
+					{team.teamName ??
+						`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
+				</strong>
+				{#if team.messages?.filter((m) => !m.readBy.find((r) => r.email === $user.email)).length}
+					<div class="flex-1" />
+					<Badge variant="destructive">
+						{team.messages?.filter(
+							(m) => !m.readBy.find((r) => r.email === $user.email),
+						).length}
+					</Badge>
+				{/if}
+			</div>
+			<p
+				class="block max-w-60 overflow-hidden text-ellipsis whitespace-nowrap opacity-80"
+			>
+				{team.messages?.at(-1)
+					? `${team.messages?.at(-1)?.sender.name}: ${team.messages?.at(-1)?.content}`
+					: 'No messages'}
+			</p>
+		</div>
 	</button>
 	{#if i < teams.length - 1}
 		<Separator />
