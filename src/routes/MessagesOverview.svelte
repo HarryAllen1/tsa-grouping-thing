@@ -49,11 +49,11 @@
 				{/if}
 			</div>
 			<p
-				class="prose block max-w-60 overflow-hidden text-ellipsis whitespace-nowrap opacity-80"
+				class="block max-w-60 overflow-hidden text-ellipsis whitespace-nowrap opacity-80"
 			>
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				{@html team.messages?.at(-1)
-					? `${team.messages?.at(-1)?.sender.name}: ${noHtmlMd.render(team.messages?.at(-1)?.content ?? '')}`
+					? `${noHtmlMd.render(`${team.messages?.at(-1)?.sender.name}: ${team.messages?.at(-1)?.content}`)}`
 					: 'No messages'}
 			</p>
 		</div>
