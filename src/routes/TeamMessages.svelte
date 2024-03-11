@@ -8,6 +8,7 @@
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
 	import { selected } from './messages';
 	import { onMount } from 'svelte';
+	import { isMobileOrTablet } from '$lib/utils';
 
 	export let teamId: string;
 
@@ -23,7 +24,10 @@
 		messagesBox = document.querySelector<HTMLDivElement>(
 			'#messages [data-melt-scroll-area-viewport]',
 		)!;
-		document.querySelector<HTMLInputElement>('#newMessageInput')?.focus();
+
+		if (!isMobileOrTablet)
+			document.querySelector<HTMLInputElement>('#newMessageInput')?.focus();
+
 		if (
 			team.messages?.filter(
 				(m) => !m.readBy.find((r) => r.email === $userDoc?.email),
