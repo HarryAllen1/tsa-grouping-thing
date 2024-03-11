@@ -128,6 +128,7 @@
 	}}
 >
 	<Input
+		autocomplete="off"
 		id="newMessageInput"
 		bind:value={newMessage}
 		placeholder="Type a message"
