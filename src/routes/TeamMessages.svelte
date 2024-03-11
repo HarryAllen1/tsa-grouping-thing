@@ -82,6 +82,8 @@
 				<p>{message.content}</p>
 			</div>
 		</div>
+	{:else}
+		<p class="opacity-80">No messages!</p>
 	{/each}
 </ScrollArea>
 
