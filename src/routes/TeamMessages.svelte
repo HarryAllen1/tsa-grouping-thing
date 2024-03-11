@@ -79,8 +79,10 @@
 							: timeSent.toLocaleDateString()}
 					</span>
 				</p>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				<p class="prose">{@html noHtmlMd.render(message.content)}</p>
+				<p class="prose prose-invert">
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					{@html noHtmlMd.render(message.content)}
+				</p>
 			</div>
 		</div>
 	{:else}
