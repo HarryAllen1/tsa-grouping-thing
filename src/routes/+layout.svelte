@@ -25,6 +25,7 @@
 	import MessagesPopover from './MessagesPopover.svelte';
 	import Navbar from './Navbar.svelte';
 	import { selected } from './messages';
+	import { onNavigate } from '$app/navigation';
 
 	const isAuthReady = auth.authStateReady();
 
@@ -33,6 +34,11 @@
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
 		}
+	});
+
+	let open = false;
+	onNavigate(() => {
+		open = false;
 	});
 
 	$: teams =
@@ -97,6 +103,7 @@
 							onOpenChange={(e) => {
 								if (e) $selected = null;
 							}}
+							{open}
 						>
 							<Popover.Trigger class="relative">
 								<Button size="icon" class="size-16">

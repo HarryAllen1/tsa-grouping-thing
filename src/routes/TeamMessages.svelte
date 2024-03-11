@@ -3,12 +3,13 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
+	import { isMobileOrTablet } from '$lib/utils';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
-	import { selected } from './messages';
+	import Video from 'lucide-svelte/icons/video';
 	import { onMount } from 'svelte';
-	import { isMobileOrTablet } from '$lib/utils';
+	import { selected } from './messages';
 
 	export let teamId: string;
 
@@ -55,12 +56,15 @@
 	});
 </script>
 
-<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+<h3
+	class="flex scroll-m-20 flex-row gap-2 text-2xl font-semibold tracking-tight"
+>
 	<button on:click={() => ($selected = null)}>
 		<ChevronLeft />
 	</button>
 	{team.teamName ??
 		`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
+	<Button size="icon" href="/call/{team.id}"><Video /></Button>
 </h3>
 
 <ScrollArea id="messages" class="mb-4 h-80">
