@@ -64,7 +64,9 @@
 	</button>
 	{team.teamName ??
 		`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
-	<Button size="icon" href="/call/{team.id}"><Video /></Button>
+	<Button size="icon" href="/call/{team.id}" class="aspect-square">
+		<Video />
+	</Button>
 </h3>
 
 <ScrollArea id="messages" class="mb-4 h-80">
@@ -83,7 +85,7 @@
 							: timeSent.toLocaleDateString()}
 					</span>
 				</p>
-				<p class="prose prose-invert">
+				<p class="prose dark:prose-invert">
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html noHtmlMd.render(message.content)}
 				</p>

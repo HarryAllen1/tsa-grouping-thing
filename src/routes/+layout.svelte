@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
+	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import {
 		FancyConfirm,
@@ -25,7 +26,6 @@
 	import MessagesPopover from './MessagesPopover.svelte';
 	import Navbar from './Navbar.svelte';
 	import { selected } from './messages';
-	import { onNavigate } from '$app/navigation';
 
 	const isAuthReady = auth.authStateReady();
 
@@ -36,10 +36,13 @@
 		}
 	});
 
-	let open = false;
+	let panelOpen = false;
+
 	onNavigate(() => {
-		open = false;
+		panelOpen = false;
 	});
+
+	$: $page.url.pathname, (panelOpen = false);
 
 	$: teams =
 		($eventsCollection ?? [])
@@ -103,7 +106,7 @@
 							onOpenChange={(e) => {
 								if (e) $selected = null;
 							}}
-							{open}
+							open={panelOpen}
 						>
 							<Popover.Trigger class="relative">
 								<Button size="icon" class="size-16">
