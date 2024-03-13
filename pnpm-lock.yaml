@@ -16,8 +16,8 @@ importers:
         specifier: ^0.76.0
         version: 0.76.0(svelte@4.2.12)
       '@observablehq/plot':
-        specifier: ^0.6.13
-        version: 0.6.13
+        specifier: ^0.6.14
+        version: 0.6.14
       '@vercel/analytics':
         specifier: ^1.2.2
         version: 1.2.2
@@ -113,8 +113,8 @@ importers:
         specifier: ^4.2.12
         version: 4.2.12
       svelte-check:
-        specifier: ^3.6.6
-        version: 3.6.6(postcss@8.4.35)(svelte@4.2.12)
+        specifier: ^3.6.7
+        version: 3.6.7(postcss@8.4.35)(svelte@4.2.12)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -2002,11 +2002,11 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@observablehq/plot@0.6.13:
-    resolution: {integrity: sha512-ebQS4ENodOy+O3WUjhqv9jNPZENAZRQMIdO3ziOlAKfUzSf69+gaFAqqc04SGrQA6JwJjPYnbfeN3YIpNsCF/A==}
+  /@observablehq/plot@0.6.14:
+    resolution: {integrity: sha512-A9HWSboh1WgFonKqYKC522VkxJwhkTUTye606qjxQH8iPtSVjVXUF6JRKwf7MPaYTin/MypaSSd+08ML4LA1rw==}
     engines: {node: '>=12'}
     dependencies:
-      d3: 7.8.5
+      d3: 7.9.0
       interval-tree-1d: 1.0.4
       isoformat: 0.2.1
     dev: false
@@ -3909,8 +3909,8 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /d3-geo@3.1.0:
-    resolution: {integrity: sha512-JEo5HxXDdDYXCaWdwLRt79y7giK8SbhZJbFWXqbRTolCHFI5jRqteLzCsq51NKbUoX0PjBVSohxrx+NoOUujYA==}
+  /d3-geo@3.1.1:
+    resolution: {integrity: sha512-637ln3gXKXOwhalDzinUgY83KzNWZRKbYubaG+fGVuc/dxO64RRljtCTnf5ecMyE1RIdtqpkVcq0IbtU2S8j2Q==}
     engines: {node: '>=12'}
     dependencies:
       d3-array: 3.2.4
@@ -3948,8 +3948,8 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /d3-scale-chromatic@3.0.0:
-    resolution: {integrity: sha512-Lx9thtxAKrO2Pq6OO2Ua474opeziKr279P/TKZsMAhYyNDD3EnCffdbgeSYN5O7m2ByQsxtuP2CSDczNUIZ22g==}
+  /d3-scale-chromatic@3.1.0:
+    resolution: {integrity: sha512-A3s5PWiZ9YCXFye1o246KoscMWqf8BsD9eRiJ3He7C9OBaxKhAd5TFCdEx/7VbKtxxTsu//1mMJFrEt572cEyQ==}
     engines: {node: '>=12'}
     dependencies:
       d3-color: 3.1.0
@@ -4023,8 +4023,8 @@ packages:
       d3-transition: 3.0.1(d3-selection@3.0.0)
     dev: false
 
-  /d3@7.8.5:
-    resolution: {integrity: sha512-JgoahDG51ncUfJu6wX/1vWQEqOflgXyl4MaHqlcSruTez7yhaRKR9i8VjjcQGeS2en/jnFivXuaIMnseMMt0XA==}
+  /d3@7.9.0:
+    resolution: {integrity: sha512-e1U46jVP+w7Iut8Jt8ri1YsPOvFpg46k+K8TpCb0P+zjCkjkPnV7WzfDJzMHy1LnA+wj5pLT1wjO901gLXeEhA==}
     engines: {node: '>=12'}
     dependencies:
       d3-array: 3.2.4
@@ -4041,7 +4041,7 @@ packages:
       d3-fetch: 3.0.1
       d3-force: 3.0.0
       d3-format: 3.1.0
-      d3-geo: 3.1.0
+      d3-geo: 3.1.1
       d3-hierarchy: 3.1.2
       d3-interpolate: 3.0.1
       d3-path: 3.1.0
@@ -4049,7 +4049,7 @@ packages:
       d3-quadtree: 3.0.1
       d3-random: 3.0.1
       d3-scale: 4.0.2
-      d3-scale-chromatic: 3.0.0
+      d3-scale-chromatic: 3.1.0
       d3-selection: 3.0.0
       d3-shape: 3.2.0
       d3-time: 3.1.0
@@ -7906,8 +7906,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /svelte-check@3.6.6(postcss@8.4.35)(svelte@4.2.12):
-    resolution: {integrity: sha512-b9q9rOHOMYF3U8XllK7LmXTq1LeWQ98waGfEJzrFutViadkNl1tgdEtxIQ8yuPx+VQ4l7YrknYol+0lfZocaZw==}
+  /svelte-check@3.6.7(postcss@8.4.35)(svelte@4.2.12):
+    resolution: {integrity: sha512-tKEjemK9FYCySAseCaIt+ps5o0XRvLC7ECjyJXXtO7vOQhR9E6JavgoUbGP1PCulD2OTcB/fi9RjV3nyF1AROw==}
     hasBin: true
     peerDependencies:
       svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
