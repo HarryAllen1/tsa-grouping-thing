@@ -16,6 +16,7 @@
 		CollectionReference,
 		updateDoc,
 		deleteDoc,
+		getDocs,
 	} from 'firebase/firestore';
 	import PhoneMissed from 'lucide-svelte/icons/phone-missed';
 	import { onDestroy, onMount } from 'svelte';
@@ -158,7 +159,7 @@
 		<!-- svelte-ignore a11y-media-has-caption -->
 		<video autoplay bind:this={remoteVideoEl} class="h-full w-full" />
 	</div>
-	<div class="absolute bottom-16 right-12 aspect-video w-64 bg-gray-600">
+	<div class="absolute bottom-16 right-12 w-[16%] bg-gray-600">
 		<video class="h-full w-full" muted autoplay bind:this={localVideoEl} />
 	</div>
 	<div class="absolute"></div>
@@ -166,6 +167,27 @@
 <div class="container flex justify-center">
 	<Button
 		on:click={async () => {
+			const offerDocuments = collection(
+				db,
+				'calls',
+				$page.params.teamId,
+				'offerCandidates',
+			);
+
+			const answerDocuments = collection(
+				db,
+				'calls',
+				$page.params.teamId,
+				'answerCandidates',
+			);
+
+			[offerDocuments, answerDocuments].forEach(async (collection) => {
+				const snapshot = await getDocs(collection);
+				snapshot.forEach(async (doc) => {
+					await deleteDoc(doc.ref);
+				});
+			});
+
 			await deleteDoc(doc(db, 'calls', $page.params.teamId));
 
 			stopVideo();
