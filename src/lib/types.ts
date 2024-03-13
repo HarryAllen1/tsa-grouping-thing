@@ -88,6 +88,7 @@ export interface SettingsDoc {
 	enableOnlineSubmissions: boolean;
 	enableRooming: boolean;
 	alert: string;
+	openAIAPIKey: string;
 }
 
 export interface EventData extends EventDoc {

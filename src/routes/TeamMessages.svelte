@@ -4,7 +4,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import { isMobileOrTablet } from '$lib/utils';
-	import { Timestamp, doc, setDoc } from 'firebase/firestore';
+	import { Timestamp, doc, getDoc, setDoc } from 'firebase/firestore';
 	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
 	import Video from 'lucide-svelte/icons/video';
@@ -20,6 +20,79 @@
 		.find((t) => t.id === teamId)!;
 
 	let newMessage = '';
+
+	const sendMessage = async () => {
+		if (newMessage.trim() === '') return;
+		const teamsClone = structuredClone(team.event.teams);
+
+		const foundTeam = teamsClone.find((t) => t.id === team.id);
+		if (!foundTeam) return;
+
+		let oldMessage = newMessage;
+
+		foundTeam.messages ??= [];
+		foundTeam?.messages?.push({
+			content: newMessage,
+			sender: {
+				name: $userDoc?.name ?? '',
+				email: $userDoc?.email ?? '',
+			},
+			id: crypto.randomUUID(),
+			time: Timestamp.now(),
+			readBy: [
+				{
+					name: $userDoc?.name ?? '',
+					email: $userDoc?.email ?? '',
+				},
+			],
+			reactions: [],
+		});
+
+		await setDoc(
+			doc(db, 'events', team.event.event),
+			{
+				teams: teamsClone,
+			},
+			{ merge: true },
+		);
+
+		newMessage = '';
+		messagesBox.scrollTop = messagesBox.scrollHeight;
+
+		moderateMessage(oldMessage);
+	};
+
+	const moderateMessage = async (message: string) => {
+		const res = await fetch('https://api.openai.com/v1/moderations', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${await getDoc(doc(db, 'settings', 'settings')).then((d) => d.data()?.openAIAPIKey)}`,
+			},
+			body: JSON.stringify({
+				input: message,
+			}),
+		});
+
+		const moderation = await res.json();
+
+		if (moderation.results[0].flagged) {
+			const teamsClone = structuredClone(team.event.teams);
+
+			const foundTeam = teamsClone.find((t) => t.id === team.id);
+			if (!foundTeam) return;
+
+			foundTeam.messages?.pop();
+
+			await setDoc(
+				doc(db, 'events', team.event.event),
+				{
+					teams: teamsClone,
+				},
+				{ merge: true },
+			);
+		}
+	};
 
 	onMount(() => {
 		messagesBox = document.querySelector<HTMLDivElement>(
@@ -98,42 +171,7 @@
 
 <form
 	class="flex w-full items-center space-x-2"
-	on:submit|preventDefault={async () => {
-		if (newMessage.trim() === '') return;
-		const teamsClone = structuredClone(team.event.teams);
-
-		const foundTeam = teamsClone.find((t) => t.id === team.id);
-		if (!foundTeam) return;
-
-		foundTeam.messages ??= [];
-		foundTeam?.messages?.push({
-			content: newMessage,
-			sender: {
-				name: $userDoc?.name ?? '',
-				email: $userDoc?.email ?? '',
-			},
-			id: crypto.randomUUID(),
-			time: Timestamp.now(),
-			readBy: [
-				{
-					name: $userDoc?.name ?? '',
-					email: $userDoc?.email ?? '',
-				},
-			],
-			reactions: [],
-		});
-
-		await setDoc(
-			doc(db, 'events', team.event.event),
-			{
-				teams: teamsClone,
-			},
-			{ merge: true },
-		);
-
-		newMessage = '';
-		messagesBox.scrollTop = messagesBox.scrollHeight;
-	}}
+	on:submit|preventDefault={sendMessage}
 >
 	<Input
 		type="text"
