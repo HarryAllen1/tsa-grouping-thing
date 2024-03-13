@@ -52,6 +52,10 @@
 						href: '/admin/members',
 					},
 					{
+						title: 'Admin Messages',
+						href: '/admin/messages',
+					},
+					{
 						title: 'Admin Results',
 						href: '/admin/results',
 					},

@@ -4,7 +4,14 @@
 	import { Input } from '$lib/components/ui/input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import { isMobileOrTablet } from '$lib/utils';
-	import { Timestamp, doc, getDoc, setDoc } from 'firebase/firestore';
+	import {
+		Timestamp,
+		addDoc,
+		collection,
+		doc,
+		getDoc,
+		setDoc,
+	} from 'firebase/firestore';
 	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
 	import Video from 'lucide-svelte/icons/video';
@@ -12,6 +19,7 @@
 	import { selected } from './messages';
 
 	export let teamId: string;
+	export let hideBack = false;
 
 	let messagesBox: HTMLDivElement;
 
@@ -82,6 +90,18 @@
 			const foundTeam = teamsClone.find((t) => t.id === team.id);
 			if (!foundTeam) return;
 
+			addDoc(collection(db, 'blockedMessages'), {
+				teamId: team.id,
+				teamNumber: team.teamNumber,
+				event: team.event.event,
+				content: message,
+				sender: {
+					name: $userDoc?.name ?? '',
+					email: $userDoc?.email ?? '',
+				},
+				time: Timestamp.now(),
+			});
+
 			foundTeam.messages?.pop();
 
 			await setDoc(
@@ -132,12 +152,14 @@
 <h3
 	class="flex scroll-m-20 flex-row gap-2 text-2xl font-semibold tracking-tight"
 >
-	<button on:click={() => ($selected = null)}>
-		<ChevronLeft />
-	</button>
+	{#if !hideBack}
+		<button on:click={() => ($selected = null)}>
+			<ChevronLeft />
+		</button>
+	{/if}
 	{team.teamName ??
 		`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
-	<Button size="icon" href="/call/{team.id}" class="aspect-square">
+	<Button size="icon" href="/call/{team.id}" class="hidden aspect-square">
 		<Video />
 	</Button>
 </h3>

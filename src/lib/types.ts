@@ -38,11 +38,14 @@ export interface Team {
 	messages?: Message[];
 }
 
-export interface Message {
-	sender: BasicUser;
-	id: ReturnType<typeof crypto.randomUUID>;
+export interface SimpleMessage {
 	content: string;
 	time: Timestamp;
+	sender: BasicUser;
+}
+
+export interface Message extends SimpleMessage {
+	id: ReturnType<typeof crypto.randomUUID>;
 	reactions: (BasicUser & { reaction: string })[];
 	readBy: BasicUser[];
 }

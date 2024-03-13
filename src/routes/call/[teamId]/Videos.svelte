@@ -34,18 +34,18 @@
 	) => {
 		console.log('create');
 
-		pc.addEventListener('icecandidate', (event) => {
-			if (event.candidate) addDoc(offerCandidates, event.candidate.toJSON());
-		});
-
 		const offerDescription = await pc.createOffer();
 		await pc.setLocalDescription(offerDescription);
 
-		setDoc(callDocRef, {
+		await setDoc(callDocRef, {
 			offer: {
 				type: offerDescription.type,
 				sdp: offerDescription.sdp,
 			},
+		});
+
+		pc.addEventListener('icecandidate', (event) => {
+			if (event.candidate) addDoc(offerCandidates, event.candidate.toJSON());
 		});
 
 		onSnapshot(callDocRef, (ss) => {
@@ -79,6 +79,8 @@
 	) => {
 		console.log('join');
 		pc.addEventListener('icecandidate', (event) => {
+			console.log('something happened');
+
 			if (event.candidate) addDoc(answerCandidates, event.candidate.toJSON());
 		});
 
@@ -125,6 +127,8 @@
 		// Pull tracks from remote stream, add to video stream
 		pc.addEventListener('track', (event) => {
 			event.streams[0].getTracks().forEach((track) => {
+				console.log('pulled track');
+
 				remoteStream.addTrack(track);
 			});
 		});
