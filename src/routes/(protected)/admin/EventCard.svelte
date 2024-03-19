@@ -103,13 +103,23 @@
 					)
 						return;
 					if (
-						!prompt('Type "delete this event" to await fancyConfirm.')
+						!prompt(
+							'Type "delete this event" to actually delete this event (LAST CHANCE!!!).',
+						)
 							?.toLowerCase()
 							.includes('delete this event')
 					)
 						return;
 
 					await deleteDoc(doc(db, 'events', event.event ?? ''));
+					for (const user of $allUsersCollection) {
+						user.events = user.events.filter((e) => e !== event.event);
+						await setDoc(
+							doc(db, 'users', user.email?.toLowerCase() ?? ''),
+							user,
+							{ merge: true },
+						);
+					}
 				}}
 			>
 				<Trash2 />
