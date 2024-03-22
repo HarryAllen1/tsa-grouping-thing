@@ -4,22 +4,11 @@ The WA regionals and state registration page is really bad. As this team creatio
 
 ![registration eyesore](./registration%20eyesore.png)
 
-So, to help streamline the transferring of events and other data, I've made a tool.
+So, to help streamline the transferring of events and other data, ~~I've made a tool.~~ I've just realized how dangerous this tool is, so there is absolutely no way I'm distributing it. I've instead included instructions on how to manually register everyone.
 
-## Prerequisites
+## Getting the Data
 
-This tool is hosted on GitHub, and must be download and ran on your computer.
+One of the hardest parts of registering everyone for state is the difficulty of staring at massive amounts of data. There are two ways to transfer data to the registration system:
 
-This tool relies on NodeJS, [so download that first](https://nodejs.org/en). Verify it works by opening the Command Prompt app and typing `node -v` followed by enter. You should see something similar to the following (the exact numbers might differ):
-
-```
-v20.9.0
-```
-
-Once you've downloaded and installed NodeJS, you will then need to get the code. Head to the tools [GitHub repo](https://github.com/HarryAllen1/tsa-uploader-but-better) and download the code by pressing the green "Code" button, downloading as zip, and extracting the files (if you know how, you can also clone the repo with git).
-
-## Prepping the Tool
-
-Once you have the folder open in File Explorer (you should see multiple files, not one folder. You might need to enter another folder), you'll need to copy the path. Do this by clicking the URL bar and copying it:
-
-![file explorer](./copy%20path.png)
+- Exporting the data to a CSV file, and using Excel to transfer the data
+- Using the [members page](https://tsa-grouping-thing.vercel.app/admin/members)
