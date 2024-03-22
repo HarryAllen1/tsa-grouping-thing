@@ -916,9 +916,9 @@
 								</Card.Header>
 								<Card.Content>
 									<div class="has-[*]:mb-4">
-										{#if !event.locked && !team.locked && team.members
-												.map((u) => u.email.toLowerCase())
-												.includes($user?.email?.toLowerCase() ?? '')}
+										{#if team.members
+											.map((u) => u.email.toLowerCase())
+											.includes($user?.email?.toLowerCase() ?? '')}
 											<StorageList ref="files/{event.event}/{team.id}" let:list>
 												{#if list?.items.length}
 													<Collapsible.Root>
