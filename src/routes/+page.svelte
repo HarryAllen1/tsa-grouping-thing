@@ -3,6 +3,7 @@
 		SimpleTooltip,
 		StorageMetadata,
 		allUsersCollection,
+		analytics,
 		aww,
 		clash,
 		congratulations,
@@ -31,6 +32,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
+	import { logEvent } from 'firebase/analytics';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { deleteObject, getDownloadURL, listAll, ref } from 'firebase/storage';
 	import {
@@ -921,7 +923,13 @@
 											.includes($user?.email?.toLowerCase() ?? '')}
 											<StorageList ref="files/{event.event}/{team.id}" let:list>
 												{#if list?.items.length}
-													<Collapsible.Root>
+													<Collapsible.Root
+														onOpenChange={(e) => {
+															if (e) {
+																logEvent(analytics, 'select_item', {});
+															}
+														}}
+													>
 														<Collapsible.Trigger asChild let:builder>
 															<Button
 																builders={[builder]}
