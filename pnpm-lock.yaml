@@ -125,7 +125,7 @@ importers:
         specifier: ^5.4.3
         version: 5.4.3
       vite:
-        specifier: ^5.2.2
+        specifier: ^5.0.7
         version: 5.2.2
       vitepress:
         specifier: 1.0.0
