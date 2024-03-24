@@ -25,7 +25,7 @@
 	</Sheet.Trigger>
 	<Sheet.Content side="left" class="pr-0">
 		<MobileLink href="/" class="flex items-center" {open}>
-			<span class="font-bold">TSA Wizard</span>
+			<span class="font-bold">TSA Grouping Thing</span>
 		</MobileLink>
 		<div class="my-4 h-[calc(100vh-8rem)] overflow-auto pb-10 pl-6">
 			<div class="flex flex-col space-y-3">
