@@ -6,6 +6,7 @@ const config: Config = {
 	darkMode: 'class',
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	plugins: [typography()],
+	safelist: ['[&>strong]:text-red-500'],
 	theme: {
 		container: {
 			center: true,
