@@ -7,3 +7,9 @@ The rooming event can be shown or hidden with the "Show rooming" toggle directly
 ## Restrictions
 
 Besides the wording of a few things, the only major difference is who can be in a room with each other. In the member view, members can still create teams/rooms as normal, except the only people they can add to their room must be of the same gender. Non-binary people can be added do any room.
+
+## Exporting to Rooming Template
+
+For state, a rooming template must be created. However, it as a rather particular format. The Team Creation Wizard provides a way to convert its format into the rooming template.
+
+Once you have your rooming complete, at the top of the rooming card in the admin page, there is a download button to the left of the delete event button. When you click it, a CSV file will be downloaded. Once it is downloaded, open the file in Excel, or some other form of spreadsheeting programme. Copy all of the data provided except for the header row, and paste the data into your rooming template.

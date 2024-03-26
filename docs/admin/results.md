@@ -4,6 +4,8 @@ This page exists to help to determine placement of eliminations. It also provide
 
 ## Posting Results
 
-Go to the [admin results](https://tsa-grouping-thing.vercel.app/admin/results) page and find the event for which you want to
+Go to the [admin results](https://tsa-grouping-thing.vercel.app/admin/results) page and find the event for which you want to add results for. Click Add and fill in the inputs for the data. If you want to add a rubric, click the Upload Rubric button to the left of the Add button.
 
 ## Modifying Existing Results
+
+If you want to modify results that have already been posted, click the pencil icon directly underneath the list of names of the team whose results you want to change. You can then add or change members of that team, add or change notes, or add or change rubrics in the same way when then result was added.
