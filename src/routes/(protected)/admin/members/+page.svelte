@@ -5,10 +5,12 @@
 	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
+	import { csvFormat } from 'd3';
 	import Fuse from 'fuse.js';
+	import Download from 'lucide-svelte/icons/download';
 	import CopyButton from './CopyButton.svelte';
-	import TableView from './TableView.svelte';
 	import MemberGridCard from './MemberGridCard.svelte';
+	import TableView from './TableView.svelte';
 
 	let search = '';
 	let hidePeopleWithoutEvents = false;
@@ -79,6 +81,36 @@
 		</Button>
 
 		<CopyButton />
+		<Button
+			size="icon"
+			on:click={() => {
+				alert(
+					'Make sure to go look at this file in Excel and ensure that all information is correct and remove any uneeded rows before submitting.',
+				);
+				const csv = csvFormat(
+					$allUsersCollection.map((u) => ({
+						'First Name': u.firstName ?? u.name.split(' ')[0],
+						'Last Name': u.lastName ?? u.name.split(' ').slice(1).join(' '),
+						Grade: u.grade,
+						Demographic: u.demographic ?? 'Opt-out',
+						Gender: u.gender,
+						'Member Type': 'Member',
+					})),
+				);
+
+				const blob = new Blob([csv], { type: 'text/csv' });
+				const url = URL.createObjectURL(blob);
+
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'members.csv';
+				a.click();
+
+				URL.revokeObjectURL(url);
+			}}
+		>
+			<Download />
+		</Button>
 	</div>
 
 	<div class="mb-2 flex items-center space-x-2">
