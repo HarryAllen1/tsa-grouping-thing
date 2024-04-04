@@ -29,7 +29,6 @@
 					value: number;
 				}[],
 			);
-		console.log(data);
 
 		const plotEl = plot({
 			grid: true,
