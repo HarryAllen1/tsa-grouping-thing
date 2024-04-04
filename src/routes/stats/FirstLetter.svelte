@@ -5,26 +5,31 @@
 	let graph: HTMLDivElement;
 
 	$: if ($allUsersCollection.length) {
+		let firstChar = 'A'.charCodeAt(0);
 		const data = $allUsersCollection
 			.filter((e) => e.events.length)
 			.reduce(
-				(acc, curr): { name: string; value: number }[] =>
-					curr.tShirtSize
+				(acc, curr) =>
+					curr.name
 						? acc.map((d) => {
-								if (d.name === curr.tShirtSize?.slice(2) ?? '') {
+								if (d.name === curr.name.toUpperCase().charAt(0)) {
 									return { name: d.name, value: d.value + 1 };
 								}
 								return d;
 							})
 						: acc,
-				['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((d) => ({
-					name: d,
-					value: 0,
-				})) as {
+				Array(26)
+					.fill(null)
+					.map(() => String.fromCharCode(firstChar++))
+					.map((d) => ({
+						name: d,
+						value: 0,
+					})) as {
 					name: string;
 					value: number;
 				}[],
 			);
+		console.log(data);
 
 		const plotEl = plot({
 			grid: true,
@@ -32,8 +37,7 @@
 				label: 'Frequency',
 			},
 			y: {
-				domain: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-				label: 'T-Shirt size',
+				label: 'First Letter of Name',
 			},
 			color: {
 				legend: true,

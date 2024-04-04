@@ -8,6 +8,7 @@
 	import Gender from './Gender.svelte';
 	import TShirt from './TShirt.svelte';
 	import { eventError } from './eventError.js';
+	import FirstLetter from './FirstLetter.svelte';
 
 	let graph: HTMLDivElement;
 
@@ -91,4 +92,5 @@
 	<Demographics />
 	<Gender />
 	<TShirt />
+	<FirstLetter />
 </div>
