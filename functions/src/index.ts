@@ -53,6 +53,7 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 				{
 					email: user.email,
 					name: user.displayName,
+					uid: user.uid,
 					events: [],
 				},
 				{
