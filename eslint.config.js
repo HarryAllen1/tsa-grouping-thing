@@ -1,42 +1,34 @@
-import js from '@eslint/js';
-import ts from 'typescript-eslint';
-import svelte from 'eslint-plugin-svelte';
-import prettier from 'eslint-config-prettier';
-import globals from 'globals';
-
-/** @type {import('eslint').Linter.FlatConfig[]} */
-export default [
-	js.configs.recommended,
-	...ts.configs.recommended,
-	...svelte.configs['flat/recommended'],
-	prettier,
-	...svelte.configs['flat/prettier'],
-	{
-		languageOptions: {
-			globals: {
-				...globals.browser,
-				...globals.node,
-			},
-		},
+/** @type {import('eslint').Linter.FlatConfig} */
+module.exports = {
+	root: true,
+	extends: [
+		'eslint:recommended',
+		'plugin:@typescript-eslint/recommended',
+		'plugin:svelte/recommended',
+		'prettier',
+	],
+	parser: '@typescript-eslint/parser',
+	plugins: ['@typescript-eslint'],
+	parserOptions: {
+		sourceType: 'module',
+		ecmaVersion: 2020,
+		extraFileExtensions: ['.svelte'],
 	},
-	{
-		files: ['**/*.svelte'],
-		languageOptions: {
+	env: {
+		browser: true,
+		es2017: true,
+		node: true,
+	},
+	overrides: [
+		{
+			files: ['*.svelte'],
+			parser: 'svelte-eslint-parser',
 			parserOptions: {
-				parser: ts.parser,
+				parser: '@typescript-eslint/parser',
 			},
 		},
+	],
+	rules: {
+		'no-undef': 'off',
 	},
-	{
-		ignores: [
-			'build/',
-			'.svelte-kit/',
-			'package/',
-			'docs/.vitepress/dist/',
-			'docs/.vitepress/cache/',
-			'functions/lib/',
-			'.vercel/',
-			'src/lib/components/ui/',
-		],
-	},
-];
+};
