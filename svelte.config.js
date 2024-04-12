@@ -1,5 +1,5 @@
+import adapterStatic from '@sveltejs/adapter-static';
 import adapterVercel from '@sveltejs/adapter-vercel';
-import adapterCloudflare from '@sveltejs/adapter-cloudflare';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -16,7 +16,7 @@ const config = {
 			? adapterVercel({
 					runtime: 'nodejs20.x',
 				})
-			: adapterCloudflare(),
+			: adapterStatic(),
 	},
 };
 
