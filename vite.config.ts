@@ -24,6 +24,7 @@ export default defineConfig({
 			'firebase/firestore',
 			'firebase/storage',
 			'd3',
+			'@google-cloud/logging',
 		],
 	},
 });
