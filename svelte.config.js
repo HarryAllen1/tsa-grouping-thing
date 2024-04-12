@@ -16,7 +16,9 @@ const config = {
 			? adapterVercel({
 					runtime: 'nodejs20.x',
 				})
-			: adapterStatic(),
+			: adapterStatic({
+					fallback: '200.html',
+				}),
 	},
 };
 
