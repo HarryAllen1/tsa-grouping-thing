@@ -24,10 +24,7 @@
 					.map((d) => ({
 						name: d,
 						value: 0,
-					})) as {
-					name: string;
-					value: number;
-				}[],
+					})),
 			);
 
 		const plotEl = plot({
