@@ -24,7 +24,7 @@
 	provider.addScope('profile');
 </script>
 
-<Card.Root class="mx-16 mt-16 max-w-md md:mx-48 lg:mx-96">
+<Card.Root class="mx-16 max-w-md md:mx-48 lg:mx-96">
 	<Card.Header>
 		<Card.Title>Login</Card.Title>
 	</Card.Header>

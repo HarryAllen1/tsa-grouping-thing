@@ -4,11 +4,12 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import LightSwitch from '$lib/components/ui/light-switch/light-switch.svelte';
+	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import { removeRef, sleep } from '$lib/utils';
 	import { signOut } from 'firebase/auth';
 	import { collection, getDocs } from 'firebase/firestore';
-	import { Download, LogOut } from 'lucide-svelte';
+	import Download from 'lucide-svelte/icons/download';
+	import LogOut from 'lucide-svelte/icons/log-out';
 	import { docStore, userStore } from 'sveltefire';
 	import DesktopNav from './DesktopNav.svelte';
 	import MobileNav from './MobileNav.svelte';
@@ -169,7 +170,7 @@
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
 				{/if}
-				<LightSwitch />
+				<ThemeCustomizer />
 				<Button
 					size="icon"
 					variant="ghost"

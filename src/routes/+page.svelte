@@ -26,7 +26,6 @@
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
-	import { localStorageStore } from '$lib/components/ui/light-switch/local-storage-store';
 	import { Progress } from '$lib/components/ui/progress';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
@@ -49,8 +48,9 @@
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import CardboardBoatDialog from './CardboardBoatDialog.svelte';
 	import Copyable from './Copyable.svelte';
+	import { persisted } from 'svelte-local-storage-store';
 
-	const yellowMode = localStorageStore('yellowMode', false);
+	const yellowMode = persisted('yellowMode', false);
 	let alertEl: HTMLDivElement;
 
 	const addAlertStuff = (el: HTMLDivElement) => {

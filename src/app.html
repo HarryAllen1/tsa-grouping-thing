@@ -16,27 +16,6 @@
 			content="https://grouping.jhstsa.org/favicon.png"
 		/>
 		<meta property="og:description" content="Team creation for TSA events" />
-		<script>
-			const elemHtmlClasses = document.documentElement.classList;
-			// Conditions
-			const condLocalStorageUserPrefs =
-				localStorage.getItem('modeUserPrefers') === 'false';
-			const condLocalStorageUserPrefsExists = !(
-				'modeUserPrefers' in localStorage
-			);
-			const condMatchMedia = window.matchMedia(
-				'(prefers-color-scheme: dark)',
-			).matches;
-			// Add/remove `.dark` class to HTML element
-			if (
-				condLocalStorageUserPrefs ||
-				(condLocalStorageUserPrefsExists && condMatchMedia)
-			) {
-				elemHtmlClasses.add('dark');
-			} else {
-				elemHtmlClasses.remove('dark');
-			}
-		</script>
 		%sveltekit.head%
 	</head>
 	<body class="pb-4" data-sveltekit-preload-data="hover">

@@ -14,7 +14,6 @@
 	} from '$lib';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
-	import { LightSwitch } from '$lib/components/ui/light-switch';
 	import * as Popover from '$lib/components/ui/popover';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { onAuthStateChanged } from 'firebase/auth';
@@ -26,6 +25,8 @@
 	import MessagesPopover from './MessagesPopover.svelte';
 	import Navbar from './Navbar.svelte';
 	import { selected } from './messages';
+	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
+	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
 
 	if ($page.url.hostname === 'tsa-grouping-thing.vercel.app') {
 		location.href = `https://grouping.jhstsa.org${$page.url.pathname}`;
@@ -92,52 +93,56 @@
 	{/if}
 </svelte:head>
 
-<ProgressBar class="text-blue-500" />
-<div class="flex max-w-full flex-col items-center">
-	{#await isAuthReady then}
-		<FirebaseApp {analytics} {auth} firestore={db} {storage}>
-			{#if !dev}
-				{#key $page.route.id}
-					<PageView />
-				{/key}
-			{/if}
-			<SignedIn>
-				<Navbar />
-				{#key $user}
-					<slot />
-					<div class="fixed bottom-8 right-8 hidden">
-						<Popover.Root
-							onOpenChange={(e) => {
-								if (e) $selected = null;
-							}}
-							open={panelOpen}
-						>
-							<Popover.Trigger class="relative">
-								<Button size="icon" class="size-16">
-									<MessageSquare class="size-8" />
-								</Button>
-								{#if unreadCount}
-									<div class="absolute -right-4 -top-4">
-										<Badge variant="destructive">
-											{unreadCount}
-										</Badge>
-									</div>
-								{/if}
-							</Popover.Trigger>
-							<Popover.Content class="transition-all">
-								<MessagesPopover />
-							</Popover.Content>
-						</Popover.Root>
+<ThemeWrapper>
+	<ProgressBar class="text-blue-500" />
+	<div class="flex max-w-full flex-col items-center">
+		{#await isAuthReady then}
+			<FirebaseApp {analytics} {auth} firestore={db} {storage}>
+				{#if !dev}
+					{#key $page.route.id}
+						<PageView />
+					{/key}
+				{/if}
+				<SignedIn>
+					<Navbar />
+					{#key $user}
+						<slot />
+						<div class="fixed bottom-8 right-8 hidden">
+							<Popover.Root
+								onOpenChange={(e) => {
+									if (e) $selected = null;
+								}}
+								open={panelOpen}
+							>
+								<Popover.Trigger class="relative">
+									<Button size="icon" class="size-16">
+										<MessageSquare class="size-8" />
+									</Button>
+									{#if unreadCount}
+										<div class="absolute -right-4 -top-4">
+											<Badge variant="destructive">
+												{unreadCount}
+											</Badge>
+										</div>
+									{/if}
+								</Popover.Trigger>
+								<Popover.Content class="transition-all">
+									<MessagesPopover />
+								</Popover.Content>
+							</Popover.Root>
+						</div>
+					{/key}
+				</SignedIn>
+				<SignedOut>
+					<div class="mt-8 flex flex-col items-center gap-8">
+						<ThemeCustomizer />
+						<Login />
 					</div>
-				{/key}
-			</SignedIn>
-			<SignedOut>
-				<LightSwitch class="mt-4" />
-				<Login />
-			</SignedOut>
-		</FirebaseApp>
-	{/await}
-</div>
+				</SignedOut>
+			</FirebaseApp>
+		{/await}
+	</div>
 
-<FancyConfirm />
-<Toaster />
+	<FancyConfirm />
+	<Toaster />
+</ThemeWrapper>
