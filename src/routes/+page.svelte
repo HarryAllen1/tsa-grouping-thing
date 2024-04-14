@@ -462,10 +462,10 @@
 						{/if}
 						{#each event.teams as team (team.id)}
 							<Card.Root
-								class="bg-opacity-20 {team.members.length > event.maxTeamSize ||
+								class={team.members.length > event.maxTeamSize ||
 								team.members.length < event.minTeamSize
-									? 'bg-red-300 dark:bg-red-950'
-									: 'bg-blue-500'}"
+									? 'bg-red-300 bg-opacity-20 dark:bg-red-950'
+									: 'bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5'}
 							>
 								<Card.Header>
 									<Card.Title>
