@@ -12,8 +12,6 @@
 	import { config } from './config.js';
 	import { themes } from './themes.js';
 	import { Input } from './components/ui/input';
-
-	let backgroundUrl = $config.background ?? '';
 </script>
 
 <ThemeWrapper defaultTheme="zinc">
