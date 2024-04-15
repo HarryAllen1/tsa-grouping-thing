@@ -11,6 +11,9 @@
 	import ThemeWrapper from './ThemeWrapper.svelte';
 	import { config } from './config.js';
 	import { themes } from './themes.js';
+	import { Input } from './components/ui/input';
+
+	let backgroundUrl = $config.background ?? '';
 </script>
 
 <ThemeWrapper defaultTheme="zinc">
@@ -103,6 +106,11 @@
 					Dark
 				</Button>
 			</div>
+		</div>
+		<div class="space-y-1.5">
+			<Label class="text-xs" for="bgCustom">Background</Label>
+			<Input id="bgCustom" type="url" bind:value={$config.background} />
+			<Button on:click={() => ($config.background = null)}>Clear</Button>
 		</div>
 	</div>
 </ThemeWrapper>

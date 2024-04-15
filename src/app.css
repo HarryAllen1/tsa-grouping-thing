@@ -22,7 +22,7 @@ g[aria-label='tip'] {
 	fill: theme('colors.white');
 }
 
-body.yellow {
+html body.yellow[class] {
 	--background: 64 100% 61%;
 	--foreground: 0 0% 0%;
 }
