@@ -94,7 +94,7 @@
 </svelte:head>
 
 <ThemeWrapper>
-	<ProgressBar class="text-blue-500" />
+	<ProgressBar class="text-primary" />
 	<div class="flex max-w-full flex-col items-center">
 		{#await isAuthReady then}
 			<FirebaseApp {analytics} {auth} firestore={db} {storage}>
