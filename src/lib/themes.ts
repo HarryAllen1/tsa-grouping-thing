@@ -1,5 +1,11 @@
 // https://github.com/huntabyte/shadcn-svelte/blob/main/apps/www/src/lib/registry/themes.ts
 
+const randomNumberBetweenInclusive = (lower: number, upper: number) =>
+	Math.floor(Math.random() * (upper - lower + 1) + lower);
+
+export const generateRandomHSLString = () =>
+	`${randomNumberBetweenInclusive(0, 360)} ${randomNumberBetweenInclusive(0, 100)}% ${randomNumberBetweenInclusive(0, 100)}%`;
+
 export const themes = [
 	{
 		name: 'zinc',
@@ -630,6 +636,58 @@ export const themes = [
 				border: '215 27.9% 16.9%',
 				input: '215 27.9% 16.9%',
 				ring: '263.4 70% 50.4%',
+			},
+		},
+	},
+	{
+		name: 'random',
+		label: 'Random',
+		activeColor: {
+			light: generateRandomHSLString(),
+			dark: generateRandomHSLString(),
+		},
+		cssVars: {
+			light: {
+				background: generateRandomHSLString(),
+				foreground: generateRandomHSLString(),
+				card: generateRandomHSLString(),
+				'card-foreground': generateRandomHSLString(),
+				popover: generateRandomHSLString(),
+				'popover-foreground': generateRandomHSLString(),
+				primary: generateRandomHSLString(),
+				'primary-foreground': generateRandomHSLString(),
+				secondary: generateRandomHSLString(),
+				'secondary-foreground': generateRandomHSLString(),
+				muted: generateRandomHSLString(),
+				'muted-foreground': generateRandomHSLString(),
+				accent: generateRandomHSLString(),
+				'accent-foreground': generateRandomHSLString(),
+				destructive: generateRandomHSLString(),
+				'destructive-foreground': generateRandomHSLString(),
+				border: generateRandomHSLString(),
+				input: generateRandomHSLString(),
+				ring: generateRandomHSLString(),
+			},
+			dark: {
+				background: generateRandomHSLString(),
+				foreground: generateRandomHSLString(),
+				card: generateRandomHSLString(),
+				'card-foreground': generateRandomHSLString(),
+				popover: generateRandomHSLString(),
+				'popover-foreground': generateRandomHSLString(),
+				primary: generateRandomHSLString(),
+				'primary-foreground': generateRandomHSLString(),
+				secondary: generateRandomHSLString(),
+				'secondary-foreground': generateRandomHSLString(),
+				muted: generateRandomHSLString(),
+				'muted-foreground': generateRandomHSLString(),
+				accent: generateRandomHSLString(),
+				'accent-foreground': generateRandomHSLString(),
+				destructive: generateRandomHSLString(),
+				'destructive-foreground': generateRandomHSLString(),
+				border: generateRandomHSLString(),
+				input: generateRandomHSLString(),
+				ring: generateRandomHSLString(),
 			},
 		},
 	},
