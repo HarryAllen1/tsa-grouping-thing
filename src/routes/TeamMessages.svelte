@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { db, eventsCollection, noHtmlMd, userDoc } from '$lib';
+	import { db, user, eventsCollection, noHtmlMd, userDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
@@ -157,9 +157,16 @@
 			<ChevronLeft />
 		</button>
 	{/if}
-	{team.teamName ??
-		`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
-	<Button size="icon" href="/call/{team.id}" class="hidden aspect-square">
+	<span>
+		{team.teamName ??
+			`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
+	</span>
+	<div class="flex-1"></div>
+	<Button
+		size="icon"
+		href="/call/{team.id}?uid={$user.uid}"
+		class="aspect-square"
+	>
 		<Video />
 	</Button>
 </h3>

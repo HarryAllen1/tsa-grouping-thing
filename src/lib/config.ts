@@ -11,5 +11,5 @@ type Config = {
 export const config = persisted<Config>('config', {
 	theme: 'zinc',
 	radius: 0.5,
-	background: null
+	background: null,
 });

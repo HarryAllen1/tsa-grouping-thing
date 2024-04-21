@@ -1,207 +1,100 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
-	import { db } from '$lib';
-	import { servers } from '$lib/calling';
-	import { Button } from '$lib/components/ui/button';
-	import {
-		DocumentReference,
-		doc,
-		getDoc,
-		setDoc,
-		type DocumentData,
-		collection,
-		addDoc,
-		onSnapshot,
-		CollectionReference,
-		updateDoc,
-		deleteDoc,
-		getDocs,
-	} from 'firebase/firestore';
-	import PhoneMissed from 'lucide-svelte/icons/phone-missed';
+	import { env } from '$env/dynamic/public';
 	import { onDestroy, onMount } from 'svelte';
+	import AgoraRTC, {
+		type IAgoraRTCRemoteUser,
+		type ILocalVideoTrack,
+		type ILocalAudioTrack,
+	} from 'agora-rtc-sdk-ng';
+	import type { PageData } from './$types';
 
-	const pc = new RTCPeerConnection(servers);
-	let remoteVideoEl: HTMLVideoElement;
-	let localVideoEl: HTMLVideoElement;
-	let remoteStream: MediaStream;
-	let localStream: MediaStream;
+	export let data: PageData;
 
-	const createCall = async (
-		callDocRef: DocumentReference<DocumentData, DocumentData>,
-		offerCandidates: CollectionReference<DocumentData>,
-		answerCandidates: CollectionReference<DocumentData>,
-	) => {
-		console.log('create');
+	const channel = data.teamId;
+	const uid = parseInt(data.uid);
+	const token = data.token;
+	console.log(token);
 
-		const offerDescription = await pc.createOffer();
-		await pc.setLocalDescription(offerDescription);
+	let users: IAgoraRTCRemoteUser[] = [];
+	let video: null | ILocalVideoTrack = null;
+	let audio: null | ILocalAudioTrack = null;
 
-		await setDoc(callDocRef, {
-			offer: {
-				type: offerDescription.type,
-				sdp: offerDescription.sdp,
-			},
-		});
+	let selfVideo: HTMLDivElement;
 
-		pc.addEventListener('icecandidate', (event) => {
-			if (event.candidate) addDoc(offerCandidates, event.candidate.toJSON());
-		});
+	AgoraRTC.setLogLevel(2);
+	const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
-		onSnapshot(callDocRef, (ss) => {
-			const data = ss.data();
+	const init = async () => {
+		[audio, video] = await AgoraRTC.createMicrophoneAndCameraTracks();
+		video.play(selfVideo);
 
-			if (!pc.currentRemoteDescription && data?.answer) {
-				const answerDescription = new RTCSessionDescription(data.answer);
-				pc.setRemoteDescription(answerDescription);
+		client.on('user-published', async (user, type) => {
+			if (type === 'audio') {
+				await client.subscribe(user, 'audio');
+				user.audioTrack?.play();
+			} else if (type === 'video') {
+				await client.subscribe(user, 'video');
+				users = [...users, user];
 			}
 		});
 
-		onSnapshot(answerCandidates, (ss) => {
-			ss.docChanges().forEach((change) => {
-				if (change.type === 'added') {
-					const candidate = new RTCIceCandidate(change.doc.data());
-					pc.addIceCandidate(candidate);
-				}
-			});
+		client.on('user-left', (u) => {
+			users = users.filter((user) => user.uid !== u.uid);
 		});
+
+		await client.join(env.PUBLIC_AGORA_APP_ID, channel, token, uid);
+		await client.publish([audio, video]);
 	};
 
-	const stopVideo = () => {
-		localStream?.getTracks().forEach((track) => track.stop());
-		remoteStream?.getTracks().forEach((track) => track.stop());
+	const renderVideo = (_node: any, user: IAgoraRTCRemoteUser) => {
+		user.videoTrack?.play(String(user.uid));
 	};
 
-	const joinCall = async (
-		callDocRef: DocumentReference<DocumentData, DocumentData>,
-		offerCandidates: CollectionReference<DocumentData>,
-		answerCandidates: CollectionReference<DocumentData>,
-	) => {
-		console.log('join');
-		pc.addEventListener('icecandidate', (event) => {
-			console.log('something happened');
+	const unit = 'minmax(0, 1fr) ';
+	let innerWidth = 0;
+	let innerHeight = 0;
+	$: isLandscape = innerWidth > innerHeight;
+	$: columnTemplate = isLandscape
+		? users.length > 8
+			? unit.repeat(4)
+			: users.length > 3
+				? unit.repeat(3)
+				: users.length > 0
+					? unit.repeat(2)
+					: unit
+		: users.length > 7
+			? unit.repeat(3)
+			: users.length > 1
+				? unit.repeat(2)
+				: unit;
 
-			if (event.candidate) addDoc(answerCandidates, event.candidate.toJSON());
+	onMount(init);
+	onDestroy(() => {
+		users.forEach((user) => {
+			user.videoTrack?.stop();
+			user.audioTrack?.stop();
 		});
-
-		const callData = (await getDoc(callDocRef)).data();
-
-		const offerDescription = callData?.offer;
-		await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
-
-		const answerDescription = await pc.createAnswer();
-		await pc.setLocalDescription(answerDescription);
-
-		await updateDoc(callDocRef, {
-			answer: {
-				type: answerDescription.type,
-				sdp: answerDescription.sdp,
-			},
-		});
-
-		onSnapshot(offerCandidates, (ss) => {
-			ss.docChanges().forEach((change) => {
-				if (change.type === 'added') {
-					pc.addIceCandidate(new RTCIceCandidate(change.doc.data()));
-				}
-			});
-		});
-	};
-
-	onMount(async () => {
-		localStream = await navigator.mediaDevices.getUserMedia({
-			video: {
-				width: 1280,
-				height: 720,
-			},
-			audio: true,
-			peerIdentity: 'user',
-		});
-
-		localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
-
-		if (localVideoEl) localVideoEl.srcObject = localStream;
-
-		remoteStream = new MediaStream();
-
-		// Pull tracks from remote stream, add to video stream
-		pc.addEventListener('track', (event) => {
-			event.streams[0].getTracks().forEach((track) => {
-				console.log('pulled track');
-
-				remoteStream.addTrack(track);
-			});
-		});
-
-		if (remoteVideoEl) remoteVideoEl.srcObject = remoteStream;
-
-		const callDocRef = doc(db, 'calls', $page.params.teamId);
-		const callDoc = await getDoc(callDocRef);
-		const offerCandidates = collection(
-			db,
-			'calls',
-			callDocRef.id,
-			'offerCandidates',
-		);
-		const answerCandidates = collection(
-			db,
-			'calls',
-			callDocRef.id,
-			'answerCandidates',
-		);
-		if (callDoc.exists())
-			joinCall(callDocRef, offerCandidates, answerCandidates);
-		else createCall(callDocRef, offerCandidates, answerCandidates);
+		users = [];
+		audio?.close();
+		video?.close();
+		client.leave();
+		client.removeAllListeners();
 	});
-
-	onDestroy(stopVideo);
 </script>
 
-<div class="container relative mt-8 aspect-video lg:mx-16">
-	<div class="absolute aspect-video w-full max-w-[calc(100%-4rem)] bg-black">
-		<!-- eslint-disable-next-line svelte/valid-compile -->
-		<!-- svelte-ignore a11y-media-has-caption -->
-		<video autoplay bind:this={remoteVideoEl} class="h-full w-full" />
+<svelte:window bind:innerWidth bind:innerHeight />
+
+<div class="container relative h-full min-h-96">
+	<div class="grid" style="grid-template-columns: {columnTemplate}">
+		{#each users as user (user.uid)}
+			<div class="cell">
+				<div use:renderVideo={user} class="video" id={user.uid.toString()} />
+				<p class="uid">{user.uid}</p>
+			</div>
+		{/each}
 	</div>
-	<div class="absolute bottom-16 right-12 w-[16%] bg-gray-600">
-		<video class="h-full w-full" muted autoplay bind:this={localVideoEl} />
+	<div class="absolute bottom-10 right-10">
+		<div class="aspect-video h-40 w-64" bind:this={selfVideo} />
+		<p class="uid">me</p>
 	</div>
-	<div class="absolute"></div>
-</div>
-<div class="container flex justify-center">
-	<Button
-		on:click={async () => {
-			const offerDocuments = collection(
-				db,
-				'calls',
-				$page.params.teamId,
-				'offerCandidates',
-			);
-
-			const answerDocuments = collection(
-				db,
-				'calls',
-				$page.params.teamId,
-				'answerCandidates',
-			);
-
-			[offerDocuments, answerDocuments].forEach(async (collection) => {
-				const snapshot = await getDocs(collection);
-				snapshot.forEach(async (doc) => {
-					await deleteDoc(doc.ref);
-				});
-			});
-
-			await deleteDoc(doc(db, 'calls', $page.params.teamId));
-
-			stopVideo();
-
-			goto('/');
-		}}
-		size="lg"
-		class="aspect-square p-2"
-		variant="destructive"
-	>
-		<PhoneMissed />
-	</Button>
 </div>
