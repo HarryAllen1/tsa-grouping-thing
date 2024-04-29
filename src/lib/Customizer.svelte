@@ -65,7 +65,7 @@
 		<div class="space-y-1.5">
 			<Label class="text-xs">Radius</Label>
 			<div class="grid grid-cols-5 gap-2">
-				{#each ['0', '0.3', '0.5', '0.75', '1.0'] as value, _ (value)}
+				{#each ['0', '0.3', '0.5', '0.75', '1.0'] as value (value)}
 					{@const valueFloat = Number.parseFloat(value)}
 					<Button
 						variant="outline"

@@ -1,9 +1,8 @@
 import { env } from '$env/dynamic/private';
 import { env as publicEnv } from '$env/dynamic/public';
 import { error } from '@sveltejs/kit';
-import TokenServerImport from 'agora-token';
+import { RtcRole, RtcTokenBuilder } from 'agora-token';
 import type { PageServerLoad } from './$types';
-const { RtcRole, RtcTokenBuilder } = TokenServerImport; // CJS module import
 
 export const load = (async ({ params: { teamId }, url }) => {
 	let uid = url.searchParams.get('uid');

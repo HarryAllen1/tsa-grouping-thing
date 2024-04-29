@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
-	import { onDestroy, onMount } from 'svelte';
 	import AgoraRTC, {
 		type IAgoraRTCRemoteUser,
-		type ILocalVideoTrack,
 		type ILocalAudioTrack,
+		type ILocalVideoTrack,
 	} from 'agora-rtc-sdk-ng';
+	import { onDestroy, onMount } from 'svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -46,7 +46,7 @@
 		await client.publish([audio, video]);
 	};
 
-	const renderVideo = (_node: any, user: IAgoraRTCRemoteUser) => {
+	const renderVideo = (_node: Node, user: IAgoraRTCRemoteUser) => {
 		user.videoTrack?.play(String(user.uid));
 	};
 

@@ -44,8 +44,8 @@
 	import { flip } from 'svelte/animate';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
-	import UserCard from './UserCard.svelte';
 	import CardboardBoatDialog from '../../CardboardBoatDialog.svelte';
+	import UserCard from './UserCard.svelte';
 
 	export let team: Team;
 	export let event: EventDoc;

@@ -11,7 +11,7 @@
 				(acc, curr): { name: string; value: number }[] =>
 					curr.tShirtSize
 						? acc.map((d) => {
-								if (d.name === curr.tShirtSize?.slice(2) ?? '') {
+								if (d.name === (curr.tShirtSize?.slice(2) ?? '')) {
 									return { name: d.name, value: d.value + 1 };
 								}
 								return d;

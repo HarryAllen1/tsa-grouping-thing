@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { db, user, eventsCollection, noHtmlMd, userDoc } from '$lib';
+	import { db, eventsCollection, noHtmlMd, user, userDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';

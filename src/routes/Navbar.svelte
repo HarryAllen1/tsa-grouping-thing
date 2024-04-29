@@ -8,6 +8,7 @@
 	import { removeRef, sleep } from '$lib/utils';
 	import { signOut } from 'firebase/auth';
 	import { collection, getDocs } from 'firebase/firestore';
+	import BookOpenText from 'lucide-svelte/icons/book-open-text';
 	import Download from 'lucide-svelte/icons/download';
 	import LogOut from 'lucide-svelte/icons/log-out';
 	import { docStore, userStore } from 'sveltefire';
@@ -55,10 +56,6 @@
 					{
 						title: 'Admin Results',
 						href: '/admin/results',
-					},
-					{
-						title: 'Admin Logs',
-						href: '/admin/logs',
 					},
 				]
 			: [],
@@ -169,6 +166,14 @@
 							</DropdownMenu.Item>
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
+					<Button
+						size="icon"
+						target="_blank"
+						variant="ghost"
+						href="https://docs.grouping.jhstsa.org/"
+					>
+						<BookOpenText />
+					</Button>
 				{/if}
 				<ThemeCustomizer />
 				<Button

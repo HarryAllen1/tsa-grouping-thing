@@ -1,5 +1,5 @@
 import typography from '@tailwindcss/typography';
-import { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 import { fontFamily } from 'tailwindcss/defaultTheme';
 
 const config: Config = {
