@@ -26,6 +26,9 @@ export default [
 				parser: ts.parser,
 			},
 		},
+		rules: {
+			'svelte/valid-compile': 'off',
+		},
 	},
 	{
 		ignores: [

@@ -28,6 +28,8 @@
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
 
+	let { children } = $props();
+
 	if ($page.url.hostname === 'tsa-grouping-thing.vercel.app') {
 		location.href = `https://grouping.jhstsa.org${$page.url.pathname}`;
 	}
@@ -41,15 +43,13 @@
 		}
 	});
 
-	let panelOpen = false;
+	let panelOpen = $state(false);
 
 	onNavigate(() => {
 		panelOpen = false;
 	});
 
-	$: $page.url.pathname, (panelOpen = false);
-
-	$: teams =
+	let teams = $derived(
 		($eventsCollection ?? [])
 			.filter((e) =>
 				e.teams.filter((t) =>
@@ -62,15 +62,18 @@
 				e.teams
 					.filter((t) => t.members.find((m) => m.email === $user.email))
 					.map((t) => ({ ...t, event: e })),
-			) ?? [];
+			) ?? [],
+	);
 
-	$: unreadCount = teams.reduce(
-		(acc, team) =>
-			acc +
-			(team.messages?.filter(
-				(m) => !m.readBy.find((r) => r.email === $user.email),
-			).length ?? 0),
-		0,
+	let unreadCount = $derived(
+		teams.reduce(
+			(acc, team) =>
+				acc +
+				(team.messages?.filter(
+					(m) => !m.readBy.find((r) => r.email === $user.email),
+				).length ?? 0),
+			0,
+		),
 	);
 	onMount(() => unsub);
 </script>
@@ -106,7 +109,7 @@
 				<SignedIn>
 					<Navbar />
 					{#key $user}
-						<slot />
+						{@render children()}
 						<div class="fixed bottom-8 right-8 hidden">
 							<Popover.Root
 								onOpenChange={(e) => {

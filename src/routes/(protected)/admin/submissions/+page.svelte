@@ -19,9 +19,9 @@
 	import AddResultDialog from '../results/AddResultDialog.svelte';
 	import RotatingImage from './RotatingImage.svelte';
 
-	let hideEmpty = false;
+	let hideEmpty = $state(false);
 
-	let editing = '';
+	let editing = $state('');
 	const descriptions: Record<string, string> = {};
 
 	const nth = (n: number) =>
@@ -40,7 +40,7 @@
 		<span>Hide teams without submissions</span>
 	</Label>
 
-	{#each $eventsCollection as event}
+	{#each $eventsCollection.filter((e) => !['*Rooming', '*Cardboard Boat'].includes(e.event)) as event}
 		<div class="my-4">
 			<h2
 				class="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
@@ -175,7 +175,7 @@
 																		<Dialog.Content
 																			class="grid max-h-full max-w-full place-items-center p-4"
 																		>
-																			<!-- svelte-ignore a11y-media-has-caption -->
+																			<!-- svelte-ignore a11y_media_has_caption -->
 																			<video
 																				controls
 																				class="max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)]"

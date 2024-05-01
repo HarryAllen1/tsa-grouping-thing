@@ -6,11 +6,11 @@
 	import { Label } from '$lib/components/ui/label';
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
-	import { derived } from 'svelte/store';
+	import { derived as derivedStore } from 'svelte/store';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
 	const actualUser = userStore(auth);
-	const user = derived(actualUser, ($u) => ({
+	const user = derivedStore(actualUser, ($u) => ({
 		...$u,
 		email: decodeURIComponent($page.params.email),
 	}));
@@ -18,15 +18,17 @@
 	const userDoc = docStore<UserDoc>(db, `users/${$user.email}`);
 	const events = collectionStore<EventDoc>(db, 'events');
 
-	$: eventMap = $events
-		.filter((e) => e.event !== '*Rooming')
-		.reduce(
-			(acc, curr) => ({
-				...acc,
-				[curr.event]: $userDoc?.events.includes(curr.event) ?? false,
-			}),
-			{} as { [event: string]: boolean },
-		);
+	let eventMap = $derived(
+		$events
+			.filter((e) => e.event !== '*Rooming')
+			.reduce(
+				(acc, curr) => ({
+					...acc,
+					[curr.event]: $userDoc?.events.includes(curr.event) ?? false,
+				}),
+				{} as { [event: string]: boolean },
+			),
+	);
 </script>
 
 <div class="container mt-6">

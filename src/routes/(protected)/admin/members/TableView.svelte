@@ -7,7 +7,7 @@
 	import { doc, setDoc } from 'firebase/firestore';
 	import UserCard from '../UserCard.svelte';
 
-	export let results: UserDoc[];
+	let { results }: { results: UserDoc[] } = $props();
 </script>
 
 <Table.Root>

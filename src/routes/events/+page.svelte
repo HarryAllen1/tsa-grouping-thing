@@ -12,15 +12,17 @@
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 	const events = collectionStore<EventDoc>(db, 'events');
 
-	$: eventMap = $events
-		.filter((e) => !e.hideInSignup)
-		.reduce(
-			(acc, curr) => ({
-				...acc,
-				[curr.event]: $userDoc?.events.includes(curr.event) ?? false,
-			}),
-			{} as { [event: string]: boolean },
-		);
+	let eventMap = $derived(
+		$events
+			.filter((e) => !e.hideInSignup)
+			.reduce(
+				(acc, curr) => ({
+					...acc,
+					[curr.event]: $userDoc?.events.includes(curr.event) ?? false,
+				}),
+				{} as { [event: string]: boolean },
+			),
+	);
 </script>
 
 <div class="container mt-6">

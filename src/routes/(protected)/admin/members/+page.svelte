@@ -12,48 +12,37 @@
 	import MemberGridCard from './MemberGridCard.svelte';
 	import TableView from './TableView.svelte';
 
-	let search = '';
-	let hidePeopleWithoutEvents = false;
-	let sortBy = {
+	let search = $state('');
+	let hidePeopleWithoutEvents = $state(false);
+	let sortBy = $state({
 		value: 'firstName',
 		label: 'First Name',
-	};
-	let view = {
+	});
+	let view = $state({
 		value: 'grid',
 		label: 'Grid',
-	};
-	let showRandomSwitch: {
+	});
+	let showRandomSwitch = $state<{
 		label: string;
 		value: 'null' | 'false' | 'true';
-	} = {
+	}>({
 		label: 'everybody',
 		value: 'null',
-	};
-
-	$: fuse = new Fuse($allUsersCollection, {
-		keys: ['name', 'email', 'grade', 'events', 'nationalId', 'washingtonId'],
-		threshold: 0.2,
 	});
-	$: results =
+
+	let fuse = $derived(
+		new Fuse($allUsersCollection, {
+			keys: ['name', 'email', 'grade', 'events', 'nationalId', 'washingtonId'],
+			threshold: 0.2,
+		}),
+	);
+	let results = $derived(
 		search === ''
 			? $allUsersCollection
 					.toSorted((a, b) => a.name.localeCompare(b.name))
 					.filter((u) => !hidePeopleWithoutEvents || u.events.length > 0)
-			: fuse.search(search).map((r) => r.item);
-
-	const valuesMap: Record<string, Record<string, number | undefined>> = {};
-
-	let updated = false;
-	allUsersCollection.subscribe((users) => {
-		if (updated || users.length < 2) return;
-		updated = true;
-		users.forEach((user) => {
-			valuesMap[user.email] = {
-				nationalId: user.nationalId,
-				washingtonId: user.washingtonId,
-			};
-		});
-	});
+			: fuse.search(search).map((r) => r.item),
+	);
 </script>
 
 <div class="container">
@@ -85,7 +74,7 @@
 			size="icon"
 			on:click={() => {
 				alert(
-					'Make sure to go look at this file in Excel and ensure that all information is correct and remove any uneeded rows before submitting.',
+					'Make sure to go look at this file in Excel and ensure that all information is correct and remove any unnecessary rows before submitting.',
 				);
 				const csv = csvFormat(
 					$allUsersCollection.map((u) => ({

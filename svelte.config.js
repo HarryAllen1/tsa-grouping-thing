@@ -15,6 +15,18 @@ const config = {
 			runtime: 'nodejs20.x',
 		}),
 	},
+	vitePlugin: {
+		/**
+		 * @param {import('svelte/compiler').Warning} warning
+		 * @param {(warning: import('svelte/compiler').Warning) => void} defaultHandler
+		 */
+		onwarn: (warning, defaultHandler) => {
+			// ignore for now until migration tool becomes available
+			if (warning.code === 'element_invalid_self_closing_tag') return;
+
+			defaultHandler(warning);
+		},
+	},
 };
 
 export default config;

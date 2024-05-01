@@ -6,8 +6,8 @@
 	import { db } from '$lib';
 	import { onMount } from 'svelte';
 
-	let open = false;
-	let alert = '';
+	let open = $state(false);
+	let alert = $state('');
 
 	onMount(async () => {
 		alert = await getDoc(doc(db, 'settings', 'settings')).then(

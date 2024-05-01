@@ -10,8 +10,7 @@
 	import { doc, setDoc } from 'firebase/firestore';
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
 
-	export let user: UserDoc;
-	export let show = true;
+	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 
 	let hash = Math.random().toString(36).substring(7);
 	let values = {

@@ -20,10 +20,17 @@
 	import TeamCard from './TeamCard.svelte';
 	import UserCard from './UserCard.svelte';
 
-	export let hidden: boolean;
-	export let event: EventData;
-	export let eventData: EventData[];
-	export let changeSearch: (s: string) => void;
+	let {
+		hidden,
+		event,
+		eventData,
+		changeSearch,
+	}: {
+		hidden: boolean;
+		event: EventData;
+		eventData: EventData[];
+		changeSearch: (s: string) => void;
+	} = $props();
 
 	const reallyStupidFunction = (arr: unknown[]) =>
 		arr as {
@@ -43,7 +50,8 @@
 					event.members.map((m) => m.name),
 				).length === 0,
 		);
-	const submissionDescriptionElementMap: Record<string, Textarea> = {};
+	let submissionDescription = $state(event.submissionDescription ?? '');
+	let submissionDialogOpen = $state(false);
 </script>
 
 <Card.Root class={hidden ? 'hidden' : ''}>
@@ -168,7 +176,7 @@
 						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						{@html md.render(event.submissionDescription ?? '(none)')}
 					</p>
-					<Dialog.Root>
+					<Dialog.Root bind:open={submissionDialogOpen}>
 						<Dialog.Trigger>
 							<Button>Edit</Button>
 						</Dialog.Trigger>
@@ -178,8 +186,7 @@
 							<Textarea
 								placeholder="Submission description"
 								class="w-full"
-								value={event.submissionDescription}
-								bind:this={submissionDescriptionElementMap[event.event]}
+								bind:value={submissionDescription}
 							/>
 							<Dialog.Footer>
 								<Button
@@ -187,9 +194,7 @@
 										setDoc(
 											doc(db, 'events', event.event),
 											{
-												submissionDescription:
-													submissionDescriptionElementMap[event.event]?.value ??
-													'',
+												submissionDescription: submissionDescription ?? '',
 												lastUpdatedBy: $user?.email ?? '',
 											},
 											{
@@ -197,10 +202,7 @@
 											},
 										);
 
-										const el = document.querySelector(
-											'[data-melt-dialog-close]',
-										);
-										if (el instanceof HTMLButtonElement) el.click();
+										submissionDialogOpen = false;
 									}}
 								>
 									Save
@@ -332,14 +334,12 @@
 						<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 							{#each nonOverlappingEvents(event) as e (e.event)}
 								<li>
-									<!-- svelte-ignore a11y-invalid-attribute -->
-									<a
-										href="#"
+									<button
 										class="underline"
-										on:click={() => changeSearch(e.event)}
+										onclick={() => changeSearch(e.event)}
 									>
 										{e.event}
-									</a>
+									</button>
 								</li>
 							{/each}
 						</ul>

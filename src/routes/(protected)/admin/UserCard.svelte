@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { UserDoc } from '$lib';
 
-	export let user: UserDoc;
+	let { user }: { user: UserDoc } = $props();
 </script>
 
 <div class="space-y-1">

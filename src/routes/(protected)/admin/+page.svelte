@@ -23,32 +23,35 @@
 
 	const user = userStore(auth);
 
-	let search = decodeURIComponent($page.url.searchParams.get('q') ?? '');
+	let search = $state(
+		decodeURIComponent($page.url.searchParams.get('q') ?? ''),
+	);
 
 	const changeSearch = (s: string) => (search = s);
 
-	let eventData: EventData[] = [];
-	$: eventData = $eventsCollection.length
-		? $eventsCollection
-				.map((e) => {
-					const allMembers =
-						$allUsersCollection?.filter((m) => m.events.includes(e.event)) ??
-						[];
-					return {
-						...e,
-						members: allMembers.map((m) => ({
-							name: m.name,
-							email: m.email,
-						})),
-						teamNumbers: e.teams.map((t) => `2082-${t.teamNumber}`),
-						waId: allMembers.map((m) => m.washingtonId).filter((m) => m),
-					};
-				})
-				.sort((a, b) => a.event.localeCompare(b.event))
-		: [];
+	let eventData: EventData[] = $derived(
+		$eventsCollection.length
+			? $eventsCollection
+					.map((e) => {
+						const allMembers =
+							$allUsersCollection?.filter((m) => m.events.includes(e.event)) ??
+							[];
+						return {
+							...e,
+							members: allMembers.map((m) => ({
+								name: m.name,
+								email: m.email,
+							})),
+							teamNumbers: e.teams.map((t) => `2082-${t.teamNumber}`),
+							waId: allMembers.map((m) => m.washingtonId).filter((m) => m),
+						};
+					})
+					.sort((a, b) => a.event.localeCompare(b.event))
+			: [],
+	);
 
-	let shouldHideIndividualEvents = false;
-	let onlyShowOverflown = false;
+	let shouldHideIndividualEvents = $state(false);
+	let onlyShowOverflown = $state(false);
 
 	const fuseKeys = {
 		event: true,
@@ -57,20 +60,23 @@
 		teamNumbers: true,
 	};
 	let threshold = 0.2;
-	$: fuse = new Fuse(
-		eventData.map((e) => ({ ...e, members: e.members.map((m) => m.name) })),
-		{
-			keys: Object.entries(fuseKeys)
-				.filter(([, value]) => value)
-				.map(([key]) => key),
-			threshold,
-		},
+	let fuse = $derived(
+		new Fuse(
+			eventData.map((e) => ({ ...e, members: e.members.map((m) => m.name) })),
+			{
+				keys: Object.entries(fuseKeys)
+					.filter(([, value]) => value)
+					.map(([key]) => key),
+				threshold,
+			},
+		),
 	);
-	$: signedUpEvents = eventData;
-	$: eventResults =
+	let signedUpEvents = $derived(eventData);
+	let eventResults = $derived(
 		search === ''
 			? eventData.map((r) => r.event)
-			: fuse.search(search).map((r) => r.item.event);
+			: fuse.search(search).map((r) => r.item.event),
+	);
 
 	const newEventStuff = {
 		event: '',
@@ -80,7 +86,7 @@
 		locked: false,
 	};
 
-	let newEventDialogOpen = false;
+	let newEventDialogOpen = $state(false);
 </script>
 
 <svelte:window
@@ -138,7 +144,8 @@
 				<Dialog.Title>Create new event</Dialog.Title>
 				<form
 					class="flex flex-col gap-4"
-					on:submit|preventDefault={async () => {
+					onsubmit={async (e) => {
+						e.preventDefault();
 						newEventStuff.maxTeamSize = Number(newEventStuff.maxTeamSize);
 						newEventStuff.minTeamSize = Number(newEventStuff.minTeamSize);
 						await setDoc(doc(db, 'events', newEventStuff.event), {

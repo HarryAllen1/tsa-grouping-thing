@@ -3,5 +3,8 @@
 	"typescript.preferences.autoImportFileExcludePatterns": [
 		"/src/lib/**/*",
 		"/src/lib/components"
-	]
+	],
+	"svelte.plugin.svelte.compilerWarnings": {
+		"element_invalid_self_closing_tag": "ignore"
+	}
 }

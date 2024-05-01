@@ -42,30 +42,28 @@
 	} from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { flip } from 'svelte/animate';
-	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import CardboardBoatDialog from '../../CardboardBoatDialog.svelte';
 	import UserCard from './UserCard.svelte';
 
-	export let team: Team;
-	export let event: EventDoc;
+	let { team, event }: { team: Team; event: EventDoc } = $props();
 
-	let submissionsFileUpload: HTMLInputElement;
-	const filesToUpload = writable<File[]>([]);
+	let submissionsFileUpload = $state<HTMLInputElement>();
+	let filesToUpload = $state<File[]>([]);
 
-	let dummyVariableToRerender = 0;
+	let dummyVariableToRerender = $state(0);
 	const updateStorageList = () => {
 		dummyVariableToRerender++;
 		return '';
 	};
 	const filterSubmissions = (submission: File) => {
-		$filesToUpload = $filesToUpload.filter((f) => f !== submission);
+		filesToUpload = filesToUpload.filter((f) => f !== submission);
 		return '';
 	};
 
-	const openTeamNumberDialogs: Record<string, boolean> = {};
+	let teamDialogOpen = $state(false);
 
-	let currentDropzone = '';
+	let dropping = $state(false);
 
 	const entryIsFile = (entry: FileSystemEntry): entry is FileSystemFileEntry =>
 		entry.isFile;
@@ -75,7 +73,7 @@
 
 	const handleFileDrop = (e: DragEvent, event: string, team: string) => {
 		e.preventDefault();
-		currentDropzone = '';
+		dropping = false;
 		toast.promise(
 			async () =>
 				new Promise((res, rej) => {
@@ -134,16 +132,17 @@
 </script>
 
 <Card.Root
-	on:drop={(e) => {
-		handleFileDrop(e, event.event, team.id);
-	}}
-	on:dragover={(e) => {
+	ondrop={(e) => {
 		e.preventDefault();
-		currentDropzone = team.id;
+		handleFileDrop(e as unknown as DragEvent, event.event, team.id);
 	}}
-	on:dragleave={(e) => {
+	ondragover={(e) => {
 		e.preventDefault();
-		currentDropzone = '';
+		dropping = true;
+	}}
+	ondragleave={(e) => {
+		e.preventDefault();
+		dropping = false;
 	}}
 	class="{team.members.length > event.maxTeamSize ||
 	team.members.length < event.minTeamSize
@@ -152,7 +151,7 @@
 			? 'bg-green-300 dark:bg-green-950'
 			: 'bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5'} relative"
 >
-	{#if currentDropzone === team.id}
+	{#if dropping}
 		<div
 			class="pointer-events-none absolute z-50 flex h-full w-full items-center justify-center rounded-md border-2 border-dashed bg-black/20 p-4 py-8"
 		>
@@ -172,7 +171,7 @@
 			{:else}
 				Team 2082-{team.teamNumber}
 			{/if}
-			<Dialog.Root bind:open={openTeamNumberDialogs[team.id]}>
+			<Dialog.Root bind:open={teamDialogOpen}>
 				<Dialog.Trigger>
 					<Button>Edit</Button>
 				</Dialog.Trigger>
@@ -209,7 +208,7 @@
 											merge: true,
 										},
 									);
-									openTeamNumberDialogs[team.id] = false;
+									teamDialogOpen = false;
 								}
 							}}
 						>
@@ -353,31 +352,32 @@
 							</Button>
 							<ul>
 								{#each team.members as teamMember (teamMember.email)}
-									<!-- svelte-ignore a11y-click-events-have-key-events -->
-									<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-									<li
-										class="cursor-pointer"
-										on:click={async () => {
-											team.teamCaptain = teamMember?.email ?? '';
-											team.lastUpdatedBy = $user?.email ?? '';
-											team.lastUpdatedTime = new Timestamp(
-												Date.now() / 1000,
-												0,
-											);
-											await setDoc(
-												doc(db, 'events', event.event ?? ''),
-												{
-													teams: event.teams,
-													lastUpdatedBy: $user?.email ?? '',
-												},
-												{
-													merge: true,
-												},
-											);
-										}}
-									>
+									<li>
 										<HoverCard.Root>
-											<HoverCard.Trigger>{teamMember.name}</HoverCard.Trigger>
+											<HoverCard.Trigger>
+												<button
+													onclick={async () => {
+														team.teamCaptain = teamMember?.email ?? '';
+														team.lastUpdatedBy = $user?.email ?? '';
+														team.lastUpdatedTime = new Timestamp(
+															Date.now() / 1000,
+															0,
+														);
+														await setDoc(
+															doc(db, 'events', event.event ?? ''),
+															{
+																teams: event.teams,
+																lastUpdatedBy: $user?.email ?? '',
+															},
+															{
+																merge: true,
+															},
+														);
+													}}
+												>
+													{teamMember.name}
+												</button>
+											</HoverCard.Trigger>
 											<HoverCard.Content>
 												<UserCard
 													user={$allUsersCollection.find(
@@ -456,7 +456,7 @@
 											</div>
 										{/if}
 										<ul>
-											{#each [...(list?.items ?? []), ...$filesToUpload] as submission (submission instanceof File ? submission.webkitRelativePath : submission.fullPath)}
+											{#each [...(list?.items ?? []), ...filesToUpload] as submission (submission instanceof File ? submission.webkitRelativePath : submission.fullPath)}
 												<li class="flex w-full flex-col items-center">
 													{#if submission instanceof File}
 														<UploadTask
@@ -513,13 +513,13 @@
 										</ul>
 										<Button
 											class="mt-4"
-											on:click={() => submissionsFileUpload.click()}
+											on:click={() => submissionsFileUpload?.click()}
 										>
 											Upload
 										</Button>
 										<input
 											bind:this={submissionsFileUpload}
-											on:change={(e) => {
+											onchange={(e) => {
 												if (e.target instanceof HTMLInputElement) {
 													if (!e.target.files?.length) return;
 													const files = [...e.target.files];
@@ -533,8 +533,7 @@
 															continue;
 														}
 
-														$filesToUpload.push(file);
-														$filesToUpload = $filesToUpload;
+														filesToUpload.push(file);
 													}
 												}
 											}}
@@ -762,7 +761,7 @@
 								<p>Loading...</p>
 							{:else}
 								<ul>
-									{#each [...(list?.items ?? []), ...($filesToUpload[0] ? [$filesToUpload[0]] : [])] as file}
+									{#each [...(list?.items ?? []), ...(filesToUpload[0] ? [filesToUpload[0]] : [])] as file}
 										<li class="flex w-full flex-col items-center">
 											{#if file instanceof File}
 												<UploadTask
@@ -828,7 +827,7 @@
 								</Button>
 								<input
 									id={hash}
-									on:change={(e) => {
+									onchange={(e) => {
 										if (e.target instanceof HTMLInputElement) {
 											if (!e.target.files?.length) return;
 											const files = [...e.target.files];
@@ -842,8 +841,7 @@
 													continue;
 												}
 
-												$filesToUpload.push(file);
-												$filesToUpload = $filesToUpload;
+												filesToUpload.push(file);
 											}
 										}
 									}}

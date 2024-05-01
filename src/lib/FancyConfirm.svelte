@@ -5,8 +5,8 @@
 	const open = writable(false);
 	const options = writable<[string, boolean][]>([]);
 
-	let alertTitle = 'test';
-	let alertMessage = 'test';
+	let alertTitle = $state('test');
+	let alertMessage = $state('test');
 
 	const result = writable<boolean | null>(null);
 

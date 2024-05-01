@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
+import type { User } from 'firebase/auth';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -29,14 +30,16 @@ export const flyAndScale = (
 		const valueB = percentage * (maxB - minB) + minB;
 		return valueB;
 	};
+
 	const styleToString = (
 		style: Record<string, number | string | undefined>,
 	): string => {
 		return Object.keys(style).reduce((str, key) => {
 			if (style[key] === undefined) return str;
-			return str + key + ':' + style[key] + ';';
+			return str + `${key}:${style[key]};`;
 		}, '');
 	};
+
 	return {
 		duration: params.duration ?? 200,
 		delay: 0,
@@ -76,7 +79,7 @@ export const removeRef = (obj: Record<string, any>) => {
 	return newObj;
 };
 
-const mobileTabletCheck = function () {
+const mobileTabletCheck = () => {
 	let check = false;
 	(function (a) {
 		if (

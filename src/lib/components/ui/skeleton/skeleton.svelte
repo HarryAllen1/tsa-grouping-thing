@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
 
 	type $$Props = HTMLAttributes<HTMLDivElement>;
 
@@ -11,4 +11,4 @@
 <div
 	class={cn('animate-pulse rounded-md bg-muted', className)}
 	{...$$restProps}
-/>
+></div>
