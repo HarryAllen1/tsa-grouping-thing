@@ -32,12 +32,6 @@
 		changeSearch: (s: string) => void;
 	} = $props();
 
-	const reallyStupidFunction = (arr: unknown[]) =>
-		arr as {
-			name: string;
-			email: string;
-		}[];
-
 	const intersect = <T,>(a: T[], b: T[]): T[] => {
 		const setB = new Set(b);
 		return [...new Set(a)].filter((x) => setB.has(x));
@@ -214,7 +208,10 @@
 			{/if}
 			{@const peopleInTeams = event.teams.reduce(
 				(acc, curr) => [...acc, ...curr.members],
-				reallyStupidFunction([]),
+				[] as {
+			name: string;
+			email: string;
+		}[],
 			)}
 			{@const peopleNotInTeams =
 				event.event === '*Rooming'
@@ -399,7 +396,10 @@
 					.filter((t) => t.members.length < event.minTeamSize)
 					.reduce(
 						(acc, curr) => [...acc, ...curr.members],
-						reallyStupidFunction([]),
+						[] as {
+							name: string;
+							email: string;
+						}[],
 					)}
 				<Collapsible.Root>
 					<Collapsible.Trigger asChild let:builder>
