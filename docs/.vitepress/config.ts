@@ -62,6 +62,10 @@ export default defineConfig({
 						link: '/admin/rooming',
 					},
 					{
+						text: 'Cardboard Boat',
+						link: '/admin/cardboard-boat',
+					},
+					{
 						text: 'Logs',
 						link: '/admin/logs',
 					},

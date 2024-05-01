@@ -58,6 +58,6 @@ If you find out that a member's name is incorrect, there is no way to change the
 
 Only after has National membership been submitted can members be added to any State level event.
 
-To register for Washington events, head to their [registration page](https://www.registermychapter.com/tsa/wa/Register.asp), and log in with the same username and password. The, you'll need to manually add every single person you just added to the Nationals page to the State page. There is no way to automatically do this. Have fun!
+To register for Washington events, head to their [registration page](https://www.registermychapter.com/tsa/wa/Register.asp), and log in with the same username and password. Then, you'll need to manually add every single person you just added to the Nationals page to the State page. There is no way to automatically do this. Have fun!
 
 If you need to check for errors in the registration (like exceeding event limits), click the "View Registration" button at the bottom of the page.
