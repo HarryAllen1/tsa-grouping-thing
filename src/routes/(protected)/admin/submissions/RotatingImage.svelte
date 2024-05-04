@@ -4,21 +4,24 @@
 	import { RotateCw } from 'lucide-svelte';
 	import type { HTMLImgAttributes } from 'svelte/elements';
 
-	export let clickableImage = false;
-	let className: $$Props['class'] = undefined;
-	export { className as class };
-
-	type $$Props = HTMLImgAttributes & {
+	let {
+		clickableImage = false,
+		class: className,
+		src,
+		...restProps
+	}: HTMLImgAttributes & {
 		clickableImage?: boolean;
-	};
+	} = $props();
 
 	let rotation = 0;
-	$: classes = cn(
-		rotation % 4 === 1 && 'rotate-90',
-		rotation % 4 === 2 && 'rotate-180',
-		rotation % 4 === 3 && '-rotate-90',
-		'transition-transform',
-		className,
+	let classes = $derived(
+		cn(
+			rotation % 4 === 1 && 'rotate-90',
+			rotation % 4 === 2 && 'rotate-180',
+			rotation % 4 === 3 && '-rotate-90',
+			'transition-transform',
+			className,
+		),
 	);
 </script>
 
@@ -27,11 +30,9 @@
 </Button>
 
 {#if clickableImage}
-	<a href={$$restProps.src} target="_blank" rel="noopener noreferrer">
-		<!-- svelte-ignore a11y-missing-attribute -->
-		<img {...$$restProps} class={classes} />
+	<a href={src} target="_blank" rel="noopener noreferrer">
+		<img {...restProps} class={classes} />
 	</a>
 {:else}
-	<!-- svelte-ignore a11y-missing-attribute -->
-	<img {...$$restProps} class={classes} />
+	<img {...restProps} class={classes} />
 {/if}

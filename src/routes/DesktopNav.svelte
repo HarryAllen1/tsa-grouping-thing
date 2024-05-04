@@ -4,12 +4,16 @@
 	import { cn } from '$lib/utils';
 	import { ChevronUp } from 'lucide-svelte';
 
-	export let navItems: (
-		| { title: string; href: string }
-		| { title: string; href: string }[]
-	)[];
+	let {
+		navItems,
+	}: {
+		navItems: (
+			| { title: string; href: string }
+			| { title: string; href: string }[]
+		)[];
+	} = $props();
 
-	let open = false;
+	let open = $state(false);
 </script>
 
 <div class="mr-4 hidden lg:flex">

@@ -3,7 +3,7 @@
 	import { Copy } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 
-	export let text: string;
+	let { text }: { text: string } = $props();
 </script>
 
 <Button

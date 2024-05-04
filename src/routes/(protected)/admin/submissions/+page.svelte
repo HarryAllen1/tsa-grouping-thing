@@ -280,17 +280,25 @@
 											{#if event.results && team.members
 													.map((m) => m.email)
 													.filter((m) => resultMemberSet.has(m)).length}
-												<AddResultDialog {event} editing id={team.id}>
-													<Button slot="edit">Edit result</Button>
-												</AddResultDialog>
-											{:else}
+												{#snippet edit()}
+													<Button>Edit result</Button>
+												{/snippet}
 												<AddResultDialog
+													{edit}
+													{event}
+													editing
+													id={team.id}
+												></AddResultDialog>
+											{:else}
+												{#snippet add()}
+													<Button>Add result</Button>
+												{/snippet}
+												<AddResultDialog
+													{add}
 													members={team.members}
 													id={team.id}
 													{event}
-												>
-													<Button slot="add">Add result</Button>
-												</AddResultDialog>
+												></AddResultDialog>
 											{/if}
 										{/if}
 									{/key}

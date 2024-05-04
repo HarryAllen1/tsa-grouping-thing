@@ -17,53 +17,72 @@
 	import { doc, setDoc } from 'firebase/firestore';
 	import { deleteObject } from 'firebase/storage';
 	import { Check, ChevronsUpDown, Minus, Pencil, X } from 'lucide-svelte';
-	import { tick } from 'svelte';
+	import { tick, type Snippet } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 
-	export let event: EventDoc;
-	export let editing = false;
-	export let id = crypto.randomUUID();
-	export let onOpenChange: ((open: boolean) => void) | undefined = undefined;
-	export let members: BasicUser[] | undefined = undefined;
+	let {
+		event,
+		editing = false,
+		edit,
+		add,
+		id = crypto.randomUUID(),
+		onOpenChange = undefined,
+		members = undefined,
+	}: {
+		edit?: Snippet;
+		add?: Snippet;
+		event: EventDoc;
+		editing?: boolean;
+		id?: string;
+		onOpenChange?: ((open: boolean) => void) | undefined;
+		members?: BasicUser[] | undefined;
+	} = $props();
 
-	let open = false;
+	let open = $state(false);
 
 	const existingResults = event.results?.find((r) => r.id === id);
-	let note = editing ? existingResults?.note ?? '' : '';
-	let newPlace =
+	let note = $state(editing ? existingResults?.note ?? '' : '');
+	let newPlace = $state(
 		editing && existingResults
 			? (event.results?.indexOf(existingResults) ?? 0) + 1
-			: (event?.results?.length ?? 0) + 1;
+			: (event?.results?.length ?? 0) + 1,
+	);
 
-	let newMembers: BasicUser[];
-	$: newMembers = members ?? (editing ? existingResults?.members ?? [] : []);
-	let fileInput: HTMLInputElement;
+	let newMembers = $state(
+		members ?? (editing ? existingResults?.members ?? [] : []),
+	);
+	let fileInput = $state<HTMLInputElement>();
 	const filesToUpload = writable<File[]>([]);
 
-	$: comboboxUsers = $allUsersCollection.map((u) => ({
-		value: `${u.email}/${u.name}`,
-		label: u.name,
-	}));
+	let comboboxUsers = $derived(
+		$allUsersCollection.map((u) => ({
+			value: `${u.email}/${u.name}`,
+			label: u.name,
+		})),
+	);
 
-	let comboboxOpen = false;
-	let comboboxValue = '';
+	let comboboxOpen = $state(false);
+	let comboboxValue = $state('');
 
-	$: comboboxSelectedValue =
+	let comboboxSelectedValue = $derived(
 		comboboxUsers.find((f) => f.value === comboboxValue)?.label ??
-		'Select a member...';
+			'Select a member...',
+	);
 
-	$: if (comboboxValue) {
-		const newMember = comboboxUsers.find((f) => f.value === comboboxValue);
-		newMembers = [
-			...newMembers,
-			{
-				name: newMember?.label ?? '',
-				email: newMember?.value ?? '',
-			},
-		];
-		comboboxValue = '';
-	}
+	$effect(() => {
+		if (comboboxValue) {
+			const newMember = comboboxUsers.find((f) => f.value === comboboxValue);
+			newMembers = [
+				...newMembers,
+				{
+					name: newMember?.label ?? '',
+					email: newMember?.value ?? '',
+				},
+			];
+			comboboxValue = '';
+		}
+	});
 
 	function closeAndFocusTrigger(triggerId: string) {
 		comboboxOpen = false;
@@ -72,7 +91,7 @@
 		});
 	}
 
-	let dummyVariableToRerender = 0;
+	let dummyVariableToRerender = $state(0);
 	const updateStorageList = () => {
 		dummyVariableToRerender++;
 		return '';
@@ -91,15 +110,15 @@
 >
 	<Dialog.Trigger>
 		{#if editing}
-			{#if $$slots.edit}
-				<slot name="edit" />
+			{#if edit}
+				{@render edit()}
 			{:else}
 				<Button variant="ghost" size="icon" class="h-6">
 					<Pencil />
 				</Button>
 			{/if}
-		{:else if $$slots.add}
-			<slot name="add" />
+		{:else if add}
+			{@render add()}
 		{:else}
 			<Button id={id.replaceAll('-', '').replace(/[0-9]/, '')}>Add</Button>
 		{/if}
@@ -216,7 +235,7 @@
 
 				<input
 					bind:this={fileInput}
-					on:change={(e) => {
+					onchange={(e) => {
 						if (e.target instanceof HTMLInputElement) {
 							if (!e.target.files?.length) return;
 							const files = [...e.target.files];
@@ -243,7 +262,7 @@
 		<Input bind:value={note} placeholder="Add note..." />
 
 		<Dialog.Footer>
-			<Button variant="outline" on:click={() => fileInput.click()}>
+			<Button variant="outline" on:click={() => fileInput?.click()}>
 				Upload rubric
 			</Button>
 			{#if editing}
@@ -296,7 +315,7 @@
 									(f) => `results/${event.event}/${id}/${f.name}`,
 								),
 								note,
-								id,
+								id: id as ReturnType<typeof crypto.randomUUID>,
 							},
 							...(event.results?.slice(newPlace - 1) ?? []),
 						];

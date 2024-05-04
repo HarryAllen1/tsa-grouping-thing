@@ -18,11 +18,7 @@
 	const user = userStore(auth);
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
 
-	let navItems: (
-		| { title: string; href: string }
-		| { title: string; href: string }[]
-	)[] = [];
-	$: navItems = [
+	let navItems = $derived([
 		{
 			title: 'Teams',
 			href: '/',
@@ -59,7 +55,7 @@
 					},
 				]
 			: [],
-	];
+	]);
 
 	const downloadAsJSON = async () => {
 		const teamsJSON = removeRef({

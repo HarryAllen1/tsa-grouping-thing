@@ -14,9 +14,11 @@
 
 	const user = userStore(auth);
 
-	$: if ($user) {
-		goto('/');
-	}
+	$effect(() => {
+		if ($user) {
+			goto('/');
+		}
+	});
 
 	const provider = new OAuthProvider('microsoft.com');
 	provider.addScope('email');
