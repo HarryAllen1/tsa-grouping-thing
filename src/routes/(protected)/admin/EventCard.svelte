@@ -16,9 +16,13 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { deleteDoc, doc, setDoc } from 'firebase/firestore';
-	import { ChevronsUpDown, Download, Trash2 } from 'lucide-svelte';
+	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+	import Download from 'lucide-svelte/icons/download';
+	import Pencil from 'lucide-svelte/icons/pencil';
+	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import TeamCard from './TeamCard.svelte';
 	import UserCard from './UserCard.svelte';
+	import { Input } from '$lib/components/ui/input';
 
 	let {
 		hidden,
@@ -46,6 +50,7 @@
 		);
 	let submissionDescription = $state(event.submissionDescription ?? '');
 	let submissionDialogOpen = $state(false);
+	let editEventDialogOpen = $state(false);
 </script>
 
 <Card.Root class={hidden ? 'hidden' : ''}>
@@ -56,6 +61,7 @@
 			{#if event.event === '*Rooming'}
 				<Button
 					size="icon"
+					variant="ghost"
 					class="mr-2"
 					on:click={() => {
 						let csv = `Room number,first1,last1,first2,last2,first3,last3,first4,last4\n`;
@@ -85,6 +91,69 @@
 				>
 					<Download />
 				</Button>
+			{:else}
+				<Dialog.Root bind:open={editEventDialogOpen}>
+					<Dialog.Trigger>
+						<Button size="icon" variant="ghost" class="mr-2">
+							<Pencil />
+						</Button>
+					</Dialog.Trigger>
+					<Dialog.Content>
+						<Dialog.Title>Edit Event</Dialog.Title>
+
+						<Label for="eventName">Event name</Label>
+						<Input type="text" bind:value={event.event} id="eventName" />
+						<Label for="minTeamSize">Min team size</Label>
+						<Input
+							type="number"
+							bind:value={event.minTeamSize}
+							id="minTeamSize"
+						/>
+						<Label for="maxTeamSize">Max team size</Label>
+						<Input
+							type="number"
+							bind:value={event.maxTeamSize}
+							id="maxTeamSize"
+						/>
+						<Label for="perChapter">Max teams per chapter</Label>
+						<Input
+							type="number"
+							bind:value={event.perChapter}
+							id="perChapter"
+						/>
+
+						<Dialog.Footer>
+							<Button
+								class="mr-2"
+								variant="ghost"
+								on:click={() => {
+									editEventDialogOpen = false;
+								}}
+							>
+								Cancel
+							</Button>
+							<Button
+								on:click={async () => {
+									await setDoc(
+										doc(db, 'events', event.event ?? ''),
+										{
+											event: event.event,
+											minTeamSize: event.minTeamSize,
+											maxTeamSize: event.maxTeamSize,
+											perChapter: event.perChapter,
+											lastUpdatedBy: $user?.email ?? '',
+										},
+										{
+											merge: true,
+										},
+									);
+								}}
+							>
+								Save
+							</Button>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Root>
 			{/if}
 			<Button
 				variant="destructive"

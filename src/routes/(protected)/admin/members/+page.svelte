@@ -45,15 +45,12 @@
 	);
 </script>
 
-<div class="container">
+<div class="container pb-4">
 	<h1
 		class="my-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl"
 	>
 		Members
 	</h1>
-	<p class="mb-4 text-red-500">
-		The National ID and WTSA ID fields do not update live
-	</p>
 
 	<div class="flex flex-row gap-2">
 		<Button

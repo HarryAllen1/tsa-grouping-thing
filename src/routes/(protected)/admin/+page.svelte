@@ -142,28 +142,15 @@
 			<Dialog.Trigger class={buttonVariants()}>Create new event</Dialog.Trigger>
 			<Dialog.Content>
 				<Dialog.Title>Create new event</Dialog.Title>
-				<form
-					class="flex flex-col gap-4"
-					onsubmit={async (e) => {
-						e.preventDefault();
-						newEventStuff.maxTeamSize = Number(newEventStuff.maxTeamSize);
-						newEventStuff.minTeamSize = Number(newEventStuff.minTeamSize);
-						await setDoc(doc(db, 'events', newEventStuff.event), {
-							...newEventStuff,
-							teams: [],
-							lastUpdatedBy: $user?.email ?? '',
-						});
-						newEventDialogOpen = false;
-					}}
-				>
-					<Label class="flex w-full max-w-sm flex-col gap-1.5">
+				<div class="flex flex-col gap-4">
+					<Label class="flex w-full flex-col gap-1.5">
 						<span>Event name</span>
 						<Input
 							bind:value={newEventStuff.event}
 							placeholder="really cool event name"
 						/>
 					</Label>
-					<Label class="flex w-full max-w-sm flex-col gap-1.5">
+					<Label class="flex w-full flex-col gap-1.5">
 						<span>Minimum team size</span>
 						<Input
 							bind:value={newEventStuff.minTeamSize}
@@ -171,7 +158,7 @@
 							placeholder="1"
 						/>
 					</Label>
-					<Label class="flex w-full max-w-sm flex-col gap-1.5">
+					<Label class="flex w-full flex-col gap-1.5">
 						<span>Maximum team size</span>
 						<Input
 							bind:value={newEventStuff.maxTeamSize}
@@ -179,7 +166,7 @@
 							placeholder="1"
 						/>
 					</Label>
-					<Label class="flex w-full max-w-sm flex-col gap-1.5">
+					<Label class="flex w-full flex-col gap-1.5">
 						<span>Maximum teams per chapter</span>
 						<Input
 							bind:value={newEventStuff.perChapter}
@@ -191,10 +178,29 @@
 						<Checkbox id="newEventLocked" bind:checked={newEventStuff.locked} />
 						<Label for="newEventLocked" class="text-foreground">Lock</Label>
 					</div>
-					<div>
-						<Button type="submit">Create</Button>
-					</div>
-				</form>
+				</div>
+				<Dialog.Footer>
+					<Button
+						class="mr-2"
+						variant="ghost"
+						on:click={() => (newEventDialogOpen = false)}
+					>
+						Cancel
+					</Button>
+					<Button
+						on:click={async (e) => {
+							e.preventDefault();
+							newEventStuff.maxTeamSize = Number(newEventStuff.maxTeamSize);
+							newEventStuff.minTeamSize = Number(newEventStuff.minTeamSize);
+							await setDoc(doc(db, 'events', newEventStuff.event), {
+								...newEventStuff,
+								teams: [],
+								lastUpdatedBy: $user?.email ?? '',
+							});
+							newEventDialogOpen = false;
+						}}>Create</Button
+					>
+				</Dialog.Footer>
 			</Dialog.Content>
 		</Dialog.Root>
 		<div class="flex items-center space-x-2">
