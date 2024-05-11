@@ -4,12 +4,16 @@
 	import { SidebarOpen } from 'lucide-svelte';
 	import MobileLink from './MobileLink.svelte';
 
-	export let navItems: (
-		| { title: string; href: string }
-		| { title: string; href: string }[]
-	)[];
+	let {
+		navItems,
+	}: {
+		navItems: (
+			| { title: string; href: string }
+			| { title: string; href: string }[]
+		)[];
+	} = $props();
 
-	let open = false;
+	let open = $state(false);
 </script>
 
 <Sheet.Root bind:open>

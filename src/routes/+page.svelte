@@ -94,14 +94,14 @@
 						.map((e) => ({
 							...$eventsCollection.find((ev) => ev.event === e),
 						}))
-						.sort((a, b) => a.event!.localeCompare(b.event!))
+						.toSorted((a, b) => a.event!.localeCompare(b.event!))
 				: []
 			: $eventsCollection.length
 				? ($userDoc?.events ?? [])
 						.map((e) => ({
 							...$eventsCollection.find((ev) => ev.event === e),
 						}))
-						.sort((a, b) => a.event!.localeCompare(b.event!))
+						.toSorted((a, b) => a.event!.localeCompare(b.event!))
 				: [],
 	) as EventDoc[];
 	let eventData = $derived(
@@ -117,7 +117,7 @@
 							email: m.email,
 						})),
 					}))
-					.sort((a, b) => a.event.localeCompare(b.event))
+					.toSorted((a, b) => a.event.localeCompare(b.event))
 			: [],
 	);
 
