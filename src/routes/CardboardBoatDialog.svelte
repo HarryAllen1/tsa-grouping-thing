@@ -5,6 +5,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { doc, setDoc } from 'firebase/firestore';
+	import Pencil from 'lucide-svelte/icons/pencil';
 
 	export let teamId: string;
 	export let event: EventDoc;
@@ -13,35 +14,35 @@
 	let teamName = event.teams.find((team) => team.id === teamId)?.teamName;
 </script>
 
-<div class="flex w-full flex-row gap-2">
-	<Dialog.Root bind:open>
-		<Dialog.Trigger>
-			<Button>Change Team Name</Button>
-		</Dialog.Trigger>
-		<Dialog.Content>
-			<Dialog.Title>Change Team Name</Dialog.Title>
-			<Label for="teamName">Team Name</Label>
-			<Input bind:value={teamName} />
-			<Dialog.Footer>
-				<Button variant="secondary" on:click={() => (open = false)}>
-					Cancel
-				</Button>
-				<Button
-					on:click={async () => {
-						const team = event.teams.find((team) => team.id === teamId);
-						if (!team) return;
-						team.teamName = teamName;
-						await setDoc(
-							doc(db, `events/${event.event}`),
-							{
-								teams: event.teams,
-							},
-							{ merge: true },
-						);
-						open = false;
-					}}>Save</Button
-				>
-			</Dialog.Footer>
-		</Dialog.Content>
-	</Dialog.Root>
-</div>
+<Dialog.Root bind:open>
+	<Dialog.Trigger>
+		<Button variant="ghost" size="icon">
+			<Pencil />
+		</Button>
+	</Dialog.Trigger>
+	<Dialog.Content>
+		<Dialog.Title>Change Team Name</Dialog.Title>
+		<Label for="teamName">Team Name</Label>
+		<Input bind:value={teamName} />
+		<Dialog.Footer>
+			<Button variant="secondary" on:click={() => (open = false)}>
+				Cancel
+			</Button>
+			<Button
+				on:click={async () => {
+					const team = event.teams.find((team) => team.id === teamId);
+					if (!team) return;
+					team.teamName = teamName;
+					await setDoc(
+						doc(db, `events/${event.event}`),
+						{
+							teams: event.teams,
+						},
+						{ merge: true },
+					);
+					open = false;
+				}}>Save</Button
+			>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>

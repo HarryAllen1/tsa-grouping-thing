@@ -1,9 +1,26 @@
 <script lang="ts">
-	import { getMetadata, ref, type StorageReference } from 'firebase/storage';
+	import {
+		getMetadata,
+		ref,
+		type FullMetadata,
+		type StorageReference,
+	} from 'firebase/storage';
+	import type { Snippet } from 'svelte';
 	import { getFirebaseContext } from 'sveltefire';
 
-	let reference: string | StorageReference;
-	export { reference as ref };
+	let {
+		ref: reference,
+		loading,
+		link,
+		withMetadata,
+		error,
+	}: {
+		ref: string | StorageReference;
+		link: string;
+		loading?: Snippet;
+		withMetadata: Snippet<[string, FullMetadata]>;
+		error?: Snippet<[unknown]>;
+	} = $props();
 
 	const { storage } = getFirebaseContext();
 	if (!storage) {
@@ -16,9 +33,13 @@
 </script>
 
 {#await metadata}
-	<slot name="loading" />
+	{#if loading}
+		{@render loading()}
+	{/if}
 {:then meta}
-	<slot {meta} />
-{:catch error}
-	<slot name="error" {error} />
+	{@render withMetadata(link, meta)}
+{:catch e}
+	{#if error}
+		{@render error(e)}
+	{/if}
 {/await}

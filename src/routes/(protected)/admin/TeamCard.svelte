@@ -7,6 +7,7 @@
 		db,
 		fancyConfirm,
 		md,
+		sleep,
 		storage,
 		user,
 		yay,
@@ -24,22 +25,20 @@
 	import { Progress } from '$lib/components/ui/progress';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { sleep } from '$lib/utils';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { deleteObject, ref, uploadBytes } from 'firebase/storage';
-	import {
-		ChevronsUpDown,
-		Crown,
-		FileUp,
-		Lightbulb,
-		Mail,
-		Minus,
-		Plus,
-		Trash2,
-		UserPlus,
-		X,
-	} from 'lucide-svelte';
+	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+	import Crown from 'lucide-svelte/icons/crown';
+	import FileUp from 'lucide-svelte/icons/file-up';
+	import Lightbulb from 'lucide-svelte/icons/lightbulb';
+	import Mail from 'lucide-svelte/icons/mail';
+	import Minus from 'lucide-svelte/icons/minus';
+	import Pencil from 'lucide-svelte/icons/pencil';
+	import Plus from 'lucide-svelte/icons/plus';
+	import Trash2 from 'lucide-svelte/icons/trash-2';
+	import UserPlus from 'lucide-svelte/icons/user-plus';
+	import X from 'lucide-svelte/icons/x';
 	import { toast } from 'svelte-sonner';
 	import { flip } from 'svelte/animate';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
@@ -159,95 +158,109 @@
 		</div>
 	{/if}
 	<Card.Header>
-		<Card.Title>
-			{#if event.event === '*Rooming'}
-				Room #{team.teamNumber}
-			{:else if event.event === '*Cardboard Boat'}
-				{team.teamName || '(no team name)'}
-			{:else if event.maxTeamSize === 1 && team.members.length === 1}
-				Team {$allUsersCollection.find(
-					(u) => u.email.toLowerCase() === team.members[0].email.toLowerCase(),
-				)?.washingtonId}
-			{:else}
-				Team 2082-{team.teamNumber}
-			{/if}
-			<Dialog.Root bind:open={teamDialogOpen}>
-				<Dialog.Trigger>
-					<Button>Edit</Button>
-				</Dialog.Trigger>
-				<Dialog.Content>
-					<Dialog.Title>Edit team number</Dialog.Title>
-					<div class="flex w-full max-w-sm flex-col gap-1.5">
-						<Label for="teamNumber">Team Number</Label>
-						<Input
-							type="number"
-							id="teamNumber"
-							placeholder="1"
-							value={team.teamNumber}
-						/>
-					</div>
-					<Dialog.Footer>
-						<Button
-							on:click={async () => {
-								const el = document.querySelector('#teamNumber');
-								if (el instanceof HTMLInputElement) {
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											teams: event.teams.map((t) =>
-												t.id === team.id
-													? {
-															...t,
-															teamNumber: el.valueAsNumber,
-														}
-													: t,
-											),
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{
-											merge: true,
-										},
-									);
-									teamDialogOpen = false;
-								}
-							}}
-						>
-							Save
+		<Card.Title class="flex flex-row items-center">
+			<span>
+				{#if event.event === '*Rooming'}
+					Room #{team.teamNumber}
+				{:else if event.event === '*Cardboard Boat'}
+					{team.teamName || '(no team name)'}
+				{:else if event.maxTeamSize === 1 && team.members.length === 1}
+					Team {$allUsersCollection.find(
+						(u) =>
+							u.email.toLowerCase() === team.members[0].email.toLowerCase(),
+					)?.washingtonId}
+				{:else}
+					Team 2082-{team.teamNumber}
+				{/if}
+			</span>
+			{#if event.event !== '*Cardboard Boat'}
+				<Dialog.Root bind:open={teamDialogOpen}>
+					<Dialog.Trigger>
+						<Button size="sm" variant="ghost" class="ml-2">
+							<Pencil />
 						</Button>
-					</Dialog.Footer>
-				</Dialog.Content>
-			</Dialog.Root>
+					</Dialog.Trigger>
+					<Dialog.Content>
+						<Dialog.Title
+							>Edit {event.event === '*Rooming' ? 'room' : 'team'} number</Dialog.Title
+						>
+						<div class="flex w-full max-w-sm flex-col gap-1.5">
+							<Label for="teamNumber"
+								>{event.event === '*Rooming' ? 'Room' : 'Team'} Number</Label
+							>
+							<Input
+								type="number"
+								id="teamNumber"
+								placeholder="1"
+								value={team.teamNumber}
+							/>
+						</div>
+						<Dialog.Footer>
+							<Button
+								on:click={async () => {
+									const el = document.querySelector('#teamNumber');
+									if (el instanceof HTMLInputElement) {
+										await setDoc(
+											doc(db, 'events', event.event ?? ''),
+											{
+												teams: event.teams.map((t) =>
+													t.id === team.id
+														? {
+																...t,
+																teamNumber: el.valueAsNumber,
+															}
+														: t,
+												),
+												lastUpdatedBy: $user?.email ?? '',
+											},
+											{
+												merge: true,
+											},
+										);
+										teamDialogOpen = false;
+									}
+								}}
+							>
+								Save
+							</Button>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Root>
+			{:else}
+				<CardboardBoatDialog teamId={team.id} {event} />
+			{/if}
+			<div class="flex-grow"></div>
+			<Button
+				variant="destructive"
+				size="icon"
+				on:click={async () => {
+					if (
+						!(await fancyConfirm(
+							'Are you sure',
+							'Are you sure you want to delete this team? This action is irreversible.',
+						))
+					)
+						return;
+					event.teams = event.teams.filter((t) => t !== team);
+					await setDoc(
+						doc(db, 'events', event.event ?? ''),
+						{
+							teams: event.teams,
+							lastUpdatedBy: $user?.email ?? '',
+						},
+						{
+							merge: true,
+						},
+					);
+
+					aww.play();
+				}}
+			>
+				<Trash2 />
+			</Button>
 		</Card.Title>
 		<div class="flex flex-col gap-2">
 			<div class="flex flex-row gap-1">
-				<Button
-					variant="destructive"
-					size="icon"
-					on:click={async () => {
-						if (
-							!(await fancyConfirm(
-								'Are you sure',
-								'Are you sure you want to delete this team? This action is irreversible.',
-							))
-						)
-							return;
-						event.teams = event.teams.filter((t) => t !== team);
-						await setDoc(
-							doc(db, 'events', event.event ?? ''),
-							{
-								teams: event.teams,
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
-
-						aww.play();
-					}}
-				>
-					<Trash2 />
-				</Button>
 				<Dialog.Root>
 					<Dialog.Trigger>
 						<Button size="icon" class="bg-green-500 hover:bg-green-400">
@@ -321,10 +334,13 @@
 						</Dialog.Description>
 					</Dialog.Content>
 				</Dialog.Root>
-
-				{#if event.event === '*Cardboard Boat'}
-					<CardboardBoatDialog teamId={team.id} {event} />
-				{:else if event.event !== '*Rooming'}
+				<Button
+					size="icon"
+					href="mailto:{team.members.map((p) => p.email).join(';')}"
+				>
+					<Mail />
+				</Button>
+				{#if event.event !== '*Rooming'}
 					<Dialog.Root>
 						<Dialog.Trigger>
 							<Button>Team Captain</Button>
@@ -401,14 +417,7 @@
 					</Dialog.Root>
 				{/if}
 			</div>
-			<div class="flex flex-row items-center gap-1">
-				<Button
-					size="icon"
-					href="mailto:{team.members.map((p) => p.email).join(';')}"
-				>
-					<Mail />
-				</Button>
-			</div>
+
 			<div>
 				<Label class="flex flex-row items-center gap-2">
 					<Switch
@@ -478,20 +487,25 @@
 														</UploadTask>
 													{:else}
 														<div class="flex w-full flex-row items-center">
+															{#snippet submissionsList(link, meta)}
+																<SimpleTooltip
+																	message={new Date(
+																		meta.timeCreated,
+																	).toLocaleString()}
+																>
+																	<a href={link} target="_blank">
+																		{meta.name}
+																	</a>
+																</SimpleTooltip>
+															{/snippet}
 															<DownloadURL ref={submission} let:link>
-																<StorageMetadata ref={submission} let:meta>
-																	<SimpleTooltip
-																		message={new Date(
-																			meta.timeCreated,
-																		).toLocaleString()}
-																	>
-																		<a href={link} target="_blank">
-																			{submission.name}
-																		</a>
-																	</SimpleTooltip>
-																</StorageMetadata>
+																<StorageMetadata
+																	ref={submission}
+																	link={link ?? ''}
+																	withMetadata={submissionsList}
+																></StorageMetadata>
 															</DownloadURL>
-															<div class="flex flex-grow" />
+															<div class="flex flex-grow"></div>
 															<Button
 																variant="ghost"
 																size="icon"
@@ -575,7 +589,7 @@
 						Manage Requests {#if team.requests?.length}
 							({team.requests.length})
 						{/if}
-						<div class="flex-1" />
+						<div class="flex-1"></div>
 						<ChevronsUpDown />
 					</Button>
 				</Collapsible.Trigger>
@@ -743,7 +757,7 @@
 						class="flex w-full items-center p-2"
 					>
 						Manage Files
-						<div class="flex-1" />
+						<div class="flex-1"></div>
 						<ChevronsUpDown />
 					</Button>
 				</Collapsible.Trigger>
@@ -783,20 +797,25 @@
 												</UploadTask>
 											{:else}
 												<div class="flex w-full flex-row items-center">
+													{#snippet submissionsList(link, meta)}
+														<SimpleTooltip
+															message={new Date(
+																meta.timeCreated,
+															).toLocaleString()}
+														>
+															<a href={link} target="_blank">
+																{file.name}
+															</a>
+														</SimpleTooltip>
+													{/snippet}
 													<DownloadURL ref={file} let:link>
-														<StorageMetadata ref={file} let:meta>
-															<SimpleTooltip
-																message={new Date(
-																	meta.timeCreated,
-																).toLocaleString()}
-															>
-																<a href={link} target="_blank">
-																	{file.name}
-																</a>
-															</SimpleTooltip>
-														</StorageMetadata>
+														<StorageMetadata
+															ref={file}
+															link={link ?? ''}
+															withMetadata={submissionsList}
+														></StorageMetadata>
 													</DownloadURL>
-													<div class="flex flex-grow" />
+													<div class="flex flex-grow"></div>
 													<Button
 														variant="ghost"
 														size="icon"

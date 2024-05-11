@@ -88,13 +88,17 @@
 	<div class="grid" style="grid-template-columns: {columnTemplate}">
 		{#each users as user (user.uid)}
 			<div class="cell">
-				<div use:renderVideo={user} class="video" id={user.uid.toString()} />
+				<div
+					use:renderVideo={user}
+					class="video"
+					id={user.uid.toString()}
+				></div>
 				<p class="uid">{user.uid}</p>
 			</div>
 		{/each}
 	</div>
 	<div class="absolute bottom-10 right-10">
-		<div class="aspect-video h-40 w-64" bind:this={selfVideo} />
+		<div class="aspect-video h-40 w-64" bind:this={selfVideo}></div>
 		<p class="uid">me</p>
 	</div>
 </div>

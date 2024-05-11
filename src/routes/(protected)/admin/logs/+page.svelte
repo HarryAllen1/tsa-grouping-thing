@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { removeRef } from '$lib';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Table from '$lib/components/ui/table';
-	import { removeRef } from '$lib/utils';
 	import { Timestamp } from 'firebase/firestore';
 	import { codeToHtml } from 'shiki/bundle/web';
 	import { Collection } from 'sveltefire';

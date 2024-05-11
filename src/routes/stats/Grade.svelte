@@ -55,4 +55,4 @@
 	});
 </script>
 
-<div bind:this={graph} />
+<div bind:this={graph}></div>

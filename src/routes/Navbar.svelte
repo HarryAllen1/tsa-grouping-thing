@@ -1,11 +1,18 @@
 <script lang="ts">
-	import { allUsersCollection, auth, aww, db, type UserDoc } from '$lib';
+	import {
+		allUsersCollection,
+		auth,
+		aww,
+		db,
+		removeRef,
+		sleep,
+		type UserDoc,
+	} from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
-	import { removeRef, sleep } from '$lib/utils';
 	import { signOut } from 'firebase/auth';
 	import { collection, getDocs } from 'firebase/firestore';
 	import BookOpenText from 'lucide-svelte/icons/book-open-text';

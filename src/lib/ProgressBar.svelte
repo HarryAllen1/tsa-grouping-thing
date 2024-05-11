@@ -253,7 +253,7 @@
 			<div
 				class="absolute right-0 top-0 h-[5px] w-[100px] translate-y-[-4px] rotate-[2.5deg] shadow-[0_0_8px]"
 				style={leaderColorStyle}
-			/>
+			></div>
 		{/if}
 	</output>
 {/if}

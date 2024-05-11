@@ -11,15 +11,17 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Input } from '$lib/components/ui/input';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
 	import { doc, setDoc } from 'firebase/firestore';
 	import Fuse from 'fuse.js';
+	import Filter from 'lucide-svelte/icons/filter';
 	import { userStore } from 'sveltefire';
-	import EventCard from './EventCard.svelte';
 	import Alert from './Alert.svelte';
+	import EventCard from './EventCard.svelte';
 
 	const user = userStore(auth);
 
@@ -29,25 +31,22 @@
 
 	const changeSearch = (s: string) => (search = s);
 
-	let eventData: EventData[] = $derived(
-		$eventsCollection.length
-			? $eventsCollection
-					.map((e) => {
-						const allMembers =
-							$allUsersCollection?.filter((m) => m.events.includes(e.event)) ??
-							[];
-						return {
-							...e,
-							members: allMembers.map((m) => ({
-								name: m.name,
-								email: m.email,
-							})),
-							teamNumbers: e.teams.map((t) => `2082-${t.teamNumber}`),
-							waId: allMembers.map((m) => m.washingtonId).filter((m) => m),
-						};
-					})
-					.sort((a, b) => a.event.localeCompare(b.event))
-			: [],
+	let eventData = $derived<EventData[]>(
+		$eventsCollection
+			.map((e) => {
+				const allMembers =
+					$allUsersCollection?.filter((m) => m.events.includes(e.event)) ?? [];
+				return {
+					...e,
+					members: allMembers.map((m) => ({
+						name: m.name,
+						email: m.email,
+					})),
+					teamNumbers: e.teams.map((t) => `2082-${t.teamNumber}`),
+					waId: allMembers.map((m) => m.washingtonId).filter((m) => m),
+				};
+			})
+			.toSorted((a, b) => a.event.localeCompare(b.event)),
 	);
 
 	let shouldHideIndividualEvents = $state(false);
@@ -71,7 +70,6 @@
 			},
 		),
 	);
-	let signedUpEvents = $derived(eventData);
 	let eventResults = $derived(
 		search === ''
 			? eventData.map((r) => r.event)
@@ -106,35 +104,50 @@
 	}}
 />
 
-<div class="container mt-8 flex flex-col items-center">
-	<h1 class="my-4 mb-6 text-3xl font-bold">
-		Please don't add yourself to events that you aren't in!
+<div class="container mt-8 flex flex-col">
+	<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+		Team Management
 	</h1>
-	<div class="mb-4 flex w-full flex-col gap-4 md:flex-row">
-		<Label class="flex flex-row items-center">
-			<Switch class="mr-2" bind:checked={fuseKeys.event} />
-			Search by events
-		</Label>
-		<Label class="flex flex-row items-center">
-			<Switch class="mr-2" bind:checked={fuseKeys.members} />
-			Search by members
-		</Label>
-		<Label class="flex flex-row items-center">
-			<Switch class="mr-2" bind:checked={shouldHideIndividualEvents} />
-			Hide individual events
-		</Label>
-		<Label class="flex flex-row items-center">
-			<Switch class="mr-2" bind:checked={onlyShowOverflown} />
-			Only show overflown events
-		</Label>
+	<p class="my-4 text-red-500">
+		Please do not add yourself to events you are not signed up for
+	</p>
+
+	<div class="flex flex-row gap-2">
+		<Input bind:value={search} type="search" id="search" placeholder="Search" />
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger>
+				<Button variant="outline" size="icon"><Filter></Filter></Button>
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content>
+				<DropdownMenu.Label>Filters</DropdownMenu.Label>
+				<DropdownMenu.Separator></DropdownMenu.Separator>
+				<DropdownMenu.Item>
+					<Label class="flex flex-row items-center">
+						<Switch class="mr-2" bind:checked={fuseKeys.event} />
+						Search by events
+					</Label>
+				</DropdownMenu.Item>
+				<DropdownMenu.Item>
+					<Label class="flex flex-row items-center">
+						<Switch class="mr-2" bind:checked={fuseKeys.members} />
+						Search by members
+					</Label>
+				</DropdownMenu.Item>
+				<DropdownMenu.Item>
+					<Label class="flex flex-row items-center">
+						<Switch class="mr-2" bind:checked={shouldHideIndividualEvents} />
+						Hide individual events
+					</Label>
+				</DropdownMenu.Item>
+				<DropdownMenu.Item>
+					<Label class="flex flex-row items-center">
+						<Switch class="mr-2" bind:checked={onlyShowOverflown} />
+						Only show overflown events
+					</Label>
+				</DropdownMenu.Item>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
 	</div>
-	<Input
-		class="mb-4"
-		bind:value={search}
-		type="search"
-		id="search"
-		placeholder="Search"
-	/>
 
 	<p class="mb-2 w-full">Green team: full; red team: over or underfilled</p>
 	<div class="mb-4 w-full space-y-2">
@@ -206,7 +219,7 @@
 		<div class="flex items-center space-x-2">
 			<Button
 				on:click={() => {
-					for (const event of signedUpEvents) {
+					for (const event of eventData) {
 						setDoc(
 							doc(db, 'events', event.event ?? ''),
 							{
@@ -247,7 +260,7 @@
 	<div
 		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 	>
-		{#each signedUpEvents ?? [] as event (event.event)}
+		{#each eventData ?? [] as event (event.event)}
 			{#if !shouldHideIndividualEvents || (shouldHideIndividualEvents && event.maxTeamSize > 1)}
 				<EventCard
 					{event}

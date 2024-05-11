@@ -1,10 +1,12 @@
 <script lang="ts">
 	import {
 		allUsersCollection,
+		cn,
 		db,
+		sleep,
+		user,
 		type BasicUser,
 		type EventDoc,
-		user,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Command from '$lib/components/ui/command';
@@ -13,11 +15,10 @@
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
 	import { Progress } from '$lib/components/ui/progress';
-	import { cn, sleep } from '$lib/utils';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { deleteObject } from 'firebase/storage';
 	import { Check, ChevronsUpDown, Minus, Pencil, X } from 'lucide-svelte';
-	import { tick, type Snippet } from 'svelte';
+	import { tick, type Snippet, untrack } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 
@@ -73,14 +74,16 @@
 	$effect(() => {
 		if (comboboxValue) {
 			const newMember = comboboxUsers.find((f) => f.value === comboboxValue);
-			newMembers = [
-				...newMembers,
-				{
-					name: newMember?.label ?? '',
-					email: newMember?.value ?? '',
-				},
-			];
-			comboboxValue = '';
+			untrack(() => {
+				newMembers = [
+					...newMembers,
+					{
+						name: newMember?.label ?? '',
+						email: newMember?.value ?? '',
+					},
+				];
+				comboboxValue = '';
+			});
 		}
 	});
 
@@ -213,7 +216,7 @@
 											{submission.name}
 										</a>
 									</DownloadURL>
-									<div class="flex flex-grow" />
+									<div class="flex flex-grow"></div>
 									<Button
 										variant="ghost"
 										size="icon"

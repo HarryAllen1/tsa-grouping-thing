@@ -226,7 +226,7 @@
 									: ''}"
 					>
 						Events ({user.events.length})
-						<div class="flex-1" />
+						<div class="flex-1"></div>
 						<ChevronsUpDown class="h-4 w-4" />
 					</Button>
 				</Collapsible.Trigger>

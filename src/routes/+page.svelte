@@ -43,17 +43,16 @@
 		UserPlus,
 		X,
 	} from 'lucide-svelte';
+	import { persisted } from 'svelte-local-storage-store';
 	import { flip } from 'svelte/animate';
-	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import CardboardBoatDialog from './CardboardBoatDialog.svelte';
 	import Copyable from './Copyable.svelte';
-	import { persisted } from 'svelte-local-storage-store';
 
 	const yellowMode = persisted('yellowMode', false);
-	let alertEl: HTMLDivElement;
+	let alertEl = $state<HTMLDivElement>();
 
-	const addAlertStuff = (el: HTMLDivElement) => {
+	const addAlertStuff = (el: HTMLDivElement | undefined) => {
 		if (!el) return;
 
 		const copyables = el.querySelectorAll('.copyable');
@@ -68,15 +67,19 @@
 		}
 	};
 
-	$: addAlertStuff(alertEl);
+	$effect(() => {
+		addAlertStuff(alertEl);
+	});
 
-	$: if ($yellowMode) {
-		document.body.classList.add('yellow');
-	} else {
-		document.body.classList.remove('yellow');
-	}
+	$effect(() => {
+		if ($yellowMode) {
+			document.body.classList.add('yellow');
+		} else {
+			document.body.classList.remove('yellow');
+		}
+	});
 
-	$: signedUpEvents = (
+	let signedUpEvents = $derived(
 		$settings?.enableRooming && $user
 			? $eventsCollection.length
 				? ($userDoc?.events
@@ -99,9 +102,9 @@
 							...$eventsCollection.find((ev) => ev.event === e),
 						}))
 						.sort((a, b) => a.event!.localeCompare(b.event!))
-				: []
+				: [],
 	) as EventDoc[];
-	$: eventData =
+	let eventData = $derived(
 		$eventsCollection.length && $user
 			? $eventsCollection
 					.map((e) => ({
@@ -115,25 +118,17 @@
 						})),
 					}))
 					.sort((a, b) => a.event.localeCompare(b.event))
-			: [];
+			: [],
+	);
 
-	$: requests = signedUpEvents
-		.filter(
-			(e) => e.teams.filter((t) => t.requests?.length).length && !e.locked,
-		)
-		.map((e) => ({
-			event: e.event,
-			team: e.teams.filter(
-				(t) =>
-					t.requests?.length &&
-					!t.locked &&
-					!e.locked &&
-					t.members
-						.map((u) => u.email.toLowerCase())
-						.includes($user?.email?.toLowerCase() ?? ''),
-			)[0],
-			requests: e.teams
-				.filter(
+	let requests = $derived(
+		signedUpEvents
+			.filter(
+				(e) => e.teams.filter((t) => t.requests?.length).length && !e.locked,
+			)
+			.map((e) => ({
+				event: e.event,
+				team: e.teams.filter(
 					(t) =>
 						t.requests?.length &&
 						!t.locked &&
@@ -141,22 +136,33 @@
 						t.members
 							.map((u) => u.email.toLowerCase())
 							.includes($user?.email?.toLowerCase() ?? ''),
-				)
-				.flatMap((t) => t.requests ?? []),
-		}))
-		.filter((r) => r.requests.length);
+				)[0],
+				requests: e.teams
+					.filter(
+						(t) =>
+							t.requests?.length &&
+							!t.locked &&
+							!e.locked &&
+							t.members
+								.map((u) => u.email.toLowerCase())
+								.includes($user?.email?.toLowerCase() ?? ''),
+					)
+					.flatMap((t) => t.requests ?? []),
+			}))
+			.filter((r) => r.requests.length),
+	);
 
-	let submissionsFileUpload: HTMLInputElement;
-	const filesToUpload = writable<File[]>([]);
+	let submissionsFileUpload = $state<HTMLInputElement>();
+	let filesToUpload = $state<File[]>([]);
 
-	let dummyVariableToRerender = 0;
+	let dummyVariableToRerender = $state(0);
 	const updateStorageList = () => {
 		dummyVariableToRerender++;
 		yay.play();
 		return '';
 	};
 	const filterSubmissions = (submission: File) => {
-		$filesToUpload = $filesToUpload.filter((f) => f !== submission);
+		filesToUpload = filesToUpload.filter((f) => f !== submission);
 		return '';
 	};
 
@@ -215,7 +221,7 @@
 							class="flex w-full items-center p-2 font-bold"
 						>
 							{request.event}
-							<div class="flex-1" />
+							<div class="flex-1"></div>
 							<ChevronsUpDown />
 						</Button>
 					</Collapsible.Trigger>
@@ -468,7 +474,7 @@
 									: 'bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5'}
 							>
 								<Card.Header>
-									<Card.Title>
+									<Card.Title class="flex flex-row items-center">
 										{event.event === '*Rooming'
 											? 'Room #'
 											: event.event === '*Cardboard Boat'
@@ -476,6 +482,9 @@
 												: 'Team 2082-'}{event.event === '*Cardboard Boat'
 											? team.teamName || '(no team name)'
 											: team.teamNumber}
+										{#if event.event === '*Cardboard Boat' && !team.locked && !event.locked && team.members.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
+											<CardboardBoatDialog teamId={team.id} {event} />
+										{/if}
 									</Card.Title>
 									<div class="flex flex-col gap-1 lg:flex-row">
 										{#if team.locked || event.locked}
@@ -654,9 +663,8 @@
 														</Dialog.Content>
 													</Dialog.Root>
 												</div>
-												{#if event.event === '*Cardboard Boat'}
-													<CardboardBoatDialog teamId={team.id} {event} />
-												{:else if event.event !== '*Rooming'}
+
+												{#if event.event !== '*Rooming' && event.event !== '*Cardboard Boat'}
 													<div class="flex w-full flex-row gap-2">
 														<Button
 															on:click={async () => {
@@ -723,7 +731,7 @@
 																		let:list
 																	>
 																		<ul>
-																			{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
+																			{#each [...(list?.items ?? []), ...filesToUpload] as submission}
 																				<li
 																					class="flex w-full flex-col items-center"
 																				>
@@ -752,29 +760,34 @@
 																						<div
 																							class="flex w-full flex-row items-center"
 																						>
+																							{#snippet submissionsList(
+																								link,
+																								meta,
+																							)}
+																								<SimpleTooltip
+																									message={new Date(
+																										meta.timeCreated,
+																									).toLocaleString()}
+																								>
+																									<a
+																										href={link}
+																										target="_blank"
+																									>
+																										{submission.name}
+																									</a>
+																								</SimpleTooltip>
+																							{/snippet}
 																							<DownloadURL
 																								ref={submission}
 																								let:link
 																							>
 																								<StorageMetadata
-																									let:meta
+																									link={link ?? ''}
+																									withMetadata={submissionsList}
 																									ref={submission}
-																								>
-																									<SimpleTooltip
-																										message={new Date(
-																											meta.timeCreated,
-																										).toLocaleString()}
-																									>
-																										<a
-																											href={link}
-																											target="_blank"
-																										>
-																											{submission.name}
-																										</a>
-																									</SimpleTooltip>
-																								</StorageMetadata>
+																								></StorageMetadata>
 																							</DownloadURL>
-																							<div class="flex flex-grow" />
+																							<div class="flex flex-grow"></div>
 																							<Button
 																								variant="ghost"
 																								size="icon"
@@ -804,13 +817,13 @@
 																		<Button
 																			class="mt-4"
 																			on:click={() =>
-																				submissionsFileUpload.click()}
+																				submissionsFileUpload?.click()}
 																		>
 																			Upload
 																		</Button>
 																		<input
 																			bind:this={submissionsFileUpload}
-																			on:change={(e) => {
+																			onchange={(e) => {
 																				if (
 																					e.target instanceof HTMLInputElement
 																				) {
@@ -834,8 +847,7 @@
 																							continue;
 																						}
 
-																						$filesToUpload.push(file);
-																						$filesToUpload = $filesToUpload;
+																						filesToUpload.push(file);
 																					}
 																					yay.play();
 																					confetti();
@@ -938,7 +950,7 @@
 																class="flex w-full items-center p-2"
 															>
 																Files ({list.items.length})
-																<div class="flex-1" />
+																<div class="flex-1"></div>
 																<ChevronsUpDown />
 															</Button>
 														</Collapsible.Trigger>
@@ -978,7 +990,7 @@
 															Manage Requests {#if team.requests?.length}
 																({team.requests.length})
 															{/if}
-															<div class="flex-1" />
+															<div class="flex-1"></div>
 															<ChevronsUpDown />
 														</Button>
 													</Collapsible.Trigger>

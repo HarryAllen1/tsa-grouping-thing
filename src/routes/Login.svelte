@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { auth, yay } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -10,15 +9,6 @@
 		setPersistence,
 		signInWithPopup,
 	} from 'firebase/auth';
-	import { userStore } from 'sveltefire';
-
-	const user = userStore(auth);
-
-	$effect(() => {
-		if ($user) {
-			goto('/');
-		}
-	});
 
 	const provider = new OAuthProvider('microsoft.com');
 	provider.addScope('email');

@@ -12,6 +12,7 @@
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as HoverCard from '$lib/components/ui/hover-card';
+	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
@@ -19,10 +20,10 @@
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import Download from 'lucide-svelte/icons/download';
 	import Pencil from 'lucide-svelte/icons/pencil';
+	import Settings from 'lucide-svelte/icons/settings';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import TeamCard from './TeamCard.svelte';
 	import UserCard from './UserCard.svelte';
-	import { Input } from '$lib/components/ui/input';
 
 	let {
 		hidden,
@@ -57,7 +58,217 @@
 	<Card.Header>
 		<Card.Title class="flex flex-row items-center">
 			<span>{event.event}</span>
-			<div class="flex-grow" />
+			<div class="flex-grow"></div>
+			<Dialog.Root bind:open={editEventDialogOpen}>
+				<Dialog.Trigger>
+					<Button size="icon" variant="ghost">
+						<Settings />
+					</Button>
+				</Dialog.Trigger>
+				<Dialog.Content class="max-h-screen overflow-y-scroll">
+					<Dialog.Header>
+						<Dialog.Title>Event Settings</Dialog.Title>
+						<Dialog.Description>Updates automatically</Dialog.Description>
+					</Dialog.Header>
+					<div class="flex items-center space-x-2">
+						<Switch
+							id="show-event-to-everyone"
+							checked={event.showToEveryone ?? false}
+							onCheckedChange={async (e) => {
+								await setDoc(
+									doc(db, 'events', event.event),
+									{
+										showToEveryone: e,
+										lastUpdatedBy: $user?.email ?? '',
+									},
+									{ merge: true },
+								);
+							}}
+						/>
+						<Label for="show-event-to-everyone">
+							{#if event.event === '*Rooming'}
+								Show rooming
+							{:else}
+								Auto-signup everyone
+							{/if}
+						</Label>
+					</div>
+					<div class="flex items-center space-x-2">
+						<Switch
+							id="show-in-signup"
+							checked={event.hideInSignup ?? false}
+							onCheckedChange={async (e) => {
+								await setDoc(
+									doc(db, 'events', event.event),
+									{
+										hideInSignup: e,
+										lastUpdatedBy: $user?.email ?? '',
+									},
+									{ merge: true },
+								);
+							}}
+						/>
+						<Label for="show-in-signup">Hide in signup page</Label>
+					</div>
+					<Label class="flex flex-row items-center gap-2">
+						<Switch
+							onCheckedChange={async (checked) => {
+								event.locked = checked;
+								await setDoc(
+									doc(db, 'events', event.event ?? ''),
+									{
+										locked: checked,
+										lastUpdatedBy: $user?.email ?? '',
+									},
+									{
+										merge: true,
+									},
+								);
+							}}
+							checked={event.locked ?? false}
+						/>
+						Lock {event.event === '*Rooming' ? 'rooming' : 'event'}
+					</Label>
+					{#if event.event !== '*Rooming'}
+						<div class="flex items-center space-x-2">
+							<Switch
+								id="lock-team-creation"
+								bind:checked={event.teamCreationLocked}
+								onCheckedChange={async (e) => {
+									await setDoc(
+										doc(db, 'events', event.event),
+										{
+											teamCreationLocked: e,
+											lastUpdatedBy: $user?.email ?? '',
+										},
+										{ merge: true },
+									);
+								}}
+							/>
+							<Label for="lock-team-creation">
+								Lock team creation when full
+							</Label>
+						</div>
+						<Label class="flex flex-row items-center gap-2">
+							<Switch
+								onCheckedChange={async (checked) => {
+									event.onlineSubmissions = checked;
+									await setDoc(
+										doc(db, 'events', event.event ?? ''),
+										{
+											onlineSubmissions: checked,
+											lastUpdatedBy: $user?.email ?? '',
+										},
+										{
+											merge: true,
+										},
+									);
+								}}
+								bind:checked={event.onlineSubmissions}
+							/>
+							Online submissions
+						</Label>
+
+						<Dialog.Header>
+							<Dialog.Title>Event Details</Dialog.Title>
+							<Dialog.Description>Requires saving</Dialog.Description>
+						</Dialog.Header>
+
+						<Label for="eventName">Event name</Label>
+						<Input type="text" bind:value={event.event} id="eventName" />
+						<Label for="minTeamSize">Min team size</Label>
+						<Input
+							type="number"
+							bind:value={event.minTeamSize}
+							id="minTeamSize"
+						/>
+						<Label for="maxTeamSize">Max team size</Label>
+						<Input
+							type="number"
+							bind:value={event.maxTeamSize}
+							id="maxTeamSize"
+						/>
+						<Label for="perChapter">Max teams per chapter</Label>
+						<Input
+							type="number"
+							bind:value={event.perChapter}
+							id="perChapter"
+						/>
+
+						<Dialog.Footer class="flex flex-row">
+							<Button
+								variant="destructive"
+								on:click={async () => {
+									editEventDialogOpen = false;
+									if (
+										!(await fancyConfirm(
+											'Are you sure?',
+											'Are you sure you want to delete this event?',
+										))
+									)
+										return;
+									if (
+										!(await fancyConfirm(
+											'Are you really sure?',
+											" This will delete ALL TEAMS and remove this event from everyone's sign up form.",
+										))
+									)
+										return;
+									if (
+										!prompt(
+											'Type "delete this event" to actually delete this event (LAST CHANCE!!!).',
+										)
+											?.toLowerCase()
+											.includes('delete this event')
+									)
+										return;
+
+									await deleteDoc(doc(db, 'events', event.event ?? ''));
+									for (const user of $allUsersCollection) {
+										user.events = user.events.filter((e) => e !== event.event);
+										await setDoc(
+											doc(db, 'users', user.email?.toLowerCase() ?? ''),
+											user,
+											{ merge: true },
+										);
+									}
+								}}
+							>
+								Delete Event
+							</Button>
+							<div class="flex-grow"></div>
+							<Button
+								class="mr-2"
+								variant="ghost"
+								on:click={() => {
+									editEventDialogOpen = false;
+								}}
+							>
+								Cancel
+							</Button>
+							<Button
+								on:click={async () => {
+									await setDoc(
+										doc(db, 'events', event.event ?? ''),
+										{
+											event: event.event,
+											minTeamSize: event.minTeamSize,
+											maxTeamSize: event.maxTeamSize,
+											perChapter: event.perChapter,
+											lastUpdatedBy: $user?.email ?? '',
+										},
+										{
+											merge: true,
+										},
+									);
+								}}
+							>
+								Save
+							</Button>
+						</Dialog.Footer>
+					{/if}
+				</Dialog.Content>
+			</Dialog.Root>
 			{#if event.event === '*Rooming'}
 				<Button
 					size="icon"
@@ -91,110 +302,7 @@
 				>
 					<Download />
 				</Button>
-			{:else}
-				<Dialog.Root bind:open={editEventDialogOpen}>
-					<Dialog.Trigger>
-						<Button size="icon" variant="ghost" class="mr-2">
-							<Pencil />
-						</Button>
-					</Dialog.Trigger>
-					<Dialog.Content>
-						<Dialog.Title>Edit Event</Dialog.Title>
-
-						<Label for="eventName">Event name</Label>
-						<Input type="text" bind:value={event.event} id="eventName" />
-						<Label for="minTeamSize">Min team size</Label>
-						<Input
-							type="number"
-							bind:value={event.minTeamSize}
-							id="minTeamSize"
-						/>
-						<Label for="maxTeamSize">Max team size</Label>
-						<Input
-							type="number"
-							bind:value={event.maxTeamSize}
-							id="maxTeamSize"
-						/>
-						<Label for="perChapter">Max teams per chapter</Label>
-						<Input
-							type="number"
-							bind:value={event.perChapter}
-							id="perChapter"
-						/>
-
-						<Dialog.Footer>
-							<Button
-								class="mr-2"
-								variant="ghost"
-								on:click={() => {
-									editEventDialogOpen = false;
-								}}
-							>
-								Cancel
-							</Button>
-							<Button
-								on:click={async () => {
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											event: event.event,
-											minTeamSize: event.minTeamSize,
-											maxTeamSize: event.maxTeamSize,
-											perChapter: event.perChapter,
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{
-											merge: true,
-										},
-									);
-								}}
-							>
-								Save
-							</Button>
-						</Dialog.Footer>
-					</Dialog.Content>
-				</Dialog.Root>
 			{/if}
-			<Button
-				variant="destructive"
-				size="icon"
-				on:click={async () => {
-					if (
-						!(await fancyConfirm(
-							'Are you sure?',
-							'Are you sure you want to delete this event?',
-						))
-					)
-						return;
-					if (
-						!(await fancyConfirm(
-							'Are you really sure?',
-							" This will delete ALL TEAMS and remove this event from everyone's sign up form.",
-						))
-					)
-						return;
-					if (
-						!prompt(
-							'Type "delete this event" to actually delete this event (LAST CHANCE!!!).',
-						)
-							?.toLowerCase()
-							.includes('delete this event')
-					)
-						return;
-
-					await deleteDoc(doc(db, 'events', event.event ?? ''));
-					for (const user of $allUsersCollection) {
-						user.events = user.events.filter((e) => e !== event.event);
-						await setDoc(
-							doc(db, 'users', user.email?.toLowerCase() ?? ''),
-							user,
-							{ merge: true },
-						);
-					}
-				}}
-			>
-				<Trash2 />
-			</Button>
 		</Card.Title>
 		<Card.Description>
 			<ul class="mb-2">
@@ -232,72 +340,81 @@
 					</li>
 				{/if}
 			</ul>
-			{#if event.event !== '*Rooming'}
-				<div class="flex flex-col gap-2">
-					<p class="text-black dark:text-white">Submission description:</p>
-					<p class="prose dark:prose-invert">
-						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-						{@html md.render(event.submissionDescription ?? '(none)')}
-					</p>
-					<Dialog.Root bind:open={submissionDialogOpen}>
-						<Dialog.Trigger>
-							<Button>Edit</Button>
-						</Dialog.Trigger>
-						<Dialog.Content>
-							<Dialog.Title>Edit submission description</Dialog.Title>
-							<p>Markdown is allowed</p>
-							<Textarea
-								placeholder="Submission description"
-								class="w-full"
-								bind:value={submissionDescription}
-							/>
-							<Dialog.Footer>
-								<Button
-									on:click={() => {
-										setDoc(
-											doc(db, 'events', event.event),
-											{
-												submissionDescription: submissionDescription ?? '',
-												lastUpdatedBy: $user?.email ?? '',
-											},
-											{
-												merge: true,
-											},
-										);
-
-										submissionDialogOpen = false;
-									}}
-								>
-									Save
-								</Button>
-							</Dialog.Footer>
-						</Dialog.Content>
-					</Dialog.Root>
-				</div>
-			{/if}
-			{@const peopleInTeams = event.teams.reduce(
+		</Card.Description>
+	</Card.Header>
+	<Card.Content class="flex flex-col gap-4">
+		{@const peopleInTeams = event.teams.reduce(
 				(acc, curr) => [...acc, ...curr.members],
 				[] as {
 			name: string;
 			email: string;
 		}[],
 			)}
-			{@const peopleNotInTeams =
-				event.event === '*Rooming'
-					? $allUsersCollection.filter(
-							(m) =>
-								m.events.length &&
-								!peopleInTeams.find(
-									(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
-								),
-						)
-					: $allUsersCollection.filter(
-							(m) =>
-								m.events.includes(event.event ?? '') &&
-								!peopleInTeams.find(
-									(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
-								),
-						)}
+		{@const peopleNotInTeams =
+			event.event === '*Rooming'
+				? $allUsersCollection.filter(
+						(m) =>
+							m.events.length &&
+							!peopleInTeams.find(
+								(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
+							),
+					)
+				: $allUsersCollection.filter(
+						(m) =>
+							m.events.includes(event.event ?? '') &&
+							!peopleInTeams.find(
+								(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
+							),
+					)}
+		<div>
+			{#if event.event !== '*Rooming'}
+				<div class="flex flex-col gap-2">
+					<div class="flex flex-row items-center gap-2">
+						<h3 class="text-lg font-semibold">Submission description</h3>
+						<Dialog.Root bind:open={submissionDialogOpen}>
+							<Dialog.Trigger>
+								<Button size="icon" variant="ghost">
+									<Pencil />
+								</Button>
+							</Dialog.Trigger>
+							<Dialog.Content>
+								<Dialog.Title>Edit submission description</Dialog.Title>
+								<p>Markdown is allowed</p>
+								<Textarea
+									placeholder="Submission description"
+									class="w-full"
+									bind:value={submissionDescription}
+								/>
+								<Dialog.Footer>
+									<Button
+										on:click={() => {
+											setDoc(
+												doc(db, 'events', event.event),
+												{
+													submissionDescription: submissionDescription ?? '',
+													lastUpdatedBy: $user?.email ?? '',
+												},
+												{
+													merge: true,
+												},
+											);
+
+											submissionDialogOpen = false;
+										}}
+									>
+										Save
+									</Button>
+								</Dialog.Footer>
+							</Dialog.Content>
+						</Dialog.Root>
+					</div>
+					<p class="prose mb-4 text-inherit dark:prose-invert">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						{@html md.render(event.submissionDescription || '(none)')}
+					</p>
+				</div>
+			{/if}
+
 			{#if peopleNotInTeams.length}
 				<Collapsible.Root>
 					<Collapsible.Trigger asChild let:builder>
@@ -308,7 +425,7 @@
 							class="flex w-full items-center p-2"
 						>
 							People not in {event.event === '*Rooming' ? 'rooms' : 'teams'} ({peopleNotInTeams.length})
-							<div class="flex-1" />
+							<div class="flex-1"></div>
 							<ChevronsUpDown />
 						</Button>
 					</Collapsible.Trigger>
@@ -392,7 +509,7 @@
 							class="flex w-full items-center p-2"
 						>
 							Events without member overlap
-							<div class="flex-1" />
+							<div class="flex-1"></div>
 							<ChevronsUpDown />
 						</Button>
 					</Collapsible.Trigger>
@@ -420,7 +537,7 @@
 							class="flex w-full items-center p-2"
 						>
 							Everyone in event
-							<div class="flex-1" />
+							<div class="flex-1"></div>
 							<ChevronsUpDown />
 						</Button>
 					</Collapsible.Trigger>
@@ -479,7 +596,7 @@
 							class="flex w-full items-center p-2"
 						>
 							People in unfilled rooms ({peopleInUnfilledRooms.length})
-							<div class="flex-1" />
+							<div class="flex-1"></div>
 							<ChevronsUpDown />
 						</Button>
 					</Collapsible.Trigger>
@@ -520,102 +637,7 @@
 					</Collapsible.Content>
 				</Collapsible.Root>
 			{/if}
-		</Card.Description>
-	</Card.Header>
-	<Card.Content class="flex flex-col gap-4">
-		<div class="flex items-center space-x-2">
-			<Switch
-				id="show-event-to-everyone"
-				checked={event.showToEveryone ?? false}
-				onCheckedChange={async (e) => {
-					await setDoc(
-						doc(db, 'events', event.event),
-						{
-							showToEveryone: e,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{ merge: true },
-					);
-				}}
-			/>
-			<Label for="show-event-to-everyone">
-				Show {event.event === '*Rooming' ? 'rooming' : 'event'} to everyone
-			</Label>
 		</div>
-		<div class="flex items-center space-x-2">
-			<Switch
-				id="show-in-signup"
-				checked={event.hideInSignup ?? false}
-				onCheckedChange={async (e) => {
-					await setDoc(
-						doc(db, 'events', event.event),
-						{
-							hideInSignup: e,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{ merge: true },
-					);
-				}}
-			/>
-			<Label for="show-in-signup">Hide in signup page</Label>
-		</div>
-		<Label class="flex flex-row items-center gap-2">
-			<Switch
-				onCheckedChange={async (checked) => {
-					event.locked = checked;
-					await setDoc(
-						doc(db, 'events', event.event ?? ''),
-						{
-							locked: checked,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{
-							merge: true,
-						},
-					);
-				}}
-				checked={event.locked ?? false}
-			/>
-			Lock {event.event === '*Rooming' ? 'rooming' : 'event'}
-		</Label>
-		{#if event.event !== '*Rooming'}
-			<div class="flex items-center space-x-2">
-				<Switch
-					id="lock-team-creation"
-					bind:checked={event.teamCreationLocked}
-					onCheckedChange={async (e) => {
-						await setDoc(
-							doc(db, 'events', event.event),
-							{
-								teamCreationLocked: e,
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{ merge: true },
-						);
-					}}
-				/>
-				<Label for="lock-team-creation">Lock team creation when full</Label>
-			</div>
-			<Label class="flex flex-row items-center gap-2">
-				<Switch
-					onCheckedChange={async (checked) => {
-						event.onlineSubmissions = checked;
-						await setDoc(
-							doc(db, 'events', event.event ?? ''),
-							{
-								onlineSubmissions: checked,
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
-					}}
-					checked={event.onlineSubmissions ?? false}
-				/>
-				Online submissions
-			</Label>
-		{/if}
 		<!-- teams loop -->
 		{#each event.teams as team (team.id)}
 			<TeamCard {event} {team} />

@@ -40,7 +40,7 @@
 						`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
 				</strong>
 				{#if team.messages?.filter((m) => !m.readBy.find((r) => r.email === $user.email)).length}
-					<div class="flex-1" />
+					<div class="flex-1"></div>
 					<Badge variant="destructive">
 						{team.messages?.filter(
 							(m) => !m.readBy.find((r) => r.email === $user.email),

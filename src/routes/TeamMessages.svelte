@@ -1,9 +1,15 @@
 <script lang="ts">
-	import { db, eventsCollection, noHtmlMd, user, userDoc } from '$lib';
+	import {
+		db,
+		eventsCollection,
+		isMobileOrTablet,
+		noHtmlMd,
+		user,
+		userDoc,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
-	import { isMobileOrTablet } from '$lib/utils';
 	import {
 		Timestamp,
 		addDoc,

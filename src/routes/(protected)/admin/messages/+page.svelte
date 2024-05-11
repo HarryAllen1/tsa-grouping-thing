@@ -46,7 +46,7 @@
 											class="flex w-full items-center p-2"
 										>
 											Blocked Messages
-											<div class="flex-1" />
+											<div class="flex-1"></div>
 											<ChevronsUpDown />
 										</Button>
 									</Collapsible.Trigger>

@@ -151,113 +151,112 @@
 											<ul>
 												{#each list.items as item}
 													<li class="flex w-full flex-row">
-														<DownloadURL ref={item.fullPath} let:link>
-															<StorageMetadata ref={item.fullPath} let:meta>
-																{#if meta.contentType?.startsWith('image/')}
-																	<Dialog.Root>
-																		<Dialog.Trigger>
-																			{item.name}
-																		</Dialog.Trigger>
-																		<Dialog.Content>
-																			<RotatingImage
-																				clickableImage
-																				src={link}
-																				alt={item.name}
-																				class="max-h-full max-w-full"
-																			/>
-																		</Dialog.Content>
-																	</Dialog.Root>
-																{:else if meta.contentType?.startsWith('video/')}
-																	<Dialog.Root>
-																		<Dialog.Trigger>
-																			{item.name}
-																		</Dialog.Trigger>
-																		<Dialog.Content
-																			class="grid max-h-full max-w-full place-items-center p-4"
-																		>
-																			<!-- svelte-ignore a11y_media_has_caption -->
-																			<video
-																				controls
-																				class="max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)]"
-																			>
-																				<source src={link} />
-																			</video>
-																		</Dialog.Content>
-																	</Dialog.Root>
-																{:else if meta.contentType?.startsWith('audio/')}
-																	<Dialog.Root>
-																		<Dialog.Trigger>
-																			{item.name}
-																		</Dialog.Trigger>
-																		<Dialog.Content
-																			class="grid place-items-center p-4"
-																		>
-																			<audio controls>
-																				<source src={link} />
-																			</audio>
-																		</Dialog.Content>
-																	</Dialog.Root>
-																{:else if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/pdf'].includes(meta.contentType ?? '')}
-																	<Dialog.Root
-																		bind:open={openDialogs[item.name]}
-																	>
-																		<Dialog.Trigger>
-																			{item.name}
-																		</Dialog.Trigger>
-																		<Dialog.Content
-																			class="grid max-h-screen max-w-full place-items-center p-6"
-																		>
-																			{#key openDialogs[item.name]}
-																				<p>
-																					If the document isn't showing up,
-																					click the download button in the
-																					bottom right.
-																				</p>
-																				<iframe
-																					src="https://docs.google.com/viewer?url={encodeURIComponent(
-																						link ?? '',
-																					)}&embedded=true"
-																					class="h-[calc(100vh-6rem)] w-[calc(100vw-6rem)]"
-																					frameborder="0"
-																					title="A powerpoint presentation"
-																				>
-																					This document cannot be viewed. Try
-																					downloading it using the button in the
-																					bottom right.
-																				</iframe>
-																				<Dialog.Footer>
-																					<Button
-																						class="fixed bottom-4 right-4 lg:bottom-8 lg:right-8"
-																						size="icon"
-																						on:click={() => {
-																							downloadURL(
-																								link ?? '',
-																								item.name,
-																							);
-																						}}
-																					>
-																						<Download />
-																					</Button>
-																				</Dialog.Footer>
-																			{/key}
-																		</Dialog.Content>
-																	</Dialog.Root>
-																{:else}
-																	<a
-																		href={link}
-																		target="_blank"
-																		rel="noreferrer"
-																		class="flex flex-row items-center"
-																	>
+														{#snippet submissionInfo(link, meta)}
+															{#if meta.contentType?.startsWith('image/')}
+																<Dialog.Root>
+																	<Dialog.Trigger>
 																		{item.name}
-																		<ArrowUpRight class="h-4 opacity-50" />
-																	</a>
-																{/if}
-																<div class="flex-grow" />
-																<span>
-																	{new Date(meta.timeCreated).toLocaleString()}
-																</span>
-															</StorageMetadata>
+																	</Dialog.Trigger>
+																	<Dialog.Content>
+																		<RotatingImage
+																			clickableImage
+																			src={link}
+																			alt={item.name}
+																			class="max-h-full max-w-full"
+																		/>
+																	</Dialog.Content>
+																</Dialog.Root>
+															{:else if meta.contentType?.startsWith('video/')}
+																<Dialog.Root>
+																	<Dialog.Trigger>
+																		{item.name}
+																	</Dialog.Trigger>
+																	<Dialog.Content
+																		class="grid max-h-full max-w-full place-items-center p-4"
+																	>
+																		<!-- svelte-ignore a11y_media_has_caption -->
+																		<video
+																			controls
+																			class="max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)]"
+																		>
+																			<source src={link} />
+																		</video>
+																	</Dialog.Content>
+																</Dialog.Root>
+															{:else if meta.contentType?.startsWith('audio/')}
+																<Dialog.Root>
+																	<Dialog.Trigger>
+																		{item.name}
+																	</Dialog.Trigger>
+																	<Dialog.Content
+																		class="grid place-items-center p-4"
+																	>
+																		<audio controls>
+																			<source src={link} />
+																		</audio>
+																	</Dialog.Content>
+																</Dialog.Root>
+															{:else if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/pdf'].includes(meta.contentType ?? '')}
+																<Dialog.Root bind:open={openDialogs[item.name]}>
+																	<Dialog.Trigger>
+																		{item.name}
+																	</Dialog.Trigger>
+																	<Dialog.Content
+																		class="grid max-h-screen max-w-full place-items-center p-6"
+																	>
+																		{#key openDialogs[item.name]}
+																			<p>
+																				If the document isn't showing up, click
+																				the download button in the bottom right.
+																			</p>
+																			<iframe
+																				src="https://docs.google.com/viewer?url={encodeURIComponent(
+																					link ?? '',
+																				)}&embedded=true"
+																				class="h-[calc(100vh-6rem)] w-[calc(100vw-6rem)]"
+																				frameborder="0"
+																				title="A powerpoint presentation"
+																			>
+																				This document cannot be viewed. Try
+																				downloading it using the button in the
+																				bottom right.
+																			</iframe>
+																			<Dialog.Footer>
+																				<Button
+																					class="fixed bottom-4 right-4 lg:bottom-8 lg:right-8"
+																					size="icon"
+																					on:click={() => {
+																						downloadURL(link ?? '', item.name);
+																					}}
+																				>
+																					<Download />
+																				</Button>
+																			</Dialog.Footer>
+																		{/key}
+																	</Dialog.Content>
+																</Dialog.Root>
+															{:else}
+																<a
+																	href={link}
+																	target="_blank"
+																	rel="noreferrer"
+																	class="flex flex-row items-center"
+																>
+																	{item.name}
+																	<ArrowUpRight class="h-4 opacity-50" />
+																</a>
+															{/if}
+															<div class="flex-grow"></div>
+															<span>
+																{new Date(meta.timeCreated).toLocaleString()}
+															</span>
+														{/snippet}
+														<DownloadURL ref={item.fullPath} let:link>
+															<StorageMetadata
+																ref={item.fullPath}
+																link={link ?? ''}
+																withMetadata={submissionInfo}
+															></StorageMetadata>
 														</DownloadURL>
 													</li>
 												{/each}
@@ -283,11 +282,7 @@
 												{#snippet edit()}
 													<Button>Edit result</Button>
 												{/snippet}
-												<AddResultDialog
-													{edit}
-													{event}
-													editing
-													id={team.id}
+												<AddResultDialog {edit} {event} editing id={team.id}
 												></AddResultDialog>
 											{:else}
 												{#snippet add()}

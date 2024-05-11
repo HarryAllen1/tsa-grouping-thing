@@ -92,7 +92,7 @@
 
 <div class="mt-6">
 	<ColorKey />
-	<div bind:this={graph} />
+	<div bind:this={graph}></div>
 
 	<Demographics />
 	<Gender />
