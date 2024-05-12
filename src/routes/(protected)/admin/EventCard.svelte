@@ -408,7 +408,7 @@
 							</Dialog.Content>
 						</Dialog.Root>
 					</div>
-					<p class="prose mb-4 text-inherit dark:prose-invert">
+					<p class="prose mb-4 text-sm text-inherit dark:prose-invert">
 						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						{@html md.render(event.submissionDescription || '(none)')}
 					</p>

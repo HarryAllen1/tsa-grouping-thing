@@ -869,7 +869,7 @@
 																</p>
 																<p>250MB max file size.</p>
 																<p>
-																	If you need to submit a file type not listed,
+																	If you need to submit a file type not listed
 																	or need to upload a file larger than 250MB,
 																	please contact Harry (<a
 																		href="mailto:s-hallen@lwsd.org"

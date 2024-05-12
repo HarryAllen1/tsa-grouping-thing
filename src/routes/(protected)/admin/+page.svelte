@@ -11,9 +11,9 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Input } from '$lib/components/ui/input';
 	import Label from '$lib/components/ui/label/label.svelte';
+	import * as Popover from '$lib/components/ui/popover';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
 	import { doc, setDoc } from 'firebase/firestore';
@@ -114,39 +114,37 @@
 
 	<div class="flex flex-row gap-2">
 		<Input bind:value={search} type="search" id="search" placeholder="Search" />
-		<DropdownMenu.Root>
-			<DropdownMenu.Trigger>
+		<Popover.Root>
+			<Popover.Trigger>
 				<Button variant="outline" size="icon"><Filter></Filter></Button>
-			</DropdownMenu.Trigger>
-			<DropdownMenu.Content>
-				<DropdownMenu.Label>Filters</DropdownMenu.Label>
-				<DropdownMenu.Separator></DropdownMenu.Separator>
-				<DropdownMenu.Item>
+			</Popover.Trigger>
+			<Popover.Content class="flex flex-col gap-2">
+				<div>
 					<Label class="flex flex-row items-center">
 						<Switch class="mr-2" bind:checked={fuseKeys.event} />
 						Search by events
 					</Label>
-				</DropdownMenu.Item>
-				<DropdownMenu.Item>
+				</div>
+				<div>
 					<Label class="flex flex-row items-center">
 						<Switch class="mr-2" bind:checked={fuseKeys.members} />
 						Search by members
 					</Label>
-				</DropdownMenu.Item>
-				<DropdownMenu.Item>
+				</div>
+				<div>
 					<Label class="flex flex-row items-center">
 						<Switch class="mr-2" bind:checked={shouldHideIndividualEvents} />
 						Hide individual events
 					</Label>
-				</DropdownMenu.Item>
-				<DropdownMenu.Item>
+				</div>
+				<div>
 					<Label class="flex flex-row items-center">
 						<Switch class="mr-2" bind:checked={onlyShowOverflown} />
 						Only show overflown events
 					</Label>
-				</DropdownMenu.Item>
-			</DropdownMenu.Content>
-		</DropdownMenu.Root>
+				</div>
+			</Popover.Content>
+		</Popover.Root>
 	</div>
 
 	<p class="mb-2 w-full">Green team: full; red team: over or underfilled</p>
