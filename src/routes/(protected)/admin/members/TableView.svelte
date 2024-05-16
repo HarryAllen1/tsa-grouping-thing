@@ -69,13 +69,18 @@
 							<Select.Value placeholder="T-shirt size" />
 						</Select.Trigger>
 						<Select.Content>
-							<Select.Item value="WXS">WXS</Select.Item>
-							<Select.Item value="S">S</Select.Item>
-							<Select.Item value="M">M</Select.Item>
-							<Select.Item value="L">L</Select.Item>
-							<Select.Item value="XL">XL</Select.Item>
-							<Select.Item value="XXL">XXL</Select.Item>
-							<Select.Item value="XXXL">XXXL</Select.Item>
+							<Select.Item value="W XS">W XS</Select.Item>
+							<Select.Item value="W S">W S</Select.Item>
+							<Select.Item value="W M">W M</Select.Item>
+							<Select.Item value="W L">W L</Select.Item>
+							<Select.Item value="W XL">W XL</Select.Item>
+							<Select.Item value="W XXL">W XXL</Select.Item>
+							<Select.Item value="M XS">M XS</Select.Item>
+							<Select.Item value="M S">M S</Select.Item>
+							<Select.Item value="M M">M M</Select.Item>
+							<Select.Item value="M L">M L</Select.Item>
+							<Select.Item value="M XL">M XL</Select.Item>
+							<Select.Item value="M XXL">M XXL</Select.Item>
 							<Select.Item value="null">Unspecified</Select.Item>
 						</Select.Content>
 					</Select.Root>
