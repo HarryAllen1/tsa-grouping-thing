@@ -30,10 +30,6 @@
 
 	let { children } = $props();
 
-	if ($page.url.hostname === 'tsa-grouping-thing.vercel.app') {
-		location.href = `https://grouping.jhstsa.org${$page.url.pathname}`;
-	}
-
 	const isAuthReady = auth.authStateReady();
 
 	const unsub = onAuthStateChanged(auth, async (user) => {
