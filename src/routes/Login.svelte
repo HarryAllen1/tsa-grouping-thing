@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { auth, yay } from '$lib';
+	import { auth, yay, fancyConfirm } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import confetti from 'canvas-confetti';
@@ -8,6 +8,7 @@
 		browserLocalPersistence,
 		setPersistence,
 		signInWithPopup,
+		type AuthError,
 	} from 'firebase/auth';
 
 	const provider = new OAuthProvider('microsoft.com');
@@ -24,16 +25,24 @@
 		<Button
 			on:click={async () => {
 				await setPersistence(auth, browserLocalPersistence);
-				const user = await signInWithPopup(auth, provider);
+				try {
+					const user = await signInWithPopup(auth, provider);
 
-				if (!user.user.email?.endsWith('@lwsd.org')) {
-					alert('You must use an LWSD account to log in.');
-					await user.user.delete();
-				}
+					if (!user.user.email?.endsWith('@lwsd.org')) {
+						alert('You must use an LWSD account to log in.');
+						await user.user.delete();
+					}
 
-				if (user.user) {
-					confetti();
-					yay.play();
+					if (user.user) {
+						confetti();
+						yay.play();
+					}
+				} catch (error: unknown) {
+					const err = error as AuthError;
+					if (['auth/cancelled-popup-request', 'auth/popup-blocked'].includes(err.code)) {
+						fancyConfirm('Please enable popups for this site.', 'An error with the login popup occurred. Make sure that you have popups enabled by clicking the window icon in the right of the address bar. If logging in still doesn\'t work, contact a board member.', [['Ok', true]])
+					}
+					else fancyConfirm('An error occurred while logging in.', `Please try again or contact a board member for assistance. (error code/message: ${err.message})`, [['Ok', true]])
 				}
 			}}
 			class="mt-4"
