@@ -261,6 +261,7 @@
 											merge: true,
 										},
 									);
+									editEventDialogOpen = false;
 								}}
 							>
 								Save
