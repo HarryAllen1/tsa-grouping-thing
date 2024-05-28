@@ -1185,7 +1185,7 @@
 			{/each}
 		</div>
 	{/if}
-	<div class="mt-4 flex items-center space-x-2">
+	<div class="my-4 flex items-center space-x-2">
 		<Switch bind:checked={$yellowMode} id="yellow" />
 		<Label for="yellow">Yellow mode</Label>
 	</div>

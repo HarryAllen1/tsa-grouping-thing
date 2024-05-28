@@ -4,7 +4,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { selected } from './messages';
 
-	$: teams =
+	let teams = $derived(
 		$eventsCollection
 			.filter((e) =>
 				e.teams.filter((t) =>
@@ -17,7 +17,8 @@
 				e.teams
 					.filter((t) => t.members.find((m) => m.email === $user.email))
 					.map((t) => ({ ...t, event: e })),
-			) ?? [];
+			) ?? [],
+	);
 </script>
 
 <h2
@@ -29,7 +30,7 @@
 {#each teams as team, i (i)}
 	<button
 		class="relative flex w-full select-none rounded-sm px-2 py-1.5 text-start text-sm outline-none hover:bg-accent hover:text-accent-foreground"
-		on:click={() => {
+		onclick={() => {
 			$selected = team.id;
 		}}
 	>
