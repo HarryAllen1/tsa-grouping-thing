@@ -1,22 +1,31 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
+	import type { Snippet } from 'svelte';
 
-	export let href: string;
-	export let open: boolean;
-
-	let className: string | undefined | null = undefined;
-	export { className as class };
+	let {
+		href,
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		open = $bindable(),
+		class: className,
+		children,
+		...restProps
+	}: {
+		href: string;
+		open: boolean;
+		children: Snippet;
+		class?: string;
+	} = $props();
 </script>
 
 <a
 	{href}
-	on:click={() => (open = false)}
+	onclick={() => (open = false)}
 	class={cn(
 		$page.url.pathname === href ? 'text-foreground' : 'text-foreground/60',
 		className,
 	)}
-	{...$$restProps}
+	{...restProps}
 >
-	<slot />
+	{@render children()}
 </a>

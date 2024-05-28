@@ -7,11 +7,12 @@
 	import { doc, setDoc } from 'firebase/firestore';
 	import Pencil from 'lucide-svelte/icons/pencil';
 
-	export let teamId: string;
-	export let event: EventDoc;
+	let { teamId, event }: { teamId: string; event: EventDoc } = $props();
 
-	let open = false;
-	let teamName = event.teams.find((team) => team.id === teamId)?.teamName;
+	let open = $state(false);
+	let teamName = $state(
+		event.teams.find((team) => team.id === teamId)?.teamName,
+	);
 </script>
 
 <Dialog.Root bind:open>

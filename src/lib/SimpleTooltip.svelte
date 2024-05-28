@@ -1,12 +1,19 @@
 <script lang="ts">
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import type { Snippet } from 'svelte';
 
-	export let message: string;
+	let {
+		message,
+		children,
+	}: {
+		message: string;
+		children: Snippet;
+	} = $props();
 </script>
 
 <Tooltip.Root>
 	<Tooltip.Trigger>
-		<slot />
+		{@render children()}
 	</Tooltip.Trigger>
 	<Tooltip.Content>
 		<p>
