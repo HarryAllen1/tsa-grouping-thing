@@ -12,7 +12,7 @@
 
 	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 
-	let hash = Math.random().toString(36).substring(7);
+	let hash = Math.random().toString(36).slice(7);
 	let values = {
 		nationalId: user.nationalId,
 		washingtonId: user.washingtonId,
@@ -117,7 +117,9 @@
 						await setDoc(
 							doc(db, 'users', user.email),
 							{
-								nationalId: parseInt((values.nationalId ?? 0).toString()),
+								nationalId: Number.parseInt(
+									(values.nationalId ?? 0).toString(),
+								),
 								lastUpdatedBy: $userStore?.email ?? '',
 							},
 							{ merge: true },
@@ -210,7 +212,7 @@
 														t.members.find((m) => m.email === user.email),
 													) ?? null,
 										)
-										.filter((t) => t).length < 4
+										.filter(Boolean).length < 4
 								? 'text-orange-500'
 								: user.events
 											.map(
@@ -221,7 +223,7 @@
 															t.members.find((m) => m.email === user.email),
 														) ?? null,
 											)
-											.filter((t) => t).length < user.events.length
+											.filter(Boolean).length < user.events.length
 									? 'text-yellow-500'
 									: ''}"
 					>

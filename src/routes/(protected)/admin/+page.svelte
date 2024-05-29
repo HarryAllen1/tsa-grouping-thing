@@ -45,7 +45,7 @@
 						email: m.email,
 					})),
 					teamNumbers: e.teams.map((t) => `2082-${t.teamNumber}`),
-					waId: allMembers.map((m) => m.washingtonId).filter((m) => m),
+					waId: allMembers.map((m) => m.washingtonId).filter(Boolean),
 				};
 			})
 			.toSorted((a, b) => a.event.localeCompare(b.event)),
@@ -96,12 +96,11 @@
 			e.key === '/' &&
 			el !== document.activeElement &&
 			!(document.activeElement instanceof HTMLInputElement) &&
-			!(document.activeElement instanceof HTMLTextAreaElement)
+			!(document.activeElement instanceof HTMLTextAreaElement) &&
+			el instanceof HTMLInputElement
 		) {
-			if (el instanceof HTMLInputElement) {
-				el.focus();
-				e.preventDefault();
-			}
+			el.focus();
+			e.preventDefault();
 		}
 	}}
 />

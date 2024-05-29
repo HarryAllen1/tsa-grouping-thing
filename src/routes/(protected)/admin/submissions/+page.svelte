@@ -30,6 +30,7 @@
 	const openDialogs: Record<string, boolean> = {};
 </script>
 
+/** eslint-disable unicorn/prefer-array-some */
 <div class="container pt-8">
 	<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 		Submissions!!!!!!!!!
@@ -127,7 +128,7 @@
 									{@const teamResult = team.members
 										.map((m) => m.email)
 										.filter((m) => resultMemberSet.has(m))}
-									{#if event.results && teamResult.length}
+									{#if event.results && teamResult.length > 0}
 										<Card.Description>
 											{nth(
 												event.results.findIndex(
@@ -135,10 +136,10 @@
 														r.members
 															.map((m) => m.email)
 															.sort((a, b) => a.localeCompare(b))
-															.join() ===
+															.join(',') ===
 														teamResult
 															.sort((a, b) => a.localeCompare(b))
-															.join(),
+															.join(','),
 												) + 1,
 											)}
 											place
@@ -278,7 +279,7 @@
 											)}
 											{#if event.results && team.members
 													.map((m) => m.email)
-													.filter((m) => resultMemberSet.has(m)).length}
+													.some((m) => resultMemberSet.has(m))}
 												{#snippet edit()}
 													<Button>Edit result</Button>
 												{/snippet}

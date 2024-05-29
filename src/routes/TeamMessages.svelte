@@ -130,12 +130,12 @@
 
 		if (
 			team.messages?.filter(
-				(m) => !m.readBy.find((r) => r.email === $userDoc?.email),
+				(m) => !m.readBy.some((r) => r.email === $userDoc?.email),
 			).length
 		) {
 			for (const message of team.event.teams.find((t) => t.id === team.id)
 				?.messages ?? []) {
-				if (!message.readBy.find((r) => r.email === $userDoc?.email)) {
+				if (!message.readBy.some((r) => r.email === $userDoc?.email)) {
 					message.readBy.push({
 						name: $userDoc?.name ?? '',
 						email: $userDoc?.email ?? '',

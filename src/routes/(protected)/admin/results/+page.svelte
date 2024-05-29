@@ -34,7 +34,7 @@
 						</Card.Description>
 					</Card.Header>
 					<Card.Content>
-						{#if event.results && event.results.length}
+						{#if event.results && event.results.length > 0}
 							<ol class="my-6 ml-6 list-decimal [&>li]:mt-2">
 								{#each event.results as result, i}
 									<li

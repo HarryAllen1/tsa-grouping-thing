@@ -59,7 +59,7 @@
 														<span class="opacity-80">
 															{new Date(
 																message.time.seconds * 1000 +
-																	message.time.nanoseconds / 1000000,
+																	message.time.nanoseconds / 1_000_000,
 															).toLocaleString()}
 														</span>
 													</p>

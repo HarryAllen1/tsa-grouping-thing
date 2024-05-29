@@ -56,11 +56,11 @@
 		<Button
 			class="mb-4"
 			on:click={() => {
-				document
-					.querySelectorAll('.member-collapsible:not([data-state="open"])')
-					.forEach((el) => {
-						if (el instanceof HTMLButtonElement) el.click();
-					});
+				for (const el of document.querySelectorAll(
+					'.member-collapsible:not([data-state="open"])',
+				)) {
+					if (el instanceof HTMLButtonElement) el.click();
+				}
 			}}
 		>
 			Expand all events

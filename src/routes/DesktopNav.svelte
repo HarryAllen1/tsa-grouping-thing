@@ -22,7 +22,7 @@
 	</a>
 	<nav class="flex items-center space-x-6 text-sm font-medium">
 		{#each navItems as navItem}
-			{#if Array.isArray(navItem) && navItem.length}
+			{#if Array.isArray(navItem) && navItem.length > 0}
 				<Dropdown.Root bind:open>
 					<Dropdown.Trigger
 						class="flex flex-row items-center {$page.url.pathname.includes(

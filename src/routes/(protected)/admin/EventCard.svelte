@@ -295,9 +295,9 @@
 						link.setAttribute('href', url);
 						link.setAttribute('download', 'rooming.csv');
 						link.style.visibility = 'hidden';
-						document.body.appendChild(link);
+						document.body.append(link);
 						link.click();
-						document.body.removeChild(link);
+						link.remove();
 						URL.revokeObjectURL(url);
 					}}
 				>
@@ -358,15 +358,15 @@
 			event.event === '*Rooming'
 				? $allUsersCollection.filter(
 						(m) =>
-							m.events.length &&
-							!peopleInTeams.find(
+							m.events.length > 0 &&
+							!peopleInTeams.some(
 								(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
 							),
 					)
 				: $allUsersCollection.filter(
 						(m) =>
 							m.events.includes(event.event ?? '') &&
-							!peopleInTeams.find(
+							!peopleInTeams.some(
 								(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
 							),
 					)}
@@ -455,7 +455,7 @@
 											"Are you sure you want to remove everyone who hasn't created a team yet from this event?",
 										)
 									) {
-										peopleNotInTeams.forEach(async (person) => {
+										for (const person of peopleNotInTeams) {
 											const userDoc = $allUsersCollection.find(
 												(u) =>
 													u.email?.toLowerCase() ===
@@ -474,7 +474,7 @@
 													{ merge: true },
 												);
 											}
-										});
+										}
 									}
 								}}
 							>
@@ -654,7 +654,7 @@
 		<Button
 			on:click={async () => {
 				let lowestNotTaken = 1;
-				while (event.teams.find((t) => t.teamNumber === lowestNotTaken)) {
+				while (event.teams.some((t) => t.teamNumber === lowestNotTaken)) {
 					lowestNotTaken++;
 				}
 
@@ -684,12 +684,12 @@
 				on:click={() => {
 					for (const member of event.members) {
 						if (
-							!event.teams.find((t) =>
+							!event.teams.some((t) =>
 								t.members.find((m) => m.email === member.email),
 							)
 						) {
 							let lowestNotTaken = 1;
-							while (event.teams.find((t) => t.teamNumber === lowestNotTaken)) {
+							while (event.teams.some((t) => t.teamNumber === lowestNotTaken)) {
 								lowestNotTaken++;
 							}
 							event.teams.push({

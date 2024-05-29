@@ -12,10 +12,7 @@ export const load = (async ({ params: { teamId }, url }) => {
 			throw error(400, 'UID is required');
 		}
 
-		uid = uid
-			.split('')
-			.map((c) => c.charCodeAt(0))
-			.join('');
+		uid = [...uid].map((c) => c.codePointAt(0)).join('');
 
 		const token = RtcTokenBuilder.buildTokenWithUid(
 			publicEnv.PUBLIC_AGORA_APP_ID,
@@ -28,7 +25,7 @@ export const load = (async ({ params: { teamId }, url }) => {
 		);
 
 		return { token, uid, teamId };
-	} catch (e) {
-		throw error(400, `json expected: ${JSON.stringify(e)}`);
+	} catch (error_) {
+		throw error(400, `json expected: ${JSON.stringify(error_)}`);
 	}
 }) satisfies PageServerLoad;

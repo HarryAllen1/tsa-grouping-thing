@@ -66,7 +66,7 @@
 			(acc, team) =>
 				acc +
 				(team.messages?.filter(
-					(m) => !m.readBy.find((r) => r.email === $user.email),
+					(m) => !m.readBy.some((r) => r.email === $user.email),
 				).length ?? 0),
 			0,
 		),

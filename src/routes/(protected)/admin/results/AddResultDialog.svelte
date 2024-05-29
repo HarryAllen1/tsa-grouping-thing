@@ -28,8 +28,8 @@
 		edit,
 		add,
 		id = crypto.randomUUID(),
-		onOpenChange = undefined,
-		members = undefined,
+		onOpenChange,
+		members,
 	}: {
 		edit?: Snippet;
 		add?: Snippet;
@@ -90,7 +90,7 @@
 	function closeAndFocusTrigger(triggerId: string) {
 		comboboxOpen = false;
 		tick().then(() => {
-			document.getElementById(triggerId)?.focus();
+			document.querySelector<HTMLElement>(`#${triggerId}`)?.focus();
 		});
 	}
 
@@ -123,7 +123,7 @@
 		{:else if add}
 			{@render add()}
 		{:else}
-			<Button id={id.replaceAll('-', '').replace(/[0-9]/, '')}>Add</Button>
+			<Button id={id.replaceAll('-', '').replace(/\d/, '')}>Add</Button>
 		{/if}
 	</Dialog.Trigger>
 	<Dialog.Content>
@@ -338,7 +338,7 @@
 						id = crypto.randomUUID();
 						open = false;
 						const el = document.querySelector(
-							`#${id.replaceAll('-', '').replace(/[0-9]/, '')}`,
+							`#${id.replaceAll('-', '').replace(/\d/, '')}`,
 						);
 
 						if (el instanceof HTMLButtonElement)

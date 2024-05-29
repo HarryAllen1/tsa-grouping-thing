@@ -20,7 +20,7 @@ export const eventError = (
 	const eventStats = eventData.find((e) => e.event === event);
 
 	if (
-		(eventStats?.members ?? []).length &&
+		(eventStats?.members ?? []).length > 0 &&
 		(eventStats?.members ?? []).length < eventInfo.minTeamSize
 	)
 		return 'errorNotEnough';
@@ -34,5 +34,5 @@ export const eventError = (
 			eventInfo.perChapter
 	)
 		return 'warning';
-	 return false;
+	return false;
 };

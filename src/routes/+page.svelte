@@ -81,7 +81,7 @@
 
 	let signedUpEvents = $derived(
 		$settings?.enableRooming && $user
-			? $eventsCollection.length
+			? $eventsCollection.length > 0
 				? ($userDoc?.events
 						? [
 								...$userDoc.events,
@@ -96,7 +96,7 @@
 						}))
 						.toSorted((a, b) => a.event!.localeCompare(b.event!))
 				: []
-			: $eventsCollection.length
+			: $eventsCollection.length > 0
 				? ($userDoc?.events ?? [])
 						.map((e) => ({
 							...$eventsCollection.find((ev) => ev.event === e),
@@ -105,7 +105,7 @@
 				: [],
 	) as EventDoc[];
 	let eventData = $derived(
-		$eventsCollection.length && $user
+		$eventsCollection.length > 0 && $user
 			? $eventsCollection
 					.map((e) => ({
 						...e,
@@ -123,12 +123,10 @@
 
 	let requests = $derived(
 		signedUpEvents
-			.filter(
-				(e) => e.teams.filter((t) => t.requests?.length).length && !e.locked,
-			)
+			.filter((e) => e.teams.some((t) => t.requests?.length) && !e.locked)
 			.map((e) => ({
 				event: e.event,
-				team: e.teams.filter(
+				team: e.teams.find(
 					(t) =>
 						t.requests?.length &&
 						!t.locked &&
@@ -136,7 +134,7 @@
 						t.members
 							.map((u) => u.email.toLowerCase())
 							.includes($user?.email?.toLowerCase() ?? ''),
-				)[0],
+				),
 				requests: e.teams
 					.filter(
 						(t) =>
@@ -176,19 +174,19 @@
 					// signed up for event and also include gender check
 					// DO NOT CHANGE TO `!event.allowGenderMixing`
 					(event.allowGenderMixing === false
-						? (m.gender === $userDoc?.gender && m.events.length) ||
-							(m.gender === 'Non-Binary' && m.events.length)
+						? (m.gender === $userDoc?.gender && m.events.length > 0) ||
+							(m.gender === 'Non-Binary' && m.events.length > 0)
 						: event.showToEveryone
 							? m.events.length
 							: m.events.includes(event.event ?? '')) &&
 					// not already in team
-					!event.teams.find((t) =>
+					!event.teams.some((t) =>
 						t.members?.find(
 							(e) => e.email.toLowerCase() === m.email.toLowerCase(),
 						),
 					) &&
 					// didn't request to be part of another team
-					!event.teams.find((t) =>
+					!event.teams.some((t) =>
 						t.requests?.find(
 							(e) => e.email.toLowerCase() === m.email.toLowerCase(),
 						),
@@ -241,7 +239,7 @@
 
 											let lowestNotTaken = 1;
 											while (
-												actualEvent.teams.find(
+												actualEvent.teams.some(
 													(t) => t.teamNumber === lowestNotTaken,
 												)
 											) {
@@ -881,7 +879,7 @@
 													</div>
 												{/if}
 											</div>
-										{:else if !event.locked && !(event.teams.find( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) || event.event === 'Technology Bowl') && team.members.length < event.maxTeamSize}
+										{:else if !event.locked && !(event.teams.some( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) || event.event === 'Technology Bowl') && team.members.length < event.maxTeamSize}
 											{#if team.requests?.find((u) => u.email === $user?.email)}
 												<Button disabled>Requested</Button>
 											{:else}
@@ -955,7 +953,7 @@
 															</Button>
 														</Collapsible.Trigger>
 														<Collapsible.Content class="px-2">
-															{#if !list.items.length}
+															{#if list.items.length === 0}
 																<p>No files</p>
 															{:else}
 																<ul>
@@ -1129,13 +1127,13 @@
 							</Card.Root>
 						{/each}
 					</Card.Content>
-					{#if !event.locked && !(event.teamCreationLocked && event.teams.length >= event.perChapter) && !event.teams.filter( (t) => t.requests
+					{#if !event.locked && !(event.teamCreationLocked && event.teams.length >= event.perChapter) && event.teams.filter( (t) => t.requests
 									?.map((r) => r.email)
-									.includes($user?.email ?? ''), ).length}
+									.includes($user?.email ?? ''), ).length === 0}
 						<Card.Footer>
 							<Button
 								disabled={!!(
-									event.teams.find((t) =>
+									event.teams.some((t) =>
 										t.members.find(
 											(e) => e.email.toLowerCase() === ($user?.email ?? ''),
 										),
@@ -1144,7 +1142,7 @@
 								on:click={async () => {
 									let lowestNotTaken = 1;
 									while (
-										event.teams.find((t) => t.teamNumber === lowestNotTaken)
+										event.teams.some((t) => t.teamNumber === lowestNotTaken)
 									) {
 										lowestNotTaken++;
 									}

@@ -116,8 +116,8 @@
 							.then(() => {
 								res('Uploaded!');
 							})
-							.catch((e) => {
-								rej(String(e));
+							.catch((error) => {
+								rej(String(error));
 							});
 					});
 				}),
@@ -273,7 +273,7 @@
 							<p>All people not already in a team:</p>
 							<ul>
 								{#each $allUsersCollection
-									.filter((p) => !event.teams.find( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
+									.filter((p) => !event.teams.some( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
 									.sort((a, b) => a?.name?.localeCompare(b?.name))
 									.filter( (m) => (event.event === '*Rooming' ? m.events.length > 0 : true), ) as person (person.email)}
 									<li

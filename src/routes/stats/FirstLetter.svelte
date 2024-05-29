@@ -5,8 +5,8 @@
 	let graph = $state<HTMLDivElement>();
 
 	$effect(() => {
-		if ($allUsersCollection.length) {
-			let firstChar = 'A'.charCodeAt(0);
+		if ($allUsersCollection.length > 0) {
+			let firstChar = 'A'.codePointAt(0) ?? 0;
 			const data = $allUsersCollection
 				.filter((e) => e.events.length)
 				.reduce(
@@ -19,9 +19,9 @@
 									return d;
 								})
 							: acc,
-					Array(26)
+					Array.from({ length: 26 })
 						.fill(null)
-						.map(() => String.fromCharCode(firstChar++))
+						.map(() => String.fromCodePoint(firstChar++))
 						.map((d) => ({
 							name: d,
 							value: 0,

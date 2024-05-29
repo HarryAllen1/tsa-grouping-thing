@@ -5,7 +5,7 @@
 	let graph = $state<HTMLDivElement>();
 
 	$effect(() => {
-		if ($allUsersCollection.length) {
+		if ($allUsersCollection.length > 0) {
 			const data = $allUsersCollection
 				.filter((e) => e.events.length)
 				.reduce(

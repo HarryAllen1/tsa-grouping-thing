@@ -16,7 +16,7 @@
 		document.body.style.setProperty('--radius', `${$config.radius ?? 0.5}rem`);
 		document.body.style.backgroundImage = `url(${$config.background ?? ''})`;
 		if ($config.theme === 'random') {
-			`--background
+			for (const prop of `--background
 --foreground
 --muted
 --muted-foreground
@@ -34,18 +34,16 @@
 --accent-foreground
 --destructive
 --destructive-foreground
---ring`
-				.split('\n')
-				.forEach((prop) => {
-					document.body.style.setProperty(
-						prop,
-						prop === '--ring'
-							? Math.random().toString()
-							: generateRandomHSLString(),
-					);
-				});
+--ring`.split('\n')) {
+				document.body.style.setProperty(
+					prop,
+					prop === '--ring'
+						? Math.random().toString()
+						: generateRandomHSLString(),
+				);
+			}
 		} else {
-			`--background
+			for (const prop of `--background
 --foreground
 --muted
 --muted-foreground
@@ -63,9 +61,8 @@
 --accent-foreground
 --destructive
 --destructive-foreground
---ring`
-				.split('\n')
-				.forEach((prop) => document.body.style.removeProperty(prop));
+--ring`.split('\n'))
+				document.body.style.removeProperty(prop);
 		}
 	});
 </script>

@@ -14,7 +14,7 @@
 	let graph = $state<HTMLDivElement>();
 
 	$effect(() => {
-		if ($allUsersCollection.length && $eventsCollection.length) {
+		if ($allUsersCollection.length > 0 && $eventsCollection.length > 0) {
 			const events = $allUsersCollection
 				.filter((u) => u.events)
 				.reduce((acc, curr) => {
