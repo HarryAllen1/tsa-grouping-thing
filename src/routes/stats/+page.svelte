@@ -17,25 +17,28 @@
 		if ($allUsersCollection.length && $eventsCollection.length) {
 			const events = $allUsersCollection
 				.filter((u) => u.events)
-				.reduce((acc, curr) => [...acc, ...curr.events], [] as string[])
+				.reduce((acc, curr) => {
+					acc.push(...curr.events);
+					return acc;
+				}, [] as string[])
 				.reduce(
 					(acc, curr) => {
 						const index = acc.findIndex((e) => e.name === curr);
 						if (index === -1) {
-							return [...acc, { name: curr, freq: 1 }];
-						} else {
-							acc[index].freq++;
+							acc.push({ name: curr, freq: 1 });
 							return acc;
 						}
+						acc[index].freq++;
+						return acc;
 					},
 					[] as { name: string; freq: number }[],
 				);
-			$eventsCollection.forEach((e) => {
+			for (const e of $eventsCollection) {
 				const index = events.findIndex((event) => event.name === e.event);
 				if (index === -1) {
 					events.push({ name: e.event, freq: 0 });
 				}
-			});
+			}
 
 			const plotEl = plot({
 				grid: true,

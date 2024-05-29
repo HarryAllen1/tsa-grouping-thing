@@ -11,7 +11,7 @@
 	export let data: PageData;
 
 	const channel = data.teamId;
-	const uid = parseInt(data.uid);
+	const uid = Number.parseInt(data.uid);
 	const token = data.token;
 	console.log(token);
 
@@ -70,10 +70,10 @@
 
 	onMount(init);
 	onDestroy(() => {
-		users.forEach((user) => {
+		for (const user of users) {
 			user.videoTrack?.stop();
 			user.audioTrack?.stop();
-		});
+		}
 		users = [];
 		audio?.close();
 		video?.close();

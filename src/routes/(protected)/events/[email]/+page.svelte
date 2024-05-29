@@ -22,10 +22,10 @@
 		$events
 			.filter((e) => e.event !== '*Rooming')
 			.reduce(
-				(acc, curr) => ({
-					...acc,
-					[curr.event]: $userDoc?.events.includes(curr.event) ?? false,
-				}),
+				(acc, curr) => {
+					acc[curr.event] = $userDoc?.events.includes(curr.event) ?? false;
+					return acc;
+				},
 				{} as { [event: string]: boolean },
 			),
 	);
@@ -46,7 +46,7 @@
 	<p class="mb-2">Minimum 4 events, maximum 6 events.</p>
 	<p class="mb-4">Currently {$userDoc?.events.length}/6</p>
 
-	<div class="flex flex-col gap-2">
+	<div class="mb-4 flex flex-col gap-2">
 		{#each $events.filter((e) => e.event !== '*Rooming') as event (event.event)}
 			<div class="flex items-center space-x-2">
 				<Checkbox

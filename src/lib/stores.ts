@@ -1,5 +1,5 @@
 import type { User } from 'firebase/auth';
-import { type Readable } from 'svelte/store';
+import type { Readable } from 'svelte/store';
 import { collectionStore, docStore, userStore } from 'sveltefire';
 import { auth, db } from './firebase';
 import type { EventDoc, SettingsDoc, UserDoc } from './types';

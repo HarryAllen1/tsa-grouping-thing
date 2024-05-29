@@ -16,10 +16,10 @@
 		$events
 			.filter((e) => !e.hideInSignup)
 			.reduce(
-				(acc, curr) => ({
-					...acc,
-					[curr.event]: $userDoc?.events.includes(curr.event) ?? false,
-				}),
+				(acc, curr) => {
+					acc[curr.event] = $userDoc?.events.includes(curr.event) ?? false;
+					return acc;
+				},
 				{} as { [event: string]: boolean },
 			),
 	);

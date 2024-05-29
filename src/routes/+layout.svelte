@@ -106,7 +106,7 @@
 					<Navbar />
 					{#key $user}
 						{@render children()}
-						<div class="fixed bottom-8 right-8">
+						<div class="fixed bottom-8 right-8" class:hidden={!dev}>
 							<Popover.Root
 								onOpenChange={(e) => {
 									if (e) $selected = null;

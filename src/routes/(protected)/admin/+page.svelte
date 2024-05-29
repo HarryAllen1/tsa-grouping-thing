@@ -29,7 +29,9 @@
 		decodeURIComponent($page.url.searchParams.get('q') ?? ''),
 	);
 
-	const changeSearch = (s: string) => (search = s);
+	const changeSearch = (s: string) => {
+		search = s;
+	};
 
 	let eventData = $derived<EventData[]>(
 		$eventsCollection

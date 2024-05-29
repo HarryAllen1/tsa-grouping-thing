@@ -34,5 +34,5 @@ export const eventError = (
 			eventInfo.perChapter
 	)
 		return 'warning';
-	else return false;
+	 return false;
 };

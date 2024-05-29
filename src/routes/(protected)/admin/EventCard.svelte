@@ -345,7 +345,10 @@
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-4">
 		{@const peopleInTeams = event.teams.reduce(
-				(acc, curr) => [...acc, ...curr.members],
+				(acc, curr) => {
+					acc.push(...curr.members);
+					return acc;
+				},
 				[] as {
 			name: string;
 			email: string;
@@ -582,7 +585,10 @@
 				{@const peopleInUnfilledRooms = event.teams
 					.filter((t) => t.members.length < event.minTeamSize)
 					.reduce(
-						(acc, curr) => [...acc, ...curr.members],
+						(acc, curr) => {
+							acc.push(...curr.members);
+							return acc;
+						},
 						[] as {
 							name: string;
 							email: string;

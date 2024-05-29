@@ -21,7 +21,7 @@ export const load = (async ({ params: { teamId }, url }) => {
 			publicEnv.PUBLIC_AGORA_APP_ID,
 			env.AGORA_APP_CERTIFICATE,
 			teamId,
-			parseInt(uid),
+			Number.parseInt(uid),
 			RtcRole.PUBLISHER,
 			600,
 			600,
