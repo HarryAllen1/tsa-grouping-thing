@@ -10,6 +10,7 @@
 	import { eventError } from './eventError.js';
 	import FirstLetter from './FirstLetter.svelte';
 	import Grade from './Grade.svelte';
+	import FirstLetterLast from './FirstLetterLast.svelte';
 
 	let graph = $state<HTMLDivElement>();
 
@@ -33,7 +34,9 @@
 					},
 					[] as { name: string; freq: number }[],
 				);
-			for (const e of $eventsCollection) {
+			for (const e of $eventsCollection.filter(
+				(e) => !['*Rooming', '*Cardboard Boat'].includes(e.event),
+			)) {
 				const index = events.findIndex((event) => event.name === e.event);
 				if (index === -1) {
 					events.push({ name: e.event, freq: 0 });
@@ -101,5 +104,6 @@
 	<Gender />
 	<TShirt />
 	<FirstLetter />
+	<FirstLetterLast />
 	<Grade />
 </div>

@@ -11,9 +11,9 @@
 				.filter((e) => e.events.length)
 				.reduce(
 					(acc, curr) =>
-						curr.firstName
+						curr.lastName
 							? acc.map((d) => {
-									if (d.name === curr.firstName?.toUpperCase().charAt(0)) {
+									if (d.name === curr.lastName?.toUpperCase().charAt(0)) {
 										return { name: d.name, value: d.value + 1 };
 									}
 									return d;
