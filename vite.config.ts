@@ -12,7 +12,6 @@ export default defineConfig({
 		},
 		include: [
 			'fuse.js',
-			'shiki/bundle/web',
 			'cmdk-sv',
 			'tailwindcss/colors',
 			'@observablehq/plot',
@@ -24,7 +23,6 @@ export default defineConfig({
 			'firebase/firestore',
 			'firebase/storage',
 			'd3',
-			'@google-cloud/logging',
 		],
 	},
 });

@@ -3,7 +3,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Table from '$lib/components/ui/table';
 	import { Timestamp } from 'firebase/firestore';
-	import { codeToHtml } from 'shiki/bundle/web';
+	// import { codeToHtml } from 'shiki/bundle/web';
 	import { Collection } from 'sveltefire';
 </script>
 
@@ -55,10 +55,10 @@
 									<Dialog.Title>
 										{log.collection}/{log.id}
 									</Dialog.Title>
-									{#await codeToHtml( JSON.stringify(removeRef(log), null, 2), { lang: 'json', theme: 'one-dark-pro' }, ) then code}
-										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-										{@html code}
-									{/await}
+									<!-- {#await ((a, b) => a)( , { lang: 'json', theme: 'one-dark-pro' }, ) then code} -->
+									<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+									{@html JSON.stringify(removeRef(log), null, 2)}
+									<!-- {/await} -->
 								</Dialog.Content>
 							</Dialog.Root>
 						</Table.Cell>
