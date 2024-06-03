@@ -8,13 +8,13 @@ import { getPerformance } from 'firebase/performance';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-	apiKey: PUBLIC_FIREBASE_API_KEY || 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
-	authDomain: 'tsa-grouping-thing.firebaseapp.com',
-	projectId: 'tsa-grouping-thing',
-	storageBucket: 'tsa-grouping-thing.appspot.com',
-	messagingSenderId: '1034710953450',
-	appId: '1:1034710953450:web:20baf0bbc221b34fcfd693',
-	measurementId: 'G-V9TSZ35FNE',
+	apiKey: PUBLIC_FIREBASE_API_KEY || 'AIzaSyAqCsVW3uEohPwFmJR1T-NOF0Gxu8SUwMM',
+	authDomain: 'hosa-grouping-thing.firebaseapp.com',
+	projectId: 'hosa-grouping-thing',
+	storageBucket: 'hosa-grouping-thing.appspot.com',
+	messagingSenderId: '416434035170',
+	appId: '1:416434035170:web:28d793ded20654259d81bb',
+	measurementId: 'G-Q2C4D90KYH',
 };
 
 export const app = initializeApp(firebaseConfig);
