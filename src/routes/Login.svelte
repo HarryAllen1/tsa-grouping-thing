@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { auth, yay, fancyConfirm } from '$lib';
+	import { auth, closeConfirmationDialog, fancyConfirm, yay } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import confetti from 'canvas-confetti';
@@ -36,6 +36,7 @@
 					if (user.user) {
 						confetti();
 						yay.play();
+						closeConfirmationDialog()
 					}
 				} catch (error: unknown) {
 					const err = error as AuthError;

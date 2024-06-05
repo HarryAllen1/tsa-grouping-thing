@@ -33,6 +33,8 @@
 				}
 			});
 		});
+
+	export const closeConfirmationDialog = () => open.set(false);
 </script>
 
 <AlertDialog.Root bind:open={$open}>
