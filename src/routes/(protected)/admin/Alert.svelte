@@ -32,7 +32,10 @@
 					<li>First name: {'{{firstName}}'}</li>
 					<li>Last name: {'{{lastName}}'}</li>
 					<li>
-						Counter (must be correctly formatted parsable Date string): {'<div class="counter">Fri Mar 01 2024 17:00:00 GMT-0800 (Pacific Standard Time)</div>'}
+						Counter (must be correctly formatted parsable <a
+							href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format"
+							target="_blank">Date string</a
+						>): {'<div class="counter">Fri Mar 01 2024 17:00:00 GMT-0800 (Pacific Standard Time)</div>'}
 					</li>
 					<li>
 						Copyable: {'<span class="copyable">copyable thing here</span>'}
