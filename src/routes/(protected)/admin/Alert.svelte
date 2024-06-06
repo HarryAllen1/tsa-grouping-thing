@@ -40,9 +40,10 @@
 				</ul>
 			</Dialog.Description>
 		</Dialog.Header>
-		<Textarea bind:value={alert} />
+		<Textarea spellcheck autocomplete="off" bind:value={alert} />
 		<Dialog.Footer>
 			<Button
+				class="mt-2"
 				on:click={async () => {
 					await setDoc(
 						doc(db, 'settings', 'settings'),
@@ -50,8 +51,10 @@
 						{ merge: true },
 					);
 					open = false;
-				}}>Save changes</Button
+				}}
 			>
+				Save changes
+			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
