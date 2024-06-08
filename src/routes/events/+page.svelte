@@ -47,7 +47,7 @@
 		</p>
 	{/if}
 
-	<div class="flex flex-col gap-2">
+	<div class="mb-4 flex flex-col gap-2">
 		{#each $events.filter((e) => !e.hideInSignup) as event (event.event)}
 			<div
 				class="flex items-center space-x-2"

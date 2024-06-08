@@ -80,13 +80,13 @@ importers:
         version: 9.4.0
       '@sveltejs/adapter-vercel':
         specifier: ^5.3.1
-        version: 5.3.1(@sveltejs/kit@2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2)))
+        version: 5.3.1(@sveltejs/kit@2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2)))
       '@sveltejs/kit':
         specifier: ^2.5.10
-        version: 2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2))
+        version: 2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2))
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.1
-        version: 3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2))
+        version: 3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2))
       '@tailwindcss/typography':
         specifier: ^0.5.13
         version: 0.5.13(tailwindcss@3.4.4)
@@ -130,8 +130,8 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(prettier@3.3.1)(svelte@5.0.0-next.149)
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.1
-        version: 0.6.1(prettier-plugin-svelte@3.2.4(prettier@3.3.1)(svelte@5.0.0-next.149))(prettier@3.3.1)
+        specifier: ^0.6.2
+        version: 0.6.2(prettier-plugin-svelte@3.2.4(prettier@3.3.1)(svelte@5.0.0-next.149))(prettier@3.3.1)
       svelte:
         specifier: 5.0.0-next.149
         version: 5.0.0-next.149
@@ -151,8 +151,8 @@ importers:
         specifier: 8.0.0-alpha.14
         version: 8.0.0-alpha.14(eslint@9.4.0)(typescript@5.4.5)
       vite:
-        specifier: ^5.2.12
-        version: 5.2.12(@types/node@20.14.2)
+        specifier: ^5.2.13
+        version: 5.2.13(@types/node@20.14.2)
       vitepress:
         specifier: 1.2.3
         version: 1.2.3(@algolia/client-search@4.23.3)(@types/node@20.14.2)(axios@1.7.2)(fuse.js@7.0.0)(postcss@8.4.38)(search-insights@2.14.0)(typescript@5.4.5)
@@ -1992,6 +1992,11 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
+  browserslist@4.23.1:
+    resolution: {integrity: sha512-TUfofFo/KsK/bWZ9TWQ5O26tsWW4Uhmt8IYklbnUa70udB6P2wA7w7o4PY4muaEPBQaAX+CEnmmIA41NVHtPVw==}
+    engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
+    hasBin: true
+
   bser@2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
 
@@ -2037,6 +2042,9 @@ packages:
 
   caniuse-lite@1.0.30001606:
     resolution: {integrity: sha512-LPbwnW4vfpJId225pwjZJOgX1m9sGfbw/RKJvw/t0QhYOOaTXHvkjVGFGPpvwEzufrjvTlsULnVTxdy4/6cqkg==}
+
+  caniuse-lite@1.0.30001629:
+    resolution: {integrity: sha512-c3dl911slnQhmxUIT4HhYzT7wnBK/XYpGnYLOj4nJBaRiw52Ibe7YxlDaAeRECvA786zCuExhxIUJ2K7nHMrBw==}
 
   canvas-confetti@1.9.3:
     resolution: {integrity: sha512-rFfTURMvmVEX1gyXFgn5QMn81bYk70qa0HLzcIOSVEyl57n6o9ItHeBtUSWdvKAPY0xlvBHno4/v3QPrT83q9g==}
@@ -2432,6 +2440,9 @@ packages:
 
   electron-to-chromium@1.4.729:
     resolution: {integrity: sha512-bx7+5Saea/qu14kmPTDHQxkp2UnziG3iajUQu3BxFvCOnpAJdDbMV4rSl+EqFDkkpNNVUFlR1kDfpL59xfy1HA==}
+
+  electron-to-chromium@1.4.796:
+    resolution: {integrity: sha512-NglN/xprcM+SHD2XCli4oC6bWe6kHoytcyLKCWXmRL854F0qhPhaYgUswUsglnPxYaNQIg2uMY4BvaomIf3kLA==}
 
   emittery@0.13.1:
     resolution: {integrity: sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==}
@@ -3854,8 +3865,8 @@ packages:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
 
-  prettier-plugin-tailwindcss@0.6.1:
-    resolution: {integrity: sha512-AnbeYZu0WGj+QgKciUgdMnRxrqcxltleZPgdwfA5104BHM3siBLONN/HLW1yS2HvzSNkzpQ/JAj+LN0jcJO+0w==}
+  prettier-plugin-tailwindcss@0.6.2:
+    resolution: {integrity: sha512-eFefm4cg+1c2B57+H274Qm//CTWBdtQN9ansl0YTP/8TC8x3bugCTQSS/e4FC5Ctl9djhTzsbcMrZ7x2/abIow==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -4509,6 +4520,12 @@ packages:
     peerDependencies:
       browserslist: '>= 4.21.0'
 
+  update-browserslist-db@1.0.16:
+    resolution: {integrity: sha512-KVbTxlBYlckhF5wgfyZXTWnMn7MMZjMu9XG8bPlliUOP9ThaF4QnhP8qrjrH7DRzHfSk0oQv1wToW+iA5GajEQ==}
+    hasBin: true
+    peerDependencies:
+      browserslist: '>= 4.21.0'
+
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
@@ -4546,8 +4563,8 @@ packages:
     peerDependencies:
       svelte: ^4.0.0
 
-  vite@5.2.12:
-    resolution: {integrity: sha512-/gC8GxzxMK5ntBwb48pR32GGhENnjtY30G4A0jemunsBkiEZFw60s8InGpN8gkhHEkjnRK1aSAxeQgwvFhUHAA==}
+  vite@5.2.13:
+    resolution: {integrity: sha512-SSq1noJfY9pR3I1TUENL3rQYDQCFqgD+lM6fTRAM8Nv6Lsg5hDLaXkjETVeBt+7vZBCMoibD+6IWnT2mJ+Zb/A==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -4889,7 +4906,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.24.7
       '@babel/helper-validator-option': 7.24.7
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -6087,18 +6104,18 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@sveltejs/adapter-vercel@5.3.1(@sveltejs/kit@2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2)))':
+  '@sveltejs/adapter-vercel@5.3.1(@sveltejs/kit@2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2)))':
     dependencies:
-      '@sveltejs/kit': 2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2))
+      '@sveltejs/kit': 2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2))
       '@vercel/nft': 0.27.1
       esbuild: 0.20.2
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  '@sveltejs/kit@2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2))':
+  '@sveltejs/kit@2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2))
+      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2))
       '@types/cookie': 0.6.0
       cookie: 0.6.0
       devalue: 5.0.0
@@ -6112,28 +6129,28 @@ snapshots:
       sirv: 2.0.4
       svelte: 5.0.0-next.149
       tiny-glob: 0.2.9
-      vite: 5.2.12(@types/node@20.14.2)
+      vite: 5.2.13(@types/node@20.14.2)
 
-  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2))':
+  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2))
+      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2))
       debug: 4.3.4
       svelte: 5.0.0-next.149
-      vite: 5.2.12(@types/node@20.14.2)
+      vite: 5.2.13(@types/node@20.14.2)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2))':
+  '@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.12(@types/node@20.14.2))
+      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2)))(svelte@5.0.0-next.149)(vite@5.2.13(@types/node@20.14.2))
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.10
       svelte: 5.0.0-next.149
       svelte-hmr: 0.16.0(svelte@5.0.0-next.149)
-      vite: 5.2.12(@types/node@20.14.2)
-      vitefu: 0.2.5(vite@5.2.12(@types/node@20.14.2))
+      vite: 5.2.13(@types/node@20.14.2)
+      vitefu: 0.2.5(vite@5.2.13(@types/node@20.14.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -6633,9 +6650,9 @@ snapshots:
       - encoding
       - supports-color
 
-  '@vitejs/plugin-vue@5.0.5(vite@5.2.12(@types/node@20.14.2))(vue@3.4.27(typescript@5.4.5))':
+  '@vitejs/plugin-vue@5.0.5(vite@5.2.13(@types/node@20.14.2))(vue@3.4.27(typescript@5.4.5))':
     dependencies:
-      vite: 5.2.12(@types/node@20.14.2)
+      vite: 5.2.13(@types/node@20.14.2)
       vue: 3.4.27(typescript@5.4.5)
 
   '@vue/compiler-core@3.4.27':
@@ -7053,6 +7070,13 @@ snapshots:
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
+  browserslist@4.23.1:
+    dependencies:
+      caniuse-lite: 1.0.30001629
+      electron-to-chromium: 1.4.796
+      node-releases: 2.0.14
+      update-browserslist-db: 1.0.16(browserslist@4.23.1)
+
   bser@2.1.1:
     dependencies:
       node-int64: 0.4.0
@@ -7086,6 +7110,8 @@ snapshots:
   caniuse-lite@1.0.30001599: {}
 
   caniuse-lite@1.0.30001606: {}
+
+  caniuse-lite@1.0.30001629: {}
 
   canvas-confetti@1.9.3: {}
 
@@ -7462,6 +7488,8 @@ snapshots:
   ee-first@1.1.1: {}
 
   electron-to-chromium@1.4.729: {}
+
+  electron-to-chromium@1.4.796: {}
 
   emittery@0.13.1: {}
 
@@ -9192,7 +9220,7 @@ snapshots:
       prettier: 3.3.1
       svelte: 5.0.0-next.149
 
-  prettier-plugin-tailwindcss@0.6.1(prettier-plugin-svelte@3.2.4(prettier@3.3.1)(svelte@5.0.0-next.149))(prettier@3.3.1):
+  prettier-plugin-tailwindcss@0.6.2(prettier-plugin-svelte@3.2.4(prettier@3.3.1)(svelte@5.0.0-next.149))(prettier@3.3.1):
     dependencies:
       prettier: 3.3.1
     optionalDependencies:
@@ -9852,6 +9880,12 @@ snapshots:
       escalade: 3.1.2
       picocolors: 1.0.0
 
+  update-browserslist-db@1.0.16(browserslist@4.23.1):
+    dependencies:
+      browserslist: 4.23.1
+      escalade: 3.1.2
+      picocolors: 1.0.1
+
   uri-js@4.4.1:
     dependencies:
       punycode: 2.3.1
@@ -9890,7 +9924,7 @@ snapshots:
       bits-ui: 0.21.10(svelte@5.0.0-next.149)
       svelte: 5.0.0-next.149
 
-  vite@5.2.12(@types/node@20.14.2):
+  vite@5.2.13(@types/node@20.14.2):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
@@ -9899,9 +9933,9 @@ snapshots:
       '@types/node': 20.14.2
       fsevents: 2.3.3
 
-  vitefu@0.2.5(vite@5.2.12(@types/node@20.14.2)):
+  vitefu@0.2.5(vite@5.2.13(@types/node@20.14.2)):
     optionalDependencies:
-      vite: 5.2.12(@types/node@20.14.2)
+      vite: 5.2.13(@types/node@20.14.2)
 
   vitepress@1.2.3(@algolia/client-search@4.23.3)(@types/node@20.14.2)(axios@1.7.2)(fuse.js@7.0.0)(postcss@8.4.38)(search-insights@2.14.0)(typescript@5.4.5):
     dependencies:
@@ -9910,7 +9944,7 @@ snapshots:
       '@shikijs/core': 1.6.2
       '@shikijs/transformers': 1.6.2
       '@types/markdown-it': 14.1.1
-      '@vitejs/plugin-vue': 5.0.5(vite@5.2.12(@types/node@20.14.2))(vue@3.4.27(typescript@5.4.5))
+      '@vitejs/plugin-vue': 5.0.5(vite@5.2.13(@types/node@20.14.2))(vue@3.4.27(typescript@5.4.5))
       '@vue/devtools-api': 7.2.1(vue@3.4.27(typescript@5.4.5))
       '@vue/shared': 3.4.27
       '@vueuse/core': 10.10.0(vue@3.4.27(typescript@5.4.5))
@@ -9919,7 +9953,7 @@ snapshots:
       mark.js: 8.11.1
       minisearch: 6.3.0
       shiki: 1.6.2
-      vite: 5.2.12(@types/node@20.14.2)
+      vite: 5.2.13(@types/node@20.14.2)
       vue: 3.4.27(typescript@5.4.5)
     optionalDependencies:
       postcss: 8.4.38
