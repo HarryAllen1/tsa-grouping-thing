@@ -6,11 +6,9 @@
 </script>
 
 <div class="container my-4">
-	<h2
-		class="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-	>
+	<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 		Elimination Results
-	</h2>
+	</h1>
 	<p class="pb-2">
 		Eliminations completed individually might be colored incorrectly.
 	</p>
