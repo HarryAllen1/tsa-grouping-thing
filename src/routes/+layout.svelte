@@ -36,6 +36,17 @@
 		if (user && !user?.email?.endsWith('@lwsd.org')) {
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
+		} else if (
+			user &&
+			![
+				's-hallen@lwsd.org',
+				's-sliyanage@lwsd.org',
+				's-wzou@lwsd.org',
+				's-achandar@lwsd.org',
+			].includes(user.email?.toLowerCase() ?? '')
+		) {
+			document.documentElement.innerHTML =
+				'The teaming site has been disabled until the start of the 2024-2025 school year for maintenance work. If you need to access rubrics or other teaming information, pleas contact Harry at s-hallen@lwsd.org.';
 		}
 	});
 
