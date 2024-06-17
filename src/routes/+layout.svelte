@@ -46,7 +46,7 @@
 			].includes(user.email?.toLowerCase() ?? '')
 		) {
 			document.documentElement.innerHTML =
-				'The teaming site has been disabled until the start of the 2024-2025 school year for maintenance work. If you need to access rubrics or other teaming information, pleas contact Harry at s-hallen@lwsd.org.';
+				'The teaming site has been disabled until the start of the 2024-2025 school year for maintenance work. If you need to access rubrics or other teaming information, please contact Harry at <a href="mailto:s-hallen@lwsd.org">s-hallen@lwsd.org</a>.';
 		}
 	});
 
