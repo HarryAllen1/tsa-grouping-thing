@@ -27,6 +27,7 @@
 	import { selected } from './messages';
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
+	import { panelOpen } from './messages-panel';
 
 	let { children } = $props();
 
@@ -50,10 +51,8 @@
 		}
 	});
 
-	let panelOpen = $state(false);
-
 	onNavigate(() => {
-		panelOpen = false;
+		$panelOpen = false;
 	});
 
 	let teams = $derived(
@@ -122,7 +121,7 @@
 								onOpenChange={(e) => {
 									if (e) $selected = null;
 								}}
-								open={panelOpen}
+								open={$panelOpen}
 							>
 								<Popover.Trigger class="relative">
 									<Button size="icon" class="size-16">
@@ -136,7 +135,7 @@
 										</div>
 									{/if}
 								</Popover.Trigger>
-								<Popover.Content class="transition-all">
+								<Popover.Content class="w-96 transition-all">
 									<MessagesPopover />
 								</Popover.Content>
 							</Popover.Root>

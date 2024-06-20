@@ -27,7 +27,19 @@
 	Messages
 </h2>
 
-{#each teams as team, i (i)}
+{#each teams.toSorted((a, b) => {
+	const aLastMessage = a.messages?.at(-1);
+	const bLastMessage = b.messages?.at(-1);
+	if (aLastMessage && bLastMessage) {
+		return bLastMessage.time.seconds - aLastMessage.time.seconds;
+	} else if (aLastMessage) {
+		return -1;
+	} else if (bLastMessage) {
+		return 1;
+	} else {
+		return 0;
+	}
+}) as team, i (i)}
 	<button
 		class="relative flex w-full select-none rounded-sm px-2 py-1.5 text-start text-sm outline-none hover:bg-accent hover:text-accent-foreground"
 		onclick={() => {

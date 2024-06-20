@@ -23,6 +23,8 @@
 	import Video from 'lucide-svelte/icons/video';
 	import { onMount } from 'svelte';
 	import { selected } from './messages';
+	import { panelOpen } from './messages-panel';
+	import { goto } from '$app/navigation';
 
 	export let teamId: string;
 	export let hideBack = false;
@@ -159,19 +161,22 @@
 	class="flex scroll-m-20 flex-row gap-2 text-2xl font-semibold tracking-tight"
 >
 	{#if !hideBack}
-		<button on:click={() => ($selected = null)}>
+		<Button variant="ghost" size="icon" on:click={() => ($selected = null)}>
 			<ChevronLeft />
-		</button>
+		</Button>
 	{/if}
-	<span>
+	<span class="max-w-[15rem]">
 		{team.teamName ??
 			`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
 	</span>
 	<div class="flex-1"></div>
 	<Button
+		on:click={() => {
+			$panelOpen = false;
+			goto(`/call/${team.id}?uid=${$user.uid}`);
+		}}
 		size="icon"
-		href="/call/{team.id}?uid={$user.uid}"
-		class="aspect-square"
+		class="aspect-square !w-10"
 	>
 		<Video />
 	</Button>
