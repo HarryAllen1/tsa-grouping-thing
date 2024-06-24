@@ -173,7 +173,7 @@
 		on:click={() => {
 			$panelOpen = false;
 			goto(
-				`/call/${team.id}?uid=${team.members.map((m) => m.email.toLowerCase()).indexOf($userDoc?.email.toLowerCase() ?? '')}`,
+				`/call/${team.event.event}:${team.id}?uid=${team.members.map((m) => m.email.toLowerCase()).indexOf($userDoc?.email.toLowerCase() ?? '')}`,
 			);
 		}}
 		size="icon"

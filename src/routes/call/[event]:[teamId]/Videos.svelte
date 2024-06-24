@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
+	import { eventsCollection } from '$lib';
 	import AgoraRTC, {
 		type IAgoraRTCRemoteUser,
 		type ILocalAudioTrack,
@@ -87,13 +88,16 @@
 <div class="container relative h-full min-h-96">
 	<div class="grid" style="grid-template-columns: {columnTemplate}">
 		{#each users as user (user.uid)}
+			{@const team = $eventsCollection
+				.find((e) => e.event === data.event)
+				?.teams.find((t) => t.id === data.teamId)}
 			<div class="relative aspect-video">
 				<div
 					use:renderVideo={user}
 					class="video size-full"
 					id={String(user.uid)}
 				></div>
-				<p class="uid">{user.uid}</p>
+				<p>{team?.members[Number(user.uid)]}</p>
 			</div>
 		{/each}
 	</div>

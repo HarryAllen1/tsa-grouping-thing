@@ -121,7 +121,7 @@
 								onOpenChange={(e) => {
 									if (e) $selected = null;
 								}}
-								open={$panelOpen}
+								bind:open={$panelOpen}
 							>
 								<Popover.Trigger class="relative">
 									<Button size="icon" class="size-16">

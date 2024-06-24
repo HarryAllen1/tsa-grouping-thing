@@ -5,7 +5,7 @@ import agoraToken from 'agora-token';
 const { RtcRole, RtcTokenBuilder } = agoraToken;
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ params: { teamId }, url }) => {
+export const load = (async ({ params: { teamId, event }, url }) => {
 	const uid = url.searchParams.get('uid');
 	try {
 		if (!uid) {
@@ -22,7 +22,7 @@ export const load = (async ({ params: { teamId }, url }) => {
 			600,
 		);
 
-		return { token, uid, teamId };
+		return { token, uid, teamId, event };
 	} catch (error_) {
 		throw error(400, `json expected: ${JSON.stringify(error_)}`);
 	}
