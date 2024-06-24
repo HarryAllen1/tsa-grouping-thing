@@ -105,7 +105,7 @@
 	}}
 />
 
-<div class="container mt-8 flex flex-col">
+<div class="container my-8 flex flex-col">
 	<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 		Team Management
 	</h1>

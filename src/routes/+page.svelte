@@ -11,7 +11,6 @@
 		userDoc,
 		yay,
 		type EventDoc,
-		type UserDoc,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';

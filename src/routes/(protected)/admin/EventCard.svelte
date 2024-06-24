@@ -17,6 +17,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import Download from 'lucide-svelte/icons/download';
 	import Pencil from 'lucide-svelte/icons/pencil';
@@ -52,6 +53,7 @@
 	let submissionDescription = $state(event.submissionDescription ?? '');
 	let submissionDialogOpen = $state(false);
 	let editEventDialogOpen = $state(false);
+	let collapsibleOpen = $state(false);
 </script>
 
 <Card.Root class={hidden ? 'hidden' : ''}>
@@ -345,15 +347,15 @@
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-4">
 		{@const peopleInTeams = event.teams.reduce(
-				(acc, curr) => {
-					acc.push(...curr.members);
-					return acc;
-				},
-				[] as {
-			name: string;
-			email: string;
-		}[],
-			)}
+			(acc, curr) => {
+				acc.push(...curr.members);
+				return acc;
+			},
+			[] as {
+				name: string;
+				email: string;
+			}[],
+		)}
 		{@const peopleNotInTeams =
 			event.event === '*Rooming'
 				? $allUsersCollection.filter(
@@ -646,9 +648,29 @@
 			{/if}
 		</div>
 		<!-- teams loop -->
-		{#each event.teams as team (team.id)}
-			<TeamCard {event} {team} />
-		{/each}
+		{#if event.teams.length <= 5}
+			{#each event.teams as team (team.id)}
+				<TeamCard {event} {team} />
+			{/each}
+		{:else}
+			<Collapsible.Root bind:open={collapsibleOpen} class="contents">
+				{#each event.teams.slice(0, 4) as team (team.id)}
+					<TeamCard {event} {team} />
+				{/each}
+				<Collapsible.Content class="contents">
+					{#each event.teams.slice(5) as team (team.id)}
+						<TeamCard {event} {team} />
+					{/each}
+				</Collapsible.Content>
+				<Collapsible.Trigger class="w-full">
+					<Button variant="ghost" size="sm" class=" w-full">
+						<ChevronUp
+							class="transition-transform {collapsibleOpen ? '' : 'rotate-180'}"
+						/>
+					</Button>
+				</Collapsible.Trigger>
+			</Collapsible.Root>
+		{/if}
 	</Card.Content>
 	<Card.Footer class="space-x-2">
 		<Button
@@ -678,7 +700,7 @@
 		>
 			Create Team
 		</Button>
-		{#if event.maxTeamSize === 1}
+		{#if event.maxTeamSize === 1 && event.teams.reduce((acc, curr) => acc + curr.members.length, 0) < event.members.length}
 			<Button
 				variant="outline"
 				on:click={() => {

@@ -14,7 +14,6 @@
 	const channel = data.teamId;
 	const uid = Number.parseInt(data.uid);
 	const token = data.token;
-	console.log(token);
 
 	let users: IAgoraRTCRemoteUser[] = [];
 	let video: null | ILocalVideoTrack = null;
@@ -100,9 +99,19 @@
 				<p>{team?.members[Number(user.uid)]}</p>
 			</div>
 		{/each}
+		{#if users.length === 0}
+			<div>
+				<div class="aspect-video h-40 w-64" bind:this={selfVideo}></div>
+				<p class="uid">You</p>
+			</div>
+		{/if}
 	</div>
-	<div class="absolute bottom-10 right-10">
-		<div class="aspect-video h-40 w-64" bind:this={selfVideo}></div>
-		<p class="uid">me</p>
-	</div>
+	{#if users.length}
+		<div class="absolute bottom-10 right-10">
+			<div>
+				<div class="aspect-video h-40 w-64" bind:this={selfVideo}></div>
+				<p class="uid">You</p>
+			</div>
+		</div>
+	{/if}
 </div>

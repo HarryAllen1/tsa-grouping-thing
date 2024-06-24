@@ -5,7 +5,6 @@
 
 	let {
 		href,
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		open = $bindable(),
 		class: className,
 		children,

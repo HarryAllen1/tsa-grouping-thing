@@ -36,14 +36,26 @@
 					if (user.user) {
 						confetti();
 						yay.play();
-						closeConfirmationDialog()
+						closeConfirmationDialog();
 					}
 				} catch (error: unknown) {
 					const err = error as AuthError;
-					if (['auth/cancelled-popup-request', 'auth/popup-blocked'].includes(err.code)) {
-						fancyConfirm('Please enable popups for this site.', 'An error with the login popup occurred. Make sure that you have popups enabled by clicking the window icon in the right of the address bar. If logging in still doesn\'t work, contact a board member.', [['Ok', true]])
-					}
-					else fancyConfirm('An error occurred while logging in.', `Please try again or contact a board member for assistance. (error code/message: ${err.message})`, [['Ok', true]])
+					if (
+						['auth/cancelled-popup-request', 'auth/popup-blocked'].includes(
+							err.code,
+						)
+					) {
+						fancyConfirm(
+							'Please enable popups for this site.',
+							"An error with the login popup occurred. Make sure that you have popups enabled by clicking the window icon in the right of the address bar. If logging in still doesn't work, contact a board member.",
+							[['Ok', true]],
+						);
+					} else
+						fancyConfirm(
+							'An error occurred while logging in.',
+							`Please try again or contact a board member for assistance. (error code/message: ${err.message})`,
+							[['Ok', true]],
+						);
 				}
 			}}
 			class="mt-4"
