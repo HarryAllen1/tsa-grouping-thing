@@ -1,10 +1,10 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import {
 		db,
 		eventsCollection,
 		isMobileOrTablet,
 		noHtmlMd,
-		user,
 		userDoc,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
@@ -24,7 +24,6 @@
 	import { onMount } from 'svelte';
 	import { selected } from './messages';
 	import { panelOpen } from './messages-panel';
-	import { goto } from '$app/navigation';
 
 	export let teamId: string;
 	export let hideBack = false;
@@ -173,7 +172,9 @@
 	<Button
 		on:click={() => {
 			$panelOpen = false;
-			goto(`/call/${team.id}?uid=${$user.uid}`);
+			goto(
+				`/call/${team.id}?uid=${team.members.map((m) => m.email.toLowerCase()).indexOf($userDoc?.email.toLowerCase() ?? '')}`,
+			);
 		}}
 		size="icon"
 		class="aspect-square !w-10"

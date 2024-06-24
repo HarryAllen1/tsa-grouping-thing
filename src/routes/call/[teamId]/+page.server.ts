@@ -6,13 +6,11 @@ const { RtcRole, RtcTokenBuilder } = agoraToken;
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params: { teamId }, url }) => {
-	let uid = url.searchParams.get('uid');
+	const uid = url.searchParams.get('uid');
 	try {
 		if (!uid) {
 			throw error(400, 'UID is required');
 		}
-
-		uid = [...uid].map((c) => c.codePointAt(0)).join('');
 
 		const token = RtcTokenBuilder.buildTokenWithUid(
 			publicEnv.PUBLIC_AGORA_APP_ID,
