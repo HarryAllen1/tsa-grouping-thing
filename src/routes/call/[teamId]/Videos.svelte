@@ -21,7 +21,7 @@
 
 	let selfVideo: HTMLDivElement;
 
-	AgoraRTC.setLogLevel(2);
+	AgoraRTC.setLogLevel(1);
 	const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
 	const init = async () => {
@@ -34,7 +34,7 @@
 				user.audioTrack?.play();
 			} else if (type === 'video') {
 				await client.subscribe(user, 'video');
-				users = [...users, user];
+				users.push(user);
 			}
 		});
 
@@ -87,11 +87,11 @@
 <div class="container relative h-full min-h-96">
 	<div class="grid" style="grid-template-columns: {columnTemplate}">
 		{#each users as user (user.uid)}
-			<div class="cell">
+			<div class="relative aspect-video">
 				<div
 					use:renderVideo={user}
-					class="video"
-					id={user.uid.toString()}
+					class="video size-full"
+					id={String(user.uid)}
 				></div>
 				<p class="uid">{user.uid}</p>
 			</div>
