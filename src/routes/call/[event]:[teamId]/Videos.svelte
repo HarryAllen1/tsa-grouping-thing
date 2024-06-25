@@ -24,6 +24,7 @@
 	let audio: null | ILocalAudioTrack = null;
 
 	let selfVideo = $state<HTMLDivElement>();
+	let otherSelfVideo = $state<HTMLDivElement>();
 
 	AgoraRTC.setLogLevel(1);
 	const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
@@ -31,6 +32,8 @@
 	const init = async () => {
 		[audio, video] = await AgoraRTC.createMicrophoneAndCameraTracks();
 		video.play(selfVideo!);
+		const videoClone = video.clone();
+		videoClone.play(otherSelfVideo!);
 
 		client.on('user-published', async (user, type) => {
 			if (type === 'audio') {
@@ -64,7 +67,7 @@
 				? unit.repeat(4)
 				: users.length > 3
 					? unit.repeat(3)
-					: users.length > 0
+					: users.length > 1
 						? unit.repeat(2)
 						: unit
 			: users.length > 7
@@ -90,7 +93,7 @@
 
 <svelte:window bind:innerWidth bind:innerHeight />
 
-<div class="container relative my-4 h-full min-h-96">
+<div class="container relative h-full min-h-96 py-8">
 	<div class="grid" style="grid-template-columns: {columnTemplate}">
 		{#each users as user (user.uid)}
 			{@const team = $eventsCollection
@@ -99,25 +102,39 @@
 			<div class="relative aspect-video">
 				<div
 					use:renderVideo={user}
-					class="video size-full"
+					class="video size-full [&>div]:rounded-md"
 					id={String(user.uid)}
 				></div>
-				<p>{team?.members[Number(user.uid)].name}</p>
+				<p
+					class="absolute bottom-1 left-1 z-50 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
+				>
+					{team?.members[Number(user.uid)].name}
+				</p>
 			</div>
 		{/each}
-		{#if users.length === 0}
-			<div>
-				<div class="relative aspect-video" bind:this={selfVideo}></div>
-				<p class="uid">You</p>
-			</div>
-		{/if}
-	</div>
-	{#if users.length}
-		<div class="absolute bottom-10 right-10">
-			<div>
-				<div class="aspect-video h-40 w-64" bind:this={selfVideo}></div>
-				<p class="uid">You</p>
-			</div>
+		<div class:hidden={users.length > 0} class="relative">
+			<div
+				class="relative aspect-video [&>div]:rounded-md"
+				bind:this={selfVideo}
+			></div>
+			<p
+				class="absolute bottom-1 left-1 z-50 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
+			>
+				You
+			</p>
 		</div>
-	{/if}
+	</div>
+	<div class="absolute bottom-10 right-10" class:hidden={users.length === 0}>
+		<div class="relative">
+			<div
+				class="aspect-video h-40 w-64 [&>div]:rounded-md"
+				bind:this={otherSelfVideo}
+			></div>
+			<p
+				class="absolute bottom-1 left-1 z-50 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
+			>
+				You
+			</p>
+		</div>
+	</div>
 </div>
