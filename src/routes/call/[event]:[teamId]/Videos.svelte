@@ -9,24 +9,28 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	let {
+		data,
+	}: {
+		data: PageData;
+	} = $props();
 
 	const channel = data.teamId;
 	const uid = Number.parseInt(data.uid);
 	const token = data.token;
 
-	let users: IAgoraRTCRemoteUser[] = [];
+	let users = $state<IAgoraRTCRemoteUser[]>([]);
 	let video: null | ILocalVideoTrack = null;
 	let audio: null | ILocalAudioTrack = null;
 
-	let selfVideo: HTMLDivElement;
+	let selfVideo = $state<HTMLDivElement>();
 
 	AgoraRTC.setLogLevel(1);
 	const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
 	const init = async () => {
 		[audio, video] = await AgoraRTC.createMicrophoneAndCameraTracks();
-		video.play(selfVideo);
+		video.play(selfVideo!);
 
 		client.on('user-published', async (user, type) => {
 			if (type === 'audio') {
@@ -51,22 +55,24 @@
 	};
 
 	const unit = 'minmax(0, 1fr) ';
-	let innerWidth = 0;
-	let innerHeight = 0;
-	$: isLandscape = innerWidth > innerHeight;
-	$: columnTemplate = isLandscape
-		? users.length > 8
-			? unit.repeat(4)
-			: users.length > 3
+	let innerWidth = $state(0);
+	let innerHeight = $state(0);
+	let isLandscape = $derived(innerWidth > innerHeight);
+	let columnTemplate = $derived(
+		isLandscape
+			? users.length > 8
+				? unit.repeat(4)
+				: users.length > 3
+					? unit.repeat(3)
+					: users.length > 0
+						? unit.repeat(2)
+						: unit
+			: users.length > 7
 				? unit.repeat(3)
-				: users.length > 0
+				: users.length > 1
 					? unit.repeat(2)
-					: unit
-		: users.length > 7
-			? unit.repeat(3)
-			: users.length > 1
-				? unit.repeat(2)
-				: unit;
+					: unit,
+	);
 
 	onMount(init);
 	onDestroy(() => {
@@ -84,7 +90,7 @@
 
 <svelte:window bind:innerWidth bind:innerHeight />
 
-<div class="container relative h-full min-h-96">
+<div class="container relative my-4 h-full min-h-96">
 	<div class="grid" style="grid-template-columns: {columnTemplate}">
 		{#each users as user (user.uid)}
 			{@const team = $eventsCollection
@@ -96,12 +102,12 @@
 					class="video size-full"
 					id={String(user.uid)}
 				></div>
-				<p>{team?.members[Number(user.uid)]}</p>
+				<p>{team?.members[Number(user.uid)].name}</p>
 			</div>
 		{/each}
 		{#if users.length === 0}
 			<div>
-				<div class="aspect-video h-40 w-64" bind:this={selfVideo}></div>
+				<div class="relative aspect-video" bind:this={selfVideo}></div>
 				<p class="uid">You</p>
 			</div>
 		{/if}
