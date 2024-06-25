@@ -94,7 +94,7 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 
 <div class="container relative h-full min-h-96 py-8">
-	<div class="grid" style="grid-template-columns: {columnTemplate}">
+	<div class="grid gap-2" style="grid-template-columns: {columnTemplate}">
 		{#each users as user (user.uid)}
 			{@const team = $eventsCollection
 				.find((e) => e.event === data.event)
