@@ -1,11 +1,16 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
 	import { eventsCollection } from '$lib';
+	import { Button } from '$lib/components/ui/button';
 	import AgoraRTC, {
 		type IAgoraRTCRemoteUser,
 		type ILocalAudioTrack,
 		type ILocalVideoTrack,
 	} from 'agora-rtc-sdk-ng';
+	import Mic from 'lucide-svelte/icons/mic';
+	import MicOff from 'lucide-svelte/icons/mic-off';
+	import Video from 'lucide-svelte/icons/video';
+	import VideoOff from 'lucide-svelte/icons/video-off';
 	import { onDestroy, onMount } from 'svelte';
 	import type { PageData } from './$types';
 
@@ -22,11 +27,23 @@
 	let users = $state<IAgoraRTCRemoteUser[]>([]);
 	let video: null | ILocalVideoTrack = null;
 	let audio: null | ILocalAudioTrack = null;
+	let localVideoStatus = $state(true);
+	let localAudioStatus = $state(true);
+	$effect(() => {
+		video;
+		localVideoStatus;
+		video?.setEnabled(localVideoStatus);
+	});
+	$effect(() => {
+		audio;
+		localAudioStatus;
+		audio?.setMuted(!localAudioStatus);
+	});
 
 	let selfVideo = $state<HTMLDivElement>();
 	let otherSelfVideo = $state<HTMLDivElement>();
 
-	AgoraRTC.setLogLevel(1);
+	AgoraRTC.setLogLevel(2);
 	const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
 	const init = async () => {
@@ -44,6 +61,13 @@
 				users.push(user);
 			}
 		});
+
+		for (const user of users) {
+			user.videoTrack?.on('video-state-changed', (e) => {
+				// if (VideoState) {}
+				console.log(e, user);
+			});
+		}
 
 		client.on('user-left', (u) => {
 			users = users.filter((user) => user.uid !== u.uid);
@@ -110,7 +134,7 @@
 					id={String(user.uid)}
 				></div>
 				<p
-					class="absolute bottom-1 left-1 z-50 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
+					class="absolute bottom-1 left-1 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
 				>
 					{team?.members[Number(user.uid)].name}
 				</p>
@@ -122,20 +146,47 @@
 				bind:this={selfVideo}
 			></div>
 			<p
-				class="absolute bottom-1 left-1 z-50 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
+				class="absolute bottom-1 left-1 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
 			>
 				You
 			</p>
 		</div>
 	</div>
-	<div class="fixed bottom-8 right-32" class:hidden={users.length === 0}>
+	<div class="fixed bottom-8 flex w-full flex-row gap-4">
+		<Button
+			class="size-16"
+			size="icon"
+			on:click={() => (localAudioStatus = !localAudioStatus)}
+		>
+			{#if localAudioStatus}
+				<Mic class="size-8" />
+			{:else}
+				<MicOff class="size-8" />
+			{/if}
+		</Button>
+		<Button
+			class="size-16"
+			size="icon"
+			on:click={() => (localVideoStatus = !localVideoStatus)}
+		>
+			{#if localVideoStatus}
+				<Video class="size-8" />
+			{:else}
+				<VideoOff class="size-8" />
+			{/if}
+		</Button>
+	</div>
+	<div
+		class="fixed bottom-8 right-32"
+		class:hidden={users.length === 0 || !localVideoStatus}
+	>
 		<div class="relative">
 			<div
 				class="aspect-video h-40 w-64 [&>div]:rounded-md"
 				bind:this={otherSelfVideo}
 			></div>
 			<p
-				class="absolute bottom-1 left-1 z-50 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
+				class="absolute bottom-1 left-1 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
 			>
 				You
 			</p>
