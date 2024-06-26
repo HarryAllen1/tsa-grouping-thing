@@ -329,9 +329,11 @@
 		</div>
 	{/if}
 
-	<h3 class="my-4 w-full scroll-m-20 text-2xl font-semibold tracking-tight">
-		Teams
-	</h3>
+	<h2
+		class="my-4 w-full scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors"
+	>
+		Your Teams
+	</h2>
 
 	{#if !signedUpEvents || signedUpEvents.length === 0}
 		<p class="mt-4 w-full">

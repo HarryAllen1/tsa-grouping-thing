@@ -94,7 +94,11 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 
 <div class="container relative h-full min-h-96 py-8">
-	<div class="grid gap-2" style="grid-template-columns: {columnTemplate}">
+	<div
+		class="grid gap-2"
+		style="grid-template-columns: {columnTemplate}"
+		class:mx-8={users.length < 2}
+	>
 		{#each users as user (user.uid)}
 			{@const team = $eventsCollection
 				.find((e) => e.event === data.event)
@@ -124,7 +128,7 @@
 			</p>
 		</div>
 	</div>
-	<div class="absolute bottom-10 right-10" class:hidden={users.length === 0}>
+	<div class="fixed bottom-10 right-10" class:hidden={users.length === 0}>
 		<div class="relative">
 			<div
 				class="aspect-video h-40 w-64 [&>div]:rounded-md"

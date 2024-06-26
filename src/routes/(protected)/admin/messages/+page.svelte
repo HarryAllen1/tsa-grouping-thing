@@ -6,6 +6,7 @@
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Button } from '$lib/components/ui/button';
 	import { ChevronsUpDown } from 'lucide-svelte';
+	import { setContext } from 'svelte';
 
 	const blockedMessages = collectionStore<
 		SimpleMessage & {
@@ -14,6 +15,8 @@
 			event: string;
 		}
 	>(db, 'blockedMessages');
+
+	setContext('isAdminMessages', true);
 </script>
 
 <div class="container pt-8">

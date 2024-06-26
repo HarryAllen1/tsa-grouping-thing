@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import {
 		db,
 		eventsCollection,
@@ -21,14 +20,14 @@
 	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
 	import Video from 'lucide-svelte/icons/video';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { selected } from './messages';
-	import { panelOpen } from './messages-panel';
 
 	export let teamId: string;
 	export let hideBack = false;
 
 	let messagesBox: HTMLDivElement;
+	const isAdminMessages = getContext<boolean | undefined>('isAdminMessages');
 
 	$: team = $eventsCollection
 		.flatMap((e) => e.teams.map((t) => ({ ...t, event: e })))
@@ -49,7 +48,9 @@
 		foundTeam?.messages?.push({
 			content: newMessage,
 			sender: {
-				name: $userDoc?.name ?? '',
+				name: isAdminMessages
+					? `(ADMIN) ${$userDoc?.name}`
+					: $userDoc?.name ?? '',
 				email: $userDoc?.email ?? '',
 			},
 			id: crypto.randomUUID(),
@@ -130,6 +131,7 @@
 			document.querySelector<HTMLInputElement>('#newMessageInput')?.focus();
 
 		if (
+			!isAdminMessages &&
 			team.messages?.filter(
 				(m) => !m.readBy.some((r) => r.email === $userDoc?.email),
 			).length
@@ -170,12 +172,7 @@
 	</span>
 	<div class="flex-1"></div>
 	<Button
-		on:click={() => {
-			$panelOpen = false;
-			goto(
-				`/call/${team.event.event}:${team.id}?uid=${team.members.map((m) => m.email.toLowerCase()).indexOf($userDoc?.email.toLowerCase() ?? '')}`,
-			);
-		}}
+		href={`/call/${team.event.event}:${team.id}?uid=${team.members.map((m) => m.email.toLowerCase()).indexOf($userDoc?.email.toLowerCase() ?? '')}`}
 		size="icon"
 		class="aspect-square !w-10"
 	>

@@ -60,6 +60,10 @@
 						title: 'Admin Results',
 						href: '/admin/results',
 					},
+					{
+						title: 'Admin Messages',
+						href: '/admin/messages',
+					},
 				]
 			: [],
 	]);
