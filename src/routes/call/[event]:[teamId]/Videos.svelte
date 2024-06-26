@@ -128,7 +128,7 @@
 			</p>
 		</div>
 	</div>
-	<div class="fixed bottom-10 right-10" class:hidden={users.length === 0}>
+	<div class="fixed bottom-8 right-32" class:hidden={users.length === 0}>
 		<div class="relative">
 			<div
 				class="aspect-video h-40 w-64 [&>div]:rounded-md"
