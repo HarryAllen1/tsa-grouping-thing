@@ -177,7 +177,7 @@
 						size="icon"
 						target="_blank"
 						variant="ghost"
-						href="https://docs.grouping.jhstsa.org/"
+						href="https://docs.teaming.jhstsa.org/"
 					>
 						<BookOpenText />
 					</Button>

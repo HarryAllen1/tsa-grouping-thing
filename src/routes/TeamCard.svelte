@@ -481,7 +481,7 @@
 									$user?.displayName ?? 'Someone'
 								} has requested to join your team for ${
 									event.event
-								}. Please go to the <a href="https://tsa-grouping-thing.vercel.app">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+								}. Please go to the <a href="https://teaming.jhstsa.org">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
 							);
 							fancyConfirm(
 								'Request sent',
