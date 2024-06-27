@@ -152,7 +152,9 @@
 			</p>
 		</div>
 	</div>
-	<div class="fixed bottom-8 flex w-full flex-row gap-4">
+	<div
+		class="fixed bottom-56 flex w-full flex-row items-center justify-center gap-4 lg:bottom-8"
+	>
 		<Button
 			class="size-16"
 			size="icon"
@@ -177,7 +179,7 @@
 		</Button>
 	</div>
 	<div
-		class="fixed bottom-8 right-32"
+		class="fixed bottom-8 flex w-full items-center justify-center lg:right-32 lg:w-auto"
 		class:hidden={users.length === 0 || !localVideoStatus}
 	>
 		<div class="relative">
