@@ -30,10 +30,9 @@
 	const openDialogs: Record<string, boolean> = {};
 </script>
 
-/** eslint-disable unicorn/prefer-array-some */
 <div class="container pt-8">
 	<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-		Submissions!!!!!!!!!
+		Submissions
 	</h1>
 
 	<Label class="my-2 flex items-center space-x-2">

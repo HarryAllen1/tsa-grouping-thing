@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import type { PageData } from './$types.js';
 	import Videos from './Videos.svelte';
 
-	export let data;
+	let {
+		data,
+	}: {
+		data: PageData;
+	} = $props();
 </script>
 
 {#key ($page.url.pathname, $page.url.searchParams)}

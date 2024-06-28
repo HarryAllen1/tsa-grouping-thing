@@ -62,13 +62,6 @@
 			}
 		});
 
-		for (const user of users) {
-			user.videoTrack?.on('video-state-changed', (e) => {
-				// if (VideoState) {}
-				console.log(e, user);
-			});
-		}
-
 		client.on('user-left', (u) => {
 			users = users.filter((user) => user.uid !== u.uid);
 		});
@@ -152,46 +145,46 @@
 			</p>
 		</div>
 	</div>
-	<div
-		class="fixed bottom-56 flex w-full flex-row items-center justify-center gap-4 lg:bottom-8"
+</div>
+<div
+	class="fixed bottom-56 flex w-full flex-row items-center justify-center gap-4 lg:bottom-8"
+>
+	<Button
+		class="size-16"
+		size="icon"
+		on:click={() => (localAudioStatus = !localAudioStatus)}
 	>
-		<Button
-			class="size-16"
-			size="icon"
-			on:click={() => (localAudioStatus = !localAudioStatus)}
-		>
-			{#if localAudioStatus}
-				<Mic class="size-8" />
-			{:else}
-				<MicOff class="size-8" />
-			{/if}
-		</Button>
-		<Button
-			class="size-16"
-			size="icon"
-			on:click={() => (localVideoStatus = !localVideoStatus)}
-		>
-			{#if localVideoStatus}
-				<Video class="size-8" />
-			{:else}
-				<VideoOff class="size-8" />
-			{/if}
-		</Button>
-	</div>
-	<div
-		class="fixed bottom-8 flex w-full items-center justify-center lg:right-32 lg:w-auto"
-		class:hidden={users.length === 0 || !localVideoStatus}
+		{#if localAudioStatus}
+			<Mic class="size-8" />
+		{:else}
+			<MicOff class="size-8" />
+		{/if}
+	</Button>
+	<Button
+		class="size-16"
+		size="icon"
+		on:click={() => (localVideoStatus = !localVideoStatus)}
 	>
-		<div class="relative">
-			<div
-				class="aspect-video h-40 w-64 [&>div]:rounded-md"
-				bind:this={otherSelfVideo}
-			></div>
-			<p
-				class="absolute bottom-1 left-1 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
-			>
-				You
-			</p>
-		</div>
+		{#if localVideoStatus}
+			<Video class="size-8" />
+		{:else}
+			<VideoOff class="size-8" />
+		{/if}
+	</Button>
+</div>
+<div
+	class="fixed bottom-8 flex w-full items-center justify-center lg:right-32 lg:w-auto"
+	class:hidden={users.length === 0 || !localVideoStatus}
+>
+	<div class="relative">
+		<div
+			class="aspect-video h-40 w-64 [&>div]:rounded-md"
+			bind:this={otherSelfVideo}
+		></div>
+		<p
+			class="absolute bottom-1 left-1 w-fit rounded-sm bg-black bg-opacity-50 px-2 py-1"
+		>
+			You
+		</p>
 	</div>
 </div>
