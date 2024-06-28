@@ -13,6 +13,7 @@
 	import VideoOff from 'lucide-svelte/icons/video-off';
 	import { onDestroy, onMount } from 'svelte';
 	import type { PageData } from './$types';
+	import { rerender } from './rerender';
 
 	let {
 		data,
@@ -33,6 +34,9 @@
 		video;
 		localVideoStatus;
 		video?.setEnabled(localVideoStatus);
+		if (localVideoStatus) {
+			$rerender = Date.now();
+		}
 	});
 	$effect(() => {
 		audio;
