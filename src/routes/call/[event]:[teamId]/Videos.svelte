@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { env } from '$env/dynamic/public';
+	import { PUBLIC_AGORA_APP_ID } from '$env/static/public';
 	import { eventsCollection } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import AgoraRTC, {
@@ -70,7 +70,7 @@
 			users = users.filter((user) => user.uid !== u.uid);
 		});
 
-		await client.join(env.PUBLIC_AGORA_APP_ID, channel, token, uid);
+		await client.join(PUBLIC_AGORA_APP_ID, channel, token, uid);
 		await client.publish([audio, video]);
 	};
 
