@@ -1,23 +1,14 @@
 <script lang="ts">
-	import {
-		db,
-		downloadURL,
-		eventsCollection,
-		md,
-		StorageMetadata,
-		user,
-	} from '$lib';
+	import { db, eventsCollection, md, StorageMetadata, user } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
-	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { doc, setDoc } from 'firebase/firestore';
-	import { ArrowUpRight, Download } from 'lucide-svelte';
+	import { ArrowUpRight } from 'lucide-svelte';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
-	import RotatingImage from './RotatingImage.svelte';
 
 	let hideEmpty = $state(false);
 
@@ -26,8 +17,6 @@
 
 	const nth = (n: number) =>
 		n + ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
-
-	const openDialogs: Record<string, boolean> = {};
 </script>
 
 <div class="container pt-8">
@@ -152,7 +141,7 @@
 												{#each list.items as item}
 													<li class="flex w-full flex-row">
 														{#snippet submissionInfo(link, meta)}
-															{#if meta.contentType?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif'].some( (ext) => item.name.endsWith(ext), )}
+															<!-- {#if meta.contentType?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif'].some( (ext) => item.name.endsWith(ext), )}
 																<Dialog.Root>
 																	<Dialog.Trigger>
 																		{item.name}
@@ -174,7 +163,6 @@
 																	<Dialog.Content
 																		class="grid max-h-full max-w-full place-items-center p-4"
 																	>
-																		<!-- svelte-ignore a11y_media_has_caption -->
 																		<video
 																			controls
 																			class="max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)]"
@@ -235,17 +223,17 @@
 																		{/key}
 																	</Dialog.Content>
 																</Dialog.Root>
-															{:else}
-																<a
-																	href={link}
-																	target="_blank"
-																	rel="noreferrer"
-																	class="flex flex-row items-center"
-																>
-																	{item.name}
-																	<ArrowUpRight class="h-4 opacity-50" />
-																</a>
-															{/if}
+															{:else} -->
+															<a
+																href={link}
+																target="_blank"
+																rel="noreferrer"
+																class="flex flex-row items-center"
+															>
+																{item.name}
+																<ArrowUpRight class="h-4 opacity-50" />
+															</a>
+															<!-- {/if} -->
 															<div class="flex-grow"></div>
 															<span>
 																{new Date(meta.timeCreated).toLocaleString()}
