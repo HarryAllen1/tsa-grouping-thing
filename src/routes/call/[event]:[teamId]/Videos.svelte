@@ -26,6 +26,7 @@
 	const token = data.token;
 
 	let users = $state<IAgoraRTCRemoteUser[]>([]);
+	let mountTime = Date.now();
 	let video: null | ILocalVideoTrack = null;
 	let audio: null | ILocalAudioTrack = null;
 	let localVideoStatus = $state(true);
@@ -34,7 +35,7 @@
 		video;
 		localVideoStatus;
 		video?.setEnabled(localVideoStatus);
-		if (localVideoStatus) {
+		if (localVideoStatus && Date.now() - mountTime > 1000) {
 			$rerender = Date.now();
 		}
 	});

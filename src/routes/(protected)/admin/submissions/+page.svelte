@@ -152,7 +152,7 @@
 												{#each list.items as item}
 													<li class="flex w-full flex-row">
 														{#snippet submissionInfo(link, meta)}
-															{#if meta.contentType?.startsWith('image/')}
+															{#if meta.contentType?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif'].some( (ext) => item.name.endsWith(ext), )}
 																<Dialog.Root>
 																	<Dialog.Trigger>
 																		{item.name}
