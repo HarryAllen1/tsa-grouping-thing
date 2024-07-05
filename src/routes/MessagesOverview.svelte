@@ -1,17 +1,19 @@
 <script lang="ts">
-	import { eventsCollection, noHtmlMd, user } from '$lib';
+	import { eventsCollection, noHtmlMd, user, userDoc } from '$lib';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Separator } from '$lib/components/ui/separator';
 	import { selected } from './messages';
 
 	let teams = $derived(
 		$eventsCollection
-			.filter((e) =>
-				e.teams.filter((t) =>
-					t.members.find(
-						(e) => e.email.toLowerCase() === $user.email?.toLowerCase(),
+			.filter(
+				(e) =>
+					$userDoc?.events.includes(e.event) &&
+					e.teams.filter((t) =>
+						t.members.find(
+							(e) => e.email.toLowerCase() === $user.email?.toLowerCase(),
+						),
 					),
-				),
 			)
 			.flatMap((e) =>
 				e.teams
@@ -74,4 +76,6 @@
 	{#if i < teams.length - 1}
 		<Separator />
 	{/if}
+{:else}
+	<p class="text-center">Join/create a team to access messages.</p>
 {/each}

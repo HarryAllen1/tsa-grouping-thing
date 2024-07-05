@@ -38,6 +38,7 @@
 		changeSearch: (s: string) => void;
 	} = $props();
 
+	const originalName = event.event;
 	const intersect = <T,>(a: T[], b: T[]): T[] => {
 		const setB = new Set(b);
 		return [...new Set(a)].filter((x) => setB.has(x));
@@ -212,7 +213,7 @@
 									if (
 										!(await fancyConfirm(
 											'Are you really sure?',
-											" This will delete ALL TEAMS and remove this event from everyone's sign up form.",
+											"This will delete ALL TEAMS and remove this event from everyone's sign up form.",
 										))
 									)
 										return;
@@ -258,11 +259,15 @@
 											maxTeamSize: event.maxTeamSize,
 											perChapter: event.perChapter,
 											lastUpdatedBy: $user?.email ?? '',
+											teams: event.teams ?? [],
 										},
 										{
 											merge: true,
 										},
 									);
+									if (originalName !== event.event) {
+										await deleteDoc(doc(db, 'events', originalName));
+									}
 									editEventDialogOpen = false;
 								}}
 							>

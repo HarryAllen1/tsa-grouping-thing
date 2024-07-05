@@ -1,26 +1,18 @@
 <script lang="ts">
-	import {
-		allUsersCollection,
-		auth,
-		aww,
-		db,
-		removeRef,
-		sleep,
-		type UserDoc,
-	} from '$lib';
+	import { auth, aww, db, sleep, type UserDoc } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import { signOut } from 'firebase/auth';
-	import { collection, getDocs } from 'firebase/firestore';
 	import BookOpenText from 'lucide-svelte/icons/book-open-text';
 	import Download from 'lucide-svelte/icons/download';
 	import LogOut from 'lucide-svelte/icons/log-out';
 	import { docStore, userStore } from 'sveltefire';
 	import DesktopNav from './DesktopNav.svelte';
 	import MobileNav from './MobileNav.svelte';
+	import { downloadAsCSV, downloadAsJSON } from './download';
 
 	const user = userStore(auth);
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
@@ -67,80 +59,6 @@
 				]
 			: [],
 	]);
-
-	const downloadAsJSON = async () => {
-		const teamsJSON = removeRef({
-			events: (await getDocs(collection(db, 'events'))).docs.map((d) => ({
-				...d.data(),
-			})),
-			users: (await getDocs(collection(db, 'users'))).docs.map((d) => ({
-				user: d.id,
-				...d.data(),
-			})),
-			settings: (await getDocs(collection(db, 'settings'))).docs.map((d) => ({
-				...d.data(),
-			})),
-		});
-
-		const teamsBlob = new Blob(
-			[
-				new TextEncoder().encode(
-					JSON.stringify(
-						teamsJSON,
-						(k, v) =>
-							[
-								'members',
-								'events',
-								'users',
-								'teams',
-								'results',
-								'requests',
-								'settings',
-							].includes(k)
-								? Object.values(v)
-								: v,
-						2,
-					),
-				),
-			],
-			{
-				type: 'application/json;charset=utf-8',
-			},
-		);
-
-		const url = URL.createObjectURL(teamsBlob);
-		const a = document.createElement('a');
-		a.style.display = 'none';
-		a.href = url;
-		a.download = 'teams.json';
-		document.body.append(a);
-		a.click();
-		URL.revokeObjectURL(url);
-		a.remove();
-	};
-
-	const downloadAsCSV = async () => {
-		let csv =
-			'Full Name,First Name,Last Name,Email,Grade,Events,Gender,Demographic,National ID,WTSA ID\n';
-
-		for (const userData of $allUsersCollection.filter((u) => u.events.length)) {
-			csv += `${userData.name},${userData.firstName},${userData.lastName},${userData.email},${userData.grade},"${userData.events.join(', ')}",${userData.gender},${userData.demographic},${userData.nationalId},${userData.washingtonId}\n`;
-		}
-
-		const csvBlob = new Blob([new TextEncoder().encode(csv)], {
-			type: 'text/csv',
-		});
-
-		const url = URL.createObjectURL(csvBlob);
-		const a = document.createElement('a');
-		a.style.display = 'none';
-		a.href = url;
-		a.download = 'members.csv';
-		document.body.append(a);
-		a.click();
-		URL.revokeObjectURL(url);
-		a.remove();
-	};
 </script>
 
 <header

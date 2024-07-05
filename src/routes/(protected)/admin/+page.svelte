@@ -5,10 +5,12 @@
 		auth,
 		db,
 		eventsCollection,
+		fancyConfirm,
 		settings,
+		sleep,
 		type EventData,
 	} from '$lib';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
@@ -16,10 +18,17 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
-	import { doc, setDoc } from 'firebase/firestore';
+	import {
+		collection,
+		deleteDoc,
+		doc,
+		getDocs,
+		setDoc,
+	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import Filter from 'lucide-svelte/icons/filter';
 	import { userStore } from 'sveltefire';
+	import { downloadAsJSON } from '../../download';
 	import Alert from './Alert.svelte';
 	import EventCard from './EventCard.svelte';
 
@@ -149,9 +158,13 @@
 	</div>
 
 	<p class="mb-2 w-full">Green team: full; red team: over or underfilled</p>
-	<div class="mb-4 w-full space-y-2">
+	<div
+		class="mb-4 flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:gap-4"
+	>
 		<Dialog.Root bind:open={newEventDialogOpen}>
-			<Dialog.Trigger class={buttonVariants()}>Create new event</Dialog.Trigger>
+			<Dialog.Trigger>
+				<Button>Create new event</Button>
+			</Dialog.Trigger>
 			<Dialog.Content>
 				<Dialog.Title>Create new event</Dialog.Title>
 				<div class="flex flex-col gap-4">
@@ -215,30 +228,116 @@
 				</Dialog.Footer>
 			</Dialog.Content>
 		</Dialog.Root>
-		<div class="flex items-center space-x-2">
-			<Button
-				on:click={() => {
-					for (const event of eventData) {
-						setDoc(
-							doc(db, 'events', event.event ?? ''),
-							{
-								teamCreationLocked: true,
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
+		<Button
+			on:click={() => {
+				for (const event of eventData) {
+					setDoc(
+						doc(db, 'events', event.event ?? ''),
+						{
+							teamCreationLocked: true,
+							lastUpdatedBy: $user?.email ?? '',
+						},
+						{
+							merge: true,
+						},
+					);
+				}
+			}}
+		>
+			Disable all team creation
+		</Button>
+		<Alert />
+		<Button
+			variant="destructive"
+			on:click={async () => {
+				for (const event of (await getDocs(collection(db, 'events'))).docs) {
+					const data = event.data() as EventData;
+					if (data.event.startsWith('*')) continue;
+					if (!data.event.endsWith('*')) continue;
+
+					// rename doc without *
+					await setDoc(
+						doc(db, 'events', data.event.slice(0, -1)),
+						{
+							...data,
+							event: data.event.slice(0, -1),
+						},
+						{
+							merge: true,
+						},
+					);
+					await deleteDoc(event.ref);
+				}
+				if (
+					!(await fancyConfirm(
+						'Are you sure you want to reset the system?',
+						"This will delete all members without events (excluding admins and advisors), all members' events, all teams (not including the events themselves), all rooms, all results, all statistics, all files (like returned rubrics and submissions), and all messages (including blocked messages).",
+					))
+				) {
+					return;
+				}
+				await downloadAsJSON();
+				await sleep(500);
+				if (
+					!(await fancyConfirm(
+						'This is (almost) irreversable',
+						'A backup JSON file has been downloaded in the event that old data needs to be recovered. Once this process is completed, all data will be gone, forever. If anything needs to be restored, email this file to Harry, and some of the data will be restored. It is impossible to restore everything (like any files), so make sure that this is actually intentional.',
+					))
+				) {
+					return;
+				}
+				const confirmationMessage =
+					'I understand that all of this data will be deleted and that most of this data cannot be restored';
+				if (
+					!prompt(
+						`Please type the following message to continue: ${confirmationMessage}`,
+					)
+						?.toLowerCase()
+						?.includes(confirmationMessage.toLowerCase())
+				) {
+					alert('Incorrect message');
+					return;
+				}
+
+				for (const member of (await getDocs(collection(db, 'users'))).docs) {
+					const data = member.data();
+					data.events = [];
+					await setDoc(member.ref, data);
+				}
+				for (const event of (await getDocs(collection(db, 'events'))).docs) {
+					const data = event.data();
+					if (data.event === '*Rooming') {
+						await setDoc(event.ref, {
+							...data,
+							teams: [],
+							allowGenderMixing: false,
+							hideInSignup: true,
+							showToEveryone: false,
+							locked: false,
+						});
 					}
-				}}
-			>
-				Disable all team creation
-			</Button>
-		</div>
-		<div class="flex items-center space-x-2">
-			<Alert />
-		</div>
-		<div class="flex items-center space-x-2">
+					await setDoc(event.ref, {
+						...data,
+						locked: false,
+						teams: [],
+						onlineSubmissions: false,
+						teamCreationLocked: false,
+					});
+				}
+
+				await setDoc(
+					doc(db, 'settings', 'settings'),
+					{
+						enableOnlineSubmissions: false,
+						lastUpdatedBy: $user?.email ?? '',
+						alert: '',
+						enableRooming: false,
+					},
+					{ merge: true },
+				);
+			}}>Reset system</Button
+		>
+		<div class="flex flex-row items-center gap-2">
 			<Switch
 				id="enable-online-submissions"
 				checked={$settings?.enableOnlineSubmissions ?? false}

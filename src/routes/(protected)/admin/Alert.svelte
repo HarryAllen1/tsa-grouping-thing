@@ -43,7 +43,12 @@
 				</ul>
 			</Dialog.Description>
 		</Dialog.Header>
-		<Textarea spellcheck autocomplete="off" bind:value={alert} />
+		<Textarea
+			placeholder="Something something something..."
+			spellcheck
+			autocomplete="off"
+			bind:value={alert}
+		/>
 		<Dialog.Footer>
 			<Button
 				class="mt-2"
