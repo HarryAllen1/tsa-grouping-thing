@@ -343,7 +343,7 @@
 		</p>
 	{:else}
 		{#if signedUpEvents.length < 4}
-			<p class="mt-4 w-full">
+			<p class="my-4 w-full">
 				You haven't signed up for enough events yet. Please add some more events
 				on the <a href="/events">event sign up page.</a>
 			</p>
