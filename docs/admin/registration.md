@@ -54,7 +54,7 @@ Before you can register anyone for any WA events, they need to be affiliated fir
 
 If you find out that a member's name is incorrect, there is no way to change the name or delete the member. You will instead have to create a new member and hopefully not get confused between the two almost duplicate members. So, make sure that all information is correct before membership submission.
 
-### Registering for WA Events
+## Registering for the State Conference
 
 Only after has National membership been submitted can members be added to any State level event.
 
