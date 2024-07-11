@@ -152,6 +152,25 @@
 								Lock team creation when full
 							</Label>
 						</div>
+						<div class="flex items-center space-x-2">
+							<Switch
+								id="lock-team-creation-but-actually"
+								bind:checked={event.teamCreationActuallyLocked}
+								onCheckedChange={async (e) => {
+									await setDoc(
+										doc(db, 'events', event.event),
+										{
+											teamCreationActuallyLocked: e,
+											lastUpdatedBy: $user?.email ?? '',
+										},
+										{ merge: true },
+									);
+								}}
+							/>
+							<Label for="lock-team-creation-but-actually">
+								Lock team creation
+							</Label>
+						</div>
 						<Label class="flex flex-row items-center gap-2">
 							<Switch
 								onCheckedChange={async (checked) => {
@@ -179,6 +198,8 @@
 
 						<Label for="eventName">Event name</Label>
 						<Input type="text" bind:value={event.event} id="eventName" />
+						<Label for="eventDesc">Event description</Label>
+						<Input type="text" bind:value={event.description} id="eventDesc" />
 						<Label for="minTeamSize">Min team size</Label>
 						<Input
 							type="number"

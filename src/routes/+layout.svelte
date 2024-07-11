@@ -28,6 +28,7 @@
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
 	import { panelOpen } from './messages-panel';
+	import { mouseThing } from './senuka-put-stuff-here';
 
 	let { children } = $props();
 
@@ -81,7 +82,10 @@
 			0,
 		),
 	);
-	onMount(() => unsub);
+	onMount(() => {
+		mouseThing();
+		return unsub;
+	});
 </script>
 
 <svelte:head>

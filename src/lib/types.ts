@@ -7,6 +7,7 @@ export interface EventDoc {
 	minTeamSize: number;
 	maxTeamSize: number;
 	perChapter: number;
+	description?: string;
 	locked?: boolean;
 	onlineSubmissions?: boolean;
 	teamCreationLocked?: boolean;
@@ -15,6 +16,7 @@ export interface EventDoc {
 	allowGenderMixing?: boolean;
 	showToEveryone?: boolean;
 	hideInSignup?: boolean;
+	teamCreationActuallyLocked?: boolean;
 }
 
 export interface Result {

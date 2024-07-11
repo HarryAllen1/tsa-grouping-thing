@@ -95,7 +95,7 @@
 						t.members.find(
 							(e) => e.email.toLowerCase() === ($user?.email ?? ''),
 						),
-					) || event.event === 'Technology Bowl'
+					) || event.teamCreationActuallyLocked
 				)}
 				on:click={async () => {
 					let lowestNotTaken = 1;
