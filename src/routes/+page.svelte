@@ -132,7 +132,7 @@
 		size="lg"
 		class="my-4 h-24 w-full bg-green-400 text-3xl text-black hover:bg-green-500"
 	>
-		Signup/change events
+		Edit events
 	</Button>
 
 	{#if requests.length}

@@ -17,9 +17,9 @@ user.subscribe(($u) => {
 		($u) => ({
 			...$u,
 			name:
-				$u.firstName && $u.lastName
+				$u?.firstName && $u?.lastName
 					? `${$u?.firstName} ${$u?.lastName}`
-					: $u.name,
+					: $u?.name,
 		}),
 	);
 	allUsersCollection = derived(
@@ -28,9 +28,9 @@ user.subscribe(($u) => {
 			$users.map(($u) => ({
 				...$u,
 				name:
-					$u.firstName && $u.lastName
+					$u?.firstName && $u?.lastName
 						? `${$u.firstName} ${$u.lastName}`
-						: $u.name,
+						: $u?.name,
 			})),
 	);
 	eventsCollection = collectionStore<EventDoc>(db, 'events');
