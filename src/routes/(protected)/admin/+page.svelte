@@ -20,7 +20,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import {
 		collection,
-		deleteDoc,
+		deleteField,
 		doc,
 		getDocs,
 		setDoc,
@@ -250,24 +250,6 @@
 		<Button
 			variant="destructive"
 			on:click={async () => {
-				for (const event of (await getDocs(collection(db, 'events'))).docs) {
-					const data = event.data() as EventData;
-					if (data.event.startsWith('*')) continue;
-					if (!data.event.endsWith('*')) continue;
-
-					// rename doc without *
-					await setDoc(
-						doc(db, 'events', data.event.slice(0, -1)),
-						{
-							...data,
-							event: data.event.slice(0, -1),
-						},
-						{
-							merge: true,
-						},
-					);
-					await deleteDoc(event.ref);
-				}
 				if (
 					!(await fancyConfirm(
 						'Are you sure you want to reset the system?',
@@ -310,6 +292,7 @@
 						await setDoc(event.ref, {
 							...data,
 							teams: [],
+							results: [],
 							allowGenderMixing: false,
 							hideInSignup: true,
 							showToEveryone: false,
@@ -318,10 +301,11 @@
 					}
 					await setDoc(event.ref, {
 						...data,
-						locked: false,
+						locked: deleteField(),
 						teams: [],
-						onlineSubmissions: false,
-						teamCreationLocked: false,
+						onlineSubmissions: deleteField(),
+						teamCreationLocked: deleteField(),
+						ref: deleteField(),
 					});
 				}
 
