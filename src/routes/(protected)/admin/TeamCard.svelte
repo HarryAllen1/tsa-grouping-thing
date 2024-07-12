@@ -270,68 +270,70 @@
 					<Dialog.Content class="max-h-full overflow-y-scroll">
 						<Dialog.Title>Add People</Dialog.Title>
 						<Dialog.Description>
-							<p>All people not already in a team:</p>
-							<ul>
-								{#each $allUsersCollection
-									.filter((p) => !event.teams.some( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
-									.sort((a, b) => a?.name?.localeCompare(b?.name))
-									.filter( (m) => (event.event === '*Rooming' ? m.events.length > 0 : true), ) as person (person.email)}
-									<li
-										class:text-green-500={$allUsersCollection
-											.filter((m) => m.events.includes(event.event ?? ''))
-											.find((e) => e.email === (person?.email ?? ''))}
-										class="flex flex-row items-center"
-										animate:flip={{
-											duration: 200,
-										}}
-									>
-										<HoverCard.Root>
-											<HoverCard.Trigger>{person.name}</HoverCard.Trigger>
-											<HoverCard.Content>
-												<UserCard user={person} />
-											</HoverCard.Content>
-										</HoverCard.Root>
-										<Button
-											on:click={async () => {
-												team.members.push({
-													name: person.name,
-													email: person.email,
-												});
-												team.lastUpdatedBy = $user?.email ?? '';
-												team.lastUpdatedTime = new Timestamp(
-													Date.now() / 1000,
-													0,
-												);
-
-												await setDoc(
-													doc(db, 'events', event.event ?? ''),
-													{
-														teams: event.teams,
-														lastUpdatedBy: $user?.email ?? '',
-													},
-													{
-														merge: true,
-													},
-												);
-												confetti();
-												yay.play();
-												navigator.vibrate(100);
-											}}
-											variant="outline"
-											size="icon"
-											class="ml-2"
-										>
-											<Plus />
-										</Button>
-									</li>
-								{:else}
-									<li>
-										No one else singed up for this event. Teams should probably
-										be merged.
-									</li>
-								{/each}
-							</ul>
+							All people not already in a team:
 						</Dialog.Description>
+						<ul>
+							{#each $allUsersCollection
+								.filter((p) => !event.teams.some( (t) => t.members?.find((e) => e.email.toLowerCase() === p.email?.toLowerCase()), ))
+								.sort((a, b) => a?.name?.localeCompare(b?.name))
+								.filter( (m) => (event.event === '*Rooming' ? m.events.length > 0 : true), ) as person (person.email)}
+								<li
+									class:text-green-500={$allUsersCollection
+										.filter((m) => m.events.includes(event.event ?? ''))
+										.find((e) => e.email === (person?.email ?? ''))}
+									class="flex flex-row items-center"
+									animate:flip={{
+										duration: 200,
+									}}
+								>
+									<HoverCard.Root>
+										<HoverCard.Trigger>
+											<a href="/events/{person.email}">{person.name}</a>
+										</HoverCard.Trigger>
+										<HoverCard.Content>
+											<UserCard user={person} />
+										</HoverCard.Content>
+									</HoverCard.Root>
+									<Button
+										on:click={async () => {
+											team.members.push({
+												name: person.name,
+												email: person.email,
+											});
+											team.lastUpdatedBy = $user?.email ?? '';
+											team.lastUpdatedTime = new Timestamp(
+												Date.now() / 1000,
+												0,
+											);
+
+											await setDoc(
+												doc(db, 'events', event.event ?? ''),
+												{
+													teams: event.teams,
+													lastUpdatedBy: $user?.email ?? '',
+												},
+												{
+													merge: true,
+												},
+											);
+											confetti();
+											yay.play();
+											navigator.vibrate(100);
+										}}
+										variant="outline"
+										size="icon"
+										class="ml-2"
+									>
+										<Plus />
+									</Button>
+								</li>
+							{:else}
+								<li>
+									No one else singed up for this event. Teams should probably be
+									merged.
+								</li>
+							{/each}
+						</ul>
 					</Dialog.Content>
 				</Dialog.Root>
 				<Button
@@ -455,119 +457,117 @@
 								</Dialog.Trigger>
 								<Dialog.Content>
 									<Dialog.Title>Manage Submissions</Dialog.Title>
-									<Dialog.Description>
-										{#if event.submissionDescription}
-											<div class="prose dark:prose-invert dark:text-white">
-												<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-												{@html md.render(
-													`## What needs to be submitted:\n\n${event.submissionDescription}`,
-												)}
-											</div>
-										{/if}
-										<ul>
-											{#each [...(list?.items ?? []), ...filesToUpload] as submission (submission instanceof File ? submission.webkitRelativePath : submission.fullPath)}
-												<li class="flex w-full flex-col items-center">
-													{#if submission instanceof File}
-														<UploadTask
-															ref="submissions/{event.event}/{team.id}/{submission.name}"
-															data={submission}
-															let:snapshot
-															let:progress
-														>
-															{#if snapshot?.state === 'success'}
-																{filterSubmissions(submission)}
-																{updateStorageList()}
-															{:else}
-																<Progress value={progress} class="w-full" />
+									{#if event.submissionDescription}
+										<div class="prose dark:prose-invert dark:text-white">
+											<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+											{@html md.render(
+												`## What needs to be submitted:\n\n${event.submissionDescription}`,
+											)}
+										</div>
+									{/if}
+									<ul>
+										{#each [...(list?.items ?? []), ...filesToUpload] as submission (submission instanceof File ? submission.webkitRelativePath : submission.fullPath)}
+											<li class="flex w-full flex-col items-center">
+												{#if submission instanceof File}
+													<UploadTask
+														ref="submissions/{event.event}/{team.id}/{submission.name}"
+														data={submission}
+														let:snapshot
+														let:progress
+													>
+														{#if snapshot?.state === 'success'}
+															{filterSubmissions(submission)}
+															{updateStorageList()}
+														{:else}
+															<Progress value={progress} class="w-full" />
 
-																<span class="w-full">
-																	{submission.name}
-																</span>
-															{/if}
-														</UploadTask>
-													{:else}
-														<div class="flex w-full flex-row items-center">
-															{#snippet submissionsList(link, meta)}
-																<SimpleTooltip
-																	message={new Date(
-																		meta.timeCreated,
-																	).toLocaleString()}
-																>
-																	<a href={link} target="_blank">
-																		{meta.name}
-																	</a>
-																</SimpleTooltip>
-															{/snippet}
-															<DownloadURL ref={submission} let:link>
-																<StorageMetadata
-																	ref={submission}
-																	link={link ?? ''}
-																	withMetadata={submissionsList}
-																></StorageMetadata>
-															</DownloadURL>
-															<div class="flex flex-grow"></div>
-															<Button
-																variant="ghost"
-																size="icon"
-																on:click={async () => {
-																	if (submission instanceof File) return;
-																	await deleteObject(submission);
-																	team.lastUpdatedBy = $user?.email ?? '';
-																	dummyVariableToRerender++;
-																}}
+															<span class="w-full">
+																{submission.name}
+															</span>
+														{/if}
+													</UploadTask>
+												{:else}
+													<div class="flex w-full flex-row items-center">
+														{#snippet submissionsList(link, meta)}
+															<SimpleTooltip
+																message={new Date(
+																	meta.timeCreated,
+																).toLocaleString()}
 															>
-																<X />
-															</Button>
-														</div>
-													{/if}
-												</li>
-											{:else}
-												<p>No submissions</p>
-											{/each}
-										</ul>
-										<Button
-											class="mt-4"
-											on:click={() => submissionsFileUpload?.click()}
-										>
-											Upload
-										</Button>
-										<input
-											bind:this={submissionsFileUpload}
-											onchange={(e) => {
-												if (e.target instanceof HTMLInputElement) {
-													if (!e.target.files?.length) return;
-													const files = [...e.target.files];
-													for (const file of files) {
-														if (
-															list?.items.map((f) => f.name).includes(file.name)
-														) {
-															alert(
-																`File ${file.name} already exists. If you want to upload this file, change the name.`,
-															);
-															continue;
-														}
-
-														filesToUpload.push(file);
+																<a href={link} target="_blank">
+																	{meta.name}
+																</a>
+															</SimpleTooltip>
+														{/snippet}
+														<DownloadURL ref={submission} let:link>
+															<StorageMetadata
+																ref={submission}
+																link={link ?? ''}
+																withMetadata={submissionsList}
+															></StorageMetadata>
+														</DownloadURL>
+														<div class="flex flex-grow"></div>
+														<Button
+															variant="ghost"
+															size="icon"
+															on:click={async () => {
+																if (submission instanceof File) return;
+																await deleteObject(submission);
+																team.lastUpdatedBy = $user?.email ?? '';
+																dummyVariableToRerender++;
+															}}
+														>
+															<X />
+														</Button>
+													</div>
+												{/if}
+											</li>
+										{:else}
+											<p>No submissions</p>
+										{/each}
+									</ul>
+									<Button
+										class="mt-4"
+										on:click={() => submissionsFileUpload?.click()}
+									>
+										Upload
+									</Button>
+									<input
+										bind:this={submissionsFileUpload}
+										onchange={(e) => {
+											if (e.target instanceof HTMLInputElement) {
+												if (!e.target.files?.length) return;
+												const files = [...e.target.files];
+												for (const file of files) {
+													if (
+														list?.items.map((f) => f.name).includes(file.name)
+													) {
+														alert(
+															`File ${file.name} already exists. If you want to upload this file, change the name.`,
+														);
+														continue;
 													}
-												}
-											}}
-											class="hidden"
-											type="file"
-											multiple
-										/>
 
-										<p>
-											Allowed file types: all image files, all audio files, all
-											video files, pdfs, and Word docs (.doc, .docx).
-										</p>
-										<p>250MB max file size.</p>
-										<p>
-											If you need to submit a file type not listed, please
-											contact Harry (<a href="mailto:s-hallen@lwsd.org"
-												>s-hallen@lwsd.org</a
-											>).
-										</p>
-									</Dialog.Description>
+													filesToUpload.push(file);
+												}
+											}
+										}}
+										class="hidden"
+										type="file"
+										multiple
+									/>
+
+									<p>
+										Allowed file types: all image files, all audio files, all
+										video files, pdfs, and Word docs (.doc, .docx).
+									</p>
+									<p>250MB max file size.</p>
+									<p>
+										If you need to submit a file type not listed, please contact
+										Harry (<a href="mailto:s-hallen@lwsd.org"
+											>s-hallen@lwsd.org</a
+										>).
+									</p>
 								</Dialog.Content>
 							</StorageList>
 						{/key}
@@ -677,71 +677,69 @@
 							<Dialog.Content class="max-h-full overflow-y-scroll">
 								<Dialog.Title>Create Request</Dialog.Title>
 
-								<Dialog.Description>
-									<ul>
-										{#each $allUsersCollection.filter((u) => !team.members
-													.map((m) => m.email)
-													.includes(u.email) && !team.requests
-													?.map((r) => r.email)
-													.includes(u.email)) as person (person.email)}
-											<li
-												class:text-green-500={$allUsersCollection
-													.filter((m) => m.events.includes(event.event ?? ''))
-													.find((e) => e.email === (person?.email ?? ''))}
-												class="flex flex-row items-center"
-												animate:flip={{
-													duration: 200,
-												}}
-											>
-												<HoverCard.Root>
-													<HoverCard.Trigger>
-														{person.name}
-													</HoverCard.Trigger>
-													<HoverCard.Content>
-														<UserCard user={person} />
-													</HoverCard.Content>
-												</HoverCard.Root>
-												<Button
-													on:click={async () => {
-														team.requests = [
-															...(team.requests ?? []),
-															{
-																name: person.name,
-																email: person.email,
-															},
-														];
-														team.lastUpdatedBy = $user?.email ?? '';
-														team.lastUpdatedTime = new Timestamp(
-															Date.now() / 1000,
-															0,
-														);
-														await setDoc(
-															doc(db, 'events', event.event ?? ''),
-															{
-																teams: event.teams,
-																lastUpdatedBy: $user?.email ?? '',
-															},
-															{
-																merge: true,
-															},
-														);
+								<ul>
+									{#each $allUsersCollection.filter((u) => !team.members
+												.map((m) => m.email)
+												.includes(u.email) && !team.requests
+												?.map((r) => r.email)
+												.includes(u.email)) as person (person.email)}
+										<li
+											class:text-green-500={$allUsersCollection
+												.filter((m) => m.events.includes(event.event ?? ''))
+												.find((e) => e.email === (person?.email ?? ''))}
+											class="flex flex-row items-center"
+											animate:flip={{
+												duration: 200,
+											}}
+										>
+											<HoverCard.Root>
+												<HoverCard.Trigger>
+													{person.name}
+												</HoverCard.Trigger>
+												<HoverCard.Content>
+													<UserCard user={person} />
+												</HoverCard.Content>
+											</HoverCard.Root>
+											<Button
+												on:click={async () => {
+													team.requests = [
+														...(team.requests ?? []),
+														{
+															name: person.name,
+															email: person.email,
+														},
+													];
+													team.lastUpdatedBy = $user?.email ?? '';
+													team.lastUpdatedTime = new Timestamp(
+														Date.now() / 1000,
+														0,
+													);
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: event.teams,
+															lastUpdatedBy: $user?.email ?? '',
+														},
+														{
+															merge: true,
+														},
+													);
 
-														confetti();
-														yay.play();
-														navigator.vibrate(100);
-													}}
-													variant="outline"
-													size="icon"
-													class="ml-2"
-												>
-													<Plus />
-												</Button>
-											</li>
-										{:else}
-											<li>how tf</li>
-										{/each}
-									</ul>
-								</Dialog.Description>
+													confetti();
+													yay.play();
+													navigator.vibrate(100);
+												}}
+												variant="outline"
+												size="icon"
+												class="ml-2"
+											>
+												<Plus />
+											</Button>
+										</li>
+									{:else}
+										<li>how tf</li>
+									{/each}
+								</ul>
 							</Dialog.Content>
 						</Dialog.Root>
 					</ul>

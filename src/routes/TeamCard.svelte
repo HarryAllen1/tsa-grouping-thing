@@ -192,76 +192,77 @@
 
 							<Dialog.Content class="max-h-screen overflow-y-scroll">
 								<Dialog.Title>Add People</Dialog.Title>
-								<Dialog.Description>
-									{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-										<Alert class="dark:brightness-200">
+								{#if team.members.length >= (event.maxTeamSize ?? 9999)}
+									<Alert class="dark:brightness-200">
+										<AlertTitle>
+											This {event.event === '*Rooming' ? 'room' : 'team'} is full</AlertTitle
+										>
+									</Alert>
+								{:else}
+									{#if event.event === '*Rooming'}
+										<Alert variant="destructive" class="dark:brightness-200">
 											<AlertTitle>
-												This {event.event === '*Rooming' ? 'room' : 'team'} is full</AlertTitle
-											>
+												You can only be in rooms with people of the same gender
+												(this is district policy)
+											</AlertTitle>
+											If something seems wrong, contact a board member.
 										</Alert>
 									{:else}
-										{#if event.event === '*Rooming'}
-											<Alert variant="destructive" class="dark:brightness-200">
-												<AlertTitle>
-													You can only be in rooms with people of the same
-													gender (this is district policy)
-												</AlertTitle>
-												If something seems wrong, contact a board member.
-											</Alert>
-										{:else}
+										<Dialog.Description>
 											<p>People who signed up for this event:</p>
-										{/if}
-										<ul>
-											{#each getPeopleWhoCanBeAddedToEvent(event, $allUsersCollection) as person (person.email)}
-												<li
-													class="flex flex-row items-center"
-													animate:flip={{
-														duration: 200,
-													}}
-												>
-													{person.name}
-													<Button
-														on:click={async () => {
-															const teamButMutable = team;
-															teamButMutable.members.push({
-																name: person.name,
-																email: person.email,
-															});
-															teamButMutable.lastUpdatedBy = $user?.email ?? '';
-															teamButMutable.lastUpdatedTime = new Timestamp(
-																Date.now() / 1000,
-																0,
-															);
-															await setDoc(
-																doc(db, 'events', event.event ?? ''),
-																{
-																	teams: event.teams,
-																	lastUpdatedBy: $user?.email ?? '',
-																},
-																{
-																	merge: true,
-																},
-															);
-															confetti();
-															navigator.vibrate(100);
-															yay.play();
-														}}
-														variant="outline"
-														size="icon"
-														class="ml-2"
-													>
-														<Plus />
-													</Button>
-												</li>
-											{:else}
-												<li>
-													No one else singed up for this event. Please see a
-													board member for next steps.
-												</li>
-											{/each}
-										</ul>
+										</Dialog.Description>
 									{/if}
-								</Dialog.Description>
+
+									<ul>
+										{#each getPeopleWhoCanBeAddedToEvent(event, $allUsersCollection) as person (person.email)}
+											<li
+												class="flex flex-row items-center"
+												animate:flip={{
+													duration: 200,
+												}}
+											>
+												{person.name}
+												<Button
+													on:click={async () => {
+														const teamButMutable = team;
+														teamButMutable.members.push({
+															name: person.name,
+															email: person.email,
+														});
+														teamButMutable.lastUpdatedBy = $user?.email ?? '';
+														teamButMutable.lastUpdatedTime = new Timestamp(
+															Date.now() / 1000,
+															0,
+														);
+														await setDoc(
+															doc(db, 'events', event.event ?? ''),
+															{
+																teams: event.teams,
+																lastUpdatedBy: $user?.email ?? '',
+															},
+															{
+																merge: true,
+															},
+														);
+														confetti();
+														navigator.vibrate(100);
+														yay.play();
+													}}
+													variant="outline"
+													size="icon"
+													class="ml-2"
+												>
+													<Plus />
+												</Button>
+											</li>
+										{:else}
+											<li>
+												No one else singed up for this event. Please see a board
+												member for next steps.
+											</li>
+										{/each}
+									</ul>
+								{/if}
 							</Dialog.Content>
 						</Dialog.Root>
 					</div>
@@ -462,7 +463,7 @@
 										if (t === team) {
 											t.requests = t.requests ?? [];
 											t.requests.push({
-												name: $user?.displayName ?? '',
+												name: $userDoc?.name ?? '',
 												email: $user?.email ?? '',
 											});
 										}
@@ -478,7 +479,7 @@
 								team.members.map((m) => m.email),
 								'New team request',
 								`${
-									$user?.displayName ?? 'Someone'
+									$userDoc.name ?? 'Someone'
 								} has requested to join your team for ${
 									event.event
 								}. Please go to the <a href="https://teaming.jhstsa.org">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,

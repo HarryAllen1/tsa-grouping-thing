@@ -134,7 +134,7 @@
 					</Dropdown.Trigger>
 					<Dropdown.Content>
 						<Dropdown.Label class="text-lg">
-							{$user?.displayName}
+							{$userDoc?.name}
 						</Dropdown.Label>
 						<Dropdown.Label class="font-normal">{$user?.email}</Dropdown.Label>
 						{#if $userDoc?.nationalId}
