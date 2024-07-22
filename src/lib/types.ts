@@ -67,10 +67,12 @@ export interface UserDoc {
 	tShirtSize?: 'WXS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
 	grade?: number;
 	firstName?: string;
+	preferredFirstName?: string;
 	random?: boolean;
 	lastName?: string;
 	gender?: string;
 	demographic?: string;
+	completedIntakeForm?: boolean;
 }
 
 export interface MailDoc {

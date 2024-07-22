@@ -4,7 +4,10 @@ import { collectionStore, docStore, userStore } from 'sveltefire';
 import { auth, db } from './firebase';
 import type { EventDoc, SettingsDoc, UserDoc } from './types';
 
-export const user = userStore(auth) as Readable<User>;
+export const user = derived(userStore(auth) as Readable<User>, ($u) => ({
+	...$u,
+	email: auth.currentUser?.email?.toLowerCase() ?? '',
+}));
 export let userDoc: Readable<UserDoc>;
 export let allUsersCollection: Readable<UserDoc[]>;
 export let eventsCollection: ReturnType<typeof collectionStore<EventDoc>>;

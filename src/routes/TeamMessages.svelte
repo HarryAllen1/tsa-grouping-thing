@@ -50,7 +50,7 @@
 			sender: {
 				name: isAdminMessages
 					? `(ADMIN) ${$userDoc?.name}`
-					: $userDoc?.name ?? '',
+					: ($userDoc?.name ?? ''),
 				email: $userDoc?.email ?? '',
 			},
 			id: crypto.randomUUID(),

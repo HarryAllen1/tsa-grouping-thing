@@ -837,7 +837,7 @@
 									class="mt-4"
 									on:click={() => {
 										const el = document.querySelector(`#${hash}`);
-										el instanceof HTMLInputElement && el.click();
+										if (el instanceof HTMLInputElement) el.click();
 									}}
 								>
 									Upload

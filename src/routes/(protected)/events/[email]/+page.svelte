@@ -33,12 +33,6 @@
 
 <div class="container mt-6">
 	<h1
-		class="mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-	>
-		Changes will automatically be saved. Try to leave any teams for events you
-		are dropping.
-	</h1>
-	<h1
 		class="mb-4 mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>
 		Crossed out events are locked, likely due to eliminations.
@@ -58,7 +52,7 @@
 							doc(db, 'users', $user?.email ?? ''),
 							{
 								events: eventMap[event.event]
-									? $userDoc?.events.filter((e) => e !== event.event) ?? []
+									? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
 									: [...($userDoc?.events ?? []), event.event],
 								lastUpdated: new Timestamp(Date.now() / 1000, 0),
 								lastUpdatedBy: $actualUser?.email ?? '',

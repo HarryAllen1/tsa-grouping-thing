@@ -223,7 +223,7 @@
 		<div
 			class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 		>
-			{#each $allUsersCollection.toSorted( (a, b) => (sortBy.value === 'firstName' ? a.name : a.lastName ?? '').localeCompare(sortBy.value === 'firstName' ? b.name : b.lastName ?? ''), ) as user (user.email)}
+			{#each $allUsersCollection.toSorted( (a, b) => (sortBy.value === 'firstName' ? a.name : (a.lastName ?? '')).localeCompare(sortBy.value === 'firstName' ? b.name : (b.lastName ?? '')), ) as user (user.email)}
 				<MemberGridCard
 					{user}
 					show={results.includes(user) &&
