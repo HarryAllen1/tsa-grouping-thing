@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import { onNavigate } from '$app/navigation';
+	import { goto, onNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import {
 		FancyConfirm,
@@ -11,26 +11,33 @@
 		eventsCollection,
 		storage,
 		user,
+		type UserDoc,
 	} from '$lib';
+	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
+	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import * as Popover from '$lib/components/ui/popover';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { onAuthStateChanged } from 'firebase/auth';
+	import { doc, getDoc } from 'firebase/firestore';
 	import MessageSquare from 'lucide-svelte/icons/message-square';
-	import { onMount } from 'svelte';
+	import { ModeWatcher } from 'mode-watcher';
+	import { onDestroy, onMount, type Snippet } from 'svelte';
 	import { FirebaseApp, PageView, SignedIn, SignedOut } from 'sveltefire';
 	import '../app.css';
 	import Login from './Login.svelte';
 	import MessagesPopover from './MessagesPopover.svelte';
 	import Navbar from './Navbar.svelte';
 	import { selected } from './messages';
-	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
-	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
 	import { panelOpen } from './messages-panel';
 	import { mouseThing } from './senuka-put-stuff-here';
 
-	let { children } = $props();
+	let {
+		children,
+	}: {
+		children: Snippet;
+	} = $props();
 
 	const isAuthReady = auth.authStateReady();
 
@@ -82,10 +89,17 @@
 			0,
 		),
 	);
-	onMount(() => {
+	onMount(async () => {
+		await auth.authStateReady();
+		const userDoc = await getDoc(
+			doc(db, 'users', auth.currentUser?.email ?? ''),
+		);
+		const userData = userDoc.data() as UserDoc;
+		if (!userData.completedIntakeForm) await goto('/intake');
 		mouseThing();
-		return unsub;
 	});
+
+	onDestroy(unsub);
 </script>
 
 <svelte:head>
@@ -106,6 +120,8 @@
 	{/if}
 </svelte:head>
 
+<ModeWatcher />
+
 <ThemeWrapper>
 	<ProgressBar class="text-primary" />
 	<div class="flex max-w-full flex-col items-center">
@@ -117,33 +133,37 @@
 					{/key}
 				{/if}
 				<SignedIn>
-					<Navbar />
+					{#if $page.route.id !== '/intake'}
+						<Navbar />
+					{/if}
 					{#key $user}
 						{@render children()}
-						<div class="fixed bottom-8 right-8">
-							<Popover.Root
-								onOpenChange={(e) => {
-									if (e) $selected = null;
-								}}
-								bind:open={$panelOpen}
-							>
-								<Popover.Trigger class="relative">
-									<Button size="icon" class="size-16">
-										<MessageSquare class="size-8" />
-									</Button>
-									{#if unreadCount}
-										<div class="absolute -right-4 -top-4">
-											<Badge variant="destructive">
-												{unreadCount}
-											</Badge>
-										</div>
-									{/if}
-								</Popover.Trigger>
-								<Popover.Content class="w-96 transition-all">
-									<MessagesPopover />
-								</Popover.Content>
-							</Popover.Root>
-						</div>
+						{#if $page.route.id !== '/intake'}
+							<div class="fixed bottom-8 right-8">
+								<Popover.Root
+									onOpenChange={(e) => {
+										if (e) $selected = null;
+									}}
+									bind:open={$panelOpen}
+								>
+									<Popover.Trigger class="relative">
+										<Button size="icon" class="size-16">
+											<MessageSquare class="size-8" />
+										</Button>
+										{#if unreadCount}
+											<div class="absolute -right-4 -top-4">
+												<Badge variant="destructive">
+													{unreadCount}
+												</Badge>
+											</div>
+										{/if}
+									</Popover.Trigger>
+									<Popover.Content class="w-96 transition-all">
+										<MessagesPopover />
+									</Popover.Content>
+								</Popover.Root>
+							</div>
+						{/if}
 					{/key}
 				</SignedIn>
 				<SignedOut>

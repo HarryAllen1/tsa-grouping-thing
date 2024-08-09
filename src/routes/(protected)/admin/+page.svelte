@@ -319,8 +319,10 @@
 					},
 					{ merge: true },
 				);
-			}}>Reset system</Button
+			}}
 		>
+			Reset system
+		</Button>
 		<div class="flex flex-row items-center gap-2">
 			<Switch
 				id="enable-online-submissions"

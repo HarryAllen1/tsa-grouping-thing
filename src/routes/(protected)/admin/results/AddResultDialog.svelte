@@ -43,7 +43,7 @@
 	let open = $state(false);
 
 	const existingResults = event.results?.find((r) => r.id === id);
-	let note = $state(editing ? existingResults?.note ?? '' : '');
+	let note = $state(editing ? (existingResults?.note ?? '') : '');
 	let newPlace = $state(
 		editing && existingResults
 			? (event.results?.indexOf(existingResults) ?? 0) + 1
@@ -51,7 +51,7 @@
 	);
 
 	let newMembers = $state(
-		members ?? (editing ? existingResults?.members ?? [] : []),
+		members ?? (editing ? (existingResults?.members ?? []) : []),
 	);
 	let fileInput = $state<HTMLInputElement>();
 	const filesToUpload = writable<File[]>([]);

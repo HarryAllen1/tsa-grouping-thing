@@ -6,6 +6,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { doc, setDoc } from 'firebase/firestore';
+	import type { FullMetadata } from 'firebase/storage';
 	import { ArrowUpRight } from 'lucide-svelte';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
@@ -140,7 +141,10 @@
 											<ul>
 												{#each list.items as item}
 													<li class="flex w-full flex-row">
-														{#snippet submissionInfo(link, meta)}
+														{#snippet submissionInfo(
+															link: string,
+															meta: FullMetadata,
+														)}
 															<!-- {#if meta.contentType?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif'].some( (ext) => item.name.endsWith(ext), )}
 																<Dialog.Root>
 																	<Dialog.Trigger>

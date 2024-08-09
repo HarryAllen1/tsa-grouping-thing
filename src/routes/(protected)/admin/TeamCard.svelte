@@ -27,7 +27,12 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import { deleteObject, ref, uploadBytes } from 'firebase/storage';
+	import {
+		deleteObject,
+		ref,
+		uploadBytes,
+		type FullMetadata,
+	} from 'firebase/storage';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import Crown from 'lucide-svelte/icons/crown';
 	import FileUp from 'lucide-svelte/icons/file-up';
@@ -488,7 +493,10 @@
 													</UploadTask>
 												{:else}
 													<div class="flex w-full flex-row items-center">
-														{#snippet submissionsList(link, meta)}
+														{#snippet submissionsList(
+															link: string,
+															meta: FullMetadata,
+														)}
 															<SimpleTooltip
 																message={new Date(
 																	meta.timeCreated,
@@ -795,7 +803,10 @@
 												</UploadTask>
 											{:else}
 												<div class="flex w-full flex-row items-center">
-													{#snippet submissionsList(link, meta)}
+													{#snippet submissionsList(
+														link: string,
+														meta: FullMetadata,
+													)}
 														<SimpleTooltip
 															message={new Date(
 																meta.timeCreated,
@@ -837,7 +848,7 @@
 									class="mt-4"
 									on:click={() => {
 										const el = document.querySelector(`#${hash}`);
-										el instanceof HTMLInputElement && el.click();
+										if (el instanceof HTMLInputElement) el.click();
 									}}
 								>
 									Upload

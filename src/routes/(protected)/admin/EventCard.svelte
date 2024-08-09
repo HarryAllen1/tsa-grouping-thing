@@ -351,8 +351,8 @@
 						0,
 					)}/{event.event === '*Rooming'
 						? $allUsersCollection.filter((u) => u.events.length > 0).length
-						: eventData.find((e) => e.event === event.event)?.members.length ??
-							0} people joined {event.event === '*Rooming' ? 'rooms' : 'teams'}
+						: (eventData.find((e) => e.event === event.event)?.members.length ??
+							0)} people joined {event.event === '*Rooming' ? 'rooms' : 'teams'}
 				</li>
 				<li>
 					ID: {event.id}

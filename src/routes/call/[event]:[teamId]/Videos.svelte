@@ -32,7 +32,9 @@
 	let localVideoStatus = $state(true);
 	let localAudioStatus = $state(true);
 	$effect(() => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		video;
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		localVideoStatus;
 		video?.setEnabled(localVideoStatus);
 		if (localVideoStatus && Date.now() - mountTime > 1000) {
@@ -40,7 +42,9 @@
 		}
 	});
 	$effect(() => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		audio;
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		localAudioStatus;
 		audio?.setMuted(!localAudioStatus);
 	});

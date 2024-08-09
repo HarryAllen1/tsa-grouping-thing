@@ -1,6 +1,6 @@
 import { dev } from '$app/environment';
 import { inject } from '@vercel/analytics';
 
-!dev && inject({ mode: 'production' });
+if (!dev) inject({ mode: 'production' });
 
 export const ssr = false;

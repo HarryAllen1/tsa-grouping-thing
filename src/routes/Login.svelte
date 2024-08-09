@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { auth, closeConfirmationDialog, fancyConfirm, yay } from '$lib';
+	import {
+		auth,
+		closeConfirmationDialog,
+		fancyConfirm,
+		lookupMsAzureProfilePhoto,
+		profilePhoto,
+		yay,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import confetti from 'canvas-confetti';
@@ -34,6 +41,9 @@
 					}
 
 					if (user.user) {
+						const credential = OAuthProvider.credentialFromResult(user);
+						const accessToken = credential?.accessToken;
+						$profilePhoto = await lookupMsAzureProfilePhoto(accessToken ?? '');
 						confetti();
 						yay.play();
 						closeConfirmationDialog();

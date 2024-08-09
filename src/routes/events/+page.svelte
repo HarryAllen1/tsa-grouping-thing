@@ -71,7 +71,7 @@
 							doc(db, 'users', $user?.email ?? ''),
 							{
 								events: eventMap[event.event]
-									? $userDoc?.events.filter((e) => e !== event.event) ?? []
+									? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
 									: [...($userDoc?.events ?? []), event.event],
 								lastUpdated: new Timestamp(Date.now() / 1000, 0),
 								lastUpdatedBy: $user?.email ?? '',
