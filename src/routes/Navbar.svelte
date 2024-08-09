@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { auth, aww, db, sleep, type UserDoc } from '$lib';
+	import { profilePhoto, auth, aww, db, sleep, type UserDoc } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
@@ -9,10 +9,11 @@
 	import BookOpenText from 'lucide-svelte/icons/book-open-text';
 	import Download from 'lucide-svelte/icons/download';
 	import LogOut from 'lucide-svelte/icons/log-out';
+	import UserCog from 'lucide-svelte/icons/user-cog';
 	import { docStore, userStore } from 'sveltefire';
 	import DesktopNav from './DesktopNav.svelte';
-	import MobileNav from './MobileNav.svelte';
 	import { downloadAsCSV, downloadAsJSON } from './download';
+	import MobileNav from './MobileNav.svelte';
 
 	const user = userStore(auth);
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
@@ -125,6 +126,7 @@
 					<Dropdown.Trigger asChild let:builder>
 						<Button builders={[builder]} size="icon" variant="ghost">
 							<Avatar.Root>
+								<Avatar.Image src={$profilePhoto} />
 								<Avatar.Fallback>
 									{@const split = $user?.displayName?.split(' ') ?? ''}
 									{split[0].slice(0, 1)}{split[1]?.slice(0, 1)}
@@ -134,7 +136,8 @@
 					</Dropdown.Trigger>
 					<Dropdown.Content>
 						<Dropdown.Label class="text-lg">
-							{$userDoc?.name}
+							{$userDoc?.preferredFirstName ?? $userDoc?.firstName}
+							{$userDoc?.lastName}
 						</Dropdown.Label>
 						<Dropdown.Label class="font-normal">{$user?.email}</Dropdown.Label>
 						{#if $userDoc?.nationalId}
@@ -148,6 +151,10 @@
 							</Dropdown.Label>
 						{/if}
 						<Dropdown.Separator />
+						<Dropdown.Item href="/account">
+							<UserCog class="mr-2 h-4 w-4" />
+							<span>Account Settings</span>
+						</Dropdown.Item>
 						<Dropdown.Item
 							on:click={async () => {
 								await aww.play();

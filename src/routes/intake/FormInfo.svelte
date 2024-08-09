@@ -23,7 +23,7 @@
 		onUpdated: async ({ form }) => {
 			if (form.valid) {
 				await setDoc(
-					doc(db, 'users', $user.email),
+					doc(db, 'users', $user.email ?? ''),
 					{
 						// non-undefined values
 						...Object.fromEntries(

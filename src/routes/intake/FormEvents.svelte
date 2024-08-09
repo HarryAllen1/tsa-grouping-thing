@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import type { EventDoc, UserDoc } from '$lib';
-	import { auth, db } from '$lib';
+	import { auth, db, yay, sleep, type EventDoc, type UserDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
@@ -159,7 +158,11 @@
 					merge: true,
 				},
 			);
+			yay.play();
+			await sleep(300);
 			await goto('/');
-		}}>Finish</Button
+		}}
 	>
+		Finish
+	</Button>
 </div>

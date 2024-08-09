@@ -29,7 +29,13 @@
 	import confetti from 'canvas-confetti';
 	import { logEvent } from 'firebase/analytics';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import { deleteObject, getDownloadURL, listAll, ref } from 'firebase/storage';
+	import {
+		deleteObject,
+		getDownloadURL,
+		listAll,
+		ref,
+		type FullMetadata,
+	} from 'firebase/storage';
 	import {
 		ChevronsUpDown,
 		Crown,
@@ -122,8 +128,9 @@
 				<div class="flex flex-col gap-2">
 					<div class="flex w-full flex-row gap-2">
 						<Tooltip.Root>
-							<Tooltip.Trigger>
+							<Tooltip.Trigger asChild let:builder>
 								<Button
+									builders={[builder]}
 									variant="destructive"
 									on:click={async () => {
 										const teamButMutable = team;
@@ -167,8 +174,12 @@
 							{#if team.members.length >= (event.maxTeamSize ?? 9999)}
 								<Tooltip.Root>
 									<Tooltip.Trigger>
-										<Dialog.Trigger disabled>
-											<Button class="bg-green-500 hover:bg-green-400" disabled>
+										<Dialog.Trigger asChild let:builder>
+											<Button
+												builders={[builder]}
+												class="bg-green-500 hover:bg-green-400"
+												disabled
+											>
 												<UserPlus />
 											</Button>
 										</Dialog.Trigger>
@@ -352,7 +363,10 @@
 															</UploadTask>
 														{:else}
 															<div class="flex w-full flex-row items-center">
-																{#snippet submissionsList(link, meta)}
+																{#snippet submissionsList(
+																	link: string,
+																	meta: FullMetadata,
+																)}
 																	<SimpleTooltip
 																		message={new Date(
 																			meta.timeCreated,

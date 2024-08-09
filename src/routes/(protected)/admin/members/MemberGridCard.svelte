@@ -7,6 +7,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
+	import UserCog from 'lucide-svelte/icons/user-cog';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
 
@@ -21,11 +22,15 @@
 
 <Card.Root class={show ? '' : 'hidden'}>
 	<Card.Header>
-		<Card.Title>
+		<Card.Title class="flex flex-row items-center justify-between">
 			{user.name}
 			{#if user.grade}
 				({user.grade})
 			{/if}
+
+			<Button variant="ghost" size="icon" href="/account/{user.email}">
+				<UserCog />
+			</Button>
 		</Card.Title>
 		<Card.Description>
 			<a href="mailto:{user.email}" class="underline">{user.email}</a>

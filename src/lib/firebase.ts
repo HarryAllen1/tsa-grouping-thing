@@ -1,4 +1,4 @@
-import { browser, dev } from '$app/environment';
+import { dev } from '$app/environment';
 import { PUBLIC_FIREBASE_API_KEY } from '$env/static/public';
 import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
@@ -21,7 +21,7 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-export const analytics = browser ? getAnalytics(app) : undefined;
+export const analytics = getAnalytics(app);
 
 if (!dev) getPerformance(app);
 
@@ -37,3 +37,17 @@ export const sendEmail = async (
 			html: body,
 		},
 	});
+
+export const lookupMsAzureProfilePhoto = async (accessToken: string) => {
+	const response = await fetch(
+		'https://graph.microsoft.com/v1.0/me/photo/$value',
+		{
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				'Content-Type': 'image/jpg',
+			},
+		},
+	);
+	const blob = await response.blob();
+	return URL.createObjectURL(blob);
+};
