@@ -20,6 +20,7 @@
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { ChevronsUpDown, Minus, Plus } from 'lucide-svelte';
+	import { mount } from 'svelte';
 	import { persisted } from 'svelte-local-storage-store';
 	import Copyable from './Copyable.svelte';
 	import EventCard from './EventCard.svelte';
@@ -33,7 +34,7 @@
 		const copyables = el.querySelectorAll('.copyable');
 
 		for (const copyable of copyables) {
-			new Copyable({
+			mount(Copyable, {
 				target: copyable,
 				props: {
 					text: copyable.textContent ?? '',

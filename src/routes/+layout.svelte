@@ -22,6 +22,7 @@
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { doc, getDoc } from 'firebase/firestore';
 	import MessageSquare from 'lucide-svelte/icons/message-square';
+	import { ModeWatcher } from 'mode-watcher';
 	import { onDestroy, onMount, type Snippet } from 'svelte';
 	import { FirebaseApp, PageView, SignedIn, SignedOut } from 'sveltefire';
 	import '../app.css';
@@ -118,6 +119,8 @@
 		</script>
 	{/if}
 </svelte:head>
+
+<ModeWatcher />
 
 <ThemeWrapper>
 	<ProgressBar class="text-primary" />

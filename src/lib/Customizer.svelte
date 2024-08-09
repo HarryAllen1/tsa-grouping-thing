@@ -9,9 +9,9 @@
 	import { cn } from '$lib/utils.js';
 	import { mode, setMode } from 'mode-watcher';
 	import ThemeWrapper from './ThemeWrapper.svelte';
+	import { Input } from './components/ui/input';
 	import { config } from './config.js';
 	import { themes } from './themes.js';
-	import { Input } from './components/ui/input';
 </script>
 
 <ThemeWrapper defaultTheme="zinc">
