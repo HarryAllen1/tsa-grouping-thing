@@ -14,7 +14,7 @@ export const profilePhoto = persisted('profile-photo', '');
 
 await auth.authStateReady();
 user.subscribe(async ($u) => {
-	if ($u) {
+	if ($u !== null && $u.email) {
 		userDoc = derived(
 			docStore<UserDoc>(db, `users/${$u?.email}`) as Readable<UserDoc>,
 			($doc) => ({

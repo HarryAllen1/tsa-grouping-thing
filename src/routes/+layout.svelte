@@ -45,17 +45,12 @@
 		if (user && !user?.email?.endsWith('@lwsd.org')) {
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
-		} else if (
-			user &&
-			![
-				's-hallen@lwsd.org',
-				's-sliyanage@lwsd.org',
-				's-wzou@lwsd.org',
-				's-achandar@lwsd.org',
-			].includes(user.email?.toLowerCase() ?? '')
-		) {
-			document.documentElement.innerHTML =
-				'The teaming site has been disabled until the start of the 2024-2025 school year for maintenance work. If you need to access rubrics or other teaming information, please contact Harry at <a href="mailto:s-hallen@lwsd.org">s-hallen@lwsd.org</a>.';
+		} else if (user) {
+			const userDoc = await getDoc(
+				doc(db, 'users', auth.currentUser?.email ?? ''),
+			);
+			const userData = userDoc.data() as UserDoc;
+			if (!userData.completedIntakeForm) await goto('/intake');
 		}
 	});
 
@@ -91,11 +86,13 @@
 	);
 	onMount(async () => {
 		await auth.authStateReady();
-		const userDoc = await getDoc(
-			doc(db, 'users', auth.currentUser?.email ?? ''),
-		);
-		const userData = userDoc.data() as UserDoc;
-		if (!userData.completedIntakeForm) await goto('/intake');
+		if (auth.currentUser) {
+			const userDoc = await getDoc(
+				doc(db, 'users', auth.currentUser?.email ?? ''),
+			);
+			const userData = userDoc.data() as UserDoc;
+			if (!userData.completedIntakeForm) await goto('/intake');
+		}
 		mouseThing();
 	});
 
