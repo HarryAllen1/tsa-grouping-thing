@@ -72,6 +72,8 @@
 		$formData.preferredFirstName = userData.preferredFirstName;
 		$formData.grade =
 			userData.grade?.toString() as typeof intakeFormSchema.shape.grade._type;
+		$formData.studentId = (userData.studentId ||
+			undefined) as typeof intakeFormSchema.shape.studentId._type;
 		$formData.gender =
 			userData.gender as typeof intakeFormSchema.shape.gender._type;
 		$formData.tShirtSize =
@@ -116,7 +118,7 @@
 
 			<Form.FieldErrors />
 		</Form.Field>
-		<div class="grid grid-cols-1 md:grid-cols-2 md:space-x-2">
+		<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
 			<Form.Field {form} name="grade">
 				<Form.Control let:attrs>
 					<Select.Root
@@ -150,6 +152,15 @@
 				<Form.FieldErrors />
 			</Form.Field>
 			<input hidden bind:value={$formData.grade} name="grade" />
+			<Form.Field {form} name="studentId">
+				<Form.Control let:attrs>
+					<Form.Label class="flex flex-row">
+						Student ID<span class="text-red-500 dark:text-red-400">*</span>
+					</Form.Label>
+					<Input {...attrs} bind:value={$formData.studentId} type="number" />
+				</Form.Control>
+				<Form.FieldErrors />
+			</Form.Field>
 			<Form.Field {form} name="gender">
 				<Form.Control let:attrs>
 					<Select.Root
@@ -193,6 +204,8 @@
 				<Form.FieldErrors />
 			</Form.Field>
 			<input hidden bind:value={$formData.gender} name="gender" />
+		</div>
+		<div class="grid grid-cols-1 md:grid-cols-2 md:space-x-2">
 			<Form.Field {form} name="demographic">
 				<Form.Control let:attrs>
 					<Select.Root

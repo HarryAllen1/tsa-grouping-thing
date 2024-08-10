@@ -25,21 +25,62 @@
 	);
 </script>
 
-<div class="container mt-6">
+<div class="container">
+	<h1
+		class="mb-6 mt-8 w-full scroll-m-20 text-start text-4xl font-extrabold tracking-tight lg:text-5xl"
+	>
+		Choose Events
+	</h1>
 	<h1
 		class="mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>
 		Changes will automatically be saved. Try to leave any teams for events you
 		are dropping.
 	</h1>
-	<h1
-		class="mb-4 mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-	>
-		Crossed out events are locked, likely due to eliminations.
-	</h1>
-	<p class="mb-2">Minimum 4 events, maximum 6 events.</p>
-	<p class="mb-4">Teams cannot be created for red events.</p>
-	<p class="mb-4">Currently {$userDoc?.events.length}/6</p>
+	<p class="leading-7 [&:not(:first-child)]:mt-6">
+		You may choose up to 6 events. You must have at at least 4 events. If an
+		event is red, teams can no longer be created for that event. Crossed out
+		events are locked, likely due to eliminations.
+	</p>
+	<p class="leading-7 [&:not(:first-child)]:mt-6">
+		If you are having trouble choosing events, here are some resources:
+	</p>
+	<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+		<li>
+			<a
+				target="_blank"
+				class="font-medium text-primary underline underline-offset-4"
+				href="https://qz.app.do/what-tsa-events-are-for-me"
+				>Competitive event quiz</a
+			>: a form created by the Washington TSA State Officer team to help you
+			choose an event
+		</li>
+		<li>
+			<a
+				target="_blank"
+				class="font-medium text-primary underline underline-offset-4"
+				href="https://lwsd.sharepoint.com/:f:/r/sites/GR-JHS-TechnologyStudentAssociation-SCA/Shared%20Documents/23-24/Competition/Event%20Guides?csf=1&web=1&e=ctur4B"
+				>Event guides</a
+			>: detailed rules and rubrics for each event
+		</li>
+		<li>
+			<a
+				target="_blank"
+				class="font-medium text-primary underline underline-offset-4"
+				href="https://www.washingtontsa.org/high-school-events"
+				>Washington TSA website</a
+			>: Washington-specific guidelines for each event as well as previous
+			year's event entries
+		</li>
+		<li>
+			<a
+				target="_blank"
+				class="font-medium text-primary underline underline-offset-4"
+				href="https://jhstsa.org">JHS TSA website</a
+			>: quick facts about each event
+		</li>
+	</ul>
+	<p class="mb-4">Currently at {$userDoc?.events.length} out of 6 events.</p>
 
 	{#if ($userDoc?.events.length ?? 1) >= 6}
 		<p class="mb-4">

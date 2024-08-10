@@ -65,13 +65,19 @@
 		const userData = userDoc.data()!;
 		$formData.firstName =
 			userData.firstName ??
-			capitalizeFirstLetter($user.displayName?.split(', ')[1] ?? '');
+			($user.displayName?.includes(',')
+				? capitalizeFirstLetter($user.displayName?.split(', ')[1] ?? '')
+				: capitalizeFirstLetter($user.displayName?.split(' ')[0] ?? ''));
 		$formData.lastName =
 			userData.lastName ??
-			capitalizeFirstLetter($user.displayName?.split(', ')[0] ?? '');
+			($user.displayName?.includes(',')
+				? capitalizeFirstLetter($user.displayName?.split(', ')[0] ?? '')
+				: capitalizeFirstLetter($user.displayName?.split(' ')[1] ?? ''));
 		$formData.preferredFirstName = userData.preferredFirstName;
 		$formData.grade =
 			userData.grade?.toString() as typeof intakeFormSchema.shape.grade._type;
+		$formData.studentId = (userData.studentId ||
+			undefined) as typeof intakeFormSchema.shape.studentId._type;
 		$formData.gender =
 			userData.gender as typeof intakeFormSchema.shape.gender._type;
 		$formData.tShirtSize =
@@ -121,7 +127,7 @@
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
-	<div class="grid grid-cols-1 md:grid-cols-2 md:space-x-2">
+	<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
 		<Form.Field {form} name="grade">
 			<Form.Control let:attrs>
 				<Select.Root
@@ -155,6 +161,30 @@
 			<Form.FieldErrors />
 		</Form.Field>
 		<input hidden bind:value={$formData.grade} name="grade" />
+		<Form.Field {form} name="studentId">
+			<Form.Control let:attrs>
+				<Form.Label class="flex flex-row">
+					Student ID<span class="text-red-500 dark:text-red-400">*</span>
+					<HoverCard.Root>
+						<HoverCard.Trigger>
+							<CircleHelpIcon class="size-5" />
+						</HoverCard.Trigger>
+						<HoverCard.Content>
+							LWSD is switching switching everybody's email to use their student
+							ID. However, for whatever reason, Microsoft still provides your
+							old email when you log in. If/when emails get switched, having
+							this information will make the migration easier. If you want more
+							information about this change, please read <a
+								href="https://www.lwsd.org/programs-and-services/technology"
+								>LWSD's FAQs</a
+							>.
+						</HoverCard.Content>
+					</HoverCard.Root>
+				</Form.Label>
+				<Input {...attrs} bind:value={$formData.studentId} type="number" />
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
 		<Form.Field {form} name="gender">
 			<Form.Control let:attrs>
 				<Select.Root
@@ -198,6 +228,8 @@
 			<Form.FieldErrors />
 		</Form.Field>
 		<input hidden bind:value={$formData.gender} name="gender" />
+	</div>
+	<div class="grid grid-cols-1 md:grid-cols-2 md:space-x-2">
 		<Form.Field {form} name="demographic">
 			<Form.Control let:attrs>
 				<Select.Root

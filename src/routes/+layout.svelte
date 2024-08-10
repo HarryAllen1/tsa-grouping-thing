@@ -42,7 +42,7 @@
 	const isAuthReady = auth.authStateReady();
 
 	const unsub = onAuthStateChanged(auth, async (user) => {
-		if (user && !user?.email?.endsWith('@lwsd.org')) {
+		if (user && !user?.email?.endsWith('@lwsd.org') && !dev) {
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
 		} else if (user) {

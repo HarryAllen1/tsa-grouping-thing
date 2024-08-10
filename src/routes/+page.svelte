@@ -339,14 +339,19 @@
 	{#if !signedUpEvents || signedUpEvents.length === 0}
 		<p class="mt-4 w-full">
 			You haven't signed up for any events yet. Please add some events on the <a
-				href="/events">event sign up page.</a
+				href="/events"
+				class="font-medium underline underline-offset-4">event sign up page.</a
 			>
 		</p>
 	{:else}
 		{#if signedUpEvents.length < 4}
 			<p class="my-4 w-full">
 				You haven't signed up for enough events yet. Please add some more events
-				on the <a href="/events">event sign up page.</a>
+				on the <a
+					href="/events"
+					class="font-medium underline underline-offset-4"
+					>event sign up page.</a
+				>
 			</p>
 		{/if}
 

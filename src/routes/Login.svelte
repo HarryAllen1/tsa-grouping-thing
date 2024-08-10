@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import {
 		auth,
 		closeConfirmationDialog,
@@ -35,7 +36,7 @@
 				try {
 					const user = await signInWithPopup(auth, provider);
 
-					if (!user.user.email?.endsWith('@lwsd.org')) {
+					if (!user.user.email?.endsWith('@lwsd.org') && !dev) {
 						alert('You must use an LWSD account to log in.');
 						await user.user.delete();
 					}

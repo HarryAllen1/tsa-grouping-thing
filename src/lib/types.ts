@@ -73,6 +73,7 @@ export interface UserDoc {
 	gender?: string;
 	demographic?: string;
 	completedIntakeForm?: boolean;
+	studentId?: number;
 }
 
 export interface MailDoc {
