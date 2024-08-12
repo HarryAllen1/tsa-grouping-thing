@@ -2,6 +2,16 @@
 
 The admin teams page is fundamentally the same as the member teams page, except admin's can view all teams in all events, and admins can change every aspect of every team and every event.
 
+## Team colour coding
+
+Teams are colour coded to assist in finding teams that might need adjusting or communicating with.
+
+If a team is red, the team is either underfilled or overfilled. If the team is underfilled, the team should be talked to so that the minimum team size can be hit. If it is too big, then something happened that shouldn't have. Communicate with the team to remove the necessary amount of people.
+
+If a team is green, the team is exactly at the event limit.
+
+If a team has no colour, it is in the middle: not at the event limit, but not underfilled either.
+
 ## Naming
 
 The names of events are largely whatever the event name is. However, as there is no way to manually order the events, as the events are sorted alphabetically, if you want to have an event be at the top, you will have to prefix it with a letter that has a [character code](https://www.ascii-code.com/) which is smaller than all of the other events' first character (in other words, if you want an event to be at the top, prefix it with a "\*").
@@ -19,6 +29,8 @@ Here is how each setting works:
 #### Auto-signup everyone
 
 When enabled, all users will automatically be added to this event. It will still appear in the "Change Events" page and member can still sign up for it. This is useful for rooming and cardboard boat, where, when those are needed, members will be signed up so they can create rooms/teams. This should often be used in conjunction with the "Hide in signup page" option.
+
+In rooming, this option wil appear as "Enable Rooming." It functions identically (under the hood, it is actually the same option, just with a different label).
 
 #### Hide in signup page
 
@@ -45,3 +57,25 @@ This is the same as above, except teams can no longer be created, even if the ev
 This toggle allows members to submit files for submissions, typically used for eliminations. See [submissions](./submissions.md) for more information.
 
 ### Event Details
+
+These are non-boolean options about the event. After editing, all changes to this section require explicit saving through the "Save" button at the bottom of the dialog. This differs from the toggles as I don't want every keypress to update the database as I get charged of there are too many requests.
+
+#### Event name
+
+The name of the event... what else?
+
+#### Event description
+
+The description is placed directly beneath the event name after a member has signed up for the event. This is useful if there is a special case happening for an elimination (like for coding and tech bowl where the teams are determined by a test).
+
+#### Min team size
+
+The minimum size of a team. Teams can be underneath this limit, but the card will appear as red. Cards that are red should be fixed before registration.
+
+#### Max team size
+
+The number of members in a team cannot exceed this limit.
+
+#### Max teams per chapter
+
+The number of teams that can be created. This has no effect until the "lock team creation when full" toggle is selected, beyond information about the event.
