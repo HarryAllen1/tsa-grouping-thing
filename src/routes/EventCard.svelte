@@ -26,6 +26,9 @@
 			{event.event}
 		</Card.Title>
 		<Card.Description>
+			{#if event.description}
+				<p>{event.description}</p>
+			{/if}
 			<ul>
 				<li>
 					Min {event.minTeamSize} people per {event.event === '*Rooming'

@@ -16,7 +16,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+	import { deleteDoc, deleteField, doc, setDoc } from 'firebase/firestore';
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import Download from 'lucide-svelte/icons/download';
@@ -28,7 +28,7 @@
 
 	let {
 		hidden,
-		event,
+		event = $bindable(),
 		eventData,
 		changeSearch,
 	}: {
@@ -276,6 +276,7 @@
 										doc(db, 'events', event.event ?? ''),
 										{
 											event: event.event,
+											description: event.description || deleteField(),
 											minTeamSize: event.minTeamSize,
 											maxTeamSize: event.maxTeamSize,
 											perChapter: event.perChapter,
@@ -334,6 +335,9 @@
 			{/if}
 		</Card.Title>
 		<Card.Description>
+			{#if event.description}
+				<p>{event.description}</p>
+			{/if}
 			<ul class="mb-2">
 				<li>
 					Min {event.minTeamSize} people per team

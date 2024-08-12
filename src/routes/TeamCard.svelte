@@ -268,8 +268,8 @@
 											</li>
 										{:else}
 											<li>
-												No one else singed up for this event. Please see a board
-												member for next steps.
+												No one else singed up for this event. Ask around to see
+												if other people want to sign up for this event.
 											</li>
 										{/each}
 									</ul>
