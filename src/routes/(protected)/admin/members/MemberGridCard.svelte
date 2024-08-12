@@ -15,8 +15,8 @@
 
 	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 
-	let hash = Math.random().toString(36).slice(7);
-	let values = {
+	const hash = Math.random().toString(36).slice(7);
+	const values = {
 		nationalId: user.nationalId,
 		washingtonId: user.washingtonId,
 	};
