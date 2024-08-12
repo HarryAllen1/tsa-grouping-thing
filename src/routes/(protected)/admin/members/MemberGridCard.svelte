@@ -30,7 +30,12 @@
 				({user.grade})
 			{/if}
 
-			<Button variant="ghost" size="icon" href="/account/{user.email}">
+			<Button
+				class="size-8"
+				variant="ghost"
+				size="icon"
+				href="/account/{user.email}"
+			>
 				<UserCog />
 			</Button>
 		</Card.Title>
@@ -221,11 +226,35 @@
 			</Select.Root>
 		</Label>
 
-		{#if user.demographic}
-			<p>
-				Demographic: {user.demographic}
-			</p>
-		{/if}
+		<Label>
+			<span class="mb-2"> Demographic </span>
+			<Select.Root
+				selected={user.demographic
+					? { value: user.demographic, label: user.demographic }
+					: { value: 'null', label: 'Unspecified' }}
+				onSelectedChange={async (s) => {
+					if (s)
+						await setDoc(
+							doc(db, 'users', user.email),
+							{
+								demographic: s.value,
+							},
+							{ merge: true },
+						);
+				}}
+			>
+				<Select.Trigger class="mt-2 w-full">
+					<Select.Value placeholder="Demographic" />
+				</Select.Trigger>
+				<Select.Content>
+					{#each ['Opt-Out', 'Non-Disclosed', 'American Indian/Alaskan Native', 'Black / African-American', 'Asian/Asian-American/Pacific Islander', 'Hispanic/Latino', 'Mixed Race', 'White/Caucasian'] as demographic}
+						<Select.Item value={demographic}>
+							{demographic}
+						</Select.Item>
+					{/each}
+				</Select.Content>
+			</Select.Root>
+		</Label>
 
 		<div class="w-full">
 			<Collapsible.Root>
