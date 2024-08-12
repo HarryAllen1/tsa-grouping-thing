@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		canScroll,
 		db,
 		eventsCollection,
 		isMobileOrTablet,
@@ -19,8 +20,7 @@
 	} from 'firebase/firestore';
 	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
-	import Video from 'lucide-svelte/icons/video';
-	import { getContext, onMount } from 'svelte';
+	import { getContext, onMount, tick } from 'svelte';
 	import { selected } from './messages';
 
 	export let teamId: string;
@@ -34,6 +34,11 @@
 		.find((t) => t.id === teamId)!;
 
 	let newMessage = '';
+	let apiKey = '';
+
+	const scrollBoxToBottom = () => {
+		messagesBox.scrollIntoView(false);
+	};
 
 	const sendMessage = async () => {
 		if (newMessage.trim() === '') return;
@@ -73,7 +78,7 @@
 		);
 
 		newMessage = '';
-		messagesBox.scrollTop = messagesBox.scrollHeight;
+		scrollBoxToBottom();
 
 		moderateMessage(oldMessage);
 	};
@@ -83,7 +88,7 @@
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${await getDoc(doc(db, 'settings', 'settings')).then((d) => d.data()?.openAIAPIKey)}`,
+				Authorization: `Bearer ${apiKey}`,
 			},
 			body: JSON.stringify({
 				input: message,
@@ -122,10 +127,10 @@
 		}
 	};
 
-	onMount(() => {
-		messagesBox = document.querySelector<HTMLDivElement>(
-			'#messages [data-melt-scroll-area-viewport]',
-		)!;
+	onMount(async () => {
+		apiKey = await getDoc(doc(db, 'settings', 'settings')).then(
+			(d) => d.data()?.openAIAPIKey,
+		);
 
 		if (!isMobileOrTablet)
 			document.querySelector<HTMLInputElement>('#newMessageInput')?.focus();
@@ -146,7 +151,7 @@
 				}
 			}
 
-			setDoc(
+			await setDoc(
 				doc(db, 'events', team.event.event),
 				{
 					teams: team.event.teams,
@@ -154,7 +159,8 @@
 				{ merge: true },
 			);
 		}
-		messagesBox.scrollTop = messagesBox.scrollHeight;
+
+		scrollBoxToBottom();
 	});
 </script>
 
@@ -171,40 +177,42 @@
 			`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
 	</span>
 	<div class="flex-1"></div>
-	<Button
+	<!-- <Button
 		href={`/call/${team.event.event}:${team.id}?uid=${team.members.map((m) => m.email.toLowerCase()).indexOf($userDoc?.email.toLowerCase() ?? '')}`}
 		size="icon"
 		class="aspect-square !w-10"
 	>
 		<Video />
-	</Button>
+	</Button> -->
 </h3>
 
 <ScrollArea id="messages" class="mb-4 h-80">
-	{#each team.messages ?? [] as message, i (i)}
-		{@const timeSent = new Timestamp(
-			message.time.seconds,
-			message.time.nanoseconds,
-		).toDate()}
-		<div class="mt-4 flex space-x-2">
-			<div class="flex flex-col">
-				<p>
-					<strong>{message.sender.name}</strong>
-					<span class="opacity-80">
-						{Date.now() - timeSent.getTime() < 1000 * 60 * 60 * 24
-							? timeSent.toLocaleTimeString()
-							: timeSent.toLocaleDateString()}
-					</span>
-				</p>
-				<p class="prose dark:prose-invert">
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-					{@html noHtmlMd.render(message.content)}
-				</p>
+	<div class="flex h-full flex-1 flex-col" bind:this={messagesBox}>
+		{#each team.messages ?? [] as message, i (i)}
+			{@const timeSent = new Timestamp(
+				message.time.seconds,
+				message.time.nanoseconds,
+			).toDate()}
+			<div class="mt-4 flex space-x-2">
+				<div class="flex flex-col">
+					<p>
+						<strong>{message.sender.name}</strong>
+						<span class="opacity-80">
+							{Date.now() - timeSent.getTime() < 1000 * 60 * 60 * 24
+								? timeSent.toLocaleTimeString()
+								: timeSent.toLocaleDateString()}
+						</span>
+					</p>
+					<p class="prose dark:prose-invert">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						{@html noHtmlMd.render(message.content)}
+					</p>
+				</div>
 			</div>
-		</div>
-	{:else}
-		<p class="opacity-80 mt-8 w-full text-center">No messages!</p>
-	{/each}
+		{:else}
+			<p class="opacity-80 mt-8 w-full text-center">No messages!</p>
+		{/each}
+	</div>
 </ScrollArea>
 
 <form

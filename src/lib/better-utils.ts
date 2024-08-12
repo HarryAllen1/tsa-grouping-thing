@@ -30,3 +30,19 @@ const mobileTabletCheck = () => {
 	return check;
 };
 export const isMobileOrTablet = mobileTabletCheck();
+
+export const canScroll = (
+	el: Element,
+	scrollAxis: 'scrollLeft' | 'scrollTop',
+) => {
+	if (el[scrollAxis] === 0) {
+		el[scrollAxis] = 1;
+		if (el[scrollAxis] === 1) {
+			el[scrollAxis] = 0;
+			return true;
+		}
+	} else {
+		return true;
+	}
+	return false;
+};

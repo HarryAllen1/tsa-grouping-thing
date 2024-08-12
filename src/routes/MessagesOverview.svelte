@@ -8,7 +8,7 @@
 		$eventsCollection
 			.filter(
 				(e) =>
-					$userDoc?.events.includes(e.event) &&
+					$userDoc?.events?.includes(e.event) &&
 					e.teams.filter((t) =>
 						t.members.find(
 							(e) => e.email.toLowerCase() === $user.email?.toLowerCase(),
