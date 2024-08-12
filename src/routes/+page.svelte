@@ -56,7 +56,7 @@
 	});
 
 	let signedUpEvents = $derived(
-		$settings?.enableRooming && $user
+		$user
 			? $eventsCollection.length > 0
 				? ($userDoc?.events
 						? [
@@ -72,13 +72,7 @@
 						}))
 						.toSorted((a, b) => a.event!.localeCompare(b.event!))
 				: []
-			: $eventsCollection.length > 0
-				? ($userDoc?.events ?? [])
-						.map((e) => ({
-							...$eventsCollection.find((ev) => ev.event === e),
-						}))
-						.toSorted((a, b) => a.event!.localeCompare(b.event!))
-				: [],
+			: [],
 	) as EventDoc[];
 	let eventData = $derived(
 		$eventsCollection.length > 0 && $user

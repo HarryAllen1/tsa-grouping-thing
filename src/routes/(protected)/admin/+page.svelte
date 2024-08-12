@@ -315,7 +315,6 @@
 						enableOnlineSubmissions: false,
 						lastUpdatedBy: $user?.email ?? '',
 						alert: '',
-						enableRooming: false,
 					},
 					{ merge: true },
 				);

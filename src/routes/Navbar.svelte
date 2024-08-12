@@ -24,7 +24,7 @@
 			href: '/',
 		},
 		{
-			title: 'Event signup',
+			title: 'Change Events',
 			href: '/events',
 		},
 		{
