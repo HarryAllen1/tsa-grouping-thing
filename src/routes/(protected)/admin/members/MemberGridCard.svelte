@@ -3,13 +3,15 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
+	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
-	import UserCog from 'lucide-svelte/icons/user-cog';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { ChevronsUpDown, Save } from 'lucide-svelte';
+	import CircleHelp from 'lucide-svelte/icons/circle-help';
+	import UserCog from 'lucide-svelte/icons/user-cog';
 
 	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 
@@ -50,6 +52,33 @@
 				}}
 			/>
 			<Label for="{hash}admin">Admin</Label>
+		</div>
+		<div class="flex items-center space-x-2">
+			<Switch
+				id="{hash}completedIntakeForm"
+				checked={user.completedIntakeForm}
+				onCheckedChange={async (e) => {
+					await setDoc(
+						doc(db, 'users', user.email),
+						{ completedIntakeForm: e, lastUpdatedBy: $userStore?.email ?? '' },
+						{ merge: true },
+					);
+				}}
+			/>
+			<Label
+				for="{hash}completedIntakeForm"
+				class="flex flex-row items-center gap-2"
+			>
+				<p>Completed intake form</p>
+				<HoverCard.Root>
+					<HoverCard.Trigger>
+						<CircleHelp class="size-5" />
+					</HoverCard.Trigger>
+					<HoverCard.Content>
+						Turn off to force the user to re-complete the intake form.
+					</HoverCard.Content>
+				</HoverCard.Root>
+			</Label>
 		</div>
 		<div class="flex items-center space-x-2">
 			<Switch
