@@ -7,7 +7,7 @@ export const intakeFormSchema = z.object({
 	preferredFirstName: z.string().optional(),
 	lastName: z.string().min(1),
 	grade: z.enum(['9', '10', '11', '12']),
-	studentId: z.number().int().positive().gte(1000000).lte(9999999),
+	studentId: z.number().int().positive().gte(1_000_000).lte(9_999_999),
 	gender: z.enum(['Male', 'Female', 'Opt-Out', 'Non-Disclosed']),
 	demographic: z.enum([
 		'American Indian/Alaskan Native',

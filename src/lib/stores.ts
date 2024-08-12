@@ -1,9 +1,9 @@
 import { type User } from 'firebase/auth';
-import { derived, writable, type Readable } from 'svelte/store';
+import { persisted } from 'svelte-local-storage-store';
+import { derived, type Readable } from 'svelte/store';
 import { collectionStore, docStore, userStore } from 'sveltefire';
 import { auth, db } from './firebase';
 import type { EventDoc, SettingsDoc, UserDoc } from './types';
-import { persisted } from 'svelte-local-storage-store';
 
 export const user = userStore(auth) as Readable<User>;
 export let userDoc: Readable<UserDoc>;
