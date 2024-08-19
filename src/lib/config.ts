@@ -1,5 +1,4 @@
-import { persisted } from 'svelte-local-storage-store';
-
+import { persisted } from 'svelte-persisted-store';
 import type { Theme } from './themes.js';
 
 type Config = {

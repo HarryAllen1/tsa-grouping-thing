@@ -38,7 +38,7 @@
 		changeSearch: (s: string) => void;
 	} = $props();
 
-	const originalName = event.event;
+	let originalName = event.event;
 	const intersect = <T,>(a: T[], b: T[]): T[] => {
 		const setB = new Set(b);
 		return [...new Set(a)].filter((x) => setB.has(x));
@@ -289,6 +289,7 @@
 									);
 									if (originalName !== event.event) {
 										await deleteDoc(doc(db, 'events', originalName));
+										originalName = event.event;
 									}
 									editEventDialogOpen = false;
 								}}

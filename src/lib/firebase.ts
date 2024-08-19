@@ -3,7 +3,13 @@ import { PUBLIC_FIREBASE_API_KEY } from '$env/static/public';
 import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import {
+	doc,
+	initializeFirestore,
+	persistentLocalCache,
+	persistentMultipleTabManager,
+	setDoc,
+} from 'firebase/firestore';
 import { getPerformance } from 'firebase/performance';
 import { getStorage } from 'firebase/storage';
 
@@ -19,7 +25,11 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const db = initializeFirestore(app, {
+	localCache: persistentLocalCache({
+		tabManager: persistentMultipleTabManager(),
+	}),
+});
 export const storage = getStorage(app);
 export const analytics = getAnalytics(app);
 

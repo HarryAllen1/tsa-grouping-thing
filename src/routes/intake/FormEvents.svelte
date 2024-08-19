@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { auth, db, yay, sleep, type EventDoc, type UserDoc } from '$lib';
+	import { auth, db, sleep, type EventDoc, type UserDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
+	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { Lock } from 'lucide-svelte';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
@@ -158,7 +159,7 @@
 					merge: true,
 				},
 			);
-			yay.play();
+			confetti();
 			await sleep(300);
 			await goto('/');
 		}}

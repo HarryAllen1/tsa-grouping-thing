@@ -1,11 +1,11 @@
 <script lang="ts">
 	import {
-		canScroll,
 		db,
 		eventsCollection,
 		isMobileOrTablet,
 		noHtmlMd,
 		userDoc,
+		type Message,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -20,27 +20,36 @@
 	} from 'firebase/firestore';
 	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
-	import { getContext, onMount, tick } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { selected } from './messages';
+	import { notificationPermission } from './notifications';
 
-	export let teamId: string;
-	export let hideBack = false;
+	let {
+		teamId,
+		hideBack = false,
+	}: {
+		teamId: string;
+		hideBack?: boolean;
+	} = $props();
 
 	let messagesBox: HTMLDivElement;
 	const isAdminMessages = getContext<boolean | undefined>('isAdminMessages');
 
-	$: team = $eventsCollection
-		.flatMap((e) => e.teams.map((t) => ({ ...t, event: e })))
-		.find((t) => t.id === teamId)!;
+	let team = $derived(
+		$eventsCollection
+			.flatMap((e) => e.teams.map((t) => ({ ...t, event: e })))
+			.find((t) => t.id === teamId)!,
+	);
 
-	let newMessage = '';
+	let newMessage = $state('');
 	let apiKey = '';
 
 	const scrollBoxToBottom = () => {
 		messagesBox.scrollIntoView(false);
 	};
 
-	const sendMessage = async () => {
+	const sendMessage = async (event: SubmitEvent) => {
+		event.preventDefault();
 		if (newMessage.trim() === '') return;
 		const teamsClone = structuredClone(team.event.teams);
 
@@ -126,6 +135,38 @@
 			);
 		}
 	};
+
+	const sendNotification = (unreadMessages: Message[]) => {
+		if (unreadMessages?.length) {
+			const lastMessage = unreadMessages.at(-1);
+			const notification = new Notification(
+				`${team.teamName ?? team.event.event} team ${
+					team.teamNumber
+				} - ${lastMessage?.sender.name}`,
+				{
+					body: lastMessage?.content,
+					icon: '/favicon.png',
+				},
+			);
+
+			notification.addEventListener('click', () => {
+				$selected = team.id;
+				notification.close();
+			});
+		}
+	};
+	$effect(() => {
+		if (
+			$notificationPermission === 'granted' &&
+			document.visibilityState === 'hidden'
+		) {
+			const unreadMessages = team.messages?.filter(
+				(m) => !m.readBy.some((r) => r.email === $userDoc?.email),
+			);
+			console.log(unreadMessages);
+			sendNotification(unreadMessages ?? []);
+		}
+	});
 
 	onMount(async () => {
 		apiKey = await getDoc(doc(db, 'settings', 'settings')).then(
@@ -215,18 +256,20 @@
 	</div>
 </ScrollArea>
 
-<form
-	class="flex w-full items-center space-x-2"
-	on:submit|preventDefault={sendMessage}
->
-	<Input
-		type="text"
-		autocomplete="off"
-		id="newMessageInput"
-		bind:value={newMessage}
-		placeholder="Type a message"
-	/>
-	<Button type="submit" size="icon" class="aspect-square">
-		<SendHorizontal />
-	</Button>
+<form class="flex w-full flex-col gap-2" onsubmit={sendMessage}>
+	<div class="flex items-center space-x-2">
+		<Input
+			type="text"
+			autocomplete="off"
+			id="newMessageInput"
+			bind:value={newMessage}
+			placeholder="Type a message"
+		/>
+		<Button type="submit" size="icon" class="aspect-square">
+			<SendHorizontal />
+		</Button>
+	</div>
+	<p class="text-sm text-muted-foreground">
+		Board members and advisors can see all messages.
+	</p>
 </form>

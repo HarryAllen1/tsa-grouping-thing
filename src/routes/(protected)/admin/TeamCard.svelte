@@ -3,14 +3,12 @@
 		SimpleTooltip,
 		StorageMetadata,
 		allUsersCollection,
-		aww,
 		db,
 		fancyConfirm,
 		md,
 		sleep,
 		storage,
 		user,
-		yay,
 		type EventDoc,
 		type Team,
 	} from '$lib';
@@ -257,8 +255,6 @@
 							merge: true,
 						},
 					);
-
-					aww.play();
 				}}
 			>
 				<Trash2 />
@@ -322,7 +318,7 @@
 												},
 											);
 											confetti();
-											yay.play();
+
 											navigator.vibrate(100);
 										}}
 										variant="outline"
@@ -638,7 +634,7 @@
 											},
 										);
 										confetti();
-										yay.play();
+
 										navigator.vibrate(100);
 									}}
 									size="icon"
@@ -734,7 +730,7 @@
 													);
 
 													confetti();
-													yay.play();
+
 													navigator.vibrate(100);
 												}}
 												variant="outline"
@@ -943,7 +939,6 @@
 									merge: true,
 								},
 							);
-							aww.play();
 						}}
 					>
 						<Minus />

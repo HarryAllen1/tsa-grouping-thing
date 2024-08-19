@@ -1,5 +1,5 @@
 import { type User } from 'firebase/auth';
-import { persisted } from 'svelte-local-storage-store';
+import { persisted } from 'svelte-persisted-store';
 import { derived, type Readable } from 'svelte/store';
 import { collectionStore, docStore, userStore } from 'sveltefire';
 import { auth, db } from './firebase';

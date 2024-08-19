@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { profilePhoto, auth, aww, db, sleep, type UserDoc } from '$lib';
+	import { auth, db, profilePhoto, type UserDoc } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
@@ -7,6 +7,7 @@
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import { signOut } from 'firebase/auth';
 	import BookOpenText from 'lucide-svelte/icons/book-open-text';
+	import Clock from 'lucide-svelte/icons/clock';
 	import Download from 'lucide-svelte/icons/download';
 	import LogOut from 'lucide-svelte/icons/log-out';
 	import UserCog from 'lucide-svelte/icons/user-cog';
@@ -24,7 +25,7 @@
 			href: '/',
 		},
 		{
-			title: 'Change Events',
+			title: 'Edit Events',
 			href: '/events',
 		},
 		{
@@ -155,10 +156,12 @@
 							<UserCog class="mr-2 h-4 w-4" />
 							<span>Account Settings</span>
 						</Dropdown.Item>
+						<Dropdown.Item href="/account">
+							<Clock class="mr-2 h-4 w-4" />
+							<span>Changelog</span>
+						</Dropdown.Item>
 						<Dropdown.Item
 							on:click={async () => {
-								await aww.play();
-								await sleep(1500);
 								signOut(auth);
 							}}
 						>

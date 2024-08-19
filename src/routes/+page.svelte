@@ -1,7 +1,6 @@
 <script lang="ts">
 	import {
 		allUsersCollection,
-		aww,
 		db,
 		eventsCollection,
 		md,
@@ -9,7 +8,6 @@
 		settings,
 		user,
 		userDoc,
-		yay,
 		type EventDoc,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
@@ -21,7 +19,7 @@
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import { ChevronsUpDown, Minus, Plus } from 'lucide-svelte';
 	import { mount } from 'svelte';
-	import { persisted } from 'svelte-local-storage-store';
+	import { persisted } from 'svelte-persisted-store';
 	import Copyable from './Copyable.svelte';
 	import EventCard from './EventCard.svelte';
 
@@ -225,7 +223,6 @@
 												`Your request to join ${members}'s team for ${request.event} has been approved.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
 											);
 											confetti();
-											yay.play();
 											navigator.vibrate(100);
 										}}
 										size="icon"
@@ -289,7 +286,6 @@
 													merge: true,
 												},
 											);
-											aww.play();
 										}}
 									>
 										<Minus />

@@ -29,7 +29,7 @@
 	<h1
 		class="mb-6 mt-8 w-full scroll-m-20 text-start text-4xl font-extrabold tracking-tight lg:text-5xl"
 	>
-		Choose Events
+		Edit Events
 	</h1>
 	<h1
 		class="mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"

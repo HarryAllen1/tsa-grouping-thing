@@ -29,6 +29,7 @@
 	import Login from './Login.svelte';
 	import MessagesPopover from './MessagesPopover.svelte';
 	import Navbar from './Navbar.svelte';
+	import OfflineNotifier from './OfflineNotifier.svelte';
 	import { selected } from './messages';
 	import { panelOpen } from './messages-panel';
 	import { mouseThing } from './senuka-put-stuff-here';
@@ -135,7 +136,7 @@
 					{/if}
 					{#key $user}
 						{@render children()}
-						{#if $page.route.id !== '/intake'}
+						{#if $page.route.id !== '/intake' && !$page.route.id?.includes('account')}
 							<div class="fixed bottom-8 right-8">
 								<Popover.Root
 									onOpenChange={(e) => {
@@ -175,4 +176,6 @@
 
 	<FancyConfirm />
 	<Toaster />
+	<!-- must be after Toaster -->
+	<OfflineNotifier />
 </ThemeWrapper>

@@ -4,9 +4,6 @@
 		StorageMetadata,
 		allUsersCollection,
 		analytics,
-		aww,
-		clash,
-		congratulations,
 		db,
 		fancyConfirm,
 		md,
@@ -14,7 +11,6 @@
 		storage,
 		user,
 		userDoc,
-		yay,
 		type EventDoc,
 		type Team,
 		type UserDoc,
@@ -63,7 +59,7 @@
 	let dummyVariableToRerender = $state(0);
 	const updateStorageList = () => {
 		dummyVariableToRerender++;
-		yay.play();
+
 		return '';
 	};
 	const filterSubmissions = (submission: File) => {
@@ -162,7 +158,6 @@
 											: []) {
 											await deleteObject(submission);
 										}
-										aww.play();
 									}}
 								>
 									<LogOut />
@@ -257,7 +252,6 @@
 														);
 														confetti();
 														navigator.vibrate(100);
-														yay.play();
 													}}
 													variant="outline"
 													size="icon"
@@ -299,7 +293,6 @@
 											merge: true,
 										},
 									);
-									congratulations.play();
 								}}
 								disabled={team.teamCaptain === $user?.email}
 								class="w-fit"
@@ -310,12 +303,7 @@
 					{/if}
 					{#if event.onlineSubmissions}
 						<div>
-							<Dialog.Root
-								onOpenChange={(e) => {
-									if (e) clash.play();
-								}}
-								closeOnOutsideClick={false}
-							>
+							<Dialog.Root closeOnOutsideClick={false}>
 								<Dialog.Trigger>
 									<Button>Manage Submissions</Button>
 								</Dialog.Trigger>
@@ -391,7 +379,7 @@
 																	on:click={async () => {
 																		if (submission instanceof File) return;
 																		await deleteObject(submission);
-																		aww.play();
+
 																		team.lastUpdatedBy = $user?.email ?? '';
 																		dummyVariableToRerender++;
 																	}}
@@ -435,7 +423,7 @@
 
 															filesToUpload.push(file);
 														}
-														yay.play();
+
 														confetti();
 													}
 												}}
@@ -623,7 +611,6 @@
 												);
 												confetti();
 												navigator.vibrate(100);
-												yay.play();
 											}}
 											size="icon"
 											class="h-5"
@@ -672,7 +659,6 @@
 														merge: true,
 													},
 												);
-												aww.play();
 											}}
 										>
 											<Minus />

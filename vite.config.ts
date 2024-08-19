@@ -15,12 +15,12 @@ export default defineConfig({
 		sveltekit(),
 	],
 	build: {
-		target: 'es2022',
+		target: 'es2023',
 		sourcemap: true,
 	},
 	optimizeDeps: {
 		esbuildOptions: {
-			target: 'es2022',
+			target: 'es2023',
 		},
 	},
 });
