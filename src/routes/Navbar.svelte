@@ -156,7 +156,7 @@
 							<UserCog class="mr-2 h-4 w-4" />
 							<span>Account Settings</span>
 						</Dropdown.Item>
-						<Dropdown.Item href="/account">
+						<Dropdown.Item href="/changelog">
 							<Clock class="mr-2 h-4 w-4" />
 							<span>Changelog</span>
 						</Dropdown.Item>

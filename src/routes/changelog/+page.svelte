@@ -15,7 +15,8 @@
 				<strong>Offline support</strong>: This app now works offline. If this
 				app was previously loaded on a device and you lose access to the
 				internet (like during the State conference), you will still be able to
-				view your teams and events.
+				view your teams and events. You can also now install this site as an
+				app.
 			</li>
 			<li>
 				<strong>Messaging</strong>: To avoid the annoyances of setting up
