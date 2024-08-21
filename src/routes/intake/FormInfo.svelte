@@ -10,6 +10,7 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { dataForm, intakeFormSchema } from './intake-form-schema';
 	import { onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
 
 	let {
 		page = $bindable(),
@@ -31,6 +32,7 @@
 								.filter((v) => (form.data as Record<string, unknown>)[v])
 								.map((a) => [a, (form.data as Record<string, unknown>)[a]]),
 						),
+						preferredFirstName: form.data.preferredFirstName || null,
 						grade: Number.parseInt(form.data.grade),
 					},
 					{
@@ -38,6 +40,11 @@
 					},
 				);
 				page++;
+				toast.success('Saved.');
+			} else {
+				toast.error(
+					'The form is invalid. Please check to make sure that all fields are filled out correctly.',
+				);
 			}
 		},
 	});

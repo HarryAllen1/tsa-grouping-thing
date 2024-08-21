@@ -4,7 +4,7 @@
 	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
 	import * as Select from '$lib/components/ui/select';
-	import { doc, getDoc, setDoc } from 'firebase/firestore';
+	import { deleteField, doc, getDoc, setDoc } from 'firebase/firestore';
 	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
@@ -14,12 +14,7 @@
 	} from '../../../intake/intake-form-schema';
 	import { onMount } from 'svelte';
 	import { page as pageStore } from '$app/stores';
-
-	let {
-		page = $bindable(),
-	}: {
-		page: number;
-	} = $props();
+	import { toast } from 'svelte-sonner';
 
 	const email = $pageStore.params.email;
 
@@ -37,13 +32,19 @@
 								.filter((v) => (form.data as Record<string, unknown>)[v])
 								.map((a) => [a, (form.data as Record<string, unknown>)[a]]),
 						),
+						preferredFirstName: form.data.preferredFirstName || deleteField(),
 						grade: Number.parseInt(form.data.grade),
 					},
 					{
 						merge: true,
 					},
 				);
-				page++;
+
+				toast.success('Saved.');
+			} else {
+				toast.error(
+					'The form is invalid. Please check to make sure that all fields are filled out correctly.',
+				);
 			}
 		},
 	});

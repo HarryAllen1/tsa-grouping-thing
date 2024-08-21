@@ -21,7 +21,7 @@ user.subscribe(async ($u) => {
 				...$doc,
 				name:
 					$doc?.firstName && $doc?.lastName
-						? `${$doc?.firstName} ${$doc?.lastName}`
+						? `${$doc.preferredFirstName ? `${$doc.preferredFirstName} (${$doc.firstName})` : $doc?.firstName} ${$doc?.lastName}`
 						: $doc?.name,
 			}),
 		);
@@ -32,7 +32,7 @@ user.subscribe(async ($u) => {
 					...$doc,
 					name:
 						$doc?.firstName && $doc?.lastName
-							? `${$doc.firstName} ${$doc.lastName}`
+							? `${$doc.preferredFirstName ? `${$doc.preferredFirstName} (${$doc.firstName})` : $doc?.firstName} ${$doc?.lastName}`
 							: $doc?.name,
 				})),
 		);

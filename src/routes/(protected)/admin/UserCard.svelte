@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { UserDoc } from '$lib';
+	import { Button } from '$lib/components/ui/button';
+	import UserCog from 'lucide-svelte/icons/user-cog';
 
 	let { user }: { user: UserDoc } = $props();
 </script>
@@ -38,4 +40,12 @@
 			{/each}
 		</div>
 	</div>
+	<Button
+		class="size-8"
+		variant="ghost"
+		size="icon"
+		href="/account/{user.email}"
+	>
+		<UserCog />
+	</Button>
 </div>
