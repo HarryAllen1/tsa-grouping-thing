@@ -7,7 +7,6 @@
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import { signOut } from 'firebase/auth';
 	import BookOpenText from 'lucide-svelte/icons/book-open-text';
-	import Clock from 'lucide-svelte/icons/clock';
 	import Download from 'lucide-svelte/icons/download';
 	import LogOut from 'lucide-svelte/icons/log-out';
 	import UserCog from 'lucide-svelte/icons/user-cog';
@@ -156,10 +155,10 @@
 							<UserCog class="mr-2 h-4 w-4" />
 							<span>Account Settings</span>
 						</Dropdown.Item>
-						<Dropdown.Item href="/changelog">
+						<!-- <Dropdown.Item href="/changelog">
 							<Clock class="mr-2 h-4 w-4" />
 							<span>Changelog</span>
-						</Dropdown.Item>
+						</Dropdown.Item> -->
 						<Dropdown.Item
 							on:click={async () => {
 								signOut(auth);
