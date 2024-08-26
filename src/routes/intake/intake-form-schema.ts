@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 export const intakeFormSchema = z.object({
 	firstName: z.string().min(1),
-	preferredFirstName: z.string().optional(),
+	preferredFirstName: z.nullable(z.string()).optional(),
 	lastName: z.string().min(1),
 	grade: z.enum(['9', '10', '11', '12']),
 	studentId: z.number().int().positive().gte(1_000_000).lte(9_999_999),
@@ -32,6 +32,16 @@ export const intakeFormSchema = z.object({
 		'M L',
 		'M XL',
 		'M XXL',
+	]),
+	foundBy: z.enum([
+		'Friend/family',
+		'Teacher',
+		'JHS website club list',
+		'Poster',
+		'Social media',
+		'Middle school',
+		'Club fair',
+		'Other',
 	]),
 });
 

@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  sveltekit-superforms@2.17.0:
+    hash: uvnaxghkn4j37bdfgatqmfgwmu
+    path: patches/sveltekit-superforms@2.17.0.patch
+
 importers:
 
   .:
@@ -49,7 +54,7 @@ importers:
         version: 10.13.0
       formsnap:
         specifier: ^1.0.1
-        version: 1.0.1(svelte@5.0.0-next.238)(sveltekit-superforms@2.17.0(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238))
+        version: 1.0.1(svelte@5.0.0-next.238)(sveltekit-superforms@2.17.0(patch_hash=uvnaxghkn4j37bdfgatqmfgwmu)(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238))
       fuse.js:
         specifier: ^7.0.0
         version: 7.0.0
@@ -76,7 +81,7 @@ importers:
         version: 0.4.5(firebase@10.13.0)(svelte@5.0.0-next.238)
       sveltekit-superforms:
         specifier: ^2.17.0
-        version: 2.17.0(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)
+        version: 2.17.0(patch_hash=uvnaxghkn4j37bdfgatqmfgwmu)(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.5.2
@@ -9375,11 +9380,11 @@ snapshots:
     dependencies:
       fetch-blob: 3.2.0
 
-  formsnap@1.0.1(svelte@5.0.0-next.238)(sveltekit-superforms@2.17.0(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)):
+  formsnap@1.0.1(svelte@5.0.0-next.238)(sveltekit-superforms@2.17.0(patch_hash=uvnaxghkn4j37bdfgatqmfgwmu)(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)):
     dependencies:
       nanoid: 5.0.7
       svelte: 5.0.0-next.238
-      sveltekit-superforms: 2.17.0(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)
+      sveltekit-superforms: 2.17.0(patch_hash=uvnaxghkn4j37bdfgatqmfgwmu)(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)
 
   forwarded@0.2.0: {}
 
@@ -11284,7 +11289,7 @@ snapshots:
       firebase: 10.13.0
       svelte: 5.0.0-next.238
 
-  sveltekit-superforms@2.17.0(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238):
+  sveltekit-superforms@2.17.0(patch_hash=uvnaxghkn4j37bdfgatqmfgwmu)(@sveltejs/kit@2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238):
     dependencies:
       '@sveltejs/kit': 2.5.24(@sveltejs/vite-plugin-svelte@4.0.0-next.6(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0)))(svelte@5.0.0-next.238)(vite@5.4.2(@types/node@22.5.0))
       devalue: 5.0.0

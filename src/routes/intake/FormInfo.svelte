@@ -6,17 +6,22 @@
 	import * as Select from '$lib/components/ui/select';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
+	import { onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { dataForm, intakeFormSchema } from './intake-form-schema';
-	import { onMount } from 'svelte';
-	import { toast } from 'svelte-sonner';
 
 	let {
 		page = $bindable(),
 	}: {
 		page: number;
 	} = $props();
+
+	let studentIdHoverCardOpen = $state(false);
+	let genderHoverCardOpen = $state(false);
+	let demographicHoverCardOpen = $state(false);
+	let tShirtSizeHoverCardOpen = $state(false);
 
 	const form = superForm(dataForm, {
 		validators: zodClient(intakeFormSchema),
@@ -91,6 +96,8 @@
 			userData.tShirtSize as typeof intakeFormSchema.shape.tShirtSize._type;
 		$formData.demographic =
 			userData.demographic as typeof intakeFormSchema.shape.demographic._type;
+		$formData.foundBy =
+			userData.foundBy as typeof intakeFormSchema.shape.foundBy._type;
 	});
 </script>
 
@@ -170,11 +177,22 @@
 		<input hidden bind:value={$formData.grade} name="grade" />
 		<Form.Field {form} name="studentId">
 			<Form.Control let:attrs>
-				<Form.Label class="flex flex-row">
-					Student ID<span class="text-red-500 dark:text-red-400">*</span>
-					<HoverCard.Root>
-						<HoverCard.Trigger>
-							<CircleHelpIcon class="size-5" />
+				<div class="flex flex-row items-center gap-1">
+					<Form.Label class="flex flex-row">
+						Student ID<span class="text-red-500 dark:text-red-400">*</span>
+					</Form.Label>
+					<HoverCard.Root bind:open={studentIdHoverCardOpen}>
+						<HoverCard.Trigger asChild let:builder>
+							<button
+								type="button"
+								{...builder}
+								use:builder.action
+								onclick={() => {
+									studentIdHoverCardOpen = !studentIdHoverCardOpen;
+								}}
+							>
+								<CircleHelpIcon class="size-5" />
+							</button>
 						</HoverCard.Trigger>
 						<HoverCard.Content>
 							LWSD is switching switching everybody's email to use their student
@@ -187,7 +205,7 @@
 							>.
 						</HoverCard.Content>
 					</HoverCard.Root>
-				</Form.Label>
+				</div>
 				<Input {...attrs} bind:value={$formData.studentId} type="number" />
 			</Form.Control>
 			<Form.FieldErrors />
@@ -208,18 +226,29 @@
 						}
 					}}
 				>
-					<Form.Label class="flex flex-row items-center gap-1">
-						<p>Gender<span class="text-red-500 dark:text-red-400">*</span></p>
-						<HoverCard.Root>
-							<HoverCard.Trigger>
-								<CircleHelpIcon class="size-5" />
+					<div class="flex flex-row items-center gap-1">
+						<Form.Label class="flex flex-row items-center gap-1">
+							<p>Gender<span class="text-red-500 dark:text-red-400">*</span></p>
+						</Form.Label>
+						<HoverCard.Root bind:open={genderHoverCardOpen}>
+							<HoverCard.Trigger asChild let:builder>
+								<button
+									{...builder}
+									use:builder.action
+									type="button"
+									onclick={() => {
+										genderHoverCardOpen = !genderHoverCardOpen;
+									}}
+								>
+									<CircleHelpIcon class="size-5" />
+								</button>
 							</HoverCard.Trigger>
 							<HoverCard.Content>
 								We need this information for rooming during State conference
 								registration.
 							</HoverCard.Content>
 						</HoverCard.Root>
-					</Form.Label>
+					</div>
 					<Select.Trigger {...attrs}>
 						<Select.Value />
 					</Select.Trigger>
@@ -236,7 +265,7 @@
 		</Form.Field>
 		<input hidden bind:value={$formData.gender} name="gender" />
 	</div>
-	<div class="grid grid-cols-1 md:grid-cols-2 md:space-x-2">
+	<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
 		<Form.Field {form} name="demographic">
 			<Form.Control let:attrs>
 				<Select.Root
@@ -257,19 +286,30 @@
 						}
 					}}
 				>
-					<Form.Label class="flex flex-row items-center gap-1">
-						<p>
-							Demographic<span class="text-red-500 dark:text-red-400">*</span>
-						</p>
-						<HoverCard.Root>
-							<HoverCard.Trigger>
-								<CircleHelpIcon class="size-5" />
+					<div class="flex flex-row items-center gap-1">
+						<Form.Label class="flex flex-row items-center gap-1">
+							<p>
+								Demographic<span class="text-red-500 dark:text-red-400">*</span>
+							</p>
+						</Form.Label>
+						<HoverCard.Root bind:open={demographicHoverCardOpen}>
+							<HoverCard.Trigger asChild let:builder>
+								<button
+									{...builder}
+									use:builder.action
+									type="button"
+									onclick={() => {
+										demographicHoverCardOpen = !demographicHoverCardOpen;
+									}}
+								>
+									<CircleHelpIcon class="size-5" />
+								</button>
 							</HoverCard.Trigger>
 							<HoverCard.Content>
 								National TSA requires this information.
 							</HoverCard.Content>
 						</HoverCard.Root>
-					</Form.Label>
+					</div>
 					<Select.Trigger {...attrs}>
 						<Select.Value />
 					</Select.Trigger>
@@ -312,20 +352,32 @@
 						}
 					}}
 				>
-					<Form.Label class="flex flex-row items-center gap-1">
-						<p>
-							T-shirt size<span class="text-red-500 dark:text-red-400">*</span>
-						</p>
-						<HoverCard.Root>
-							<HoverCard.Trigger>
-								<CircleHelpIcon class="size-5" />
+					<div class="flex flex-row items-center gap-1">
+						<Form.Label class="flex flex-row items-center gap-1">
+							<p>
+								T-shirt size<span class="text-red-500 dark:text-red-400">*</span
+								>
+							</p>
+						</Form.Label>
+						<HoverCard.Root bind:open={tShirtSizeHoverCardOpen}>
+							<HoverCard.Trigger asChild let:builder>
+								<button
+									{...builder}
+									use:builder.action
+									type="button"
+									onclick={() => {
+										tShirtSizeHoverCardOpen = !tShirtSizeHoverCardOpen;
+									}}
+								>
+									<CircleHelpIcon class="size-5" />
+								</button>
 							</HoverCard.Trigger>
 							<HoverCard.Content>
 								You will get a polo shirt in this size during the State
 								conference.
 							</HoverCard.Content>
 						</HoverCard.Root>
-					</Form.Label>
+					</div>
 					<Select.Trigger {...attrs}>
 						<Select.Value />
 					</Select.Trigger>
@@ -341,6 +393,53 @@
 			<Form.FieldErrors />
 		</Form.Field>
 		<input hidden bind:value={$formData.tShirtSize} name="tShirtSize" />
+		<Form.Field {form} name="foundBy">
+			<Form.Control let:attrs>
+				<Select.Root
+					selected={$userDoc.foundBy
+						? {
+								value: $userDoc.foundBy,
+								label: $userDoc.foundBy,
+							}
+						: undefined}
+					onSelectedChange={(v) => {
+						if (v) {
+							$formData.foundBy = v.value as
+								| 'Friend/family'
+								| 'Teacher'
+								| 'JHS website club list'
+								| 'Poster'
+								| 'Social media'
+								| 'Middle school'
+								| 'Club fair'
+								| 'Other';
+						}
+					}}
+				>
+					<div class="flex flex-row items-center gap-1">
+						<Form.Label class="flex flex-row items-center gap-1">
+							<p>
+								How did you find out about us?<span
+									class="text-red-500 dark:text-red-400">*</span
+								>
+							</p>
+						</Form.Label>
+					</div>
+					<Select.Trigger {...attrs}>
+						<Select.Value />
+					</Select.Trigger>
+					<Select.Content>
+						{#each ['Friend/family', 'Teacher', 'JHS website club list', 'Poster', 'Social media', 'Middle school', 'Club fair', 'Other'] as place}
+							<Select.Item value={place}>
+								{place}
+							</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		<input hidden bind:value={$formData.foundBy} name="foundBy" />
 	</div>
 	<div class="mt-2 flex w-full flex-row justify-end">
 		<Form.Button>Next</Form.Button>

@@ -74,6 +74,7 @@ export interface UserDoc {
 	demographic?: string;
 	completedIntakeForm?: boolean;
 	studentId?: number;
+	foundBy?: string;
 }
 
 export interface MailDoc {

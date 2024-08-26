@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { writable } from 'svelte/store';
 
