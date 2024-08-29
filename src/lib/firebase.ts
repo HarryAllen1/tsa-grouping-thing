@@ -6,9 +6,7 @@ import { getAuth } from 'firebase/auth';
 import {
 	doc,
 	initializeFirestore,
-	persistentLocalCache,
-	persistentMultipleTabManager,
-	setDoc,
+	setDoc
 } from 'firebase/firestore';
 import { getPerformance } from 'firebase/performance';
 import { getStorage } from 'firebase/storage';
@@ -26,9 +24,9 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = initializeFirestore(app, {
-	localCache: persistentLocalCache({
-		tabManager: persistentMultipleTabManager(),
-	}),
+	// localCache: persistentLocalCache({
+	// 	tabManager: persistentMultipleTabManager(),
+	// }),
 });
 export const storage = getStorage(app);
 export const analytics = getAnalytics(app);
