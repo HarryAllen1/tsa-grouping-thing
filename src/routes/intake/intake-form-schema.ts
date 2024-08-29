@@ -3,9 +3,15 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
 
 export const intakeFormSchema = z.object({
-	firstName: z.string().min(1),
-	preferredFirstName: z.nullable(z.string()).optional(),
-	lastName: z.string().min(1),
+	firstName: z
+		.string()
+		.min(1)
+		.regex(/^[\sA-Za-z-]+$/),
+	preferredFirstName: z.nullable(z.string().regex(/^[\sA-Za-z-]+$/)).optional(),
+	lastName: z
+		.string()
+		.min(1)
+		.regex(/^[\sA-Za-z-]+$/),
 	grade: z.enum(['9', '10', '11', '12']),
 	studentId: z.number().int().positive().gte(1_000_000).lte(9_999_999),
 	gender: z.enum(['Male', 'Female', 'Opt-Out', 'Non-Disclosed']),
