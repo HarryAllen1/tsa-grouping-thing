@@ -218,13 +218,6 @@
 			`${team.event.event.replaceAll('*', '').replaceAll(' (Washington Only)', '')} team ${team.teamNumber}`}
 	</span>
 	<div class="flex-1"></div>
-	<!-- <Button
-		href={`/call/${team.event.event}:${team.id}?uid=${team.members.map((m) => m.email.toLowerCase()).indexOf($userDoc?.email.toLowerCase() ?? '')}`}
-		size="icon"
-		class="aspect-square !w-10"
-	>
-		<Video />
-	</Button> -->
 </h3>
 
 <ScrollArea id="messages" class="mb-4 h-80">
