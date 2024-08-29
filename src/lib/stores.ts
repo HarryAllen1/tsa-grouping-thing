@@ -12,7 +12,6 @@ export let eventsCollection: ReturnType<typeof collectionStore<EventDoc>>;
 export let settings: ReturnType<typeof docStore<SettingsDoc>>;
 export const profilePhoto = persisted('profile-photo', '');
 
-await auth.authStateReady();
 user.subscribe(async ($u) => {
 	if ($u !== null && $u.email) {
 		userDoc = derived(
