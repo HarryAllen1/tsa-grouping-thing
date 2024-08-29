@@ -10,9 +10,7 @@
 	import { toast } from 'svelte-sonner';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { dataFormPromise, intakeFormSchema } from './intake-form-schema';
-	import type { Writable } from 'svelte/store';
-	import { enhance as kitEnhance } from '$app/forms';
+	import { dataForm, intakeFormSchema } from './intake-form-schema';
 
 	let {
 		page = $bindable(),
@@ -25,11 +23,37 @@
 	let demographicHoverCardOpen = $state(false);
 	let tShirtSizeHoverCardOpen = $state(false);
 
-	let formData: Writable<typeof intakeFormSchema._type> | undefined = $state();
-	let enhance:
-		| ((el: HTMLFormElement) => ReturnType<typeof kitEnhance>)
-		| undefined = $state();
-	let form: ReturnType<typeof superForm> | undefined = $state();
+	const form = superForm(dataForm, {
+		validators: zodClient(intakeFormSchema),
+		resetForm: false,
+		onUpdated: async ({ form }) => {
+			if (form.valid) {
+				await setDoc(
+					doc(db, 'users', $user.email ?? ''),
+					{
+						// non-undefined values
+						...Object.fromEntries(
+							Object.keys(form.data)
+								.filter((v) => (form.data as Record<string, unknown>)[v])
+								.map((a) => [a, (form.data as Record<string, unknown>)[a]]),
+						),
+						preferredFirstName: form.data.preferredFirstName || null,
+						grade: Number.parseInt(form.data.grade),
+					},
+					{
+						merge: true,
+					},
+				);
+				page++;
+				toast.success('Saved.');
+			} else {
+				toast.error(
+					'The form is invalid. Please check to make sure that all fields are filled out correctly.',
+				);
+			}
+		},
+	});
+	const { form: formData, enhance } = form;
 
 	const capitalizeFirstLetter = (str: string) =>
 		`${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
@@ -49,64 +73,30 @@
 	]);
 
 	onMount(async () => {
-		form = superForm(await dataFormPromise, {
-			validators: zodClient(intakeFormSchema),
-			resetForm: false,
-			onUpdated: async ({ form }) => {
-				if (form.valid) {
-					await setDoc(
-						doc(db, 'users', $user.email ?? ''),
-						{
-							// non-undefined values
-							...Object.fromEntries(
-								Object.keys(form.data)
-									.filter((v) => (form.data as Record<string, unknown>)[v])
-									.map((a) => [a, (form.data as Record<string, unknown>)[a]]),
-							),
-							preferredFirstName: form.data.preferredFirstName || null,
-							grade: Number.parseInt(form.data.grade),
-						},
-						{
-							merge: true,
-						},
-					);
-					page++;
-					toast.success('Saved.');
-				} else {
-					toast.error(
-						'The form is invalid. Please check to make sure that all fields are filled out correctly.',
-					);
-				}
-			},
-		}) as unknown as ReturnType<typeof superForm>;
-
-		formData = form.form as Writable<typeof intakeFormSchema._type>;
-		enhance = form.enhance;
-
 		const userDoc = await getDoc(doc(db, 'users', $user.email ?? ''));
 		const userData = userDoc.data()!;
-		$formData!.firstName =
+		$formData.firstName =
 			userData.firstName ??
 			($user.displayName?.includes(',')
 				? capitalizeFirstLetter($user.displayName?.split(', ')[1] ?? '')
 				: capitalizeFirstLetter($user.displayName?.split(' ')[0] ?? ''));
-		$formData!.lastName =
+		$formData.lastName =
 			userData.lastName ??
 			($user.displayName?.includes(',')
 				? capitalizeFirstLetter($user.displayName?.split(', ')[0] ?? '')
 				: capitalizeFirstLetter($user.displayName?.split(' ')[1] ?? ''));
-		$formData!.preferredFirstName = userData.preferredFirstName;
-		$formData!.grade =
+		$formData.preferredFirstName = userData.preferredFirstName;
+		$formData.grade =
 			userData.grade?.toString() as typeof intakeFormSchema.shape.grade._type;
-		$formData!.studentId = (userData.studentId ||
+		$formData.studentId = (userData.studentId ||
 			undefined) as typeof intakeFormSchema.shape.studentId._type;
-		$formData!.gender =
+		$formData.gender =
 			userData.gender as typeof intakeFormSchema.shape.gender._type;
-		$formData!.tShirtSize =
+		$formData.tShirtSize =
 			userData.tShirtSize as typeof intakeFormSchema.shape.tShirtSize._type;
-		$formData!.demographic =
+		$formData.demographic =
 			userData.demographic as typeof intakeFormSchema.shape.demographic._type;
-		$formData!.foundBy =
+		$formData.foundBy =
 			userData.foundBy as typeof intakeFormSchema.shape.foundBy._type;
 	});
 </script>
@@ -116,350 +106,342 @@
 >
 	Intake Form
 </h1>
-{#if enhance && form && formData && $formData}
-	<form method="POST" use:enhance>
-		<Form.Field {form} name="firstName">
+<form method="POST" use:enhance>
+	<Form.Field {form} name="firstName">
+		<Form.Control let:attrs>
+			<Form.Label>
+				First name<span class="text-red-500 dark:text-red-400">*</span>
+			</Form.Label>
+			<Input {...attrs} bind:value={$formData.firstName} />
+		</Form.Control>
+		<Form.Description>
+			This name should match your first name in Skyward. Please use the correct
+			spacing and capitalization.
+		</Form.Description>
+		<Form.FieldErrors />
+	</Form.Field>
+	<Form.Field {form} name="preferredFirstName">
+		<Form.Control let:attrs>
+			<Form.Label>Preferred name</Form.Label>
+			<Input {...attrs} bind:value={$formData.preferredFirstName} />
+		</Form.Control>
+		<Form.Description>Optional.</Form.Description>
+		<Form.FieldErrors />
+	</Form.Field>
+	<Form.Field {form} name="lastName">
+		<Form.Control let:attrs>
+			<Form.Label>
+				Last name<span class="text-red-500 dark:text-red-400">*</span>
+			</Form.Label>
+			<Input {...attrs} bind:value={$formData.lastName} />
+		</Form.Control>
+		<Form.Description>
+			This should match your last name in Skyward. Please use the correct
+			spacing and capitalization.
+		</Form.Description>
+		<Form.FieldErrors />
+	</Form.Field>
+	<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
+		<Form.Field {form} name="grade">
 			<Form.Control let:attrs>
-				<Form.Label>
-					First name<span class="text-red-500 dark:text-red-400">*</span>
-				</Form.Label>
-				<Input {...attrs} bind:value={$formData.firstName} />
-			</Form.Control>
-			<Form.Description>
-				This name should match your first name in Skyward. Please use the
-				correct spacing and capitalization.
-			</Form.Description>
-			<Form.FieldErrors />
-		</Form.Field>
-		<Form.Field {form} name="preferredFirstName">
-			<Form.Control let:attrs>
-				<Form.Label>Preferred name</Form.Label>
-				<Input {...attrs} bind:value={$formData.preferredFirstName} />
-			</Form.Control>
-			<Form.Description>Optional.</Form.Description>
-			<Form.FieldErrors />
-		</Form.Field>
-		<Form.Field {form} name="lastName">
-			<Form.Control let:attrs>
-				<Form.Label>
-					Last name<span class="text-red-500 dark:text-red-400">*</span>
-				</Form.Label>
-				<Input {...attrs} bind:value={$formData.lastName} />
-			</Form.Control>
-			<Form.Description>
-				This should match your last name in Skyward. Please use the correct
-				spacing and capitalization.
-			</Form.Description>
-			<Form.FieldErrors />
-		</Form.Field>
-		<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
-			<Form.Field {form} name="grade">
-				<Form.Control let:attrs>
-					<Select.Root
-						selected={$userDoc.grade
-							? {
-									value: $userDoc.grade.toString(),
-									label: $userDoc.grade.toString(),
-								}
-							: undefined}
-						onSelectedChange={(v) => {
-							if (v) {
-								$formData.grade = v.value as '9' | '10' | '11' | '12';
+				<Select.Root
+					selected={$userDoc.grade
+						? {
+								value: $userDoc.grade.toString(),
+								label: $userDoc.grade.toString(),
 							}
-						}}
-					>
-						<Form.Label>
-							Grade<span class="text-red-500 dark:text-red-400">*</span>
-						</Form.Label>
-						<Select.Trigger {...attrs}>
-							<Select.Value />
-						</Select.Trigger>
-						<Select.Content>
-							{#each ['9', '10', '11', '12'] as grade}
-								<Select.Item value={grade}>
-									{grade}
-								</Select.Item>
-							{/each}
-						</Select.Content>
-					</Select.Root>
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<input hidden bind:value={$formData.grade} name="grade" />
-			<Form.Field {form} name="studentId">
-				<Form.Control let:attrs>
+						: undefined}
+					onSelectedChange={(v) => {
+						if (v) {
+							$formData.grade = v.value as '9' | '10' | '11' | '12';
+						}
+					}}
+				>
+					<Form.Label>
+						Grade<span class="text-red-500 dark:text-red-400">*</span>
+					</Form.Label>
+					<Select.Trigger {...attrs}>
+						<Select.Value />
+					</Select.Trigger>
+					<Select.Content>
+						{#each ['9', '10', '11', '12'] as grade}
+							<Select.Item value={grade}>
+								{grade}
+							</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		<input hidden bind:value={$formData.grade} name="grade" />
+		<Form.Field {form} name="studentId">
+			<Form.Control let:attrs>
+				<div class="flex flex-row items-center gap-1">
+					<Form.Label class="flex flex-row">
+						Student ID<span class="text-red-500 dark:text-red-400">*</span>
+					</Form.Label>
+					<HoverCard.Root bind:open={studentIdHoverCardOpen}>
+						<HoverCard.Trigger asChild let:builder>
+							<button
+								type="button"
+								{...builder}
+								use:builder.action
+								onclick={() => {
+									studentIdHoverCardOpen = !studentIdHoverCardOpen;
+								}}
+							>
+								<CircleHelpIcon class="size-5" />
+							</button>
+						</HoverCard.Trigger>
+						<HoverCard.Content>
+							LWSD is switching switching everybody's email to use their student
+							ID. However, for whatever reason, Microsoft still provides your
+							old email when you log in. If/when emails get switched, having
+							this information will make the migration easier. If you want more
+							information about this change, please read <a
+								href="https://www.lwsd.org/programs-and-services/technology"
+								>LWSD's FAQs</a
+							>.
+						</HoverCard.Content>
+					</HoverCard.Root>
+				</div>
+				<Input {...attrs} bind:value={$formData.studentId} type="number" />
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		<Form.Field {form} name="gender">
+			<Form.Control let:attrs>
+				<Select.Root
+					selected={$userDoc.gender
+						? { value: $userDoc.gender, label: $userDoc.gender }
+						: undefined}
+					onSelectedChange={(v) => {
+						if (v) {
+							$formData.gender = v.value as
+								| 'Male'
+								| 'Female'
+								| 'Opt-Out'
+								| 'Non-Disclosed';
+						}
+					}}
+				>
 					<div class="flex flex-row items-center gap-1">
-						<Form.Label class="flex flex-row">
-							Student ID<span class="text-red-500 dark:text-red-400">*</span>
+						<Form.Label class="flex flex-row items-center gap-1">
+							<p>Gender<span class="text-red-500 dark:text-red-400">*</span></p>
 						</Form.Label>
-						<HoverCard.Root bind:open={studentIdHoverCardOpen}>
+						<HoverCard.Root bind:open={genderHoverCardOpen}>
 							<HoverCard.Trigger asChild let:builder>
 								<button
-									type="button"
 									{...builder}
 									use:builder.action
+									type="button"
 									onclick={() => {
-										studentIdHoverCardOpen = !studentIdHoverCardOpen;
+										genderHoverCardOpen = !genderHoverCardOpen;
 									}}
 								>
 									<CircleHelpIcon class="size-5" />
 								</button>
 							</HoverCard.Trigger>
 							<HoverCard.Content>
-								LWSD is switching switching everybody's email to use their
-								student ID. However, for whatever reason, Microsoft still
-								provides your old email when you log in. If/when emails get
-								switched, having this information will make the migration
-								easier. If you want more information about this change, please
-								read <a
-									href="https://www.lwsd.org/programs-and-services/technology"
-									>LWSD's FAQs</a
-								>.
+								We need this information for rooming during State conference
+								registration.
 							</HoverCard.Content>
 						</HoverCard.Root>
 					</div>
-					<Input {...attrs} bind:value={$formData.studentId} type="number" />
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="gender">
-				<Form.Control let:attrs>
-					<Select.Root
-						selected={$userDoc.gender
-							? { value: $userDoc.gender, label: $userDoc.gender }
-							: undefined}
-						onSelectedChange={(v) => {
-							if (v) {
-								$formData.gender = v.value as
-									| 'Male'
-									| 'Female'
-									| 'Opt-Out'
-									| 'Non-Disclosed';
+					<Select.Trigger {...attrs}>
+						<Select.Value />
+					</Select.Trigger>
+					<Select.Content>
+						{#each ['Male', 'Female', 'Opt-Out', 'Non-Disclosed'] as gender}
+							<Select.Item value={gender}>
+								{gender}
+							</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		<input hidden bind:value={$formData.gender} name="gender" />
+	</div>
+	<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
+		<Form.Field {form} name="demographic">
+			<Form.Control let:attrs>
+				<Select.Root
+					selected={$userDoc.demographic
+						? { value: $userDoc.demographic, label: $userDoc.demographic }
+						: undefined}
+					onSelectedChange={(v) => {
+						if (v) {
+							$formData.demographic = v.value as
+								| 'Opt-Out'
+								| 'Non-Disclosed'
+								| 'American Indian/Alaskan Native'
+								| 'Black / African-American'
+								| 'Asian/Asian-American/Pacific Islander'
+								| 'Hispanic/Latino'
+								| 'Mixed Race'
+								| 'White/Caucasian';
+						}
+					}}
+				>
+					<div class="flex flex-row items-center gap-1">
+						<Form.Label class="flex flex-row items-center gap-1">
+							<p>
+								Demographic<span class="text-red-500 dark:text-red-400">*</span>
+							</p>
+						</Form.Label>
+						<HoverCard.Root bind:open={demographicHoverCardOpen}>
+							<HoverCard.Trigger asChild let:builder>
+								<button
+									{...builder}
+									use:builder.action
+									type="button"
+									onclick={() => {
+										demographicHoverCardOpen = !demographicHoverCardOpen;
+									}}
+								>
+									<CircleHelpIcon class="size-5" />
+								</button>
+							</HoverCard.Trigger>
+							<HoverCard.Content>
+								National TSA requires this information.
+							</HoverCard.Content>
+						</HoverCard.Root>
+					</div>
+					<Select.Trigger {...attrs}>
+						<Select.Value />
+					</Select.Trigger>
+					<Select.Content>
+						{#each ['Opt-Out', 'Non-Disclosed', 'American Indian/Alaskan Native', 'Black / African-American', 'Asian/Asian-American/Pacific Islander', 'Hispanic/Latino', 'Mixed Race', 'White/Caucasian'] as demographic}
+							<Select.Item value={demographic}>
+								{demographic}
+							</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		<input hidden bind:value={$formData.demographic} name="demographic" />
+		<Form.Field {form} name="tShirtSize">
+			<Form.Control let:attrs>
+				<Select.Root
+					selected={$userDoc.tShirtSize
+						? {
+								value: $userDoc.tShirtSize,
+								label: tShirtMap.get($userDoc.tShirtSize),
 							}
-						}}
-					>
-						<div class="flex flex-row items-center gap-1">
-							<Form.Label class="flex flex-row items-center gap-1">
-								<p>
-									Gender<span class="text-red-500 dark:text-red-400">*</span>
-								</p>
-							</Form.Label>
-							<HoverCard.Root bind:open={genderHoverCardOpen}>
-								<HoverCard.Trigger asChild let:builder>
-									<button
-										{...builder}
-										use:builder.action
-										type="button"
-										onclick={() => {
-											genderHoverCardOpen = !genderHoverCardOpen;
-										}}
-									>
-										<CircleHelpIcon class="size-5" />
-									</button>
-								</HoverCard.Trigger>
-								<HoverCard.Content>
-									We need this information for rooming during State conference
-									registration.
-								</HoverCard.Content>
-							</HoverCard.Root>
-						</div>
-						<Select.Trigger {...attrs}>
-							<Select.Value />
-						</Select.Trigger>
-						<Select.Content>
-							{#each ['Male', 'Female', 'Opt-Out', 'Non-Disclosed'] as gender}
-								<Select.Item value={gender}>
-									{gender}
-								</Select.Item>
-							{/each}
-						</Select.Content>
-					</Select.Root>
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<input hidden bind:value={$formData.gender} name="gender" />
-		</div>
-		<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
-			<Form.Field {form} name="demographic">
-				<Form.Control let:attrs>
-					<Select.Root
-						selected={$userDoc.demographic
-							? { value: $userDoc.demographic, label: $userDoc.demographic }
-							: undefined}
-						onSelectedChange={(v) => {
-							if (v) {
-								$formData.demographic = v.value as
-									| 'Opt-Out'
-									| 'Non-Disclosed'
-									| 'American Indian/Alaskan Native'
-									| 'Black / African-American'
-									| 'Asian/Asian-American/Pacific Islander'
-									| 'Hispanic/Latino'
-									| 'Mixed Race'
-									| 'White/Caucasian';
+						: undefined}
+					onSelectedChange={(v) => {
+						if (v) {
+							$formData.tShirtSize = v.value as
+								| 'W XS'
+								| 'W S'
+								| 'W M'
+								| 'W L'
+								| 'W XL'
+								| 'W XXL'
+								| 'M XS'
+								| 'M S'
+								| 'M M'
+								| 'M L'
+								| 'M XL'
+								| 'M XXL';
+						}
+					}}
+				>
+					<div class="flex flex-row items-center gap-1">
+						<Form.Label class="flex flex-row items-center gap-1">
+							<p>
+								T-shirt size<span class="text-red-500 dark:text-red-400">*</span
+								>
+							</p>
+						</Form.Label>
+						<HoverCard.Root bind:open={tShirtSizeHoverCardOpen}>
+							<HoverCard.Trigger asChild let:builder>
+								<button
+									{...builder}
+									use:builder.action
+									type="button"
+									onclick={() => {
+										tShirtSizeHoverCardOpen = !tShirtSizeHoverCardOpen;
+									}}
+								>
+									<CircleHelpIcon class="size-5" />
+								</button>
+							</HoverCard.Trigger>
+							<HoverCard.Content>
+								You will get a polo shirt in this size during the State
+								conference.
+							</HoverCard.Content>
+						</HoverCard.Root>
+					</div>
+					<Select.Trigger {...attrs}>
+						<Select.Value />
+					</Select.Trigger>
+					<Select.Content>
+						{#each tShirtMap as [abbr, size]}
+							<Select.Item value={abbr}>
+								{size}
+							</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		<input hidden bind:value={$formData.tShirtSize} name="tShirtSize" />
+		<Form.Field {form} name="foundBy">
+			<Form.Control let:attrs>
+				<Select.Root
+					selected={$userDoc.foundBy
+						? {
+								value: $userDoc.foundBy,
+								label: $userDoc.foundBy,
 							}
-						}}
-					>
-						<div class="flex flex-row items-center gap-1">
-							<Form.Label class="flex flex-row items-center gap-1">
-								<p>
-									Demographic<span class="text-red-500 dark:text-red-400"
-										>*</span
-									>
-								</p>
-							</Form.Label>
-							<HoverCard.Root bind:open={demographicHoverCardOpen}>
-								<HoverCard.Trigger asChild let:builder>
-									<button
-										{...builder}
-										use:builder.action
-										type="button"
-										onclick={() => {
-											demographicHoverCardOpen = !demographicHoverCardOpen;
-										}}
-									>
-										<CircleHelpIcon class="size-5" />
-									</button>
-								</HoverCard.Trigger>
-								<HoverCard.Content>
-									National TSA requires this information.
-								</HoverCard.Content>
-							</HoverCard.Root>
-						</div>
-						<Select.Trigger {...attrs}>
-							<Select.Value />
-						</Select.Trigger>
-						<Select.Content>
-							{#each ['Opt-Out', 'Non-Disclosed', 'American Indian/Alaskan Native', 'Black / African-American', 'Asian/Asian-American/Pacific Islander', 'Hispanic/Latino', 'Mixed Race', 'White/Caucasian'] as demographic}
-								<Select.Item value={demographic}>
-									{demographic}
-								</Select.Item>
-							{/each}
-						</Select.Content>
-					</Select.Root>
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<input hidden bind:value={$formData.demographic} name="demographic" />
-			<Form.Field {form} name="tShirtSize">
-				<Form.Control let:attrs>
-					<Select.Root
-						selected={$userDoc.tShirtSize
-							? {
-									value: $userDoc.tShirtSize,
-									label: tShirtMap.get($userDoc.tShirtSize),
-								}
-							: undefined}
-						onSelectedChange={(v) => {
-							if (v) {
-								$formData.tShirtSize = v.value as
-									| 'W XS'
-									| 'W S'
-									| 'W M'
-									| 'W L'
-									| 'W XL'
-									| 'W XXL'
-									| 'M XS'
-									| 'M S'
-									| 'M M'
-									| 'M L'
-									| 'M XL'
-									| 'M XXL';
-							}
-						}}
-					>
-						<div class="flex flex-row items-center gap-1">
-							<Form.Label class="flex flex-row items-center gap-1">
-								<p>
-									T-shirt size<span class="text-red-500 dark:text-red-400"
-										>*</span
-									>
-								</p>
-							</Form.Label>
-							<HoverCard.Root bind:open={tShirtSizeHoverCardOpen}>
-								<HoverCard.Trigger asChild let:builder>
-									<button
-										{...builder}
-										use:builder.action
-										type="button"
-										onclick={() => {
-											tShirtSizeHoverCardOpen = !tShirtSizeHoverCardOpen;
-										}}
-									>
-										<CircleHelpIcon class="size-5" />
-									</button>
-								</HoverCard.Trigger>
-								<HoverCard.Content>
-									You will get a polo shirt in this size during the State
-									conference.
-								</HoverCard.Content>
-							</HoverCard.Root>
-						</div>
-						<Select.Trigger {...attrs}>
-							<Select.Value />
-						</Select.Trigger>
-						<Select.Content>
-							{#each tShirtMap as [abbr, size]}
-								<Select.Item value={abbr}>
-									{size}
-								</Select.Item>
-							{/each}
-						</Select.Content>
-					</Select.Root>
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<input hidden bind:value={$formData.tShirtSize} name="tShirtSize" />
-			<Form.Field {form} name="foundBy">
-				<Form.Control let:attrs>
-					<Select.Root
-						selected={$userDoc.foundBy
-							? {
-									value: $userDoc.foundBy,
-									label: $userDoc.foundBy,
-								}
-							: undefined}
-						onSelectedChange={(v) => {
-							if (v) {
-								$formData.foundBy = v.value as
-									| 'Friend/family'
-									| 'Teacher'
-									| 'JHS website club list'
-									| 'Poster'
-									| 'Social media'
-									| 'Middle school'
-									| 'Club fair'
-									| 'Other';
-							}
-						}}
-					>
-						<div class="flex flex-row items-center gap-1">
-							<Form.Label class="flex flex-row items-center gap-1">
-								<p>
-									How did you find out about us?<span
-										class="text-red-500 dark:text-red-400">*</span
-									>
-								</p>
-							</Form.Label>
-						</div>
-						<Select.Trigger {...attrs}>
-							<Select.Value />
-						</Select.Trigger>
-						<Select.Content>
-							{#each ['Friend/family', 'Teacher', 'JHS website club list', 'Poster', 'Social media', 'Middle school', 'Club fair', 'Other'] as place}
-								<Select.Item value={place}>
-									{place}
-								</Select.Item>
-							{/each}
-						</Select.Content>
-					</Select.Root>
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<input hidden bind:value={$formData.foundBy} name="foundBy" />
-		</div>
-		<div class="mt-2 flex w-full flex-row justify-end">
-			<Form.Button>Next</Form.Button>
-		</div>
-	</form>
-{/if}
+						: undefined}
+					onSelectedChange={(v) => {
+						if (v) {
+							$formData.foundBy = v.value as
+								| 'Friend/family'
+								| 'Teacher'
+								| 'JHS website club list'
+								| 'Poster'
+								| 'Social media'
+								| 'Middle school'
+								| 'Club fair'
+								| 'Other';
+						}
+					}}
+				>
+					<div class="flex flex-row items-center gap-1">
+						<Form.Label class="flex flex-row items-center gap-1">
+							<p>
+								How did you find out about us?<span
+									class="text-red-500 dark:text-red-400">*</span
+								>
+							</p>
+						</Form.Label>
+					</div>
+					<Select.Trigger {...attrs}>
+						<Select.Value />
+					</Select.Trigger>
+					<Select.Content>
+						{#each ['Friend/family', 'Teacher', 'JHS website club list', 'Poster', 'Social media', 'Middle school', 'Club fair', 'Other'] as place}
+							<Select.Item value={place}>
+								{place}
+							</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		<input hidden bind:value={$formData.foundBy} name="foundBy" />
+	</div>
+	<div class="mt-2 flex w-full flex-row justify-end">
+		<Form.Button>Next</Form.Button>
+	</div>
+</form>

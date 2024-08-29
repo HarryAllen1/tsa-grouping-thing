@@ -47,7 +47,6 @@ export const intakeFormSchema = z.object({
 	]),
 });
 
-// SAFARI SUCKS!!!
-export const dataFormPromise = superValidate(zod(intakeFormSchema));
+export const dataForm = await superValidate(zod(intakeFormSchema));
 
 export type IntakeFormSchema = typeof intakeFormSchema;
