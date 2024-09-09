@@ -87,6 +87,7 @@
 	);
 	onMount(async () => {
 		await auth.authStateReady();
+		console.log(auth.currentUser?.providerData);
 		if (auth.currentUser) {
 			const userDoc = await getDoc(
 				doc(db, 'users', auth.currentUser?.email ?? ''),
