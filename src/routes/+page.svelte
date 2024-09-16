@@ -31,7 +31,7 @@
 
 		const copyables = el.querySelectorAll('.copyable');
 
-		for (const copyable of copyables) {
+		for (const copyable of copyables as unknown as HTMLElement[]) {
 			mount(Copyable, {
 				target: copyable,
 				props: {

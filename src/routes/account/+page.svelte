@@ -1,47 +1,73 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { db, user, userDoc } from '$lib';
-	import * as Form from '$lib/components/ui/form';
+	import { Button } from '$lib/components/ui/button';
 	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
-	import { superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { dataForm, intakeFormSchema } from '../intake/intake-form-schema';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
-	const form = superForm(dataForm, {
-		validators: zodClient(intakeFormSchema),
-		resetForm: false,
-		onUpdated: async ({ form }) => {
-			if (form.valid) {
-				await setDoc(
-					doc(db, 'users', $user.email ?? ''),
-					{
-						// non-undefined values
-						...Object.fromEntries(
-							Object.keys(form.data)
-								.filter((v) => (form.data as Record<string, unknown>)[v])
-								.map((a) => [a, (form.data as Record<string, unknown>)[a]]),
-						),
-						preferredFirstName: form.data.preferredFirstName || null,
-						grade: Number.parseInt(form.data.grade),
-					},
-					{
-						merge: true,
-					},
-				);
-				toast.success('Saved.');
-			} else {
-				toast.error(
-					'The form is invalid. Please check to make sure that all fields are filled out correctly.',
-				);
-			}
-		},
+	let studentIdHoverCardOpen = $state(false);
+	let genderHoverCardOpen = $state(false);
+	let demographicHoverCardOpen = $state(false);
+	let tShirtSizeHoverCardOpen = $state(false);
+
+	let formData = $state<{
+		firstName: string;
+		lastName: string;
+		preferredFirstName: string | undefined;
+		grade: '9' | '10' | '11' | '12' | undefined;
+		gender: 'Male' | 'Female' | 'Opt-Out' | 'Non-Disclosed' | undefined;
+		studentId: number | undefined;
+		tShirtSize:
+			| 'W XS'
+			| 'W S'
+			| 'W M'
+			| 'W L'
+			| 'W XL'
+			| 'W XXL'
+			| 'M XS'
+			| 'M S'
+			| 'M M'
+			| 'M L'
+			| 'M XL'
+			| 'M XXL'
+			| undefined;
+		demographic:
+			| 'American Indian/Alaskan Native'
+			| 'Black / African-American'
+			| 'Asian/Asian-American/Pacific Islander'
+			| 'Hispanic/Latino'
+			| 'Mixed Race'
+			| 'White/Caucasian'
+			| 'Opt-Out'
+			| 'Non-Disclosed'
+			| undefined;
+		foundBy:
+			| 'Friend/family'
+			| 'Teacher'
+			| 'JHS website club list'
+			| 'Poster'
+			| 'Social media'
+			| 'Middle school'
+			| 'Club fair'
+			| 'Other'
+			| undefined;
+	}>({
+		firstName: '',
+		lastName: '',
+		preferredFirstName: undefined,
+		grade: undefined,
+		gender: undefined,
+		studentId: undefined,
+		tShirtSize: undefined,
+		demographic: undefined,
+		foundBy: undefined,
 	});
-	const { form: formData, enhance } = form;
 
 	const capitalizeFirstLetter = (str: string) =>
 		`${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
@@ -63,23 +89,23 @@
 	onMount(async () => {
 		const userDoc = await getDoc(doc(db, 'users', $user.email ?? ''));
 		const userData = userDoc.data()!;
-		$formData.firstName =
+		formData.firstName =
 			userData.firstName ??
-			capitalizeFirstLetter($user.displayName?.split(', ')[1] ?? '');
-		$formData.lastName =
+			($user.displayName?.includes(',')
+				? capitalizeFirstLetter($user.displayName?.split(', ')[1] ?? '')
+				: capitalizeFirstLetter($user.displayName?.split(' ')[0] ?? ''));
+		formData.lastName =
 			userData.lastName ??
-			capitalizeFirstLetter($user.displayName?.split(', ')[0] ?? '');
-		$formData.preferredFirstName = userData.preferredFirstName;
-		$formData.grade =
-			userData.grade?.toString() as typeof intakeFormSchema.shape.grade._type;
-		$formData.studentId = (userData.studentId ||
-			undefined) as typeof intakeFormSchema.shape.studentId._type;
-		$formData.gender =
-			userData.gender as typeof intakeFormSchema.shape.gender._type;
-		$formData.tShirtSize =
-			userData.tShirtSize as typeof intakeFormSchema.shape.tShirtSize._type;
-		$formData.demographic =
-			userData.demographic as typeof intakeFormSchema.shape.demographic._type;
+			($user.displayName?.includes(',')
+				? capitalizeFirstLetter($user.displayName?.split(', ')[0] ?? '')
+				: capitalizeFirstLetter($user.displayName?.split(' ')[1] ?? ''));
+		formData.preferredFirstName = userData.preferredFirstName;
+		formData.grade = userData.grade?.toString();
+		formData.studentId = userData.studentId || undefined;
+		formData.gender = userData.gender;
+		formData.tShirtSize = userData.tShirtSize;
+		formData.demographic = userData.demographic;
+		formData.foundBy = userData.foundBy;
 	});
 </script>
 
@@ -89,45 +115,78 @@
 	>
 		Intake Form
 	</h1>
-	<form method="POST" use:enhance action="/intake">
-		<Form.Field {form} name="firstName">
-			<Form.Control let:attrs>
-				<Form.Label>
+	<form
+		class="flex flex-col gap-2"
+		onsubmit={async (e) => {
+			e.preventDefault();
+
+			await setDoc(
+				doc(db, 'users', $user.email ?? ''),
+				{
+					// non-undefined values
+					...Object.fromEntries(
+						Object.keys(formData)
+							.filter((v) => (formData as Record<string, unknown>)[v])
+							.map((a) => [a, (formData as Record<string, unknown>)[a]]),
+					),
+					preferredFirstName: formData.preferredFirstName || null,
+					grade: Number.parseInt(formData.grade!),
+				},
+				{
+					merge: true,
+				},
+			);
+			toast.success('Saved.');
+			await goto('/');
+		}}
+	>
+		<div>
+			<div>
+				<Label>
 					First name<span class="text-red-500 dark:text-red-400">*</span>
-				</Form.Label>
-				<Input {...attrs} bind:value={$formData.firstName} />
-			</Form.Control>
-			<Form.Description>
+				</Label>
+				<Input
+					required
+					pattern="^[a-zA-Z\- ]+"
+					bind:value={formData.firstName}
+				/>
+			</div>
+			<p class="text-sm text-muted-foreground">
 				This name should match your first name in Skyward. Please use the
 				correct spacing and capitalization.
-			</Form.Description>
-			<Form.FieldErrors />
-		</Form.Field>
-		<Form.Field {form} name="preferredFirstName">
-			<Form.Control let:attrs>
-				<Form.Label>Preferred name</Form.Label>
-				<Input {...attrs} bind:value={$formData.preferredFirstName} />
-			</Form.Control>
-			<Form.Description>Optional.</Form.Description>
-			<Form.FieldErrors />
-		</Form.Field>
-		<Form.Field {form} name="lastName">
-			<Form.Control let:attrs>
-				<Form.Label>
+			</p>
+		</div>
+		<div>
+			<div>
+				<Label>Preferred name</Label>
+				<Input
+					pattern="^[a-zA-Z\- ]*"
+					bind:value={formData.preferredFirstName}
+				/>
+			</div>
+			<p class="text-sm text-muted-foreground">Optional.</p>
+		</div>
+		<div>
+			<div>
+				<Label>
 					Last name<span class="text-red-500 dark:text-red-400">*</span>
-				</Form.Label>
-				<Input {...attrs} bind:value={$formData.lastName} />
-			</Form.Control>
-			<Form.Description>
+				</Label>
+				<Input
+					required
+					pattern="^[a-zA-Z\- ]+"
+					bind:value={formData.lastName}
+				/>
+			</div>
+			<p class="text-sm text-muted-foreground">
 				This should match your last name in Skyward. Please use the correct
 				spacing and capitalization.
-			</Form.Description>
-			<Form.FieldErrors />
-		</Form.Field>
+			</p>
+		</div>
 		<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
-			<Form.Field {form} name="grade">
-				<Form.Control let:attrs>
+			<div>
+				<div>
 					<Select.Root
+						required
 						selected={$userDoc.grade
 							? {
 									value: $userDoc.grade.toString(),
@@ -136,14 +195,14 @@
 							: undefined}
 						onSelectedChange={(v) => {
 							if (v) {
-								$formData.grade = v.value as '9' | '10' | '11' | '12';
+								formData.grade = v.value as '9' | '10' | '11' | '12';
 							}
 						}}
 					>
-						<Form.Label>
+						<Label>
 							Grade<span class="text-red-500 dark:text-red-400">*</span>
-						</Form.Label>
-						<Select.Trigger {...attrs}>
+						</Label>
+						<Select.Trigger>
 							<Select.Value />
 						</Select.Trigger>
 						<Select.Content>
@@ -154,17 +213,27 @@
 							{/each}
 						</Select.Content>
 					</Select.Root>
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<input hidden bind:value={$formData.grade} name="grade" />
-			<Form.Field {form} name="studentId">
-				<Form.Control let:attrs>
-					<Form.Label class="flex flex-row">
-						Student ID<span class="text-red-500 dark:text-red-400">*</span>
-						<HoverCard.Root>
-							<HoverCard.Trigger>
-								<CircleHelpIcon class="size-5" />
+				</div>
+			</div>
+			<input required hidden bind:value={formData.grade} name="grade" />
+			<div>
+				<div>
+					<div class="flex flex-row items-center gap-1">
+						<Label class="flex flex-row">
+							Student ID<span class="text-red-500 dark:text-red-400">*</span>
+						</Label>
+						<HoverCard.Root bind:open={studentIdHoverCardOpen}>
+							<HoverCard.Trigger asChild let:builder>
+								<button
+									type="button"
+									{...builder}
+									use:builder.action
+									onclick={() => {
+										studentIdHoverCardOpen = !studentIdHoverCardOpen;
+									}}
+								>
+									<CircleHelpIcon class="size-5" />
+								</button>
 							</HoverCard.Trigger>
 							<HoverCard.Content>
 								LWSD is switching switching everybody's email to use their
@@ -178,20 +247,26 @@
 								>.
 							</HoverCard.Content>
 						</HoverCard.Root>
-					</Form.Label>
-					<Input {...attrs} bind:value={$formData.studentId} type="number" />
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="gender">
-				<Form.Control let:attrs>
+					</div>
+					<Input
+						required
+						bind:value={formData.studentId}
+						min="1000000"
+						max="9999999"
+						type="number"
+					/>
+				</div>
+			</div>
+			<div>
+				<div>
 					<Select.Root
+						required
 						selected={$userDoc.gender
 							? { value: $userDoc.gender, label: $userDoc.gender }
 							: undefined}
 						onSelectedChange={(v) => {
 							if (v) {
-								$formData.gender = v.value as
+								formData.gender = v.value as
 									| 'Male'
 									| 'Female'
 									| 'Opt-Out'
@@ -199,19 +274,30 @@
 							}
 						}}
 					>
-						<Form.Label class="flex flex-row items-center gap-1">
-							<p>Gender<span class="text-red-500 dark:text-red-400">*</span></p>
-							<HoverCard.Root>
-								<HoverCard.Trigger>
-									<CircleHelpIcon class="size-5" />
+						<div class="flex flex-row items-center gap-1">
+							<Label class="flex flex-row items-center gap-1">
+								Gender<span class="text-red-500 dark:text-red-400">*</span>
+							</Label>
+							<HoverCard.Root bind:open={genderHoverCardOpen}>
+								<HoverCard.Trigger asChild let:builder>
+									<button
+										{...builder}
+										use:builder.action
+										type="button"
+										onclick={() => {
+											genderHoverCardOpen = !genderHoverCardOpen;
+										}}
+									>
+										<CircleHelpIcon class="size-5" />
+									</button>
 								</HoverCard.Trigger>
 								<HoverCard.Content>
 									We need this information for rooming during State conference
 									registration.
 								</HoverCard.Content>
 							</HoverCard.Root>
-						</Form.Label>
-						<Select.Trigger {...attrs}>
+						</div>
+						<Select.Trigger>
 							<Select.Value />
 						</Select.Trigger>
 						<Select.Content>
@@ -222,21 +308,21 @@
 							{/each}
 						</Select.Content>
 					</Select.Root>
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<input hidden bind:value={$formData.gender} name="gender" />
+				</div>
+			</div>
+			<input required hidden bind:value={formData.gender} name="gender" />
 		</div>
-		<div class="grid grid-cols-1 md:grid-cols-2 md:space-x-2">
-			<Form.Field {form} name="demographic">
-				<Form.Control let:attrs>
+		<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
+			<div>
+				<div>
 					<Select.Root
+						required
 						selected={$userDoc.demographic
 							? { value: $userDoc.demographic, label: $userDoc.demographic }
 							: undefined}
 						onSelectedChange={(v) => {
 							if (v) {
-								$formData.demographic = v.value as
+								formData.demographic = v.value as
 									| 'Opt-Out'
 									| 'Non-Disclosed'
 									| 'American Indian/Alaskan Native'
@@ -248,20 +334,29 @@
 							}
 						}}
 					>
-						<Form.Label class="flex flex-row items-center gap-1">
-							<p>
+						<div class="flex flex-row items-center gap-1">
+							<Label class="flex flex-row items-center gap-1">
 								Demographic<span class="text-red-500 dark:text-red-400">*</span>
-							</p>
-							<HoverCard.Root>
-								<HoverCard.Trigger>
-									<CircleHelpIcon class="size-5" />
+							</Label>
+							<HoverCard.Root bind:open={demographicHoverCardOpen}>
+								<HoverCard.Trigger asChild let:builder>
+									<button
+										{...builder}
+										use:builder.action
+										type="button"
+										onclick={() => {
+											demographicHoverCardOpen = !demographicHoverCardOpen;
+										}}
+									>
+										<CircleHelpIcon class="size-5" />
+									</button>
 								</HoverCard.Trigger>
 								<HoverCard.Content>
 									National TSA requires this information.
 								</HoverCard.Content>
 							</HoverCard.Root>
-						</Form.Label>
-						<Select.Trigger {...attrs}>
+						</div>
+						<Select.Trigger>
 							<Select.Value />
 						</Select.Trigger>
 						<Select.Content>
@@ -272,13 +367,18 @@
 							{/each}
 						</Select.Content>
 					</Select.Root>
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<input hidden bind:value={$formData.demographic} name="demographic" />
-			<Form.Field {form} name="tShirtSize">
-				<Form.Control let:attrs>
+				</div>
+			</div>
+			<input
+				required
+				hidden
+				bind:value={formData.demographic}
+				name="demographic"
+			/>
+			<div>
+				<div>
 					<Select.Root
+						required
 						selected={$userDoc.tShirtSize
 							? {
 									value: $userDoc.tShirtSize,
@@ -287,7 +387,7 @@
 							: undefined}
 						onSelectedChange={(v) => {
 							if (v) {
-								$formData.tShirtSize = v.value as
+								formData.tShirtSize = v.value as
 									| 'W XS'
 									| 'W S'
 									| 'W M'
@@ -303,22 +403,31 @@
 							}
 						}}
 					>
-						<Form.Label class="flex flex-row items-center gap-1">
-							<p>
+						<div class="flex flex-row items-center gap-1">
+							<Label class="flex flex-row items-center gap-1">
 								T-shirt size<span class="text-red-500 dark:text-red-400">*</span
 								>
-							</p>
-							<HoverCard.Root>
-								<HoverCard.Trigger>
-									<CircleHelpIcon class="size-5" />
+							</Label>
+							<HoverCard.Root bind:open={tShirtSizeHoverCardOpen}>
+								<HoverCard.Trigger asChild let:builder>
+									<button
+										{...builder}
+										use:builder.action
+										type="button"
+										onclick={() => {
+											tShirtSizeHoverCardOpen = !tShirtSizeHoverCardOpen;
+										}}
+									>
+										<CircleHelpIcon class="size-5" />
+									</button>
 								</HoverCard.Trigger>
 								<HoverCard.Content>
 									You will get a polo shirt in this size during the State
 									conference.
 								</HoverCard.Content>
 							</HoverCard.Root>
-						</Form.Label>
-						<Select.Trigger {...attrs}>
+						</div>
+						<Select.Trigger>
 							<Select.Value />
 						</Select.Trigger>
 						<Select.Content>
@@ -329,13 +438,62 @@
 							{/each}
 						</Select.Content>
 					</Select.Root>
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<input hidden bind:value={$formData.tShirtSize} name="tShirtSize" />
+				</div>
+			</div>
+			<input
+				required
+				hidden
+				bind:value={formData.tShirtSize}
+				name="tShirtSize"
+			/>
+			<div>
+				<div>
+					<Select.Root
+						required
+						selected={$userDoc.foundBy
+							? {
+									value: $userDoc.foundBy,
+									label: $userDoc.foundBy,
+								}
+							: undefined}
+						onSelectedChange={(v) => {
+							if (v) {
+								formData.foundBy = v.value as
+									| 'Friend/family'
+									| 'Teacher'
+									| 'JHS website club list'
+									| 'Poster'
+									| 'Social media'
+									| 'Middle school'
+									| 'Club fair'
+									| 'Other';
+							}
+						}}
+					>
+						<div class="flex flex-row items-center gap-1">
+							<Label class="flex flex-row items-center gap-1">
+								How did you find out about us?<span
+									class="text-red-500 dark:text-red-400">*</span
+								>
+							</Label>
+						</div>
+						<Select.Trigger>
+							<Select.Value />
+						</Select.Trigger>
+						<Select.Content>
+							{#each ['Friend/family', 'Teacher', 'JHS website club list', 'Poster', 'Social media', 'Middle school', 'Club fair', 'Other'] as place}
+								<Select.Item value={place}>
+									{place}
+								</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
+				</div>
+			</div>
+			<input required hidden bind:value={formData.foundBy} name="foundBy" />
 		</div>
 		<div class="mt-2 flex w-full flex-row justify-end">
-			<Form.Button type="submit">Save</Form.Button>
+			<Button type="submit">Save</Button>
 		</div>
 	</form>
 </div>

@@ -59,7 +59,7 @@
 			on:click={() => {
 				for (const el of document.querySelectorAll(
 					'.member-collapsible:not([data-state="open"])',
-				)) {
+				) as unknown as HTMLElement[]) {
 					if (el instanceof HTMLButtonElement) el.click();
 				}
 			}}

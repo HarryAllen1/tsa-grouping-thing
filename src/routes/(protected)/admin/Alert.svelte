@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 
 	let open = $state(false);
-	let alert = $state('');
+	let alert = $state<string | number | string[] | null>('');
 
 	onMount(async () => {
 		alert = await getDoc(doc(db, 'settings', 'settings')).then(

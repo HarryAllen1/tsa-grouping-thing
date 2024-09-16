@@ -241,7 +241,7 @@
 					onchange={(e) => {
 						if (e.target instanceof HTMLInputElement) {
 							if (!e.target.files?.length) return;
-							const files = [...e.target.files];
+							const files = [...(e.target.files as unknown as File[])];
 							for (const file of files) {
 								if (list?.items.map((f) => f.name).includes(file.name)) {
 									alert(

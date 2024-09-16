@@ -79,7 +79,7 @@
 					'g[aria-label="y-axis tick label"] > text',
 				);
 
-				for (const label of labels) {
+				for (const label of labels as unknown as Iterable<SVGElement>) {
 					label.style.textDecoration = 'underline';
 					label.style.cursor = 'pointer';
 					label.addEventListener('click', async () => {

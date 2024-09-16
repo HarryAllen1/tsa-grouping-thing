@@ -87,7 +87,13 @@
 			: fuse.search(search).map((r) => r.item.event),
 	);
 
-	const newEventStuff = {
+	const newEventStuff: {
+		event: string;
+		minTeamSize: number;
+		maxTeamSize: number;
+		perChapter: number;
+		locked: boolean | 'indeterminate' | undefined;
+	} = {
 		event: '',
 		minTeamSize: 1,
 		maxTeamSize: 1,

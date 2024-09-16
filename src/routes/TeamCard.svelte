@@ -404,7 +404,9 @@
 												onchange={(e) => {
 													if (e.target instanceof HTMLInputElement) {
 														if (!e.target.files?.length) return;
-														const files = [...e.target.files];
+														const files = [
+															...(e.target.files as unknown as File[]),
+														];
 														for (const file of files) {
 															if (file.size > 250 * 1024 * 1024) {
 																alert(`File ${file.name} is too large.`);

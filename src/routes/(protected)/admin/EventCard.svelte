@@ -51,7 +51,9 @@
 					event.members.map((m) => m.name),
 				).length === 0,
 		);
-	let submissionDescription = $state(event.submissionDescription ?? '');
+	let submissionDescription = $state<string | number | string[] | null>(
+		event.submissionDescription ?? '',
+	);
 	let submissionDialogOpen = $state(false);
 	let editEventDialogOpen = $state(false);
 	let collapsibleOpen = $state(false);
