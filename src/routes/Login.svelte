@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { auth, closeConfirmationDialog, fancyConfirm } from '$lib';
 	import { Button } from '$lib/components/ui/button';
@@ -11,14 +10,11 @@
 	import {
 		OAuthProvider,
 		browserLocalPersistence,
-		isSignInWithEmailLink,
 		sendSignInLinkToEmail,
 		setPersistence,
-		signInWithEmailLink,
 		signInWithPopup,
 		type AuthError,
 	} from 'firebase/auth';
-	import { onMount } from 'svelte';
 
 	const provider = new OAuthProvider('microsoft.com');
 	provider.addScope('email');
@@ -26,32 +22,6 @@
 	provider.addScope('profile');
 
 	let email = $state('');
-
-	onMount(async () => {
-		if (isSignInWithEmailLink(auth, $page.url.href)) {
-			email =
-				localStorage.getItem('jhs-tsa-sign-in-email') ??
-				prompt(
-					'It looks like you clicked this link on a different device. Please enter your email address:',
-				) ??
-				'';
-
-			if (!email.endsWith('@lwsd.org')) {
-				await fancyConfirm(
-					'Invalid email',
-					'You must use an LWSD email address to log in.',
-					[['Ok', true]],
-				);
-				return;
-			}
-
-			const user = await signInWithEmailLink(auth, email, $page.url.href);
-			localStorage.removeItem('jhs-tsa-sign-in-email');
-			console.log(user);
-			confetti();
-			goto('/');
-		}
-	});
 </script>
 
 <Card.Root class="mx-16 max-w-md md:mx-48 lg:mx-96">
@@ -139,7 +109,7 @@
 				}
 
 				await sendSignInLinkToEmail(auth, email, {
-					url: $page.url.origin,
+					url: `${$page.url.origin}/email-link`,
 					handleCodeInApp: true,
 				});
 
@@ -147,7 +117,7 @@
 
 				await fancyConfirm(
 					'Check your email',
-					'We sent you a link to sign in. If you do not see it, check your spam folder.',
+					'We sent you a link to sign in. If you do not see it, check your spam folder. This email can take up to 5 minutes to show up.',
 					[['Ok', true]],
 				);
 			}}
