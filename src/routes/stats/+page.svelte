@@ -11,6 +11,7 @@
 	import FirstLetter from './FirstLetter.svelte';
 	import Grade from './Grade.svelte';
 	import FirstLetterLast from './FirstLetterLast.svelte';
+	import FoundBy from './FoundBy.svelte';
 
 	let graph = $state<HTMLDivElement>();
 
@@ -106,4 +107,5 @@
 	<FirstLetter />
 	<FirstLetterLast />
 	<Grade />
+	<FoundBy />
 </div>
