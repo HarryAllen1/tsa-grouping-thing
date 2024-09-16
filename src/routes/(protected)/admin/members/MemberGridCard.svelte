@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { db, eventsCollection, user as userStore, type UserDoc } from '$lib';
+	import {
+		db,
+		eventsCollection,
+		MAX_EVENTS,
+		MIN_EVENTS,
+		user as userStore,
+		type UserDoc,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -264,7 +271,7 @@
 						variant="ghost"
 						size="sm"
 						class="member-collapsible flex w-full items-center p-2 {user.events
-							.length < 4 || user.events.length > 5
+							.length < MIN_EVENTS || user.events.length > MAX_EVENTS
 							? 'text-red-500'
 							: user.events
 										.map(
@@ -275,7 +282,7 @@
 														t.members.find((m) => m.email === user.email),
 													) ?? null,
 										)
-										.filter(Boolean).length < 4
+										.filter(Boolean).length < MIN_EVENTS
 								? 'text-orange-500'
 								: user.events
 											.map(
