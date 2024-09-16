@@ -49,22 +49,34 @@
 					}
 				} catch (error: unknown) {
 					const err = error as AuthError;
-					if (
-						['auth/cancelled-popup-request', 'auth/popup-blocked'].includes(
-							err.code,
-						)
-					) {
-						fancyConfirm(
-							'Please enable popups for this site.',
-							"An error with the login popup occurred. Make sure that you have popups enabled by clicking the window icon in the right of the address bar. If logging in still doesn't work, contact a board member.",
-							[['Ok', true]],
-						);
-					} else
-						fancyConfirm(
-							'An error occurred while logging in.',
-							`Please try again or contact a board member for assistance. (error code/message: ${err.message})`,
-							[['Ok', true]],
-						);
+					switch (err.code) {
+						case 'auth/canclled-popup-request':
+						case 'auth/popup-blocked': {
+							fancyConfirm(
+								'Please enable popups for this site.',
+								"An error with the login popup occurred. Make sure that you have popups enabled by clicking the window icon in the right of the address bar. If logging in still doesn't work, contact a board member.",
+								[['Ok', true]],
+							);
+							break;
+						}
+
+						case 'auth/account-exists-with-different-credential': {
+							fancyConfirm(
+								'Account already exists',
+								'It seems like you previously signed in with your email, and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact harry at s-hallen@lwsd.org to fix this. In the meantime, please login using your email.',
+							);
+							break;
+						}
+
+						default: {
+							fancyConfirm(
+								'An error occurred while logging in.',
+								`Please try again or contact a board member for assistance. (error code/message: ${err.message})`,
+								[['Ok', true]],
+							);
+							break;
+						}
+					}
 				}
 			}}
 			class="mt-4"
