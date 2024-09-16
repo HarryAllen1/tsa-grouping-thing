@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		MIN_EVENTS,
 		allUsersCollection,
 		db,
 		eventsCollection,
@@ -334,7 +335,7 @@
 			>
 		</p>
 	{:else}
-		{#if signedUpEvents.length < 4}
+		{#if signedUpEvents.length < MIN_EVENTS}
 			<p class="my-4 w-full">
 				You haven't signed up for enough events yet. Please add some more events
 				on the <a

@@ -1,4 +1,5 @@
 export { canScroll, isMobileOrTablet, removeRef, sleep } from './better-utils';
+export { MAX_EVENTS, MIN_EVENTS } from './constants';
 export { downloadURL } from './download';
 export {
 	default as FancyConfirm,

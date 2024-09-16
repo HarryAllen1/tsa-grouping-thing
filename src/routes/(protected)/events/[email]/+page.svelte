@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { UserDoc } from '$lib';
-	import { auth, db, type EventDoc } from '$lib';
+	import {
+		MAX_EVENTS,
+		MIN_EVENTS,
+		auth,
+		db,
+		type EventDoc,
+		type UserDoc,
+	} from '$lib';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
@@ -37,8 +43,8 @@
 	>
 		Crossed out events are locked, likely due to eliminations.
 	</h1>
-	<p class="mb-2">Minimum 4 events, maximum 6 events.</p>
-	<p class="mb-4">Currently {$userDoc?.events.length}/6</p>
+	<p class="mb-2">Minimum {MIN_EVENTS} events, maximum {MAX_EVENTS} events.</p>
+	<p class="mb-4">Currently {$userDoc?.events.length}/{MAX_EVENTS}</p>
 
 	<div class="mb-4 flex flex-col gap-2">
 		{#each $events.filter((e) => e.event !== '*Rooming') as event (event.event)}

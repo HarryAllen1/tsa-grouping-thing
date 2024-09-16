@@ -264,7 +264,7 @@
 						variant="ghost"
 						size="sm"
 						class="member-collapsible flex w-full items-center p-2 {user.events
-							.length < 4 || user.events.length > 6
+							.length < 4 || user.events.length > 5
 							? 'text-red-500'
 							: user.events
 										.map(
