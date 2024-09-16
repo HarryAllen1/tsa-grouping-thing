@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { db, user, userDoc } from '$lib';
-	import * as Form from '$lib/components/ui/form';
 	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
 	import * as Select from '$lib/components/ui/select';
@@ -8,9 +7,6 @@
 	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import { superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { dataForm, intakeFormSchema } from './intake-form-schema';
 
 	let {
 		page = $bindable(),
@@ -53,7 +49,15 @@
 			}
 		},
 	});
-	const { form: formData, enhance } = form;
+	let formData = $state({
+		firstName: undefined,
+		lastName: undefined,
+		preferredFirstName: undefined,
+		grade: undefined,
+		studentId: undefined,
+		tShirtSize: undefined,
+		demographic: undefined,
+	});
 
 	const capitalizeFirstLetter = (str: string) =>
 		`${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}`;

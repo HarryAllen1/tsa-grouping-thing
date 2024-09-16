@@ -29,6 +29,7 @@
 		<Card.Title>Login</Card.Title>
 	</Card.Header>
 	<Card.Content>
+		<h2>If you created an account before 2024:</h2>
 		<Button
 			on:click={async () => {
 				await setPersistence(auth, browserLocalPersistence);
@@ -86,5 +87,9 @@
 			</svg>
 			Sign in with Microsoft
 		</Button>
+		<h2>Otherwise:</h2>
+		<form>
+			<div class="flex flex-row"></div>
+		</form>
 	</Card.Content>
 </Card.Root>
