@@ -1,27 +1,57 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import {
-		auth,
-		closeConfirmationDialog,
-		fancyConfirm,
-		lookupMsAzureProfilePhoto,
-		profilePhoto,
-	} from '$lib';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { auth, closeConfirmationDialog, fancyConfirm } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
 	import confetti from 'canvas-confetti';
 	import {
 		OAuthProvider,
 		browserLocalPersistence,
+		isSignInWithEmailLink,
+		sendSignInLinkToEmail,
 		setPersistence,
+		signInWithEmailLink,
 		signInWithPopup,
 		type AuthError,
 	} from 'firebase/auth';
+	import { onMount } from 'svelte';
 
 	const provider = new OAuthProvider('microsoft.com');
 	provider.addScope('email');
 	provider.addScope('openid');
 	provider.addScope('profile');
+
+	let email = $state('');
+
+	onMount(async () => {
+		if (isSignInWithEmailLink(auth, $page.url.href)) {
+			email =
+				localStorage.getItem('jhs-tsa-sign-in-email') ??
+				prompt(
+					'It looks like you clicked this link on a different device. Please enter your email address:',
+				) ??
+				'';
+
+			if (!email.endsWith('@lwsd.org')) {
+				await fancyConfirm(
+					'Invalid email',
+					'You must use an LWSD email address to log in.',
+					[['Ok', true]],
+				);
+				return;
+			}
+
+			const user = await signInWithEmailLink(auth, email, $page.url.href);
+			localStorage.removeItem('jhs-tsa-sign-in-email');
+			console.log(user);
+			confetti();
+			goto('/');
+		}
+	});
 </script>
 
 <Card.Root class="mx-16 max-w-md md:mx-48 lg:mx-96">
@@ -29,7 +59,9 @@
 		<Card.Title>Login</Card.Title>
 	</Card.Header>
 	<Card.Content>
-		<h2>If you created an account before 2024:</h2>
+		<h2 class="font-semibold">
+			If you created an account before the 2024/25 school year:
+		</h2>
 		<Button
 			on:click={async () => {
 				await setPersistence(auth, browserLocalPersistence);
@@ -42,9 +74,6 @@
 					}
 
 					if (user.user) {
-						const credential = OAuthProvider.credentialFromResult(user);
-						const accessToken = credential?.accessToken;
-						$profilePhoto = await lookupMsAzureProfilePhoto(accessToken ?? '');
 						confetti();
 						closeConfirmationDialog();
 					}
@@ -87,9 +116,53 @@
 			</svg>
 			Sign in with Microsoft
 		</Button>
-		<h2>Otherwise:</h2>
-		<form>
-			<div class="flex flex-row"></div>
+		<h2 class="my-2 font-semibold">Otherwise, sign in with email</h2>
+		<form
+			class="flex flex-col gap-2"
+			onsubmit={async (e) => {
+				e.preventDefault();
+
+				if (!email.endsWith('@lwsd.org')) {
+					await fancyConfirm(
+						'Invalid email',
+						'You must use an LWSD email address to log in.',
+						[['Ok', true]],
+					);
+					return;
+				}
+
+				if (email.startsWith('s-')) {
+					await fancyConfirm('Invalid email', 'Please use your new email.', [
+						['Ok', true],
+					]);
+					return;
+				}
+
+				await sendSignInLinkToEmail(auth, email, {
+					url: $page.url.origin,
+					handleCodeInApp: true,
+				});
+
+				localStorage.setItem('jhs-tsa-sign-in-email', email);
+
+				await fancyConfirm(
+					'Check your email',
+					'We sent you a link to sign in. If you do not see it, check your spam folder.',
+					[['Ok', true]],
+				);
+			}}
+		>
+			<div class="grid w-full max-w-sm items-center gap-1.5">
+				<Label for="email">Email</Label>
+				<Input
+					type="email"
+					id="email"
+					bind:value={email}
+					placeholder="1234567@lwsd.org"
+				/>
+			</div>
+
+			<Button type="submit" class="self-end">Log in</Button>
 		</form>
 	</Card.Content>
 </Card.Root>

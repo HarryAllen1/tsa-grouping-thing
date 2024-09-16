@@ -128,8 +128,12 @@
 							<Avatar.Root>
 								<Avatar.Image src={$profilePhoto} />
 								<Avatar.Fallback>
-									{@const split = $user?.displayName?.split(' ') ?? ''}
-									{split[0].slice(0, 1)}{split[1]?.slice(0, 1)}
+									{@const split = $user?.displayName?.split(' ')}
+									{#if split}
+										{split[0].slice(0, 1)}{split[1]?.slice(0, 1)}
+									{:else}
+										{$user?.email?.slice(0, 2)}
+									{/if}
 								</Avatar.Fallback>
 							</Avatar.Root>
 						</Button>

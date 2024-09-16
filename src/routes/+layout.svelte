@@ -30,6 +30,7 @@
 	import MessagesPopover from './MessagesPopover.svelte';
 	import Navbar from './Navbar.svelte';
 	import OfflineNotifier from './OfflineNotifier.svelte';
+	import Signup from './Signup.svelte';
 	import { selected } from './messages';
 	import { panelOpen } from './messages-panel';
 	import { mouseThing } from './senuka-put-stuff-here';
@@ -41,6 +42,7 @@
 	} = $props();
 
 	const isAuthReady = auth.authStateReady();
+	let authPage = $state<'login' | 'signup'>('login');
 
 	const unsub = onAuthStateChanged(auth, async (user) => {
 		if (user && !user?.email?.endsWith('@lwsd.org') && !dev) {
@@ -168,7 +170,11 @@
 				<SignedOut>
 					<div class="mt-8 flex flex-col items-center gap-8">
 						<ThemeCustomizer />
-						<Login />
+						{#if authPage === 'login'}
+							<Login />
+						{:else}
+							<Signup />
+						{/if}
 					</div>
 				</SignedOut>
 			</FirebaseApp>
