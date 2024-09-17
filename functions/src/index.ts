@@ -21,7 +21,7 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 			doc.set(
 				{
 					email: user.email,
-					name: user.displayName,
+					name: user.displayName ?? '',
 					uid: user.uid,
 					events: [],
 				},
