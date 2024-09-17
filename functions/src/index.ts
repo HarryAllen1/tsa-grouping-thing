@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import { beforeUserCreated, HttpsError } from 'firebase-functions/v2/identity';
+import { beforeUserCreated, HttpsError } from 'firebase-functions/identity';
 
 initializeApp();
 const db = getFirestore();
@@ -18,12 +18,21 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 		}
 		const doc = db.doc(`users/${user.email}`);
 		if (!(await doc.get()).exists) {
-			doc.set(
+			await doc.set(
 				{
 					email: user.email,
 					name: user.displayName ?? '',
 					uid: user.uid,
 					events: [],
+				},
+				{
+					merge: true,
+				},
+			);
+		} else {
+			await doc.set(
+				{
+					uid: user.uid,
 				},
 				{
 					merge: true,
