@@ -29,12 +29,12 @@
 		gender: 'Male' | 'Female' | 'Opt-Out' | 'Non-Disclosed' | undefined;
 		studentId: number | undefined;
 		tShirtSize:
-			| 'W XS'
-			| 'W S'
-			| 'W M'
-			| 'W L'
-			| 'W XL'
-			| 'W XXL'
+			| 'F XS'
+			| 'F S'
+			| 'F M'
+			| 'F L'
+			| 'F XL'
+			| 'F XXL'
 			| 'M XS'
 			| 'M S'
 			| 'M M'
@@ -77,12 +77,12 @@
 	const capitalizeFirstLetter = (str: string) =>
 		`${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
 	const tShirtMap = new Map([
-		['W XS', 'W XS'],
-		['W S', 'W Small'],
-		['W M', 'W Medium'],
-		['W L', 'W Large'],
-		['W XL', 'W XL'],
-		['W XXL', 'W XXL'],
+		['F XS', 'F XS'],
+		['F S', 'F Small'],
+		['F M', 'F Medium'],
+		['F L', 'F Large'],
+		['F XL', 'F XL'],
+		['F XXL', 'F XXL'],
 		['M XS', 'M XS'],
 		['M S', 'M Small'],
 		['M M', 'M Medium'],
@@ -380,12 +380,12 @@
 					onSelectedChange={(v) => {
 						if (v) {
 							formData.tShirtSize = v.value as
-								| 'W XS'
-								| 'W S'
-								| 'W M'
-								| 'W L'
-								| 'W XL'
-								| 'W XXL'
+								| 'F XS'
+								| 'F S'
+								| 'F M'
+								| 'F L'
+								| 'F XL'
+								| 'F XXL'
 								| 'M XS'
 								| 'M S'
 								| 'M M'
