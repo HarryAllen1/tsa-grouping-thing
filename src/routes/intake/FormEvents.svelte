@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { auth, db, sleep, type EventDoc, type UserDoc } from '$lib';
+	import {
+		auth,
+		db,
+		sleep,
+		MAX_EVENTS,
+		MIN_EVENTS,
+		type EventDoc,
+		type UserDoc,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
@@ -39,9 +47,9 @@
 	Choose Events
 </h1>
 <p class="leading-7 [&:not(:first-child)]:mt-6">
-	You may choose up to 6 events. You must have at at least 4 events. If an event
-	is red, teams can no longer be created for that event. Crossed out events are
-	locked, likely due to eliminations.
+	You may choose up to {MAX_EVENTS} events. You must have at at least {MIN_EVENTS}
+	events. If an event is red, teams can no longer be created for that event. Crossed
+	out events are locked, likely due to eliminations.
 </p>
 <p class="leading-7 [&:not(:first-child)]:mt-6">
 	If you are having trouble choosing events, here are some resources:
@@ -82,7 +90,7 @@
 	</li>
 </ul>
 
-{#if ($userDoc?.events.length ?? 1) >= 6}
+{#if ($userDoc?.events.length ?? 1) >= MAX_EVENTS}
 	<p class="mb-4">
 		Remove one or more events if you want to change your events.
 	</p>
@@ -97,14 +105,16 @@
 			<Checkbox
 				checked={eventMap[event.event]}
 				disabled={event.locked ||
-					(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= 6) ||
+					(!eventMap[event.event] &&
+						($userDoc?.events.length ?? 0) >= MAX_EVENTS) ||
 					!$userDoc?.events}
 				id={event.event}
 				class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
 				onCheckedChange={async () => {
 					if (
 						event.locked ||
-						(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= 6)
+						(!eventMap[event.event] &&
+							($userDoc?.events.length ?? 0) >= MAX_EVENTS)
 					)
 						return;
 
@@ -126,7 +136,7 @@
 			<Label
 				for={event.event}
 				class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {event.locked ||
-				(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= 6)
+				(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= MAX_EVENTS)
 					? 'opacity-50'
 					: ''} {event.locked ? 'line-through' : ''}"
 			>
