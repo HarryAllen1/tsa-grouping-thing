@@ -32,6 +32,7 @@
 {#if clickableImage}
 	<a href={src} target="_blank" rel="noopener noreferrer">
 		<img {...restProps} class={classes} />
+		<span class="sr-only">{src}</span>
 	</a>
 {:else}
 	<img {...restProps} class={classes} />
