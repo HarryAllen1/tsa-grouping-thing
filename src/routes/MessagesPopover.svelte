@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, setContext } from 'svelte';
+	import { onMount } from 'svelte';
 	import MessagesOverview from './MessagesOverview.svelte';
 	import TeamMessages from './TeamMessages.svelte';
 	import { selected } from './messages';
