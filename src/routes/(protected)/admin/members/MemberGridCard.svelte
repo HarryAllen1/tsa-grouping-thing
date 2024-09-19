@@ -23,10 +23,10 @@
 	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 
 	const hash = Math.random().toString(36).slice(7);
-	const values = {
+	const values = $state({
 		nationalId: user.nationalId,
 		washingtonId: user.washingtonId,
-	};
+	});
 </script>
 
 <Card.Root class={show ? '' : 'hidden'}>
