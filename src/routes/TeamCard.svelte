@@ -277,7 +277,7 @@
 						</Dialog.Root>
 					</div>
 
-					{#if event.event !== '*Rooming' && event.event !== '*Cardboard Boat'}
+					{#if event.event !== '*Rooming' && event.event !== '*Cardboard Boat' && event.maxTeamSize > 1}
 						<div class="flex w-full flex-row gap-2">
 							<Button
 								on:click={async () => {
