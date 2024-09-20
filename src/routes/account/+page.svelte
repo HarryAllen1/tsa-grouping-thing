@@ -129,7 +129,10 @@
 							.filter((v) => (formData as Record<string, unknown>)[v])
 							.map((a) => [a, (formData as Record<string, unknown>)[a]]),
 					),
-					preferredFirstName: formData.preferredFirstName || null,
+					preferredFirstName:
+						(formData.preferredFirstName?.trim() === formData.firstName.trim()
+							? null
+							: formData.preferredFirstName) || '',
 					grade: Number.parseInt(formData.grade!),
 				},
 				{
@@ -158,7 +161,9 @@
 		</div>
 		<div>
 			<div>
-				<Label>Preferred name</Label>
+				<Label>
+					Preferred first name (if not the same as your Skyward name)
+				</Label>
 				<Input
 					pattern="^[a-zA-Z\- ]*"
 					bind:value={formData.preferredFirstName}
