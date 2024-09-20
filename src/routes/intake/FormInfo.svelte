@@ -106,7 +106,13 @@
 				: capitalizeFirstLetter($user.displayName?.split(' ')[1] ?? ''));
 		formData.preferredFirstName = userData.preferredFirstName;
 		formData.grade = userData.grade?.toString();
-		formData.studentId = userData.studentId || undefined;
+		const firstPartOfEmail = $user.email?.split('@')[0];
+		formData.studentId =
+			(userData.studentId ??
+				(Number.isFinite(firstPartOfEmail)
+					? Number(firstPartOfEmail)
+					: undefined)) ||
+			undefined;
 		formData.gender = userData.gender;
 		formData.tShirtSize = userData.tShirtSize;
 		formData.demographic = userData.demographic;
@@ -134,9 +140,9 @@
 						.map((a) => [a, (formData as Record<string, unknown>)[a]]),
 				),
 				preferredFirstName:
-					formData.preferredFirstName?.trim() === formData.firstName.trim()
+					(formData.preferredFirstName?.trim() === formData.firstName.trim()
 						? null
-						: formData.preferredFirstName,
+						: formData.preferredFirstName) || '',
 				grade: Number.parseInt(formData.grade!),
 			},
 			{

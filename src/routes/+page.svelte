@@ -92,7 +92,16 @@
 
 	let requests = $derived(
 		signedUpEvents
-			.filter((e) => e.teams.some((t) => t.requests?.length) && !e.locked)
+			.filter(
+				(e) =>
+					e.teams
+						.filter((t) =>
+							t.members.some(
+								(u) => u.email.toLowerCase() === $user.email?.toLowerCase(),
+							),
+						)
+						.some((t) => t.requests?.length) && !e.locked,
+			)
 			.map((e) => ({
 				event: e.event,
 				team: e.teams.find(
@@ -114,9 +123,20 @@
 								.map((u) => u.email.toLowerCase())
 								.includes($user?.email?.toLowerCase() ?? ''),
 					)
-					.flatMap((t) => t.requests ?? []),
+					.flatMap((t) => t.requests ?? [])
+					.filter(
+						(r) =>
+							!e.teams
+								.filter((t) =>
+									t.members.some(
+										(u) => u.email.toLowerCase() !== $user.email?.toLowerCase(),
+									),
+								)
+								.flatMap((t) => t.members)
+								.some((u) => u.email.toLowerCase() === r.email.toLowerCase()),
+					),
 			}))
-			.filter((r) => r.requests.length),
+			.filter((r) => r.requests.length > 0),
 	);
 </script>
 
