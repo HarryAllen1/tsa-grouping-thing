@@ -107,13 +107,17 @@
 >
 	<Card.Header>
 		<Card.Title class="flex flex-row items-center">
-			{event.event === '*Rooming'
-				? 'Room #'
-				: event.event === '*Cardboard Boat'
-					? ''
-					: 'Team 2082-'}{event.event === '*Cardboard Boat'
-				? team.teamName || '(no team name)'
-				: team.teamNumber}
+			<span>
+				{#if event.event === '*Rooming'}
+					Room #{team.teamNumber}
+				{:else if event.event === '*Cardboard Boat'}
+					{team.teamName || '(no team name)'}
+				{:else if event.maxTeamSize === 1 && team.members.length === 1}
+					Individual Event
+				{:else}
+					Team 2082-{team.teamNumber}
+				{/if}
+			</span>
 			{#if event.event === '*Cardboard Boat' && !team.locked && !event.locked && team.members.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 				<CardboardBoatDialog teamId={team.id} {event} />
 			{/if}
