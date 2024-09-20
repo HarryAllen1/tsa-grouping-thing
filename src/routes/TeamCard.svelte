@@ -41,6 +41,7 @@
 		UserPlus,
 		X,
 	} from 'lucide-svelte';
+	import type { Snippet } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import CardboardBoatDialog from './CardboardBoatDialog.svelte';
@@ -368,7 +369,7 @@
 																<DownloadURL ref={submission} let:link>
 																	<StorageMetadata
 																		link={link ?? ''}
-																		withMetadata={submissionsList}
+																		withMetadata={submissionsList as Snippet}
 																		ref={submission}
 																	></StorageMetadata>
 																</DownloadURL>
@@ -557,7 +558,22 @@
 								class="flex w-full items-center p-2"
 							>
 								Manage Requests {#if team.requests?.length}
-									({team.requests.length})
+									({team.requests.filter(
+										(r) =>
+											!event.teams
+												.filter((t) =>
+													t.members.some(
+														(u) =>
+															u.email.toLowerCase() !==
+															$user.email?.toLowerCase(),
+													),
+												)
+												.flatMap((t) => t.members)
+												.some(
+													(u) =>
+														u.email.toLowerCase() === r.email.toLowerCase(),
+												),
+									).length})
 								{/if}
 								<div class="flex-1"></div>
 								<ChevronsUpDown />
@@ -565,7 +581,10 @@
 						</Collapsible.Trigger>
 						<Collapsible.Content class="px-2">
 							<ul>
-								{#each team.requests ?? [] as request}
+								{#each team.requests.filter((r) => !event.teams
+											.filter( (t) => t.members.some((u) => u.email.toLowerCase() !== $user.email?.toLowerCase()), )
+											.flatMap((t) => t.members)
+											.some((u) => u.email.toLowerCase() === r.email.toLowerCase())) ?? [] as request}
 									<li class="flex flex-row">
 										{request.name}
 										<Button
