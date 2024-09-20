@@ -5,7 +5,6 @@
 		isMobileOrTablet,
 		noHtmlMd,
 		userDoc,
-		type Message,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -22,7 +21,6 @@
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
 	import { getContext, onMount } from 'svelte';
 	import { selected } from './messages';
-	import { notificationPermission } from './notifications';
 
 	let {
 		teamId,
@@ -136,37 +134,25 @@
 		}
 	};
 
-	const sendNotification = (unreadMessages: Message[]) => {
-		if (unreadMessages?.length) {
-			const lastMessage = unreadMessages.at(-1);
-			const notification = new Notification(
-				`${team.teamName ?? team.event.event} team ${
-					team.teamNumber
-				} - ${lastMessage?.sender.name}`,
-				{
-					body: lastMessage?.content,
-					icon: '/favicon.png',
-				},
-			);
+	// const sendNotification = (unreadMessages: Message[]) => {
+	// 	if (unreadMessages?.length) {
+	// 		const lastMessage = unreadMessages.at(-1);
+	// 		const notification = new Notification(
+	// 			`${team.teamName ?? team.event.event} team ${
+	// 				team.teamNumber
+	// 			} - ${lastMessage?.sender.name}`,
+	// 			{
+	// 				body: lastMessage?.content,
+	// 				icon: '/favicon.png',
+	// 			},
+	// 		);
 
-			notification.addEventListener('click', () => {
-				$selected = team.id;
-				notification.close();
-			});
-		}
-	};
-	$effect(() => {
-		if (
-			$notificationPermission === 'granted' &&
-			document.visibilityState === 'hidden'
-		) {
-			const unreadMessages = team.messages?.filter(
-				(m) => !m.readBy.some((r) => r.email === $userDoc?.email),
-			);
-			console.log(unreadMessages);
-			sendNotification(unreadMessages ?? []);
-		}
-	});
+	// 		notification.addEventListener('click', () => {
+	// 			$selected = team.id;
+	// 			notification.close();
+	// 		});
+	// 	}
+	// };
 
 	onMount(async () => {
 		apiKey = await getDoc(doc(db, 'settings', 'settings')).then(

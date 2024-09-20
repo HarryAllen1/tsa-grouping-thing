@@ -20,7 +20,7 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { onAuthStateChanged } from 'firebase/auth';
-	import { doc, getDoc } from 'firebase/firestore';
+	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import MessageSquare from 'lucide-svelte/icons/message-square';
 	import { ModeWatcher } from 'mode-watcher';
 	import { onDestroy, onMount, type Snippet } from 'svelte';
@@ -33,6 +33,8 @@
 	import { selected } from './messages';
 	import { panelOpen } from './messages-panel';
 	import { mouseThing } from './senuka-put-stuff-here';
+
+	navigator.vibrate ||= (pattern: number | number[]) => !!pattern;
 
 	let {
 		children,
@@ -47,11 +49,41 @@
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
 		} else if (user) {
-			const userDoc = await getDoc(
+			let userDoc = await getDoc(
 				doc(db, 'users', auth.currentUser?.email ?? ''),
 			);
-			const userData = userDoc.data() as UserDoc;
-			if (!userData.completedIntakeForm) await goto('/intake');
+			if (!userDoc.exists()) {
+				await setDoc(doc(db, 'users', auth.currentUser?.email ?? ''), {
+					email: auth.currentUser?.email ?? '',
+					name: auth.currentUser?.displayName ?? '',
+					events: [],
+					completedIntakeForm: false,
+				} satisfies UserDoc);
+				userDoc = await getDoc(doc(db, 'users', auth.currentUser?.email ?? ''));
+			}
+			const userData = userDoc.data() as UserDoc | undefined;
+			if (userData) {
+				if (!userData.events) {
+					await setDoc(
+						doc(db, 'users', auth.currentUser?.email ?? ''),
+						{
+							events: [],
+						},
+						{
+							merge: true,
+						},
+					);
+				}
+				if (!userData.completedIntakeForm) await goto('/intake');
+			} else {
+				await setDoc(doc(db, 'users', auth.currentUser?.email ?? ''), {
+					email: auth.currentUser?.email ?? '',
+					name: auth.currentUser?.displayName ?? '',
+					events: [],
+					completedIntakeForm: false,
+				} satisfies UserDoc);
+				await goto('/intake');
+			}
 		}
 	});
 

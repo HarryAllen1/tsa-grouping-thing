@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import {
-		MAX_EVENTS,
-		MIN_EVENTS,
 		auth,
 		db,
+		MAX_EVENTS,
+		MIN_EVENTS,
 		type EventDoc,
 		type UserDoc,
 	} from '$lib';
+	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
@@ -43,6 +44,7 @@
 	>
 		Crossed out events are locked, likely due to eliminations.
 	</h1>
+	<Button href="/account/{$userDoc?.email}">Modify intake form</Button>
 	<p class="mb-2">Minimum {MIN_EVENTS} events, maximum {MAX_EVENTS} events.</p>
 	<p class="mb-4">Currently {$userDoc?.events.length}/{MAX_EVENTS}</p>
 

@@ -158,7 +158,7 @@
 	</div>
 	<div>
 		<div>
-			<Label>Preferred name</Label>
+			<Label>Preferred first name (if not the same as your Skyward name)</Label>
 			<Input pattern="^[a-zA-Z\- ]*" bind:value={formData.preferredFirstName} />
 		</div>
 		<p class="text-sm text-muted-foreground">Optional.</p>
