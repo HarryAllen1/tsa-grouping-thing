@@ -11,6 +11,10 @@
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
+		if (auth.currentUser) {
+			goto('/');
+			return;
+		}
 		if (isSignInWithEmailLink(auth, $page.url.href) && !auth.currentUser) {
 			const email =
 				localStorage.getItem('jhs-tsa-sign-in-email') ??
