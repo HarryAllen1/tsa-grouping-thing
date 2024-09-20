@@ -133,7 +133,7 @@
 						(formData.preferredFirstName?.trim() === formData.firstName.trim()
 							? null
 							: formData.preferredFirstName) || '',
-					grade: Number.parseInt(formData.grade!),
+					grade: Number(formData.grade),
 				},
 				{
 					merge: true,
