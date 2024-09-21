@@ -9,6 +9,7 @@
 			.filter(
 				(e) =>
 					$userDoc?.events?.includes(e.event) &&
+					e.maxTeamSize > 1 &&
 					e.teams.filter((t) =>
 						t.members.find(
 							(e) => e.email.toLowerCase() === $user.email?.toLowerCase(),

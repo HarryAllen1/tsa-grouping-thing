@@ -219,7 +219,7 @@
 						<strong>{message.sender.name}</strong>
 						<span class="opacity-80">
 							{Date.now() - timeSent.getTime() < 1000 * 60 * 60 * 24
-								? timeSent.toLocaleTimeString()
+								? `Today, ${timeSent.toLocaleTimeString()}`
 								: timeSent.toLocaleDateString()}
 						</span>
 					</p>

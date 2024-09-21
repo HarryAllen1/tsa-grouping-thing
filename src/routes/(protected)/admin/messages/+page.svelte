@@ -24,7 +24,7 @@
 		Message Moderation
 	</h1>
 
-	{#each $eventsCollection as event}
+	{#each $eventsCollection.filter((e) => e.maxTeamSize > 1) as event}
 		<div class="my-4">
 			<h2
 				class="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
