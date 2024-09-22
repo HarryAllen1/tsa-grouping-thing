@@ -1,17 +1,23 @@
 <script lang="ts">
-	import { allUsersCollection, fancyConfirm, db, type UserDoc } from '$lib';
+	import { allUsersCollection, db, fancyConfirm, type UserDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import { csvFormat } from 'd3';
+	import {
+		collection,
+		deleteDoc,
+		deleteField,
+		getDocs,
+		setDoc,
+	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import Download from 'lucide-svelte/icons/download';
 	import CopyButton from './CopyButton.svelte';
 	import MemberGridCard from './MemberGridCard.svelte';
 	import TableView from './TableView.svelte';
-	import { collection, deleteDoc, getDocs, setDoc } from 'firebase/firestore';
 
 	let search = $state('');
 	let hidePeopleWithoutEvents = $state(false);
@@ -126,6 +132,8 @@
 								{
 									grade: (data.grade ?? 9) + 1,
 									random: false,
+									events: [],
+									washingtonId: deleteField(),
 								},
 								{
 									merge: true,
