@@ -24,7 +24,11 @@ export const eventError = (
 		(eventStats?.members ?? []).length < eventInfo.minTeamSize
 	)
 		return 'errorNotEnough';
-	if ((eventStats?.teams ?? []).length > eventInfo.perChapter)
+	if (
+		(eventStats?.teams ?? []).length > eventInfo.perChapter ||
+		(eventStats?.members.length ?? 0) / eventInfo.maxTeamSize >
+			eventInfo.perChapter
+	)
 		return 'errorTooMany';
 	else if (
 		(eventStats?.members ?? []).length >
