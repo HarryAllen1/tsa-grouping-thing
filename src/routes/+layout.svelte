@@ -8,29 +8,22 @@
 		analytics,
 		auth,
 		db,
-		eventsCollection,
 		storage,
 		user,
 		type UserDoc,
 	} from '$lib';
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
-	import { Badge } from '$lib/components/ui/badge';
-	import { Button } from '$lib/components/ui/button';
-	import * as Popover from '$lib/components/ui/popover';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
-	import MessageSquare from 'lucide-svelte/icons/message-square';
 	import { ModeWatcher } from 'mode-watcher';
 	import { onDestroy, onMount, type Snippet } from 'svelte';
 	import { FirebaseApp, PageView, SignedIn, SignedOut } from 'sveltefire';
 	import '../app.css';
 	import Login from './Login.svelte';
-	import MessagesPopover from './MessagesPopover.svelte';
 	import Navbar from './Navbar.svelte';
 	import OfflineNotifier from './OfflineNotifier.svelte';
-	import { selected } from './messages';
 	import { panelOpen } from './messages-panel';
 	import { mouseThing } from './senuka-put-stuff-here';
 
@@ -49,6 +42,7 @@
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
 		} else if (user) {
+			console.log('test');
 			let userDoc = await getDoc(
 				doc(db, 'users', auth.currentUser?.email ?? ''),
 			);
@@ -91,38 +85,39 @@
 		$panelOpen = false;
 	});
 
-	let teams = $derived(
-		($eventsCollection ?? [])
-			.filter((e) =>
-				e.teams.filter((t) =>
-					t.members.find(
-						(e) => e.email.toLowerCase() === $user.email?.toLowerCase(),
-					),
-				),
-			)
-			.flatMap((e) =>
-				e.teams
-					.filter((t) => t.members.find((m) => m.email === $user.email))
-					.map((t) => ({ ...t, event: e })),
-			) ?? [],
-	);
+	// let teams = $derived(
+	// 	($eventsCollection ?? [])
+	// 		.filter((e) =>
+	// 			e.teams.filter((t) =>
+	// 				t.members.find(
+	// 					(e) => e.email.toLowerCase() === $user.email?.toLowerCase(),
+	// 				),
+	// 			),
+	// 		)
+	// 		.flatMap((e) =>
+	// 			e.teams
+	// 				.filter((t) => t.members.find((m) => m.email === $user.email))
+	// 				.map((t) => ({ ...t, event: e })),
+	// 		) ?? [],
+	// );
 
-	let unreadCount = $derived(
-		teams.reduce(
-			(acc, team) =>
-				acc +
-				(team.messages?.filter(
-					(m) => !m.readBy.some((r) => r.email === $user.email),
-				).length ?? 0),
-			0,
-		),
-	);
+	// let unreadCount = $derived(
+	// 	teams.reduce(
+	// 		(acc, team) =>
+	// 			acc +
+	// 			(team.messages?.filter(
+	// 				(m) => !m.readBy.some((r) => r.email === $user.email),
+	// 			).length ?? 0),
+	// 		0,
+	// 	),
+	// );
 	onMount(async () => {
 		await auth.authStateReady();
 		if (auth.currentUser) {
 			const userDoc = await getDoc(
 				doc(db, 'users', auth.currentUser?.email ?? ''),
 			);
+
 			const userData = userDoc.data() as UserDoc;
 			if (!userData.completedIntakeForm) await goto('/intake');
 		}
@@ -168,7 +163,7 @@
 					{/if}
 					{#key $user}
 						{@render children()}
-						{#if $page.route.id !== '/intake' && !$page.route.id?.includes('account')}
+						<!-- {#if $page.route.id !== '/intake' && !$page.route.id?.includes('account')}
 							<div class="fixed bottom-8 right-8">
 								<Popover.Root
 									onOpenChange={(e) => {
@@ -193,7 +188,7 @@
 									</Popover.Content>
 								</Popover.Root>
 							</div>
-						{/if}
+						{/if} -->
 					{/key}
 				</SignedIn>
 				<SignedOut>
