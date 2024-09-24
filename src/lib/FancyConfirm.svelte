@@ -43,7 +43,8 @@
 			{alertTitle}
 		</AlertDialog.Title>
 		<AlertDialog.Description>
-			{alertMessage}
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+			{@html alertMessage}
 		</AlertDialog.Description>
 		<AlertDialog.Footer>
 			{#each $options as option}

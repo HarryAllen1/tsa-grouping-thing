@@ -48,8 +48,7 @@
 </h1>
 <p class="leading-7 [&:not(:first-child)]:mt-6">
 	You may choose up to {MAX_EVENTS} events. You must have at at least {MIN_EVENTS}
-	events. If an event is red, teams can no longer be created for that event. Crossed
-	out events are locked, likely due to eliminations.
+	events. Crossed out events are locked, likely due to eliminations.
 </p>
 <p class="leading-7 [&:not(:first-child)]:mt-6">
 	If you are having trouble choosing events, here are some resources:
@@ -98,10 +97,7 @@
 
 <div class="mb-4 flex flex-col gap-2">
 	{#each $events.filter((e) => !e.hideInSignup) as event (event.event)}
-		<div
-			class="flex items-center space-x-2"
-			class:text-red-500={event.teams.length >= event.perChapter}
-		>
+		<div class="flex items-center space-x-2">
 			<Checkbox
 				checked={eventMap[event.event]}
 				disabled={event.locked ||

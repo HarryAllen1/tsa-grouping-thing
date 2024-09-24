@@ -129,7 +129,7 @@
 
 				await fancyConfirm(
 					'Check your email',
-					'We sent you a link to sign in. If you do not see it, check your spam folder. This email can take up to 5 minutes to show up.',
+					'We sent you a link to sign in. <span class="text-destructive">If you do not see it, check your spam folder.</span> This email can take up to 5 minutes to show up.',
 					[['Ok', true]],
 				);
 			}}
