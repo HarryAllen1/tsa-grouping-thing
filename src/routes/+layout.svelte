@@ -42,7 +42,6 @@
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
 		} else if (user) {
-			console.log('test');
 			let userDoc = await getDoc(
 				doc(db, 'users', auth.currentUser?.email ?? ''),
 			);
@@ -112,15 +111,15 @@
 	// 	),
 	// );
 	onMount(async () => {
-		await auth.authStateReady();
-		if (auth.currentUser) {
-			const userDoc = await getDoc(
-				doc(db, 'users', auth.currentUser?.email ?? ''),
-			);
+		// await auth.authStateReady();
+		// if (auth.currentUser) {
+		// 	const userDoc = await getDoc(
+		// 		doc(db, 'users', auth.currentUser?.email ?? ''),
+		// 	);
 
-			const userData = userDoc.data() as UserDoc;
-			if (!userData.completedIntakeForm) await goto('/intake');
-		}
+		// 	const userData = userDoc.data() as UserDoc;
+		// 	if (!userData.completedIntakeForm) await goto('/intake');
+		// }
 		mouseThing();
 	});
 
