@@ -74,7 +74,7 @@
 					<TeamCard {event} {team} />
 				{/each}
 				<Collapsible.Content class="contents">
-					{#each event.teams.slice(5) as team (team.id)}
+					{#each event.teams.slice(4) as team (team.id)}
 						<TeamCard {event} {team} />
 					{/each}
 				</Collapsible.Content>
