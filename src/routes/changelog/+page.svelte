@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Changelog — JHS TSA Teaming</title>
+</svelte:head>
+
 <div class="container my-4">
 	<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 		Changes Since Last Year

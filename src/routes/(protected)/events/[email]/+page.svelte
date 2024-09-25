@@ -38,6 +38,11 @@
 	);
 </script>
 
+
+<svelte:head>
+	<title>Admin Account Management — JHS TSA Teaming</title>
+</svelte:head>
+
 <div class="container mt-6">
 	<h1
 		class="mb-4 mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"

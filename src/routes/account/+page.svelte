@@ -109,11 +109,16 @@
 	});
 </script>
 
+
+<svelte:head>
+	<title>Account — JHS TSA Teaming</title>
+</svelte:head>
+
 <div class="container mb-4">
 	<h1
 		class="mb-6 mt-8 w-full scroll-m-20 text-start text-4xl font-extrabold tracking-tight lg:text-5xl"
 	>
-		Intake Form
+		Account
 	</h1>
 	<form
 		class="flex flex-col gap-2"

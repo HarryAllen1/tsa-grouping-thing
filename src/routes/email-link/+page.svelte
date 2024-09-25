@@ -55,4 +55,8 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Logging in... — JHS TSA Teaming</title>
+</svelte:head>
+
 Logging you in...

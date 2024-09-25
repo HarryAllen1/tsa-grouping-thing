@@ -97,6 +97,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Statistics — JHS TSA Teaming</title>
+</svelte:head>
+
 <div class="mt-6">
 	<ColorKey />
 	<div bind:this={graph}></div>

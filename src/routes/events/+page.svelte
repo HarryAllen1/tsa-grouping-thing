@@ -25,6 +25,10 @@
 	);
 </script>
 
+<svelte:head>
+	<title>Edit Events — JHS TSA Teaming</title>
+</svelte:head>
+
 <div class="container">
 	<h1
 		class="mb-6 mt-8 w-full scroll-m-20 text-start text-4xl font-extrabold tracking-tight lg:text-5xl"

@@ -140,6 +140,10 @@
 	);
 </script>
 
+<svelte:head>
+	<title>Teams — JHS TSA Teaming</title>
+</svelte:head>
+
 <div class="container mt-8 flex flex-col items-center">
 	<Button
 		href="/events"

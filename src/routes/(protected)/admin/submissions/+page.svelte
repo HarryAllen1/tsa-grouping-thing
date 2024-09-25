@@ -20,6 +20,11 @@
 		n + ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
 </script>
 
+
+<svelte:head>
+	<title>Admin Result Management — JHS TSA Teaming</title>
+</svelte:head>
+
 <div class="container pt-8">
 	<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 		Submissions

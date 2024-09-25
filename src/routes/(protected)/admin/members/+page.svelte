@@ -52,6 +52,11 @@
 	);
 </script>
 
+
+<svelte:head>
+	<title>Admin Member Management — JHS TSA Teaming</title>
+</svelte:head>
+
 <div class="container pb-4">
 	<h1
 		class="my-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl"
