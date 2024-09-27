@@ -102,6 +102,9 @@
 </svelte:head>
 
 <div class="mt-6">
+	<p>
+		Total members: {$allUsersCollection.filter((u) => u.events.length).length}
+	</p>
 	<ColorKey />
 	<div bind:this={graph}></div>
 
