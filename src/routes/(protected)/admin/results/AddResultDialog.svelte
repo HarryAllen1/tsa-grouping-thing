@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {
 		allUsersCollection,
-		cn,
+		Combobox,
 		db,
 		sleep,
 		user,
@@ -9,16 +9,14 @@
 		type EventDoc,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
-	import * as Command from '$lib/components/ui/command';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import * as Popover from '$lib/components/ui/popover';
 	import { Progress } from '$lib/components/ui/progress';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { deleteObject } from 'firebase/storage';
-	import { Check, ChevronsUpDown, Minus, Pencil, X } from 'lucide-svelte';
-	import { tick, type Snippet, untrack } from 'svelte';
+	import { Minus, Pencil, X } from 'lucide-svelte';
+	import { type Snippet } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 
@@ -58,41 +56,12 @@
 
 	let comboboxUsers = $derived(
 		$allUsersCollection.map((u) => ({
-			value: `${u.email}/${u.name}`,
 			label: u.name,
+			value: u.name,
 		})),
 	);
 
-	let comboboxOpen = $state(false);
 	let comboboxValue = $state('');
-
-	let comboboxSelectedValue = $derived(
-		comboboxUsers.find((f) => f.value === comboboxValue)?.label ??
-			'Select a member...',
-	);
-
-	$effect(() => {
-		if (comboboxValue) {
-			const newMember = comboboxUsers.find((f) => f.value === comboboxValue);
-			untrack(() => {
-				newMembers = [
-					...newMembers,
-					{
-						name: newMember?.label ?? '',
-						email: newMember?.value ?? '',
-					},
-				];
-				comboboxValue = '';
-			});
-		}
-	});
-
-	function closeAndFocusTrigger(triggerId: string) {
-		comboboxOpen = false;
-		tick().then(() => {
-			document.querySelector<HTMLElement>(`#${triggerId}`)?.focus();
-		});
-	}
 
 	let dummyVariableToRerender = $state(0);
 	const updateStorageList = () => {
@@ -148,7 +117,21 @@
 				</Button>
 			</div>
 		{/each}
-		<Popover.Root bind:open={comboboxOpen} let:ids>
+		<Combobox
+			bind:value={comboboxValue}
+			options={comboboxUsers}
+			onSelect={(selected) => {
+				const newUser = $allUsersCollection.find(
+					(u) => u.name === selected.value,
+				)!;
+				newMembers.push({
+					name: newUser.name,
+					email: newUser.email,
+				});
+				comboboxValue = '';
+			}}
+		/>
+		<!-- <Popover.Root bind:open={comboboxOpen} let:ids>
 			<Popover.Trigger asChild let:builder>
 				<Button
 					builders={[builder]}
@@ -185,7 +168,7 @@
 					</Command.Group>
 				</Command.Root>
 			</Popover.Content>
-		</Popover.Root>
+		</Popover.Root> -->
 		{#key dummyVariableToRerender}
 			<StorageList ref="results/{event.event}/{id}" let:list>
 				<ul>
@@ -297,6 +280,7 @@
 						);
 						id = crypto.randomUUID();
 						open = false;
+						note = '';
 						onOpenChange?.(false);
 					}}
 				>

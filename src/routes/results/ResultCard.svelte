@@ -75,7 +75,7 @@
 		{:else}
 			<Collapsible.Root bind:open>
 				<ol class="mb-2 ml-6 list-decimal [&_li]:mt-2">
-					{#each (event.results ?? []).slice(0, 9) as result, i}
+					{#each (event.results ?? []).slice(0, 10) as result, i}
 						{@render resultItem(result, i)}
 					{/each}
 					<Collapsible.Content>
