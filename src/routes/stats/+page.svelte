@@ -105,6 +105,18 @@
 	<p>
 		Total members: {$allUsersCollection.filter((u) => u.events.length).length}
 	</p>
+	<p>
+		Events requiring eliminations: {$eventsCollection.reduce(
+			(acc, e) =>
+				e.teams.length > e.perChapter ||
+				$allUsersCollection.filter((u) => u.events.includes(e.event)).length /
+					e.maxTeamSize >
+					e.perChapter
+					? acc + 1
+					: acc,
+			0,
+		)}
+	</p>
 	<ColorKey />
 	<div bind:this={graph}></div>
 
