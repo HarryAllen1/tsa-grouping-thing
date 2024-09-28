@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { beforeUserCreated, HttpsError } from 'firebase-functions/identity';
+import { user } from 'firebase-functions/v1/auth';
 
 initializeApp();
 const db = getFirestore();
@@ -41,3 +42,8 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 		}
 	},
 );
+
+export const onUserDelete = user().onDelete(async (user) => {
+	const doc = db.doc(`users/${user.email}`);
+	await doc.delete();
+});
