@@ -103,7 +103,9 @@
 
 <div class="mt-6">
 	<p>
-		Total members: {$allUsersCollection.filter((u) => u.events.length).length}
+		Total members: {$allUsersCollection.filter(
+			(u) => u.events.length > 0 && u.completedIntakeForm,
+		).length}
 	</p>
 	<p>
 		Events requiring eliminations: {$eventsCollection.reduce(
