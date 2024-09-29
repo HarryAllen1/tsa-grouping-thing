@@ -85,14 +85,17 @@
 					'Make sure to go look at this file in Excel and ensure that all information is correct and remove any unnecessary rows before submitting.',
 				);
 				const csv = csvFormat(
-					$allUsersCollection.map((u) => ({
-						'First Name': u.firstName ?? u.name.split(' ')[0],
-						'Last Name': u.lastName ?? u.name.split(' ').slice(1).join(' '),
-						Grade: u.grade,
-						Demographic: u.demographic ?? 'Opt-out',
-						Gender: u.gender,
-						'Member Type': 'Member',
-					})),
+					$allUsersCollection
+						.filter((u) => u.events.length > 0 && u.completedIntakeForm)
+						.map((u) => ({
+							'First Name':
+								(u.preferredFirstName || u.firstName) ?? u.name.split(' ')[0],
+							'Last Name': u.lastName ?? u.name.split(' ').slice(1).join(' '),
+							Grade: u.grade,
+							Demographic: u.demographic ?? 'Opt-out',
+							Gender: u.gender,
+							'Member Type': 'Member',
+						})),
 				);
 
 				const blob = new Blob([csv], { type: 'text/csv' });
