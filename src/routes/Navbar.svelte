@@ -140,7 +140,7 @@
 					</Dropdown.Trigger>
 					<Dropdown.Content>
 						<Dropdown.Label class="text-lg">
-							{$userDoc?.preferredFirstName ?? $userDoc?.firstName}
+							{$userDoc?.preferredFirstName || $userDoc?.firstName}
 							{$userDoc?.lastName}
 						</Dropdown.Label>
 						<Dropdown.Label class="font-normal">{$user?.email}</Dropdown.Label>
