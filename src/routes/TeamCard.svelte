@@ -8,7 +8,6 @@
 		fancyConfirm,
 		md,
 		sendEmail,
-		storage,
 		user,
 		userDoc,
 		type EventDoc,
@@ -28,8 +27,6 @@
 	import {
 		deleteObject,
 		getDownloadURL,
-		listAll,
-		ref,
 		type FullMetadata,
 	} from 'firebase/storage';
 	import {
@@ -156,13 +153,6 @@
 												merge: true,
 											},
 										);
-										for (const submission of event.onlineSubmissions
-											? await listAll(
-													ref(storage, `submissions/${event.event}/${team.id}`),
-												).then((r) => r.items)
-											: []) {
-											await deleteObject(submission);
-										}
 									}}
 								>
 									<LogOut />

@@ -105,7 +105,8 @@
 						!$userDoc?.events}
 					id={event.event}
 					class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
-					onCheckedChange={async () => {
+					onCheckedChange={async (state) => {
+						if (state === 'indeterminate') return;
 						if (
 							event.locked ||
 							(!eventMap[event.event] &&
@@ -113,6 +114,51 @@
 						)
 							return;
 
+						const membersTeam = event.teams.find((t) =>
+							t.members
+								.map((m) => m.email)
+								.includes($user?.email?.toLowerCase() ?? ''),
+						);
+						if (event.maxTeamSize === 1) {
+							if (state && !membersTeam) {
+								let lowestNotTaken = 1;
+								while (
+									event.teams.some((t) => t.teamNumber === lowestNotTaken)
+								) {
+									lowestNotTaken++;
+								}
+
+								event.teams.push({
+									members: [
+										{
+											name: $userDoc?.name ?? '',
+											email: $user?.email ?? '',
+										},
+									],
+									lastUpdatedBy: $user?.email ?? '',
+									id: crypto.randomUUID(),
+									teamNumber: lowestNotTaken,
+								});
+							} else if (!state && membersTeam) {
+								membersTeam.members.splice(
+									membersTeam.members.findIndex(
+										(e) => e.email.toLowerCase() === ($user?.email ?? ''),
+									),
+									1,
+								);
+							}
+							await setDoc(
+								doc(db, 'events', event.event),
+								{
+									teams: event.teams.filter((t) => t.members.length > 0),
+									lastUpdated: new Timestamp(Date.now() / 1000, 0),
+									lastUpdatedBy: $user?.email ?? '',
+								},
+								{
+									merge: true,
+								},
+							);
+						}
 						await setDoc(
 							doc(db, 'users', $user?.email ?? ''),
 							{
