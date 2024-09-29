@@ -5,13 +5,13 @@
 	import colors from 'tailwindcss/colors';
 	import ColorKey from './ColorKey.svelte';
 	import Demographics from './Demographics.svelte';
-	import Gender from './Gender.svelte';
-	import TShirt from './TShirt.svelte';
 	import { eventError } from './eventError.js';
 	import FirstLetter from './FirstLetter.svelte';
-	import Grade from './Grade.svelte';
 	import FirstLetterLast from './FirstLetterLast.svelte';
 	import FoundBy from './FoundBy.svelte';
+	import Gender from './Gender.svelte';
+	import Grade from './Grade.svelte';
+	import TShirt from './TShirt.svelte';
 
 	let graph = $state<HTMLDivElement>();
 

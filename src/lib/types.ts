@@ -1,4 +1,5 @@
 import type { Timestamp } from 'firebase/firestore';
+import { tShirtMap } from './t-shirt';
 
 export interface EventDoc {
 	teams: Team[];
@@ -64,7 +65,7 @@ export interface UserDoc {
 	admin?: boolean;
 	nationalId?: number;
 	washingtonId?: number;
-	tShirtSize?: 'WXS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
+	tShirtSize?: typeof tShirtMap extends Map<infer K, unknown> ? K : never;
 	grade?: number;
 	firstName?: string;
 	preferredFirstName?: string;

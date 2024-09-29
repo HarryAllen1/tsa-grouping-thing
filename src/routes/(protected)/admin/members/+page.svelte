@@ -52,7 +52,6 @@
 	);
 </script>
 
-
 <svelte:head>
 	<title>Admin Member Management — JHS TSA Teaming</title>
 </svelte:head>

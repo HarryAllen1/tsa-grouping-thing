@@ -34,7 +34,7 @@
 					label: 'Frequency',
 				},
 				y: {
-					label: 'First Letter of First Name',
+					label: 'First Letter of Last Name',
 				},
 				color: {
 					legend: true,

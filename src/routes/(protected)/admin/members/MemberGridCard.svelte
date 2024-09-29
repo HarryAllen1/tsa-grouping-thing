@@ -4,6 +4,7 @@
 		eventsCollection,
 		MAX_EVENTS,
 		MIN_EVENTS,
+		tShirtMap,
 		user as userStore,
 		type UserDoc,
 	} from '$lib';
@@ -113,7 +114,7 @@
 			<span class="mb-2"> T-shirt size </span>
 			<Select.Root
 				selected={user.tShirtSize
-					? { value: user.tShirtSize, label: user.tShirtSize }
+					? { value: user.tShirtSize, label: tShirtMap.get(user.tShirtSize) }
 					: { value: 'null', label: 'Unspecified' }}
 				onSelectedChange={async (s) => {
 					if (s)
@@ -130,18 +131,9 @@
 					<Select.Value placeholder="T-shirt size" />
 				</Select.Trigger>
 				<Select.Content>
-					<Select.Item value="W XS">W XS</Select.Item>
-					<Select.Item value="W S">W S</Select.Item>
-					<Select.Item value="W M">W M</Select.Item>
-					<Select.Item value="W L">W L</Select.Item>
-					<Select.Item value="W XL">W XL</Select.Item>
-					<Select.Item value="W XXL">W XXL</Select.Item>
-					<Select.Item value="M XS">M XS</Select.Item>
-					<Select.Item value="M S">M S</Select.Item>
-					<Select.Item value="M M">M M</Select.Item>
-					<Select.Item value="M L">M L</Select.Item>
-					<Select.Item value="M XL">M XL</Select.Item>
-					<Select.Item value="M XXL">M XXL</Select.Item>
+					{#each tShirtMap.entries() as [value, label]}
+						<Select.Item {value}>{label}</Select.Item>
+					{/each}
 					<Select.Item value="null">Unspecified</Select.Item>
 				</Select.Content>
 			</Select.Root>

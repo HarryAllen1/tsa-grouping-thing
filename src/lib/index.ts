@@ -28,6 +28,7 @@ export {
 	user,
 	userDoc,
 } from './stores';
+export { tShirtMap } from './t-shirt';
 export { receive, send } from './transition';
 export type {
 	BasicUser,

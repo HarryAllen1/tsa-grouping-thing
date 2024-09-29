@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { db } from '$lib';
+	import { db, tShirtMap } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
@@ -28,18 +28,7 @@
 		gender: 'Male' | 'Female' | 'Opt-Out' | 'Non-Disclosed' | undefined;
 		studentId: number | undefined;
 		tShirtSize:
-			| 'F XS'
-			| 'F S'
-			| 'F M'
-			| 'F L'
-			| 'F XL'
-			| 'F XXL'
-			| 'M XS'
-			| 'M S'
-			| 'M M'
-			| 'M L'
-			| 'M XL'
-			| 'M XXL'
+			| (typeof tShirtMap extends Map<infer K, unknown> ? K : never)
 			| undefined;
 		demographic:
 			| 'American Indian/Alaskan Native'
@@ -72,21 +61,6 @@
 		demographic: undefined,
 		foundBy: undefined,
 	});
-
-	const tShirtMap = new Map([
-		['F XS', 'F XS'],
-		['F S', 'F Small'],
-		['F M', 'F Medium'],
-		['F L', 'F Large'],
-		['F XL', 'F XL'],
-		['F XXL', 'F XXL'],
-		['M XS', 'M XS'],
-		['M S', 'M Small'],
-		['M M', 'M Medium'],
-		['M L', 'M Large'],
-		['M XL', 'M XL'],
-		['M XXL', 'M XXL'],
-	]);
 
 	onMount(async () => {
 		const userDoc = await getDoc(doc(db, 'users', email ?? ''));
@@ -370,19 +344,7 @@
 								: undefined}
 							onSelectedChange={(v) => {
 								if (v) {
-									formData.tShirtSize = v.value as
-										| 'F XS'
-										| 'F S'
-										| 'F M'
-										| 'F L'
-										| 'F XL'
-										| 'F XXL'
-										| 'M XS'
-										| 'M S'
-										| 'M M'
-										| 'M L'
-										| 'M XL'
-										| 'M XXL';
+									formData.tShirtSize = v.value;
 								}
 							}}
 						>
