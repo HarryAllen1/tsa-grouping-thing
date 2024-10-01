@@ -295,6 +295,8 @@
 				for (const member of (await getDocs(collection(db, 'users'))).docs) {
 					const data = member.data();
 					data.events = [];
+					data.washingtonId = deleteField();
+					data.completedIntakeForm = false;
 					await setDoc(member.ref, data);
 				}
 				for (const event of (await getDocs(collection(db, 'events'))).docs) {
