@@ -263,7 +263,7 @@
 						variant="ghost"
 						size="sm"
 						class="member-collapsible flex w-full items-center p-2 {user.events
-							.length < MIN_EVENTS || user.events.length > MAX_EVENTS
+							.length < MIN_EVENTS || user.events.length > MAX_EVENTS + 1
 							? 'text-red-500'
 							: user.events
 										.map(
