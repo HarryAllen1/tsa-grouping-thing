@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { db, tShirtMap, user, userDoc } from '$lib';
+	import { auth, db, tShirtMap, user, userDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
+	import { updateProfile } from 'firebase/auth';
 	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
@@ -124,6 +125,11 @@
 				merge: true,
 			},
 		);
+		await updateProfile(auth.currentUser!, {
+			displayName: formData.preferredFirstName
+				? `${formData.preferredFirstName} (${formData.firstName}) ${formData.lastName}`
+				: `${formData.firstName} ${formData.lastName}`,
+		});
 		page++;
 		toast.success('Saved.');
 	}}
