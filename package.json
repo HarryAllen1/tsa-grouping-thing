@@ -78,9 +78,6 @@
 			"allowedVersions": {
 				"firebase": "^10.0.0"
 			}
-		},
-		"patchedDependencies": {
-			"sveltekit-superforms@2.17.0": "patches/sveltekit-superforms@2.17.0.patch"
 		}
 	}
 }

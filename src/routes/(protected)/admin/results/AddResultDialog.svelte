@@ -279,9 +279,9 @@
 							},
 						);
 						id = crypto.randomUUID();
-						open = false;
 						note = '';
 						onOpenChange?.(false);
+						open = false;
 					}}
 				>
 					Save
