@@ -456,7 +456,7 @@
 											: ''}
 									</Button>
 								</Dialog.Trigger>
-								<Dialog.Content>
+								<Dialog.Content class="max-h-screen overflow-y-auto">
 									<Dialog.Title>Manage Submissions</Dialog.Title>
 									{#if event.submissionDescription}
 										<div class="prose dark:prose-invert dark:text-white">
