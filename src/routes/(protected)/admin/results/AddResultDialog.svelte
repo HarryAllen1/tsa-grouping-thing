@@ -29,8 +29,8 @@
 		onOpenChange,
 		members,
 	}: {
-		edit?: Snippet;
-		add?: Snippet;
+		edit?: () => ReturnType<Snippet>;
+		add?: () => ReturnType<Snippet>;
 		event: EventDoc;
 		editing?: boolean;
 		id?: string;

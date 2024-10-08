@@ -104,7 +104,6 @@
 	let newEventDialogOpen = $state(false);
 </script>
 
-
 <svelte:head>
 	<title>Admin Team Management — JHS TSA Teaming</title>
 </svelte:head>

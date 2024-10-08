@@ -38,7 +38,6 @@
 	);
 </script>
 
-
 <svelte:head>
 	<title>Admin Account Management — JHS TSA Teaming</title>
 </svelte:head>

@@ -7,7 +7,6 @@
 	import { Collection } from 'sveltefire';
 </script>
 
-
 <svelte:head>
 	<title>Admin Audit Logs — JHS TSA Teaming</title>
 </svelte:head>

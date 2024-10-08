@@ -19,7 +19,6 @@
 	setContext('isAdminMessages', true);
 </script>
 
-
 <svelte:head>
 	<title>Admin Message Moderation — JHS TSA Teaming</title>
 </svelte:head>

@@ -302,7 +302,7 @@
 								<Dialog.Trigger>
 									<Button>Manage Submissions</Button>
 								</Dialog.Trigger>
-								<Dialog.Content>
+								<Dialog.Content class="max-h-screen overflow-y-auto">
 									<Dialog.Header>
 										<Dialog.Title>Manage Submissions</Dialog.Title>
 									</Dialog.Header>

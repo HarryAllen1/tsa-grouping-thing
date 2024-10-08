@@ -18,7 +18,7 @@
 		ref: string | StorageReference;
 		link: string;
 		loading?: Snippet;
-		withMetadata: Snippet<[string, FullMetadata]>;
+		withMetadata: (link: string, meta: FullMetadata) => ReturnType<Snippet>;
 		error?: Snippet<[unknown]>;
 	} = $props();
 

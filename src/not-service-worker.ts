@@ -4,6 +4,7 @@
 /// <reference lib="esnext" />
 /// <reference lib="webworker" />
 
+// eslint-disable-next-line unicorn/prefer-global-this
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
 import { build, files, version } from '$service-worker';

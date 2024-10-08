@@ -26,7 +26,7 @@ const mobileTabletCheck = () => {
 		)
 			check = true;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	})(navigator.userAgent || navigator.vendor || (window as any).opera);
+	})(navigator.userAgent || navigator.vendor || (globalThis as any).opera);
 	return check;
 };
 export const isMobileOrTablet = mobileTabletCheck();

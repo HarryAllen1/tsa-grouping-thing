@@ -20,7 +20,6 @@
 		n + ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
 </script>
 
-
 <svelte:head>
 	<title>Admin Result Management — JHS TSA Teaming</title>
 </svelte:head>
