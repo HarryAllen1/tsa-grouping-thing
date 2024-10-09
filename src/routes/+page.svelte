@@ -208,6 +208,11 @@
 												id: crypto.randomUUID(),
 												teamNumber: 0,
 											};
+											if (
+												teamUserIsIn.members.length >= actualEvent.maxTeamSize
+											) {
+												return alert('Your team is full');
+											}
 											teamUserIsIn.members.push({
 												name: r.name,
 												email: r.email,

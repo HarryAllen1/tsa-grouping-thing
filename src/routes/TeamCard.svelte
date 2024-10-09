@@ -226,6 +226,11 @@
 												<Button
 													on:click={async () => {
 														const teamButMutable = team;
+														if (
+															teamButMutable.members.length >= event.maxTeamSize
+														) {
+															return alert('Your team is full');
+														}
 														teamButMutable.members.push({
 															name: person.name,
 															email: person.email,
@@ -580,6 +585,9 @@
 										{request.name}
 										<Button
 											on:click={async () => {
+												if (team.members.length >= event.maxTeamSize) {
+													return alert('Your team is full');
+												}
 												team.members.push({
 													name: request.name,
 													email: request.email,
