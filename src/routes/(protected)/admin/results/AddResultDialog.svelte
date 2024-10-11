@@ -322,7 +322,7 @@
 						id = crypto.randomUUID();
 						open = false;
 						const el = document.querySelector(
-							`#${id.replaceAll('-', '').replace(/\d/, '')}`,
+							`#${CSS.escape(id.replaceAll('-', '').replace(/\d/, ''))}`,
 						);
 
 						if (el instanceof HTMLButtonElement)
