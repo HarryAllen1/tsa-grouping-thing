@@ -62,7 +62,7 @@
 			<a
 				target="_blank"
 				class="font-medium text-primary underline underline-offset-4"
-				href="https://lwsd.sharepoint.com/:f:/r/sites/GR-JHS-TechnologyStudentAssociation-SCA/Shared%20Documents/23-24/Competition/Event%20Guides?csf=1&web=1&e=ctur4B"
+				href="https://lwsd.sharepoint.com/:f:/r/sites/GR-JHS-TechnologyStudentAssociation-SCA/Shared%20Documents/2024-25/Event%20Guides?csf=1&web=1&e=5PsOsB"
 				>Event guides</a
 			>: detailed rules and rubrics for each event
 		</li>
