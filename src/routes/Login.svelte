@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
-	import { auth, closeConfirmationDialog, fancyConfirm } from '$lib';
+	import {
+		auth,
+		closeConfirmationDialog,
+		fancyConfirm,
+		POINT_OF_CONTACT_EMAIL,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
@@ -63,7 +68,7 @@
 						case 'auth/account-exists-with-different-credential': {
 							fancyConfirm(
 								'Account already exists',
-								'It seems like you previously signed in with your email, and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact harry at s-hallen@lwsd.org to fix this. In the meantime, please login using your email.',
+								`It seems like you previously signed in with your email, and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact harry at ${POINT_OF_CONTACT_EMAIL} to fix this. In the meantime, please login using your email.`,
 							);
 							break;
 						}

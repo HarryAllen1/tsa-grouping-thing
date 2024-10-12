@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		POINT_OF_CONTACT_EMAIL,
 		SimpleTooltip,
 		StorageMetadata,
 		allUsersCollection,
@@ -570,8 +571,8 @@
 									<p>250MB max file size.</p>
 									<p>
 										If you need to submit a file type not listed, please contact
-										Harry (<a href="mailto:s-hallen@lwsd.org"
-											>s-hallen@lwsd.org</a
+										Harry (<a href="mailto:{POINT_OF_CONTACT_EMAIL}"
+											>{POINT_OF_CONTACT_EMAIL}</a
 										>).
 									</p>
 								</Dialog.Content>

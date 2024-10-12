@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		POINT_OF_CONTACT_EMAIL,
 		SimpleTooltip,
 		StorageMetadata,
 		allUsersCollection,
@@ -443,7 +444,8 @@
 									<p>
 										If you need to submit a file type not listed or need to
 										upload a file larger than 250MB, please contact Harry (<a
-											href="mailto:s-hallen@lwsd.org">s-hallen@lwsd.org</a
+											href="mailto:{POINT_OF_CONTACT_EMAIL}"
+											>{POINT_OF_CONTACT_EMAIL}</a
 										>).
 									</p>
 								</Dialog.Content>
