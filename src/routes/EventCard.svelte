@@ -21,6 +21,32 @@
 	let collapsibleOpen = $state(false);
 </script>
 
+{#snippet renderTeams(teams: Team[])}
+	{#if teams.length <= 5}
+		{#each teams as team (team.id)}
+			<TeamCard {event} {team} />
+		{/each}
+	{:else}
+		<Collapsible.Root bind:open={collapsibleOpen} class="contents">
+			{#each teams.slice(0, 4) as team (team.id)}
+				<TeamCard {event} {team} />
+			{/each}
+			<Collapsible.Content class="contents">
+				{#each teams.slice(4) as team (team.id)}
+					<TeamCard {event} {team} />
+				{/each}
+			</Collapsible.Content>
+			<Collapsible.Trigger class="w-full">
+				<Button variant="ghost" size="sm" class=" w-full">
+					<ChevronUp
+						class="transition-transform {collapsibleOpen ? '' : 'rotate-180'}"
+					/>
+				</Button>
+			</Collapsible.Trigger>
+		</Collapsible.Root>
+	{/if}
+{/snippet}
+
 <Card.Root>
 	<Card.Header>
 		<Card.Title>
@@ -58,6 +84,7 @@
 			</ul>
 		</Card.Description>
 	</Card.Header>
+
 	<Card.Content class="flex flex-col gap-4">
 		{#if event.locked}
 			<p>
@@ -65,33 +92,7 @@
 				correct, contact a board member.
 			</p>
 		{/if}
-		{#snippet renderTeams(teams: Team[])}
-			{#if teams.length <= 5}
-				{#each teams as team (team.id)}
-					<TeamCard {event} {team} />
-				{/each}
-			{:else}
-				<Collapsible.Root bind:open={collapsibleOpen} class="contents">
-					{#each teams.slice(0, 4) as team (team.id)}
-						<TeamCard {event} {team} />
-					{/each}
-					<Collapsible.Content class="contents">
-						{#each teams.slice(4) as team (team.id)}
-							<TeamCard {event} {team} />
-						{/each}
-					</Collapsible.Content>
-					<Collapsible.Trigger class="w-full">
-						<Button variant="ghost" size="sm" class=" w-full">
-							<ChevronUp
-								class="transition-transform {collapsibleOpen
-									? ''
-									: 'rotate-180'}"
-							/>
-						</Button>
-					</Collapsible.Trigger>
-				</Collapsible.Root>
-			{/if}
-		{/snippet}
+
 		{@const usersTeam = event.teams.find((t) =>
 			t.members.some((m) => m.email === $userDoc.email),
 		)}
