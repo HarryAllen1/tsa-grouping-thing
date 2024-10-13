@@ -6,7 +6,6 @@
 		db,
 		eventsCollection,
 		fancyConfirm,
-		settings,
 		sleep,
 		type EventData,
 	} from '$lib';
@@ -334,23 +333,6 @@
 		>
 			Reset system
 		</Button>
-		<div class="flex flex-row items-center gap-2">
-			<Switch
-				id="enable-online-submissions"
-				checked={$settings?.enableOnlineSubmissions ?? false}
-				onCheckedChange={async (e) => {
-					await setDoc(
-						doc(db, 'settings', 'settings'),
-						{
-							enableOnlineSubmissions: e,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{ merge: true },
-					);
-				}}
-			/>
-			<Label for="enable-online-submissions">Enable online submissions</Label>
-		</div>
 	</div>
 	<div
 		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
