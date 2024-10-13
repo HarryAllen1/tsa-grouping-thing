@@ -4,6 +4,7 @@
 		db,
 		user,
 		userDoc,
+		type Team,
 		type EventData,
 		type EventDoc,
 	} from '$lib';
@@ -64,28 +65,41 @@
 				correct, contact a board member.
 			</p>
 		{/if}
-		{#if event.teams.length <= 5}
-			{#each event.teams as team (team.id)}
-				<TeamCard {event} {team} />
-			{/each}
-		{:else}
-			<Collapsible.Root bind:open={collapsibleOpen} class="contents">
-				{#each event.teams.slice(0, 4) as team (team.id)}
+		{#snippet renderTeams(teams: Team[])}
+			{#if teams.length <= 5}
+				{#each teams as team (team.id)}
 					<TeamCard {event} {team} />
 				{/each}
-				<Collapsible.Content class="contents">
-					{#each event.teams.slice(4) as team (team.id)}
+			{:else}
+				<Collapsible.Root bind:open={collapsibleOpen} class="contents">
+					{#each teams.slice(0, 4) as team (team.id)}
 						<TeamCard {event} {team} />
 					{/each}
-				</Collapsible.Content>
-				<Collapsible.Trigger class="w-full">
-					<Button variant="ghost" size="sm" class=" w-full">
-						<ChevronUp
-							class="transition-transform {collapsibleOpen ? '' : 'rotate-180'}"
-						/>
-					</Button>
-				</Collapsible.Trigger>
-			</Collapsible.Root>
+					<Collapsible.Content class="contents">
+						{#each teams.slice(4) as team (team.id)}
+							<TeamCard {event} {team} />
+						{/each}
+					</Collapsible.Content>
+					<Collapsible.Trigger class="w-full">
+						<Button variant="ghost" size="sm" class=" w-full">
+							<ChevronUp
+								class="transition-transform {collapsibleOpen
+									? ''
+									: 'rotate-180'}"
+							/>
+						</Button>
+					</Collapsible.Trigger>
+				</Collapsible.Root>
+			{/if}
+		{/snippet}
+		{@const usersTeam = event.teams.find((t) =>
+			t.members.some((m) => m.email === $userDoc.email),
+		)}
+		{#if usersTeam}
+			<TeamCard {event} team={usersTeam} />
+			{@render renderTeams(event.teams.filter((t) => t.id !== usersTeam.id))}
+		{:else}
+			{@render renderTeams(event.teams)}
 		{/if}
 	</Card.Content>
 	{#if !event.locked && !(event.teamCreationLocked && event.teams.length >= event.perChapter) && event.teams.filter( (t) => t.requests
