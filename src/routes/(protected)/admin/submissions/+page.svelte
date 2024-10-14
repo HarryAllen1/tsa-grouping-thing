@@ -22,9 +22,6 @@
 
 	let hideEmpty = $state(false);
 
-	let editing = $state('');
-	const descriptions: Record<string, string> = {};
-
 	const nth = (n: number) =>
 		n + ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
 </script>
@@ -56,51 +53,47 @@
 						Submission Requirements
 					</h3>
 
-					{#if editing === event.event}
-						<Textarea
-							value={event.submissionDescription}
-							placeholder="Submit the following..."
-							style="height: {event.submissionDescription.split('\n').length *
-								1.5 +
-								1}rem;"
-							on:input={(e) => {
-								if (e.target instanceof HTMLTextAreaElement) {
-									e.target.style.height = '';
-									e.target.style.height = `${e.target.scrollHeight + 3}px`;
-									descriptions[event.event] = e.target.value;
-								}
-							}}
-						/>
-						<Button
-							class="my-4"
-							on:click={async () => {
-								await setDoc(
-									doc(db, 'events', event.event),
-									{
-										submissionDescription: descriptions[event.event],
-										lastUpdatedBy: $user?.email ?? '',
-									},
-									{ merge: true },
-								);
-								editing = '';
-							}}
-						>
-							Save
-						</Button>
-					{:else}
-						<div class="prose dark:prose-invert dark:text-white">
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-							{@html md.render(event.submissionDescription)}
-						</div>
-						<Button
-							class="mb-4"
-							on:click={() => {
-								editing = event.event;
-							}}
-						>
-							Edit
-						</Button>
-					{/if}
+					<div class="prose dark:prose-invert dark:text-white">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						{@html md.render(event.submissionDescription)}
+					</div>
+					<Dialog.Root>
+						<Dialog.Trigger asChild let:builder>
+							<Button variant="default" builders={[builder]}>Edit</Button>
+						</Dialog.Trigger>
+						<Dialog.Content>
+							<Dialog.Title>Edit submission description</Dialog.Title>
+							<p>Markdown is allowed</p>
+							<Textarea
+								placeholder="Submission description"
+								class="w-full"
+								bind:value={event.submissionDescription}
+							/>
+							<Dialog.Footer>
+								<Dialog.Close asChild let:builder>
+									<Button
+										builders={[builder]}
+										variant="default"
+										on:click={() => {
+											setDoc(
+												doc(db, 'events', event.event),
+												{
+													submissionDescription:
+														event.submissionDescription ?? '',
+													lastUpdatedBy: $user?.email ?? '',
+												},
+												{
+													merge: true,
+												},
+											);
+										}}
+									>
+										Save
+									</Button>
+								</Dialog.Close>
+							</Dialog.Footer>
+						</Dialog.Content>
+					</Dialog.Root>
 				</div>
 			{/if}
 			<div
