@@ -70,7 +70,7 @@
 		"typescript-eslint": "8.8.1",
 		"vite": "^5.4.8",
 		"vite-plugin-top-level-await": "^1.4.4",
-		"vitepress": "1.4.0"
+		"vitepress": "1.4.1"
 	},
 	"type": "module",
 	"pnpm": {
