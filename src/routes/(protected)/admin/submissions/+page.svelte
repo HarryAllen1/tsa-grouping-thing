@@ -34,7 +34,7 @@
 		<span>Hide teams without submissions</span>
 	</Label>
 
-	{#each $eventsCollection.filter((e) => !['*Rooming', '*Cardboard Boat'].includes(e.event)) as event}
+	{#each $eventsCollection.filter((e) => !['*Rooming', '*Cardboard Boat'].includes(e.event)) as event (event.event)}
 		<div class="my-4">
 			<h2
 				class="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
@@ -97,7 +97,7 @@
 			<div
 				class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 			>
-				{#each event.teams as team}
+				{#each event.teams as team (team.id)}
 					<StorageList
 						ref="submissions/{event.event}/{team.id}"
 						let:list
