@@ -333,7 +333,7 @@
 
 	{#if $settings?.alert}
 		<div
-			class="prose max-w-full dark:prose-invert dark:text-white"
+			class="prose w-full max-w-full dark:prose-invert dark:text-white"
 			bind:this={alertEl}
 		>
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
