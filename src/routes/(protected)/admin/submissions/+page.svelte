@@ -19,6 +19,7 @@
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
 	import Download from 'lucide-svelte/icons/download';
+	import * as HoverCard from '$lib/components/ui/hover-card';
 
 	let hideEmpty = $state(false);
 
@@ -244,7 +245,21 @@
 															{/if}
 															<div class="flex-grow"></div>
 															<span>
-																{new Date(meta.timeCreated).toLocaleString()}
+																<HoverCard.Root>
+																	<HoverCard.Trigger>
+																		{new Date(
+																			meta.timeCreated,
+																		).toLocaleString()}
+																	</HoverCard.Trigger>
+																	<HoverCard.Content>
+																		<p>
+																			{meta.customMetadata?.userName}
+																		</p>
+																		<p>
+																			{meta.customMetadata?.userEmail}
+																		</p>
+																	</HoverCard.Content>
+																</HoverCard.Root>
 															</span>
 														{/snippet}
 														<DownloadURL ref={item.fullPath} let:link>
