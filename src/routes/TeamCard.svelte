@@ -331,6 +331,13 @@
 													<li class="flex w-full flex-col items-center">
 														{#if submission instanceof File}
 															<UploadTask
+																metadata={{
+																	customMetadata: {
+																		teamId: team.id,
+																		userEmail: $user?.email ?? '',
+																		userName: $userDoc?.name ?? '',
+																	},
+																}}
 																ref="submissions/{event.event}/{team.id}/{submission.name}"
 																data={submission}
 																let:snapshot
