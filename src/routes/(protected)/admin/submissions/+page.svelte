@@ -197,7 +197,7 @@
 																</Dialog.Root> -->
 															{#if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/pdf'].includes(meta.contentType ?? '')}
 																<Dialog.Root>
-																	<Dialog.Trigger>
+																	<Dialog.Trigger class="w-full text-start">
 																		{item.name}
 																	</Dialog.Trigger>
 																	<Dialog.Content
