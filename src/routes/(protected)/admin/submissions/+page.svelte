@@ -1,25 +1,17 @@
 <script lang="ts">
-	import {
-		db,
-		eventsCollection,
-		md,
-		StorageMetadata,
-		user,
-		downloadURL,
-	} from '$lib';
+	import { db, eventsCollection, md, StorageMetadata, user } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { doc, setDoc } from 'firebase/firestore';
 	import type { FullMetadata } from 'firebase/storage';
 	import { ArrowUpRight } from 'lucide-svelte';
-	import * as Dialog from '$lib/components/ui/dialog';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
-	import Download from 'lucide-svelte/icons/download';
-	import * as HoverCard from '$lib/components/ui/hover-card';
 
 	let hideEmpty = $state(false);
 
@@ -195,43 +187,15 @@
 																		</audio>
 																	</Dialog.Content>
 																</Dialog.Root> -->
-															{#if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/pdf'].includes(meta.contentType ?? '')}
-																<Dialog.Root>
-																	<Dialog.Trigger class="w-full text-start">
-																		{item.name}
-																	</Dialog.Trigger>
-																	<Dialog.Content
-																		class="grid max-h-screen max-w-full place-items-center p-6"
-																	>
-																		<p>
-																			If the document isn't showing up, click
-																			the download button in the bottom right.
-																		</p>
-																		<iframe
-																			src="https://docs.google.com/viewer?url={encodeURIComponent(
-																				link ?? '',
-																			)}&embedded=true"
-																			class="h-[calc(100vh-6rem)] w-[calc(100vw-6rem)]"
-																			frameborder="0"
-																			title="A powerpoint presentation"
-																		>
-																			This document cannot be viewed. Try
-																			downloading it using the button in the
-																			bottom right.
-																		</iframe>
-																		<Dialog.Footer>
-																			<Button
-																				class="fixed bottom-4 right-4 lg:bottom-8 lg:right-8"
-																				size="icon"
-																				on:click={() => {
-																					downloadURL(link ?? '', item.name);
-																				}}
-																			>
-																				<Download />
-																			</Button>
-																		</Dialog.Footer>
-																	</Dialog.Content>
-																</Dialog.Root>
+															{#if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'].includes(meta.contentType ?? '')}
+																<a
+																	href="https://docs.google.com/viewer?url={encodeURIComponent(
+																		link ?? '',
+																	)}"
+																	target="_blank"
+																	rel="noreferrer"
+																	class="w-full text-start">{item.name}</a
+																>
 															{:else}
 																<a
 																	href={link}
