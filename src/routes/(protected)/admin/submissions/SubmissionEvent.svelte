@@ -1,0 +1,122 @@
+<script lang="ts">
+	import { db, md, storage, user, type EventDoc } from '$lib';
+	import { Button } from '$lib/components/ui/button';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { Textarea } from '$lib/components/ui/textarea';
+	import { doc, setDoc } from 'firebase/firestore';
+	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
+	import SubmissionTeam from './SubmissionTeam.svelte';
+	import JSZip from 'jszip';
+	import { getBlob, listAll, ref } from 'firebase/storage';
+
+	let {
+		event,
+	}: {
+		event: EventDoc;
+	} = $props();
+
+	let count = $state(0);
+</script>
+
+<div class="my-4">
+	<h2
+		class="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+	>
+		{event.event}
+	</h2>
+	{#if event.submissionDescription}
+		<div>
+			<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+				Submission Requirements
+			</h3>
+
+			<div class="prose dark:prose-invert dark:text-white">
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				{@html md.render(event.submissionDescription)}
+			</div>
+			<Dialog.Root>
+				<Dialog.Trigger asChild let:builder>
+					<Button variant="default" builders={[builder]}>Edit</Button>
+				</Dialog.Trigger>
+				<Dialog.Content>
+					<Dialog.Title>Edit submission description</Dialog.Title>
+					<p>Markdown is allowed</p>
+					<Textarea
+						placeholder="Submission description"
+						class="w-full"
+						bind:value={event.submissionDescription}
+					/>
+					<Dialog.Footer>
+						<Dialog.Close asChild let:builder>
+							<Button
+								builders={[builder]}
+								variant="default"
+								on:click={() => {
+									setDoc(
+										doc(db, 'events', event.event),
+										{
+											submissionDescription: event.submissionDescription ?? '',
+											lastUpdatedBy: $user?.email ?? '',
+										},
+										{
+											merge: true,
+										},
+									);
+								}}
+							>
+								Save
+							</Button>
+						</Dialog.Close>
+					</Dialog.Footer>
+				</Dialog.Content>
+			</Dialog.Root>
+			<Button
+				variant="ghost"
+				class="mx-2"
+				onclick={() => {
+					count++;
+				}}
+			>
+				<RefreshCw /> Refresh
+			</Button>
+			<Button
+				variant="ghost"
+				class="mx-2"
+				onclick={async () => {
+					const zip = new JSZip();
+					for (const team of event.teams) {
+						const teamFolder = zip.folder(`2082-${team.teamNumber}`);
+						const submissions = await listAll(
+							ref(storage, `submissions/${event.event}/${team.id}`),
+						);
+
+						for (const item of submissions.items) {
+							teamFolder!.file(item.name, await getBlob(item));
+						}
+					}
+
+					const blob = await zip.generateAsync({ type: 'blob' });
+					const url = URL.createObjectURL(blob);
+					const a = document.createElement('a');
+
+					a.href = url;
+					a.download = `${event.event}.zip`;
+					a.click();
+
+					URL.revokeObjectURL(url);
+				}}>Download all</Button
+			>
+		</div>
+	{/if}
+	<div
+		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
+	>
+		{#key count}
+			{#each event.teams as team (team.id)}
+				<SubmissionTeam {team} {event} />
+			{:else}
+				<p>No teams</p>
+			{/each}
+		{/key}
+	</div>
+</div>
