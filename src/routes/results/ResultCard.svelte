@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { user, type EventDoc, type Result } from '$lib';
+	import { storage, user, type EventDoc, type Result } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import { listAll, ref } from 'firebase/storage';
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import { DownloadURL } from 'sveltefire';
 
@@ -12,6 +13,8 @@
 	}: {
 		event: EventDoc;
 	} = $props();
+
+	const rubrics = listAll(ref(storage, `rubrics/${event.event}/${event.id}`));
 
 	let open = $state(false);
 </script>
@@ -24,35 +27,37 @@
 				{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
 			{/if}
 		{/each}
-		{#if result.members
-			.map((u) => u.email.toLowerCase())
-			.includes($user.email?.toLowerCase() ?? '') && (result.rubricPaths?.length || result.note)}
-			<Dialog.Root>
-				<Dialog.Trigger class="underline">View Rubric</Dialog.Trigger>
-				<Dialog.Content>
-					<Dialog.Title>Rubric</Dialog.Title>
-					{#if result.note}
-						{result.note}
-					{/if}
-					{#each result.rubricPaths ?? [] as rubric}
-						<DownloadURL ref={rubric} let:link>
-							{#if link}
-								{@const url = new URL(link)}
-								{#if ['.jpg', '.jpeg', '.webp', '.png', '.avif'].includes(url.pathname
-										.slice(-4)
-										.toLowerCase())}
-									<img src={link} alt="Rubric" />
-								{:else}
-									<a href={link} target="_blank" rel="noopener noreferrer">
-										{url.pathname.slice(1)}
-									</a>
+		{#await rubrics then rubs}
+			{#if result.members
+				.map((u) => u.email.toLowerCase())
+				.includes($user.email?.toLowerCase() ?? '') && (rubs.items.length || result.note)}
+				<Dialog.Root>
+					<Dialog.Trigger class="underline">View Rubric</Dialog.Trigger>
+					<Dialog.Content>
+						<Dialog.Title>Rubric</Dialog.Title>
+						{#if result.note}
+							{result.note}
+						{/if}
+						{#each rubs.items ?? [] as rubric}
+							<DownloadURL ref={rubric} let:link>
+								{#if link}
+									{@const url = new URL(link)}
+									{#if ['.jpg', '.jpeg', '.webp', '.png', '.avif'].includes(url.pathname
+											.slice(-4)
+											.toLowerCase())}
+										<img src={link} alt="Rubric" />
+									{:else}
+										<a href={link} target="_blank" rel="noopener noreferrer">
+											{url.pathname.slice(1)}
+										</a>
+									{/if}
 								{/if}
-							{/if}
-						</DownloadURL>
-					{/each}
-				</Dialog.Content>
-			</Dialog.Root>
-		{/if}
+							</DownloadURL>
+						{/each}
+					</Dialog.Content>
+				</Dialog.Root>
+			{/if}
+		{/await}
 	</li>
 {/snippet}
 
