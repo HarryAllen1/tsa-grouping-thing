@@ -4,11 +4,11 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { getBlob, type FullMetadata } from 'firebase/storage';
+	import JSZip from 'jszip';
 	import { ArrowUpRight } from 'lucide-svelte';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
 	import { hideEmpty } from './state';
-	import JSZip from 'jszip';
 
 	let {
 		event,
@@ -19,7 +19,7 @@
 	} = $props();
 
 	const nth = (n: number) =>
-		n + ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
+		n + (['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th');
 </script>
 
 <StorageList ref="submissions/{event.event}/{team.id}" let:list let:ref>
