@@ -133,6 +133,8 @@
 			},
 		);
 	};
+
+	let submissionsUpdater = $state(0);
 </script>
 
 <Card.Root
@@ -460,6 +462,12 @@
 								</Dialog.Trigger>
 								<Dialog.Content class="max-h-screen overflow-y-auto">
 									<Dialog.Title>Manage Submissions</Dialog.Title>
+									<Button
+										onclick={() => {
+											submissionsUpdater++;
+										}}
+										variant="outline">Refresh</Button
+									>
 									{#if event.submissionDescription}
 										<div class="prose dark:prose-invert dark:text-white">
 											<!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -469,75 +477,77 @@
 										</div>
 									{/if}
 									<ul>
-										{#each [...(list?.items ?? []), ...filesToUpload] as submission (submission instanceof File ? submission.webkitRelativePath : submission.fullPath)}
-											<li class="flex w-full flex-col items-center">
-												{#if submission instanceof File}
-													<UploadTask
-														metadata={{
-															customMetadata: {
-																teamId: team.id,
-																userEmail: $user?.email ?? '',
-																userName: $userDoc?.name ?? '',
-															},
-														}}
-														ref="submissions/{event.event}/{team.id}/{submission.name}"
-														data={submission}
-														let:snapshot
-														let:progress
-													>
-														{#if snapshot?.state === 'success'}
-															{filterSubmissions(submission)}
-															{updateStorageList()}
-														{:else}
-															<Progress value={progress} class="w-full" />
-
-															<span class="w-full">
-																{submission.name}
-															</span>
-														{/if}
-													</UploadTask>
-												{:else}
-													<div class="flex w-full flex-row items-center">
-														{#snippet submissionsList(
-															link: string,
-															meta: FullMetadata,
-														)}
-															<SimpleTooltip
-																message={new Date(
-																	meta.timeCreated,
-																).toLocaleString()}
-															>
-																<a href={link} target="_blank">
-																	{meta.name}
-																</a>
-															</SimpleTooltip>
-														{/snippet}
-														<DownloadURL ref={submission} let:link>
-															<StorageMetadata
-																ref={submission}
-																link={link ?? ''}
-																withMetadata={submissionsList}
-															></StorageMetadata>
-														</DownloadURL>
-														<div class="flex flex-grow"></div>
-														<Button
-															variant="ghost"
-															size="icon"
-															on:click={async () => {
-																if (submission instanceof File) return;
-																await deleteObject(submission);
-																team.lastUpdatedBy = $user?.email ?? '';
-																dummyVariableToRerender++;
+										{#key submissionsUpdater}
+											{#each [...(list?.items ?? []), ...filesToUpload] as submission (submission instanceof File ? submission.webkitRelativePath : submission.fullPath)}
+												<li class="flex w-full flex-col items-center">
+													{#if submission instanceof File}
+														<UploadTask
+															metadata={{
+																customMetadata: {
+																	teamId: team.id,
+																	userEmail: $user?.email ?? '',
+																	userName: $userDoc?.name ?? '',
+																},
 															}}
+															ref="submissions/{event.event}/{team.id}/{submission.name}"
+															data={submission}
+															let:snapshot
+															let:progress
 														>
-															<X />
-														</Button>
-													</div>
-												{/if}
-											</li>
-										{:else}
-											<p>No submissions</p>
-										{/each}
+															{#if snapshot?.state === 'success'}
+																{filterSubmissions(submission)}
+																{updateStorageList()}
+															{:else}
+																<Progress value={progress} class="w-full" />
+
+																<span class="w-full">
+																	{submission.name}
+																</span>
+															{/if}
+														</UploadTask>
+													{:else}
+														<div class="flex w-full flex-row items-center">
+															{#snippet submissionsList(
+																link: string,
+																meta: FullMetadata,
+															)}
+																<SimpleTooltip
+																	message={new Date(
+																		meta.timeCreated,
+																	).toLocaleString()}
+																>
+																	<a href={link} target="_blank">
+																		{meta.name}
+																	</a>
+																</SimpleTooltip>
+															{/snippet}
+															<DownloadURL ref={submission} let:link>
+																<StorageMetadata
+																	ref={submission}
+																	link={link ?? ''}
+																	withMetadata={submissionsList}
+																></StorageMetadata>
+															</DownloadURL>
+															<div class="flex flex-grow"></div>
+															<Button
+																variant="ghost"
+																size="icon"
+																on:click={async () => {
+																	if (submission instanceof File) return;
+																	await deleteObject(submission);
+																	team.lastUpdatedBy = $user?.email ?? '';
+																	dummyVariableToRerender++;
+																}}
+															>
+																<X />
+															</Button>
+														</div>
+													{/if}
+												</li>
+											{:else}
+												<p>No submissions</p>
+											{/each}
+										{/key}
 									</ul>
 									<Button
 										class="mt-4"
