@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { storage, user, type EventDoc, type Result } from '$lib';
+	import { storage, user, md, type EventDoc, type Result } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -14,12 +14,13 @@
 		event: EventDoc;
 	} = $props();
 
-	const rubrics = listAll(ref(storage, `rubrics/${event.event}/${event.id}`));
-
 	let open = $state(false);
 </script>
 
 {#snippet resultItem(result: Result, i: number)}
+	{@const rubrics = listAll(
+		ref(storage, `rubrics/${event.event}/${result.rubricPaths?.[0]}`),
+	)}
 	<li class={i < event.perChapter ? 'font-bold text-green-500' : ''}>
 		{#each result.members as member, i}
 			<!-- DO NOT FORMAT -->
@@ -30,13 +31,16 @@
 		{#await rubrics then rubs}
 			{#if result.members
 				.map((u) => u.email.toLowerCase())
-				.includes($user.email?.toLowerCase() ?? '') && (rubs.items.length || result.note)}
+				.includes($user.email?.toLowerCase() ?? '') && (rubs.items.length > 0 || result.note)}
 				<Dialog.Root>
 					<Dialog.Trigger class="underline">View Rubric</Dialog.Trigger>
 					<Dialog.Content>
 						<Dialog.Title>Rubric</Dialog.Title>
 						{#if result.note}
-							{result.note}
+							<div class="prose dark:prose-invert">
+								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+								{@html md.render(result.note)}
+							</div>
 						{/if}
 						{#each rubs.items ?? [] as rubric}
 							<DownloadURL ref={rubric} let:link>

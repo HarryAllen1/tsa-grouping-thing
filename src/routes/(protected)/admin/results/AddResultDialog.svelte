@@ -298,9 +298,7 @@
 										? m.email.split('/')[0]
 										: m.email,
 								})),
-								rubricPaths: $filesToUpload.map(
-									(f) => `results/${event.event}/${id}/${f.name}`,
-								),
+								rubricPaths: [`results/${event.event}/${id}`],
 								note,
 								id: id as ReturnType<typeof crypto.randomUUID>,
 							},
