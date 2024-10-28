@@ -19,7 +19,7 @@
 
 {#snippet resultItem(result: Result, i: number)}
 	{@const rubrics = listAll(
-		ref(storage, `rubrics/${event.event}/${result.rubricPaths?.[0]}`),
+		ref(storage, `results/${event.event}/${result.id}`),
 	)}
 	<li class={i < event.perChapter ? 'font-bold text-green-500' : ''}>
 		{#each result.members as member, i}
@@ -34,7 +34,7 @@
 				.includes($user.email?.toLowerCase() ?? '') && (rubs.items.length > 0 || result.note)}
 				<Dialog.Root>
 					<Dialog.Trigger class="underline">View Rubric</Dialog.Trigger>
-					<Dialog.Content>
+					<Dialog.Content class="max-h-screen overflow-y-auto">
 						<Dialog.Title>Rubric</Dialog.Title>
 						{#if result.note}
 							<div class="prose dark:prose-invert">
@@ -49,7 +49,9 @@
 									{#if ['.jpg', '.jpeg', '.webp', '.png', '.avif'].includes(url.pathname
 											.slice(-4)
 											.toLowerCase())}
-										<img src={link} alt="Rubric" />
+										<a href={link} target="_blank">
+											<img src={link} alt="Rubric" />
+										</a>
 									{:else}
 										<a href={link} target="_blank" rel="noopener noreferrer">
 											{url.pathname.slice(1)}
