@@ -127,37 +127,41 @@
 				<div class="flex flex-col gap-2">
 					<div class="flex w-full flex-row gap-2">
 						<Tooltip.Root>
-							<Tooltip.Trigger asChild let:builder>
-								<Button
-									builders={[builder]}
-									variant="destructive"
-									onclick={async () => {
-										const teamButMutable = team;
-										teamButMutable.members.splice(
-											teamButMutable.members.findIndex(
-												(e) => e.email.toLowerCase() === ($user?.email ?? ''),
-											),
-											1,
-										);
-										teamButMutable.lastUpdatedBy = $user?.email ?? '';
-										teamButMutable.lastUpdatedTime = new Timestamp(
-											Date.now() / 1000,
-											0,
-										);
-										await setDoc(
-											doc(db, 'events', event.event ?? ''),
-											{
-												teams: event.teams.filter((t) => t.members.length > 0),
-												lastUpdatedBy: $user?.email ?? '',
-											},
-											{
-												merge: true,
-											},
-										);
-									}}
-								>
-									<LogOut />
-								</Button>
+							<Tooltip.Trigger>
+								{#snippet child({ props })}
+									<Button
+										variant="destructive"
+										onclick={async () => {
+											const teamButMutable = team;
+											teamButMutable.members.splice(
+												teamButMutable.members.findIndex(
+													(e) => e.email.toLowerCase() === ($user?.email ?? ''),
+												),
+												1,
+											);
+											teamButMutable.lastUpdatedBy = $user?.email ?? '';
+											teamButMutable.lastUpdatedTime = new Timestamp(
+												Date.now() / 1000,
+												0,
+											);
+											await setDoc(
+												doc(db, 'events', event.event ?? ''),
+												{
+													teams: event.teams.filter(
+														(t) => t.members.length > 0,
+													),
+													lastUpdatedBy: $user?.email ?? '',
+												},
+												{
+													merge: true,
+												},
+											);
+										}}
+										{...props}
+									>
+										<LogOut />
+									</Button>
+								{/snippet}
 							</Tooltip.Trigger>
 							<Tooltip.Content>Leave team</Tooltip.Content>
 						</Tooltip.Root>
@@ -165,14 +169,16 @@
 							{#if team.members.length >= (event.maxTeamSize ?? 9999)}
 								<Tooltip.Root>
 									<Tooltip.Trigger>
-										<Dialog.Trigger asChild let:builder>
-											<Button
-												builders={[builder]}
-												class="bg-green-500 hover:bg-green-400"
-												disabled
-											>
-												<UserPlus />
-											</Button>
+										<Dialog.Trigger>
+											{#snippet child({ props })}
+												<Button
+													class="bg-green-500 hover:bg-green-400"
+													disabled
+													{...props}
+												>
+													<UserPlus />
+												</Button>
+											{/snippet}
 										</Dialog.Trigger>
 									</Tooltip.Trigger>
 									<Tooltip.Content>
@@ -304,11 +310,14 @@
 					{/if}
 					{#if event.onlineSubmissions}
 						<div>
-							<Dialog.Root closeOnOutsideClick={false}>
+							<Dialog.Root>
 								<Dialog.Trigger>
 									<Button>Manage Submissions</Button>
 								</Dialog.Trigger>
-								<Dialog.Content class="max-h-screen overflow-y-auto">
+								<Dialog.Content
+									interactOutsideBehavior="ignore"
+									class="max-h-screen overflow-y-auto"
+								>
 									<Dialog.Header>
 										<Dialog.Title>Manage Submissions</Dialog.Title>
 									</Dialog.Header>
@@ -521,17 +530,19 @@
 								}
 							}}
 						>
-							<Collapsible.Trigger asChild let:builder>
-								<Button
-									builders={[builder]}
-									variant="ghost"
-									size="sm"
-									class="flex w-full items-center p-2"
-								>
-									Files ({list.items.length})
-									<div class="flex-1"></div>
-									<ChevronsUpDown />
-								</Button>
+							<Collapsible.Trigger>
+								{#snippet child({ props })}
+									<Button
+										variant="ghost"
+										size="sm"
+										class="flex w-full items-center p-2"
+										{...props}
+									>
+										Files ({list.items.length})
+										<div class="flex-1"></div>
+										<ChevronsUpDown />
+									</Button>
+								{/snippet}
 							</Collapsible.Trigger>
 							<Collapsible.Content class="px-2">
 								{#if list.items.length === 0}
@@ -555,34 +566,36 @@
 				</StorageList>
 				{#if team.requests?.length}
 					<Collapsible.Root>
-						<Collapsible.Trigger asChild let:builder>
-							<Button
-								builders={[builder]}
-								variant="ghost"
-								size="sm"
-								class="flex w-full items-center p-2"
-							>
-								Manage Requests {#if team.requests?.length}
-									({team.requests.filter(
-										(r) =>
-											!event.teams
-												.filter((t) =>
-													t.members.some(
+						<Collapsible.Trigger>
+							{#snippet child({ props })}
+								<Button
+									variant="ghost"
+									size="sm"
+									class="flex w-full items-center p-2"
+									{...props}
+								>
+									Manage Requests {#if team.requests?.length}
+										({team.requests.filter(
+											(r) =>
+												!event.teams
+													.filter((t) =>
+														t.members.some(
+															(u) =>
+																u.email.toLowerCase() !==
+																$user.email?.toLowerCase(),
+														),
+													)
+													.flatMap((t) => t.members)
+													.some(
 														(u) =>
-															u.email.toLowerCase() !==
-															$user.email?.toLowerCase(),
+															u.email.toLowerCase() === r.email.toLowerCase(),
 													),
-												)
-												.flatMap((t) => t.members)
-												.some(
-													(u) =>
-														u.email.toLowerCase() === r.email.toLowerCase(),
-												),
-									).length})
-								{/if}
-								<div class="flex-1"></div>
-								<ChevronsUpDown />
-							</Button>
+										).length})
+									{/if}
+									<div class="flex-1"></div>
+									<ChevronsUpDown />
+								</Button>
+							{/snippet}
 						</Collapsible.Trigger>
 						<Collapsible.Content class="px-2">
 							<ul>

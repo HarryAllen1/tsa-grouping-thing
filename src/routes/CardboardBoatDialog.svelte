@@ -17,9 +17,11 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Trigger>
-		<Button variant="ghost" size="icon">
-			<Pencil />
-		</Button>
+		{#snippet child({ props })}
+			<Button variant="ghost" size="icon" {...props}>
+				<Pencil />
+			</Button>
+		{/snippet}
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<Dialog.Title>Change Team Name</Dialog.Title>

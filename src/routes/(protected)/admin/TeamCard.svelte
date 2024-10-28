@@ -522,26 +522,26 @@
 														</UploadTask>
 													{:else}
 														<div class="flex w-full flex-row items-center">
-															{#snippet submissionsList(
-																link: string,
-																meta: FullMetadata,
-															)}
-																<SimpleTooltip
-																	message={new Date(
-																		meta.timeCreated,
-																	).toLocaleString()}
-																>
-																	<a href={link} target="_blank">
-																		{meta.name}
-																	</a>
-																</SimpleTooltip>
-															{/snippet}
 															<DownloadURL ref={submission} let:link>
 																<StorageMetadata
 																	ref={submission}
 																	link={link ?? ''}
-																	withMetadata={submissionsList}
-																></StorageMetadata>
+																>
+																	{#snippet withMetadata(
+																		link: string,
+																		meta: FullMetadata,
+																	)}
+																		<SimpleTooltip
+																			message={new Date(
+																				meta.timeCreated,
+																			).toLocaleString()}
+																		>
+																			<a href={link} target="_blank">
+																				{meta.name}
+																			</a>
+																		</SimpleTooltip>
+																	{/snippet}
+																</StorageMetadata>
 															</DownloadURL>
 															<div class="flex flex-grow"></div>
 															<Button

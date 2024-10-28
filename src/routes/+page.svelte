@@ -160,17 +160,19 @@
 			</h3>
 			{#each requests as request}
 				<Collapsible.Root>
-					<Collapsible.Trigger asChild let:builder>
-						<Button
-							builders={[builder]}
-							variant="ghost"
-							size="sm"
-							class="flex w-full items-center p-2 font-bold"
-						>
-							{request.event}
-							<div class="flex-1"></div>
-							<ChevronsUpDown />
-						</Button>
+					<Collapsible.Trigger>
+						{#snippet child({ props })}
+							<Button
+								variant="ghost"
+								size="sm"
+								class="flex w-full items-center p-2 font-bold"
+								{...props}
+							>
+								{request.event}
+								<div class="flex-1"></div>
+								<ChevronsUpDown />
+							</Button>
+						{/snippet}
 					</Collapsible.Trigger>
 					<Collapsible.Content class="px-2">
 						<ul>

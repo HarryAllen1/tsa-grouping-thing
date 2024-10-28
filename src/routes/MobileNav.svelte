@@ -17,15 +17,17 @@
 </script>
 
 <Sheet.Root bind:open>
-	<Sheet.Trigger asChild let:builder>
-		<Button
-			builders={[builder]}
-			variant="ghost"
-			class="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 lg:hidden"
-		>
-			<SidebarOpen class="h-5 w-5" />
-			<span class="sr-only">Toggle Menu</span>
-		</Button>
+	<Sheet.Trigger>
+		{#snippet child({ props })}
+			<Button
+				variant="ghost"
+				class="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 lg:hidden"
+				{...props}
+			>
+				<SidebarOpen class="h-5 w-5" />
+				<span class="sr-only">Toggle Menu</span>
+			</Button>
+		{/snippet}
 	</Sheet.Trigger>
 	<Sheet.Content side="left" class="pr-0">
 		<MobileLink href="/" bind:open class="flex items-center">

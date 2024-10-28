@@ -168,17 +168,17 @@
 						{#if event.results && team.members
 								.map((m) => m.email)
 								.some((m) => resultMemberSet.has(m))}
-							{#snippet edit()}
-								<Button>Edit result</Button>
-							{/snippet}
-							<AddResultDialog {edit} {event} editing id={team.id}
-							></AddResultDialog>
+							<AddResultDialog {event} editing id={team.id}>
+								{#snippet edit()}
+									<Button>Edit result</Button>
+								{/snippet}
+							</AddResultDialog>
 						{:else}
-							{#snippet add()}
-								<Button>Add result</Button>
-							{/snippet}
-							<AddResultDialog {add} members={team.members} id={team.id} {event}
-							></AddResultDialog>
+							<AddResultDialog members={team.members} id={team.id} {event}>
+								{#snippet add()}
+									<Button>Add result</Button>
+								{/snippet}
+							</AddResultDialog>
 						{/if}
 					{/if}
 				{/key}

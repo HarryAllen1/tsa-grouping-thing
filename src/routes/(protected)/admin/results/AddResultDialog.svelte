@@ -29,8 +29,8 @@
 		onOpenChange,
 		members,
 	}: {
-		edit?: () => ReturnType<Snippet>;
-		add?: () => ReturnType<Snippet>;
+		edit?: Snippet<[Record<string, unknown>]>;
+		add?: Snippet<[Record<string, unknown>]>;
 		event: EventDoc;
 		editing?: boolean;
 		id?: string;
@@ -81,19 +81,21 @@
 	}}
 >
 	<Dialog.Trigger>
-		{#if editing}
-			{#if edit}
-				{@render edit()}
+		{#snippet child({ props })}
+			{#if editing}
+				{#if edit}
+					{@render edit(props)}
+				{:else}
+					<Button variant="ghost" size="icon" class="h-6" {...props}>
+						<Pencil />
+					</Button>
+				{/if}
+			{:else if add}
+				{@render add(props)}
 			{:else}
-				<Button variant="ghost" size="icon" class="h-6">
-					<Pencil />
-				</Button>
+				<Button id={id.replaceAll('-', '').replace(/\d/, '')}>Add</Button>
 			{/if}
-		{:else if add}
-			{@render add()}
-		{:else}
-			<Button id={id.replaceAll('-', '').replace(/\d/, '')}>Add</Button>
-		{/if}
+		{/snippet}
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<Dialog.Title>Add Results</Dialog.Title>
