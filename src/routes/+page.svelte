@@ -178,7 +178,7 @@
 								<li class="flex flex-row">
 									{r.name}
 									<Button
-										on:click={async () => {
+										onclick={async () => {
 											const actualEvent = signedUpEvents.find(
 												(e) => e.event === request.event,
 											);
@@ -265,7 +265,7 @@
 										size="icon"
 										class="h-5"
 										variant="ghost"
-										on:click={async () => {
+										onclick={async () => {
 											const event = signedUpEvents.find(
 												(e) => e.event === request.event,
 											)?.teams;

@@ -109,7 +109,7 @@
 					variant="ghost"
 					class="h-6"
 					size="icon"
-					on:click={() => {
+					onclick={() => {
 						newMembers = newMembers.filter((m) => m.email !== member.email);
 					}}
 				>
@@ -203,7 +203,7 @@
 									<Button
 										variant="ghost"
 										size="icon"
-										on:click={async () => {
+										onclick={async () => {
 											if (submission instanceof File) return;
 											await deleteObject(submission);
 											dummyVariableToRerender++;
@@ -248,12 +248,12 @@
 		<Input bind:value={note} placeholder="Add note..." />
 
 		<Dialog.Footer>
-			<Button variant="outline" on:click={() => fileInput?.click()}>
+			<Button variant="outline" onclick={() => fileInput?.click()}>
 				Upload rubric
 			</Button>
 			{#if editing}
 				<Button
-					on:click={async () => {
+					onclick={async () => {
 						await setDoc(
 							doc(db, 'events', event.event),
 							{
@@ -288,7 +288,7 @@
 				</Button>
 			{:else}
 				<Button
-					on:click={async () => {
+					onclick={async () => {
 						event.results = [
 							...(event.results?.slice(0, newPlace - 1) ?? []),
 							{

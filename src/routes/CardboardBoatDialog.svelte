@@ -26,11 +26,9 @@
 		<Label for="teamName">Team Name</Label>
 		<Input bind:value={teamName} />
 		<Dialog.Footer>
-			<Button variant="secondary" on:click={() => (open = false)}>
-				Cancel
-			</Button>
+			<Button variant="secondary" onclick={() => (open = false)}>Cancel</Button>
 			<Button
-				on:click={async () => {
+				onclick={async () => {
 					const team = event.teams.find((team) => team.id === teamId);
 					if (!team) return;
 					team.teamName = teamName;

@@ -115,7 +115,7 @@
 						),
 					) || event.teamCreationActuallyLocked
 				)}
-				on:click={async () => {
+				onclick={async () => {
 					let lowestNotTaken = 1;
 					while (event.teams.some((t) => t.teamNumber === lowestNotTaken)) {
 						lowestNotTaken++;

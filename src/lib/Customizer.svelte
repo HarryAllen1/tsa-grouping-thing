@@ -26,7 +26,7 @@
 			variant="ghost"
 			size="icon"
 			class="ml-auto rounded-[0.5rem]"
-			on:click={() => {
+			onclick={() => {
 				$config.radius = 0.5;
 				$config.theme = 'zinc';
 			}}
@@ -44,7 +44,7 @@
 					<Button
 						variant="outline"
 						size="sm"
-						on:click={() => {
+						onclick={() => {
 							$config.theme = theme.name;
 						}}
 						class={cn('justify-start', isActive && 'border-2 border-primary')}
@@ -70,7 +70,7 @@
 					<Button
 						variant="outline"
 						size="sm"
-						on:click={() => {
+						onclick={() => {
 							$config.radius = valueFloat;
 						}}
 						class={cn(
@@ -88,7 +88,7 @@
 				<Button
 					variant="outline"
 					size="sm"
-					on:click={() => setMode('light')}
+					onclick={() => setMode('light')}
 					class={cn($mode === 'light' && 'border-2 border-primary')}
 				>
 					<Sun class="mr-1 size-4 -translate-x-1" />
@@ -97,7 +97,7 @@
 				<Button
 					variant="outline"
 					size="sm"
-					on:click={() => setMode('dark')}
+					onclick={() => setMode('dark')}
 					class={cn($mode === 'dark' && 'border-2 border-primary')}
 				>
 					<Moon class="mr-1 size-4 -translate-x-1" />
@@ -113,7 +113,7 @@
 				type="url"
 				bind:value={$config.background}
 			/>
-			<Button on:click={() => ($config.background = null)}>Clear</Button>
+			<Button onclick={() => ($config.background = null)}>Clear</Button>
 		</div>
 	</div>
 </ThemeWrapper>

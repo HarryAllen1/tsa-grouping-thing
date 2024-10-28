@@ -25,7 +25,7 @@
 	);
 </script>
 
-<Button size="icon" on:click={() => rotation++}>
+<Button size="icon" onclick={() => rotation++}>
 	<RotateCw />
 </Button>
 

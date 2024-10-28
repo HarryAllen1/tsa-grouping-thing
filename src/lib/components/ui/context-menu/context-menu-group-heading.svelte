@@ -5,12 +5,19 @@
 	let {
 		ref = $bindable(null),
 		class: className,
+		inset,
 		...restProps
-	}: ContextMenuPrimitive.SeparatorProps = $props();
+	}: ContextMenuPrimitive.GroupHeadingProps & {
+		inset?: boolean;
+	} = $props();
 </script>
 
-<ContextMenuPrimitive.Separator
+<ContextMenuPrimitive.GroupHeading
 	bind:ref
-	class={cn('-mx-1 my-1 h-px bg-border', className)}
+	class={cn(
+		'px-2 py-1.5 text-sm font-semibold text-foreground',
+		inset && 'pl-8',
+		className,
+	)}
 	{...restProps}
 />

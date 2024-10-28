@@ -66,7 +66,7 @@
 	<div class="flex flex-row gap-2">
 		<Button
 			class="mb-4"
-			on:click={() => {
+			onclick={() => {
 				for (const el of document.querySelectorAll(
 					'.member-collapsible:not([data-state="open"])',
 				) as unknown as HTMLElement[]) {
@@ -80,7 +80,7 @@
 		<CopyButton />
 		<Button
 			size="icon"
-			on:click={() => {
+			onclick={() => {
 				alert(
 					'Make sure to go look at this file in Excel and ensure that all information is correct and remove any unnecessary rows before submitting.',
 				);
@@ -113,7 +113,7 @@
 		</Button>
 		<Button
 			variant="destructive"
-			on:click={async () => {
+			onclick={async () => {
 				if (
 					!(await fancyConfirm(
 						'Are you sure you want to do this?',

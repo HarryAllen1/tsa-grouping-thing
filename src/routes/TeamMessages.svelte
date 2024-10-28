@@ -195,7 +195,7 @@
 	class="flex scroll-m-20 flex-row gap-2 text-2xl font-semibold tracking-tight"
 >
 	{#if !hideBack}
-		<Button variant="ghost" size="icon" on:click={() => ($selected = null)}>
+		<Button variant="ghost" size="icon" onclick={() => ($selected = null)}>
 			<ChevronLeft />
 		</Button>
 	{/if}

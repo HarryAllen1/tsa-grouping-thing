@@ -151,7 +151,7 @@
 					disabled={values.nationalId?.toString() ===
 						user.nationalId?.toString()}
 					size="icon"
-					on:click={async () => {
+					onclick={async () => {
 						await setDoc(
 							doc(db, 'users', user.email),
 							{
@@ -181,7 +181,7 @@
 					disabled={values.washingtonId?.toString() ===
 						user.washingtonId?.toString()}
 					size="icon"
-					on:click={async () => {
+					onclick={async () => {
 						await setDoc(
 							doc(db, 'users', user.email),
 							{

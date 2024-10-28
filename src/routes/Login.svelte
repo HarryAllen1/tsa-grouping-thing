@@ -38,7 +38,7 @@
 			If you created an account before the 2024/25 school year:
 		</h2>
 		<Button
-			on:click={async () => {
+			onclick={async () => {
 				await setPersistence(auth, browserLocalPersistence);
 				try {
 					const user = await signInWithPopup(auth, provider);

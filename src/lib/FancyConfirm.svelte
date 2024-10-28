@@ -49,11 +49,11 @@
 		<AlertDialog.Footer>
 			{#each $options as option}
 				{#if option[1]}
-					<AlertDialog.Action on:click={() => ($result = true)}>
+					<AlertDialog.Action onclick={() => ($result = true)}>
 						{option[0]}
 					</AlertDialog.Action>
 				{:else}
-					<AlertDialog.Cancel on:click={() => ($result = false)}>
+					<AlertDialog.Cancel onclick={() => ($result = false)}>
 						{option[0]}
 					</AlertDialog.Cancel>
 				{/if}

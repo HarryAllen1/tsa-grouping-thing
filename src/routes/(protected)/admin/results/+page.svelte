@@ -63,7 +63,7 @@
 											editing
 										/>
 										<Button
-											on:click={async () => {
+											onclick={async () => {
 												await setDoc(
 													doc(db, 'events', event.event),
 													{

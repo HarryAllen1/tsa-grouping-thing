@@ -84,12 +84,10 @@
 							</Button>
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content>
-							<DropdownMenu.Item on:click={downloadAsJSON}>
+							<DropdownMenu.Item onclick={downloadAsJSON}>
 								JSON
 							</DropdownMenu.Item>
-							<DropdownMenu.Item on:click={downloadAsCSV}>
-								CSV
-							</DropdownMenu.Item>
+							<DropdownMenu.Item onclick={downloadAsCSV}>CSV</DropdownMenu.Item>
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
 					<Button
@@ -164,7 +162,7 @@
 							<span>Changelog</span>
 						</Dropdown.Item> -->
 						<Dropdown.Item
-							on:click={async () => {
+							onclick={async () => {
 								signOut(auth);
 							}}
 						>

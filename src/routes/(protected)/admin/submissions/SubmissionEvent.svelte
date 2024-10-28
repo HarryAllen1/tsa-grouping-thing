@@ -35,8 +35,10 @@
 				{@html md.render(event.submissionDescription)}
 			</div>
 			<Dialog.Root>
-				<Dialog.Trigger asChild let:builder>
-					<Button variant="default" builders={[builder]}>Edit</Button>
+				<Dialog.Trigger>
+					{#snippet child({ props })}
+						<Button variant="default" {...props}>Edit</Button>
+					{/snippet}
 				</Dialog.Trigger>
 				<Dialog.Content>
 					<Dialog.Title>Edit submission description</Dialog.Title>
@@ -47,25 +49,28 @@
 						bind:value={event.submissionDescription}
 					/>
 					<Dialog.Footer>
-						<Dialog.Close asChild let:builder>
-							<Button
-								builders={[builder]}
-								variant="default"
-								on:click={() => {
-									setDoc(
-										doc(db, 'events', event.event),
-										{
-											submissionDescription: event.submissionDescription ?? '',
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{
-											merge: true,
-										},
-									);
-								}}
-							>
-								Save
-							</Button>
+						<Dialog.Close>
+							{#snippet child({ props })}
+								<Button
+									variant="default"
+									onclick={() => {
+										setDoc(
+											doc(db, 'events', event.event),
+											{
+												submissionDescription:
+													event.submissionDescription ?? '',
+												lastUpdatedBy: $user?.email ?? '',
+											},
+											{
+												merge: true,
+											},
+										);
+									}}
+									{...props}
+								>
+									Save
+								</Button>
+							{/snippet}
 						</Dialog.Close>
 					</Dialog.Footer>
 				</Dialog.Content>

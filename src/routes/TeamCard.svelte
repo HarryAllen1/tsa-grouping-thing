@@ -131,7 +131,7 @@
 								<Button
 									builders={[builder]}
 									variant="destructive"
-									on:click={async () => {
+									onclick={async () => {
 										const teamButMutable = team;
 										teamButMutable.members.splice(
 											teamButMutable.members.findIndex(
@@ -225,7 +225,7 @@
 											>
 												{person.name}
 												<Button
-													on:click={async () => {
+													onclick={async () => {
 														const teamButMutable = team;
 														if (
 															teamButMutable.members.length >= event.maxTeamSize
@@ -276,7 +276,7 @@
 					{#if event.event !== '*Rooming' && event.event !== '*Cardboard Boat' && event.maxTeamSize > 1}
 						<div class="flex w-full flex-row gap-2">
 							<Button
-								on:click={async () => {
+								onclick={async () => {
 									const teamButMutable = team;
 									teamButMutable.teamCaptain = $user?.email ?? '';
 									teamButMutable.lastUpdatedBy = $user?.email ?? '';
@@ -381,7 +381,7 @@
 																<Button
 																	variant="ghost"
 																	size="icon"
-																	on:click={async () => {
+																	onclick={async () => {
 																		if (submission instanceof File) return;
 																		await deleteObject(submission);
 
@@ -400,7 +400,7 @@
 											</ul>
 											<Button
 												class="mt-4"
-												on:click={() => submissionsFileUpload?.click()}
+												onclick={() => submissionsFileUpload?.click()}
 											>
 												Upload
 											</Button>
@@ -465,7 +465,7 @@
 					<Button disabled>Requested</Button>
 				{:else}
 					<Button
-						on:click={async () => {
+						onclick={async () => {
 							await setDoc(
 								doc(db, 'events', event.event ?? ''),
 								{
@@ -593,7 +593,7 @@
 									<li class="flex flex-row">
 										{request.name}
 										<Button
-											on:click={async () => {
+											onclick={async () => {
 												if (team.members.length >= event.maxTeamSize) {
 													return alert('Your team is full');
 												}
@@ -651,7 +651,7 @@
 											size="icon"
 											class="h-5"
 											variant="ghost"
-											on:click={async () => {
+											onclick={async () => {
 												team.requests = team.requests?.filter(
 													(r) =>
 														r.email !== request.email &&
