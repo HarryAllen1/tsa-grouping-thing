@@ -14,6 +14,7 @@
 	} from '$lib';
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
+	import * as Sidebar from '$lib/components/ui/sidebar';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { onAuthStateChanged } from 'firebase/auth';
@@ -22,8 +23,8 @@
 	import { onDestroy, onMount, type Snippet } from 'svelte';
 	import { FirebaseApp, PageView, SignedIn, SignedOut } from 'sveltefire';
 	import '../app.css';
+	import AppSidebar from './AppSidebar.svelte';
 	import Login from './Login.svelte';
-	import Navbar from './Navbar.svelte';
 	import OfflineNotifier from './OfflineNotifier.svelte';
 	import { panelOpen } from './messages-panel';
 	import { mouseThing } from './senuka-put-stuff-here';
@@ -147,24 +148,29 @@
 
 <ModeWatcher />
 
-<Tooltip.Provider>
-	<ThemeWrapper>
-		<ProgressBar class="text-primary" />
-		<div class="flex max-w-full flex-col items-center">
-			{#await isAuthReady then}
-				<FirebaseApp {analytics} {auth} firestore={db} {storage}>
-					{#if !dev}
-						{#key $page.route.id}
-							<PageView />
-						{/key}
-					{/if}
-					<SignedIn>
+{#await isAuthReady then}
+	<FirebaseApp {analytics} {auth} firestore={db} {storage}>
+		<Sidebar.Provider>
+			<Tooltip.Provider>
+				<ThemeWrapper>
+					<ProgressBar class="text-primary" />
+					<AppSidebar />
+					<div class="w-full">
 						{#if $page.route.id !== '/intake'}
-							<Navbar />
+							<div class="w-full p-4">
+								<Sidebar.Trigger />
+							</div>
 						{/if}
-						{#key $user}
-							{@render children()}
-							<!-- {#if $page.route.id !== '/intake' && !$page.route.id?.includes('account')}
+						<div class="flex w-full flex-col items-center">
+							{#if !dev}
+								{#key $page.route.id}
+									<PageView />
+								{/key}
+							{/if}
+							<SignedIn>
+								{#key $user}
+									{@render children()}
+									<!-- {#if $page.route.id !== '/intake' && !$page.route.id?.includes('account')}
 							<div class="fixed bottom-8 right-8">
 								<Popover.Root
 									onOpenChange={(e) => {
@@ -190,25 +196,27 @@
 								</Popover.Root>
 							</div>
 						{/if} -->
-						{/key}
-					</SignedIn>
-					<SignedOut>
-						{#if $page.route.id === '/email-link'}
-							{@render children()}
-						{:else}
-							<div class="mt-8 flex flex-col items-center gap-8">
-								<ThemeCustomizer />
-								<Login />
-							</div>
-						{/if}
-					</SignedOut>
-				</FirebaseApp>
-			{/await}
-		</div>
+								{/key}
+							</SignedIn>
+							<SignedOut>
+								{#if $page.route.id === '/email-link'}
+									{@render children()}
+								{:else}
+									<div class="mt-8 flex flex-col items-center gap-8">
+										<ThemeCustomizer />
+										<Login />
+									</div>
+								{/if}
+							</SignedOut>
+						</div>
+					</div>
 
-		<FancyConfirm />
-		<Toaster />
-		<!-- must be after Toaster -->
-		<OfflineNotifier />
-	</ThemeWrapper>
-</Tooltip.Provider>
+					<FancyConfirm />
+					<Toaster />
+					<!-- must be after Toaster -->
+					<OfflineNotifier />
+				</ThemeWrapper>
+			</Tooltip.Provider>
+		</Sidebar.Provider>
+	</FirebaseApp>
+{/await}

@@ -144,11 +144,11 @@
 	<title>Teams — JHS TSA Teaming</title>
 </svelte:head>
 
-<div class="container mt-8 flex flex-col items-center">
+<div class="container mx-auto mt-2 flex flex-col items-center">
 	<Button
 		href="/events"
 		size="lg"
-		class="my-4 h-24 w-full bg-green-400 text-3xl text-black hover:bg-green-500"
+		class="mb-4 h-24 w-full bg-green-400 text-3xl text-black hover:bg-green-500"
 	>
 		Edit events
 	</Button>
