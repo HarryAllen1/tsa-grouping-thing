@@ -36,7 +36,7 @@
 		side={sidebar.isMobile ? 'bottom' : 'right'}
 		align="end"
 		sideOffset={4}
-		class="z-40 w-[340px] rounded-[0.5rem] bg-white p-6 dark:bg-zinc-950"
+		class="z-40 w-[340px]"
 	>
 		<Customizer />
 	</Popover.Content>
