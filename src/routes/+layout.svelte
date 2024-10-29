@@ -8,6 +8,7 @@
 		analytics,
 		auth,
 		db,
+		userDoc,
 		storage,
 		user,
 		type UserDoc,
@@ -153,9 +154,11 @@
 			<Tooltip.Provider>
 				<ThemeWrapper>
 					<ProgressBar class="text-primary" />
-					<AppSidebar />
+					{#if $page.route.id !== '/intake' && $user}
+						<AppSidebar />
+					{/if}
 					<div class="w-full">
-						{#if $page.route.id !== '/intake'}
+						{#if $page.route.id !== '/intake' && $user}
 							<div class="w-full p-4">
 								<Sidebar.Trigger />
 							</div>
@@ -200,6 +203,10 @@
 							<SignedOut>
 								{#if $page.route.id === '/email-link'}
 									{@render children()}
+								{:else}
+									<div class="mt-6">
+										<Login />
+									</div>
 								{/if}
 							</SignedOut>
 						</div>
