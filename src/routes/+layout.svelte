@@ -12,7 +12,6 @@
 		user,
 		type UserDoc,
 	} from '$lib';
-	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import { Toaster } from '$lib/components/ui/sonner';
@@ -201,11 +200,6 @@
 							<SignedOut>
 								{#if $page.route.id === '/email-link'}
 									{@render children()}
-								{:else}
-									<div class="mt-8 flex flex-col items-center gap-8">
-										<ThemeCustomizer />
-										<Login />
-									</div>
 								{/if}
 							</SignedOut>
 						</div>
