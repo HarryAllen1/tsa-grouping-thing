@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { auth, profilePhoto, userDoc } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
+	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import * as Popover from '$lib/components/ui/popover/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar';
-	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
+	import Customizer from '$lib/Customizer.svelte';
 	import { signOut } from 'firebase/auth';
 	import BookOpenText from 'lucide-svelte/icons/book-open-text';
 	import CalendarCheck from 'lucide-svelte/icons/calendar-check';
@@ -13,6 +15,7 @@
 	import ListCheck from 'lucide-svelte/icons/list-check';
 	import LogOut from 'lucide-svelte/icons/log-out';
 	import NotebookText from 'lucide-svelte/icons/notebook-text';
+	import Paintbrush from 'lucide-svelte/icons/paintbrush';
 	import UserCog from 'lucide-svelte/icons/user-cog';
 	import UserPen from 'lucide-svelte/icons/user-pen';
 	import Users from 'lucide-svelte/icons/users';
@@ -172,7 +175,39 @@
 				</Sidebar.MenuButton>
 			{/if}
 			<Sidebar.MenuItem>
-				<ThemeCustomizer />
+				<Drawer.Root>
+					<Drawer.Trigger>
+						{#snippet child({ props })}
+							<Sidebar.MenuButton {...props} class="flex md:hidden">
+								<Paintbrush />
+
+								<span>Customize</span>
+							</Sidebar.MenuButton>
+						{/snippet}
+					</Drawer.Trigger>
+					<Drawer.Content class="bg-white p-6 dark:bg-zinc-950">
+						<Customizer />
+					</Drawer.Content>
+				</Drawer.Root>
+				<Popover.Root>
+					<Popover.Trigger>
+						{#snippet child({ props })}
+							<Sidebar.MenuButton class="hidden md:flex" {...props}>
+								<Paintbrush />
+
+								<span> Customize </span>
+							</Sidebar.MenuButton>
+						{/snippet}
+					</Popover.Trigger>
+					<Popover.Content
+						side={sidebar.isMobile ? 'bottom' : 'right'}
+						align="end"
+						sideOffset={4}
+						class="w-[340px]"
+					>
+						<Customizer />
+					</Popover.Content>
+				</Popover.Root>
 			</Sidebar.MenuItem>
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton>
