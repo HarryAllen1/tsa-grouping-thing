@@ -177,7 +177,9 @@
 						Grade<span class="text-red-500 dark:text-red-400">*</span>
 					</Label>
 					<Select.Trigger>
-						{formData.grade}
+						<span>
+							{formData.grade}
+						</span>
 					</Select.Trigger>
 					<Select.Content>
 						{#each ['9', '10', '11', '12'] as grade}
@@ -252,7 +254,9 @@
 						</Popover.Root>
 					</div>
 					<Select.Trigger>
-						{formData.grade}
+						<span>
+							{formData.gender}
+						</span>
 					</Select.Trigger>
 					<Select.Content>
 						{#each ['Male', 'Female', 'Opt-Out', 'Non-Disclosed'] as gender}
@@ -301,7 +305,9 @@
 						</Popover.Root>
 					</div>
 					<Select.Trigger>
-						{formData.demographic}
+						<span>
+							{formData.demographic}
+						</span>
 					</Select.Trigger>
 					<Select.Content>
 						{#each ['Opt-Out', 'Non-Disclosed', 'American Indian/Alaskan Native', 'Black / African-American', 'Asian/Asian-American/Pacific Islander', 'Hispanic/Latino', 'Mixed Race', 'White/Caucasian'] as demographic}
@@ -351,9 +357,9 @@
 						</Popover.Root>
 					</div>
 					<Select.Trigger>
-						{formData.tShirtSize
-							? tShirtMap.get(formData.tShirtSize)
-							: 'Select a size'}
+						<span>
+							{formData.tShirtSize ? tShirtMap.get(formData.tShirtSize) : ''}
+						</span>
 					</Select.Trigger>
 					<Select.Content>
 						{#each tShirtMap as [abbr, size]}
@@ -394,7 +400,9 @@
 						</Label>
 					</div>
 					<Select.Trigger>
-						{formData.foundBy}
+						<span>
+							{formData.foundBy}
+						</span>
 					</Select.Trigger>
 					<Select.Content>
 						{#each ['Friend/family', 'Teacher', 'JHS website club list', 'Poster', 'Social media', 'Middle school', 'Club fair', 'Other'] as place}
