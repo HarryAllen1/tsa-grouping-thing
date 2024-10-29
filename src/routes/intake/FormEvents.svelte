@@ -147,13 +147,13 @@
 
 <div class="mb-4 flex w-full flex-row justify-between">
 	<Button
-		on:click={() => {
+		onclick={() => {
 			page--;
 		}}
 		variant="outline">Back</Button
 	>
 	<Button
-		on:click={async () => {
+		onclick={async () => {
 			await setDoc(
 				doc(db, 'users', $user?.email ?? ''),
 				{

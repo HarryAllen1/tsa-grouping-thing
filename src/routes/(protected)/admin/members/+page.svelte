@@ -21,21 +21,9 @@
 
 	let search = $state('');
 	let hidePeopleWithoutEvents = $state(false);
-	let sortBy = $state({
-		value: 'firstName',
-		label: 'First Name',
-	});
-	let view = $state({
-		value: 'grid',
-		label: 'Grid',
-	});
-	let showRandomSwitch = $state<{
-		label: string;
-		value: 'null' | 'false' | 'true';
-	}>({
-		label: 'everybody',
-		value: 'null',
-	});
+	let sortBy = $state<'firstName' | 'lastName'>('firstName');
+	let view = $state('grid');
+	let showRandomSwitch = $state<'null' | 'false' | 'true'>('null');
 
 	let fuse = $derived(
 		new Fuse($allUsersCollection, {
@@ -66,7 +54,7 @@
 	<div class="flex flex-row gap-2">
 		<Button
 			class="mb-4"
-			on:click={() => {
+			onclick={() => {
 				for (const el of document.querySelectorAll(
 					'.member-collapsible:not([data-state="open"])',
 				) as unknown as HTMLElement[]) {
@@ -80,7 +68,7 @@
 		<CopyButton />
 		<Button
 			size="icon"
-			on:click={() => {
+			onclick={() => {
 				alert(
 					'Make sure to go look at this file in Excel and ensure that all information is correct and remove any unnecessary rows before submitting.',
 				);
@@ -113,7 +101,7 @@
 		</Button>
 		<Button
 			variant="destructive"
-			on:click={async () => {
+			onclick={async () => {
 				if (
 					!(await fancyConfirm(
 						'Are you sure you want to do this?',
@@ -161,9 +149,9 @@
 		<div>
 			<Label for="sortBy">Sort by</Label>
 			<div id="sortBy" class="mb-2 flex items-center space-x-2">
-				<Select.Root bind:selected={sortBy}>
+				<Select.Root type="single" bind:value={sortBy}>
 					<Select.Trigger class="w-[180px]">
-						<Select.Value placeholder="Sort by..." />
+						{sortBy === 'firstName' ? 'First Name' : 'Last Name'}
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
@@ -174,16 +162,15 @@
 							{/each}
 						</Select.Group>
 					</Select.Content>
-					<Select.Input name="favoriteFruit" />
 				</Select.Root>
 			</div>
 		</div>
 		<div>
 			<Label for="view">View</Label>
 			<div id="view" class="mb-2 flex items-center space-x-2">
-				<Select.Root bind:selected={view}>
+				<Select.Root type="single" bind:value={view}>
 					<Select.Trigger class="w-[180px]">
-						<Select.Value placeholder="View..." />
+						{view === 'grid' ? 'Grid' : 'List'}
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
@@ -191,7 +178,6 @@
 							<Select.Item label="List" value="list">List</Select.Item>
 						</Select.Group>
 					</Select.Content>
-					<Select.Input name="favoriteFruit" />
 				</Select.Root>
 			</div>
 		</div>
@@ -199,9 +185,13 @@
 		<div>
 			<Label for="randomSwitch">See...</Label>
 			<div id="randomSwitch" class="mb-2 flex items-center space-x-2">
-				<Select.Root bind:selected={showRandomSwitch}>
+				<Select.Root type="single" bind:value={showRandomSwitch}>
 					<Select.Trigger class="w-[180px]">
-						<Select.Value placeholder="everybody" />
+						{showRandomSwitch === 'null'
+							? 'everybody'
+							: showRandomSwitch === 'false'
+								? 'people without random switch'
+								: 'people with random switch'}
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
@@ -215,7 +205,6 @@
 							</Select.Item>
 						</Select.Group>
 					</Select.Content>
-					<Select.Input name="randomSwitch" />
 				</Select.Root>
 			</div>
 		</div>
@@ -234,17 +223,17 @@
 		Event format: [event name] ([team number] [👑 if team captain])
 	</p>
 
-	{#if view.value === 'grid'}
+	{#if view === 'grid'}
 		<div
 			class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 		>
-			{#each $allUsersCollection.toSorted( (a, b) => (sortBy.value === 'firstName' ? a.name : (a.lastName ?? '')).localeCompare(sortBy.value === 'firstName' ? b.name : (b.lastName ?? '')), ) as user (user.email)}
+			{#each $allUsersCollection.toSorted( (a, b) => (sortBy === 'firstName' ? a.name : (a.lastName ?? '')).localeCompare(sortBy === 'firstName' ? b.name : (b.lastName ?? '')), ) as user (user.email)}
 				<MemberGridCard
 					{user}
 					show={results.includes(user) &&
-						((showRandomSwitch.value === 'false' && !user.random) ||
-							(showRandomSwitch.value === 'true' && user.random) ||
-							showRandomSwitch.value === 'null')}
+						((showRandomSwitch === 'false' && !user.random) ||
+							(showRandomSwitch === 'true' && user.random) ||
+							showRandomSwitch === 'null')}
 				/>
 			{/each}
 		</div>

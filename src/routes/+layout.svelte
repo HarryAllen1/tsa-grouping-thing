@@ -15,6 +15,7 @@
 	import ThemeCustomizer from '$lib/ThemeCustomizer.svelte';
 	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import { ModeWatcher } from 'mode-watcher';
@@ -146,23 +147,24 @@
 
 <ModeWatcher />
 
-<ThemeWrapper>
-	<ProgressBar class="text-primary" />
-	<div class="flex max-w-full flex-col items-center">
-		{#await isAuthReady then}
-			<FirebaseApp {analytics} {auth} firestore={db} {storage}>
-				{#if !dev}
-					{#key $page.route.id}
-						<PageView />
-					{/key}
-				{/if}
-				<SignedIn>
-					{#if $page.route.id !== '/intake'}
-						<Navbar />
+<Tooltip.Provider>
+	<ThemeWrapper>
+		<ProgressBar class="text-primary" />
+		<div class="flex max-w-full flex-col items-center">
+			{#await isAuthReady then}
+				<FirebaseApp {analytics} {auth} firestore={db} {storage}>
+					{#if !dev}
+						{#key $page.route.id}
+							<PageView />
+						{/key}
 					{/if}
-					{#key $user}
-						{@render children()}
-						<!-- {#if $page.route.id !== '/intake' && !$page.route.id?.includes('account')}
+					<SignedIn>
+						{#if $page.route.id !== '/intake'}
+							<Navbar />
+						{/if}
+						{#key $user}
+							{@render children()}
+							<!-- {#if $page.route.id !== '/intake' && !$page.route.id?.includes('account')}
 							<div class="fixed bottom-8 right-8">
 								<Popover.Root
 									onOpenChange={(e) => {
@@ -188,24 +190,25 @@
 								</Popover.Root>
 							</div>
 						{/if} -->
-					{/key}
-				</SignedIn>
-				<SignedOut>
-					{#if $page.route.id === '/email-link'}
-						{@render children()}
-					{:else}
-						<div class="mt-8 flex flex-col items-center gap-8">
-							<ThemeCustomizer />
-							<Login />
-						</div>
-					{/if}
-				</SignedOut>
-			</FirebaseApp>
-		{/await}
-	</div>
+						{/key}
+					</SignedIn>
+					<SignedOut>
+						{#if $page.route.id === '/email-link'}
+							{@render children()}
+						{:else}
+							<div class="mt-8 flex flex-col items-center gap-8">
+								<ThemeCustomizer />
+								<Login />
+							</div>
+						{/if}
+					</SignedOut>
+				</FirebaseApp>
+			{/await}
+		</div>
 
-	<FancyConfirm />
-	<Toaster />
-	<!-- must be after Toaster -->
-	<OfflineNotifier />
-</ThemeWrapper>
+		<FancyConfirm />
+		<Toaster />
+		<!-- must be after Toaster -->
+		<OfflineNotifier />
+	</ThemeWrapper>
+</Tooltip.Provider>

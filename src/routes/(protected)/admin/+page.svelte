@@ -217,12 +217,12 @@
 					<Button
 						class="mr-2"
 						variant="ghost"
-						on:click={() => (newEventDialogOpen = false)}
+						onclick={() => (newEventDialogOpen = false)}
 					>
 						Cancel
 					</Button>
 					<Button
-						on:click={async (e) => {
+						onclick={async (e) => {
 							e.preventDefault();
 							newEventStuff.maxTeamSize = Number(newEventStuff.maxTeamSize);
 							newEventStuff.minTeamSize = Number(newEventStuff.minTeamSize);
@@ -238,7 +238,7 @@
 			</Dialog.Content>
 		</Dialog.Root>
 		<Button
-			on:click={() => {
+			onclick={() => {
 				for (const event of eventData) {
 					setDoc(
 						doc(db, 'events', event.event ?? ''),
@@ -258,7 +258,7 @@
 		<Alert />
 		<Button
 			variant="destructive"
-			on:click={async () => {
+			onclick={async () => {
 				if (
 					!(await fancyConfirm(
 						'Are you sure you want to reset the system?',

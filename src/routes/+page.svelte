@@ -160,17 +160,19 @@
 			</h3>
 			{#each requests as request}
 				<Collapsible.Root>
-					<Collapsible.Trigger asChild let:builder>
-						<Button
-							builders={[builder]}
-							variant="ghost"
-							size="sm"
-							class="flex w-full items-center p-2 font-bold"
-						>
-							{request.event}
-							<div class="flex-1"></div>
-							<ChevronsUpDown />
-						</Button>
+					<Collapsible.Trigger>
+						{#snippet child({ props })}
+							<Button
+								variant="ghost"
+								size="sm"
+								class="flex w-full items-center p-2 font-bold"
+								{...props}
+							>
+								{request.event}
+								<div class="flex-1"></div>
+								<ChevronsUpDown />
+							</Button>
+						{/snippet}
 					</Collapsible.Trigger>
 					<Collapsible.Content class="px-2">
 						<ul>
@@ -178,7 +180,7 @@
 								<li class="flex flex-row">
 									{r.name}
 									<Button
-										on:click={async () => {
+										onclick={async () => {
 											const actualEvent = signedUpEvents.find(
 												(e) => e.event === request.event,
 											);
@@ -265,7 +267,7 @@
 										size="icon"
 										class="h-5"
 										variant="ghost"
-										on:click={async () => {
+										onclick={async () => {
 											const event = signedUpEvents.find(
 												(e) => e.event === request.event,
 											)?.teams;

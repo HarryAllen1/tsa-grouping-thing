@@ -10,7 +10,7 @@
 	variant="ghost"
 	size="icon"
 	class="m-0 h-8 w-8 p-0"
-	on:click={async () => {
+	onclick={async () => {
 		await navigator.clipboard.writeText(text);
 		toast.success('Copied text to clipboard');
 	}}

@@ -62,7 +62,7 @@
 
 <Button
 	size="icon"
-	on:click={() => {
+	onclick={() => {
 		copyStuff();
 		toast.success('Copied to clipboard');
 	}}

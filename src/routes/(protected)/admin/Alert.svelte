@@ -52,7 +52,7 @@
 		<Dialog.Footer>
 			<Button
 				class="mt-2"
-				on:click={async () => {
+				onclick={async () => {
 					await setDoc(
 						doc(db, 'settings', 'settings'),
 						{ alert },

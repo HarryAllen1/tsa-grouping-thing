@@ -224,7 +224,7 @@
 						<Dialog.Footer class="flex flex-row">
 							<Button
 								variant="destructive"
-								on:click={async () => {
+								onclick={async () => {
 									editEventDialogOpen = false;
 									if (
 										!(await fancyConfirm(
@@ -266,14 +266,14 @@
 							<Button
 								class="mr-2"
 								variant="ghost"
-								on:click={() => {
+								onclick={() => {
 									editEventDialogOpen = false;
 								}}
 							>
 								Cancel
 							</Button>
 							<Button
-								on:click={async () => {
+								onclick={async () => {
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
 										{
@@ -307,7 +307,7 @@
 					size="icon"
 					variant="ghost"
 					class="mr-2"
-					on:click={() => {
+					onclick={() => {
 						let csv = `Room number,first1,last1,first2,last2,first3,last3,first4,last4\n`;
 						for (const team of event.teams) {
 							csv += `${team.teamNumber},${team.members
@@ -426,7 +426,7 @@
 								/>
 								<Dialog.Footer>
 									<Button
-										on:click={() => {
+										onclick={() => {
 											setDoc(
 												doc(db, 'events', event.event),
 												{
@@ -456,17 +456,19 @@
 
 			{#if peopleNotInTeams.length}
 				<Collapsible.Root>
-					<Collapsible.Trigger asChild let:builder>
-						<Button
-							builders={[builder]}
-							variant="ghost"
-							size="sm"
-							class="flex w-full items-center p-2"
-						>
-							People not in {event.event === '*Rooming' ? 'rooms' : 'teams'} ({peopleNotInTeams.length})
-							<div class="flex-1"></div>
-							<ChevronsUpDown />
-						</Button>
+					<Collapsible.Trigger>
+						{#snippet child({ props })}
+							<Button
+								variant="ghost"
+								size="sm"
+								class="flex w-full items-center p-2"
+								{...props}
+							>
+								People not in {event.event === '*Rooming' ? 'rooms' : 'teams'} ({peopleNotInTeams.length})
+								<div class="flex-1"></div>
+								<ChevronsUpDown />
+							</Button>
+						{/snippet}
 					</Collapsible.Trigger>
 					<Collapsible.Content>
 						<Button
@@ -483,7 +485,7 @@
 							<Button
 								variant="destructive"
 								size="icon"
-								on:click={async () => {
+								onclick={async () => {
 									if (
 										await fancyConfirm(
 											'Are you sure',
@@ -540,17 +542,19 @@
 			{/if}
 			{#if event.event !== '*Rooming'}
 				<Collapsible.Root>
-					<Collapsible.Trigger asChild let:builder>
-						<Button
-							builders={[builder]}
-							variant="ghost"
-							size="sm"
-							class="flex w-full items-center p-2"
-						>
-							Events without member overlap
-							<div class="flex-1"></div>
-							<ChevronsUpDown />
-						</Button>
+					<Collapsible.Trigger>
+						{#snippet child({ props })}
+							<Button
+								variant="ghost"
+								size="sm"
+								class="flex w-full items-center p-2"
+								{...props}
+							>
+								Events without member overlap
+								<div class="flex-1"></div>
+								<ChevronsUpDown />
+							</Button>
+						{/snippet}
 					</Collapsible.Trigger>
 					<Collapsible.Content>
 						<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
@@ -568,17 +572,19 @@
 					</Collapsible.Content>
 				</Collapsible.Root>
 				<Collapsible.Root>
-					<Collapsible.Trigger asChild let:builder>
-						<Button
-							builders={[builder]}
-							variant="ghost"
-							size="sm"
-							class="flex w-full items-center p-2"
-						>
-							Everyone in event
-							<div class="flex-1"></div>
-							<ChevronsUpDown />
-						</Button>
+					<Collapsible.Trigger>
+						{#snippet child({ props })}
+							<Button
+								variant="ghost"
+								size="sm"
+								class="flex w-full items-center p-2"
+								{...props}
+							>
+								Everyone in event
+								<div class="flex-1"></div>
+								<ChevronsUpDown />
+							</Button>
+						{/snippet}
 					</Collapsible.Trigger>
 					<Collapsible.Content>
 						<Button
@@ -630,17 +636,19 @@
 						}[],
 					)}
 				<Collapsible.Root>
-					<Collapsible.Trigger asChild let:builder>
-						<Button
-							builders={[builder]}
-							variant="ghost"
-							size="sm"
-							class="flex w-full items-center p-2"
-						>
-							People in unfilled rooms ({peopleInUnfilledRooms.length})
-							<div class="flex-1"></div>
-							<ChevronsUpDown />
-						</Button>
+					<Collapsible.Trigger>
+						{#snippet child({ props })}
+							<Button
+								variant="ghost"
+								size="sm"
+								class="flex w-full items-center p-2"
+								{...props}
+							>
+								People in unfilled rooms ({peopleInUnfilledRooms.length})
+								<div class="flex-1"></div>
+								<ChevronsUpDown />
+							</Button>
+						{/snippet}
 					</Collapsible.Trigger>
 					<Collapsible.Content>
 						<Button
@@ -696,18 +704,22 @@
 					{/each}
 				</Collapsible.Content>
 				<Collapsible.Trigger class="w-full">
-					<Button variant="ghost" size="sm" class=" w-full">
-						<ChevronUp
-							class="transition-transform {collapsibleOpen ? '' : 'rotate-180'}"
-						/>
-					</Button>
+					{#snippet child({ props })}
+						<Button variant="ghost" size="sm" class="w-full" {...props}>
+							<ChevronUp
+								class="transition-transform {collapsibleOpen
+									? ''
+									: 'rotate-180'}"
+							/>
+						</Button>
+					{/snippet}
 				</Collapsible.Trigger>
 			</Collapsible.Root>
 		{/if}
 	</Card.Content>
 	<Card.Footer class="space-x-2">
 		<Button
-			on:click={async () => {
+			onclick={async () => {
 				let lowestNotTaken = 1;
 				while (event.teams.some((t) => t.teamNumber === lowestNotTaken)) {
 					lowestNotTaken++;
@@ -736,7 +748,7 @@
 		{#if event.maxTeamSize === 1 && event.teams.reduce((acc, curr) => acc + curr.members.length, 0) < event.members.length}
 			<Button
 				variant="outline"
-				on:click={() => {
+				onclick={() => {
 					for (const member of event.members) {
 						if (
 							!event.teams.some((t) =>

@@ -28,6 +28,10 @@
 		nationalId: user.nationalId,
 		washingtonId: user.washingtonId,
 	});
+
+	let selectedTShirt = $derived(
+		user.tShirtSize ? tShirtMap.get(user.tShirtSize) : 'Unspecified',
+	);
 </script>
 
 <Card.Root class={show ? '' : 'hidden'}>
@@ -113,22 +117,21 @@
 		<Label>
 			<span class="mb-2"> T-shirt size </span>
 			<Select.Root
-				selected={user.tShirtSize
-					? { value: user.tShirtSize, label: tShirtMap.get(user.tShirtSize) }
-					: { value: 'null', label: 'Unspecified' }}
-				onSelectedChange={async (s) => {
-					if (s)
+				type="single"
+				value={user.tShirtSize ?? 'null'}
+				onValueChange={async (v) => {
+					if (v)
 						await setDoc(
 							doc(db, 'users', user.email),
 							{
-								tShirtSize: s.value,
+								tShirtSize: v,
 							},
 							{ merge: true },
 						);
 				}}
 			>
 				<Select.Trigger class="mt-2 w-full">
-					<Select.Value placeholder="T-shirt size" />
+					{selectedTShirt ?? 'T-Shirt Size'}
 				</Select.Trigger>
 				<Select.Content>
 					{#each tShirtMap.entries() as [value, label]}
@@ -151,7 +154,7 @@
 					disabled={values.nationalId?.toString() ===
 						user.nationalId?.toString()}
 					size="icon"
-					on:click={async () => {
+					onclick={async () => {
 						await setDoc(
 							doc(db, 'users', user.email),
 							{
@@ -181,7 +184,7 @@
 					disabled={values.washingtonId?.toString() ===
 						user.washingtonId?.toString()}
 					size="icon"
-					on:click={async () => {
+					onclick={async () => {
 						await setDoc(
 							doc(db, 'users', user.email),
 							{
@@ -199,22 +202,21 @@
 		<Label>
 			<span class="mb-2"> Gender </span>
 			<Select.Root
-				selected={user.gender
-					? { value: user.gender, label: user.gender }
-					: { value: 'null', label: 'Unspecified' }}
-				onSelectedChange={async (s) => {
-					if (s)
+				type="single"
+				value={user.gender ?? 'null'}
+				onValueChange={async (v) => {
+					if (v)
 						await setDoc(
 							doc(db, 'users', user.email),
 							{
-								gender: s.value,
+								gender: v,
 							},
 							{ merge: true },
 						);
 				}}
 			>
 				<Select.Trigger class="mt-2 w-full">
-					<Select.Value placeholder="Gender" />
+					{(user.gender || user.gender === 'null') ?? 'Unspecified'}
 				</Select.Trigger>
 				<Select.Content>
 					<Select.Item value="Male">Male</Select.Item>
@@ -228,22 +230,21 @@
 		<Label>
 			<span class="mb-2"> Demographic </span>
 			<Select.Root
-				selected={user.demographic
-					? { value: user.demographic, label: user.demographic }
-					: { value: 'null', label: 'Unspecified' }}
-				onSelectedChange={async (s) => {
-					if (s)
+				type="single"
+				value={user.demographic ?? 'null'}
+				onValueChange={async (v) => {
+					if (v)
 						await setDoc(
 							doc(db, 'users', user.email),
 							{
-								demographic: s.value,
+								demographic: v,
 							},
 							{ merge: true },
 						);
 				}}
 			>
 				<Select.Trigger class="mt-2 w-full">
-					<Select.Value placeholder="Demographic" />
+					{user.demographic}
 				</Select.Trigger>
 				<Select.Content>
 					{#each ['Opt-Out', 'Non-Disclosed', 'American Indian/Alaskan Native', 'Black / African-American', 'Asian/Asian-American/Pacific Islander', 'Hispanic/Latino', 'Mixed Race', 'White/Caucasian'] as demographic}
@@ -257,25 +258,15 @@
 
 		<div class="w-full">
 			<Collapsible.Root>
-				<Collapsible.Trigger asChild let:builder>
-					<Button
-						builders={[builder]}
-						variant="ghost"
-						size="sm"
-						class="member-collapsible flex w-full items-center p-2 {user.events
-							.length < MIN_EVENTS || user.events.length > MAX_EVENTS + 1
-							? 'text-red-500'
-							: user.events
-										.map(
-											(e) =>
-												$eventsCollection
-													.find((ev) => ev.event === e)
-													?.teams.find((t) =>
-														t.members.find((m) => m.email === user.email),
-													) ?? null,
-										)
-										.filter(Boolean).length < MIN_EVENTS
-								? 'text-orange-500'
+				<Collapsible.Trigger>
+					{#snippet child({ props })}
+						<Button
+							variant="ghost"
+							size="sm"
+							class="member-collapsible flex w-full items-center p-2 {user
+								.events.length < MIN_EVENTS ||
+							user.events.length > MAX_EVENTS + 1
+								? 'text-red-500'
 								: user.events
 											.map(
 												(e) =>
@@ -285,14 +276,27 @@
 															t.members.find((m) => m.email === user.email),
 														) ?? null,
 											)
-											.filter(Boolean).length < user.events.length
-									? 'text-yellow-500'
-									: ''}"
-					>
-						Events ({user.events.length})
-						<div class="flex-1"></div>
-						<ChevronsUpDown class="h-4 w-4" />
-					</Button>
+											.filter(Boolean).length < MIN_EVENTS
+									? 'text-orange-500'
+									: user.events
+												.map(
+													(e) =>
+														$eventsCollection
+															.find((ev) => ev.event === e)
+															?.teams.find((t) =>
+																t.members.find((m) => m.email === user.email),
+															) ?? null,
+												)
+												.filter(Boolean).length < user.events.length
+										? 'text-yellow-500'
+										: ''}"
+							{...props}
+						>
+							Events ({user.events.length})
+							<div class="flex-1"></div>
+							<ChevronsUpDown class="h-4 w-4" />
+						</Button>
+					{/snippet}
 				</Collapsible.Trigger>
 				<Collapsible.Content>
 					<Button href="/events/{user.email}">Edit</Button>

@@ -42,4 +42,4 @@ export type {
 	Team,
 	UserDoc,
 } from './types';
-export { cn, flyAndScale } from './utils';
+export { cn } from './utils';

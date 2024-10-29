@@ -9,10 +9,12 @@
 <div class="flex items-center">
 	<div class="block md:hidden">
 		<Drawer.Root>
-			<Drawer.Trigger asChild let:builder>
-				<Button variant="ghost" size="icon" builders={[builder]}>
-					<Paintbrush />
-				</Button>
+			<Drawer.Trigger>
+				{#snippet child({ props })}
+					<Button variant="ghost" size="icon" {...props}>
+						<Paintbrush />
+					</Button>
+				{/snippet}
 			</Drawer.Trigger>
 			<Drawer.Content class="bg-white p-6 dark:bg-zinc-950">
 				<Customizer />
@@ -21,10 +23,12 @@
 	</div>
 	<div class="hidden md:block">
 		<Popover.Root>
-			<Popover.Trigger asChild let:builder>
-				<Button variant="ghost" size="icon" builders={[builder]}>
-					<Paintbrush />
-				</Button>
+			<Popover.Trigger>
+				{#snippet child({ props })}
+					<Button variant="ghost" size="icon" {...props}>
+						<Paintbrush />
+					</Button>
+				{/snippet}
 			</Popover.Trigger>
 			<Popover.Content
 				class="z-40 w-[340px] rounded-[0.5rem] bg-white p-6 dark:bg-zinc-950"

@@ -29,8 +29,8 @@
 		onOpenChange,
 		members,
 	}: {
-		edit?: () => ReturnType<Snippet>;
-		add?: () => ReturnType<Snippet>;
+		edit?: Snippet<[Record<string, unknown>]>;
+		add?: Snippet<[Record<string, unknown>]>;
 		event: EventDoc;
 		editing?: boolean;
 		id?: string;
@@ -81,19 +81,21 @@
 	}}
 >
 	<Dialog.Trigger>
-		{#if editing}
-			{#if edit}
-				{@render edit()}
+		{#snippet child({ props })}
+			{#if editing}
+				{#if edit}
+					{@render edit(props)}
+				{:else}
+					<Button variant="ghost" size="icon" class="h-6" {...props}>
+						<Pencil />
+					</Button>
+				{/if}
+			{:else if add}
+				{@render add(props)}
 			{:else}
-				<Button variant="ghost" size="icon" class="h-6">
-					<Pencil />
-				</Button>
+				<Button id={id.replaceAll('-', '').replace(/\d/, '')}>Add</Button>
 			{/if}
-		{:else if add}
-			{@render add()}
-		{:else}
-			<Button id={id.replaceAll('-', '').replace(/\d/, '')}>Add</Button>
-		{/if}
+		{/snippet}
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<Dialog.Title>Add Results</Dialog.Title>
@@ -109,7 +111,7 @@
 					variant="ghost"
 					class="h-6"
 					size="icon"
-					on:click={() => {
+					onclick={() => {
 						newMembers = newMembers.filter((m) => m.email !== member.email);
 					}}
 				>
@@ -203,7 +205,7 @@
 									<Button
 										variant="ghost"
 										size="icon"
-										on:click={async () => {
+										onclick={async () => {
 											if (submission instanceof File) return;
 											await deleteObject(submission);
 											dummyVariableToRerender++;
@@ -248,12 +250,12 @@
 		<Input bind:value={note} placeholder="Add note..." />
 
 		<Dialog.Footer>
-			<Button variant="outline" on:click={() => fileInput?.click()}>
+			<Button variant="outline" onclick={() => fileInput?.click()}>
 				Upload rubric
 			</Button>
 			{#if editing}
 				<Button
-					on:click={async () => {
+					onclick={async () => {
 						await setDoc(
 							doc(db, 'events', event.event),
 							{
@@ -288,7 +290,7 @@
 				</Button>
 			{:else}
 				<Button
-					on:click={async () => {
+					onclick={async () => {
 						event.results = [
 							...(event.results?.slice(0, newPlace - 1) ?? []),
 							{

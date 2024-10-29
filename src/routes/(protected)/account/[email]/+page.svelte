@@ -2,9 +2,9 @@
 	import { page } from '$app/stores';
 	import { db, tShirtMap } from '$lib';
 	import { Button } from '$lib/components/ui/button';
-	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
@@ -12,11 +12,6 @@
 	import { toast } from 'svelte-sonner';
 
 	const email = $page.params.email;
-
-	let studentIdHoverCardOpen = $state(false);
-	let genderHoverCardOpen = $state(false);
-	let demographicHoverCardOpen = $state(false);
-	let tShirtSizeHoverCardOpen = $state(false);
 
 	let initialized = $state(false);
 
@@ -150,15 +145,11 @@
 				<div>
 					<div>
 						<Select.Root
-							selected={formData.grade
-								? {
-										value: formData.grade.toString(),
-										label: formData.grade.toString(),
-									}
-								: undefined}
-							onSelectedChange={(v) => {
+							type="single"
+							value={formData.grade?.toString()}
+							onValueChange={(v) => {
 								if (v) {
-									formData.grade = v.value as '9' | '10' | '11' | '12';
+									formData.grade = v as '9' | '10' | '11' | '12';
 								}
 							}}
 						>
@@ -166,7 +157,9 @@
 								Grade<span class="text-red-500 dark:text-red-400">*</span>
 							</Label>
 							<Select.Trigger>
-								<Select.Value />
+								<span>
+									{formData.grade}
+								</span>
 							</Select.Trigger>
 							<Select.Content>
 								{#each ['9', '10', '11', '12'] as grade}
@@ -185,20 +178,11 @@
 							<Label class="flex flex-row">
 								Student ID<span class="text-red-500 dark:text-red-400">*</span>
 							</Label>
-							<HoverCard.Root bind:open={studentIdHoverCardOpen}>
-								<HoverCard.Trigger asChild let:builder>
-									<button
-										type="button"
-										{...builder}
-										use:builder.action
-										onclick={() => {
-											studentIdHoverCardOpen = !studentIdHoverCardOpen;
-										}}
-									>
-										<CircleHelpIcon class="size-5" />
-									</button>
-								</HoverCard.Trigger>
-								<HoverCard.Content>
+							<Popover.Root>
+								<Popover.Trigger>
+									<CircleHelpIcon class="size-5" />
+								</Popover.Trigger>
+								<Popover.Content>
 									LWSD is switching switching everybody's email to use their
 									student ID. However, for whatever reason, Microsoft still
 									provides your old email when you log in. If/when emails get
@@ -208,8 +192,8 @@
 										href="https://www.lwsd.org/programs-and-services/technology"
 										>LWSD's FAQs</a
 									>.
-								</HoverCard.Content>
-							</HoverCard.Root>
+								</Popover.Content>
+							</Popover.Root>
 						</div>
 						<Input
 							bind:value={formData.studentId}
@@ -222,12 +206,11 @@
 				<div>
 					<div>
 						<Select.Root
-							selected={formData.gender
-								? { value: formData.gender, label: formData.gender }
-								: undefined}
-							onSelectedChange={(v) => {
+							type="single"
+							value={formData.gender}
+							onValueChange={(v) => {
 								if (v) {
-									formData.gender = v.value as
+									formData.gender = v as
 										| 'Male'
 										| 'Female'
 										| 'Opt-Out'
@@ -239,27 +222,20 @@
 								<Label class="flex flex-row items-center gap-1">
 									Gender<span class="text-red-500 dark:text-red-400">*</span>
 								</Label>
-								<HoverCard.Root bind:open={genderHoverCardOpen}>
-									<HoverCard.Trigger asChild let:builder>
-										<button
-											{...builder}
-											use:builder.action
-											type="button"
-											onclick={() => {
-												genderHoverCardOpen = !genderHoverCardOpen;
-											}}
-										>
-											<CircleHelpIcon class="size-5" />
-										</button>
-									</HoverCard.Trigger>
-									<HoverCard.Content>
+								<Popover.Root>
+									<Popover.Trigger>
+										<CircleHelpIcon class="size-5" />
+									</Popover.Trigger>
+									<Popover.Content>
 										We need this information for rooming during State conference
 										registration.
-									</HoverCard.Content>
-								</HoverCard.Root>
+									</Popover.Content>
+								</Popover.Root>
 							</div>
 							<Select.Trigger>
-								<Select.Value />
+								<span>
+									{formData.grade}
+								</span>
 							</Select.Trigger>
 							<Select.Content>
 								{#each ['Male', 'Female', 'Opt-Out', 'Non-Disclosed'] as gender}
@@ -277,12 +253,11 @@
 				<div>
 					<div>
 						<Select.Root
-							selected={formData.demographic
-								? { value: formData.demographic, label: formData.demographic }
-								: undefined}
-							onSelectedChange={(v) => {
+							type="single"
+							value={formData.demographic}
+							onValueChange={(v) => {
 								if (v) {
-									formData.demographic = v.value as
+									formData.demographic = v as
 										| 'Opt-Out'
 										| 'Non-Disclosed'
 										| 'American Indian/Alaskan Native'
@@ -300,26 +275,19 @@
 										>*</span
 									>
 								</Label>
-								<HoverCard.Root bind:open={demographicHoverCardOpen}>
-									<HoverCard.Trigger asChild let:builder>
-										<button
-											{...builder}
-											use:builder.action
-											type="button"
-											onclick={() => {
-												demographicHoverCardOpen = !demographicHoverCardOpen;
-											}}
-										>
-											<CircleHelpIcon class="size-5" />
-										</button>
-									</HoverCard.Trigger>
-									<HoverCard.Content>
+								<Popover.Root>
+									<Popover.Trigger>
+										<CircleHelpIcon class="size-5" />
+									</Popover.Trigger>
+									<Popover.Content>
 										National TSA requires this information.
-									</HoverCard.Content>
-								</HoverCard.Root>
+									</Popover.Content>
+								</Popover.Root>
 							</div>
 							<Select.Trigger>
-								<Select.Value />
+								<span>
+									{formData.demographic}
+								</span>
 							</Select.Trigger>
 							<Select.Content>
 								{#each ['Opt-Out', 'Non-Disclosed', 'American Indian/Alaskan Native', 'Black / African-American', 'Asian/Asian-American/Pacific Islander', 'Hispanic/Latino', 'Mixed Race', 'White/Caucasian'] as demographic}
@@ -334,17 +302,17 @@
 				<input hidden bind:value={formData.demographic} name="demographic" />
 				<div>
 					<div>
-						{console.log(formData.tShirtSize)}
 						<Select.Root
-							selected={formData.tShirtSize
-								? {
-										value: formData.tShirtSize,
-										label: tShirtMap.get(formData.tShirtSize),
-									}
-								: undefined}
-							onSelectedChange={(v) => {
+							type="single"
+							value={formData.tShirtSize}
+							onValueChange={(v) => {
 								if (v) {
-									formData.tShirtSize = v.value;
+									formData.tShirtSize = v as typeof tShirtMap extends Map<
+										infer K,
+										unknown
+									>
+										? K
+										: never;
 								}
 							}}
 						>
@@ -354,27 +322,22 @@
 										>*</span
 									>
 								</Label>
-								<HoverCard.Root bind:open={tShirtSizeHoverCardOpen}>
-									<HoverCard.Trigger asChild let:builder>
-										<button
-											{...builder}
-											use:builder.action
-											type="button"
-											onclick={() => {
-												tShirtSizeHoverCardOpen = !tShirtSizeHoverCardOpen;
-											}}
-										>
-											<CircleHelpIcon class="size-5" />
-										</button>
-									</HoverCard.Trigger>
-									<HoverCard.Content>
+								<Popover.Root>
+									<Popover.Trigger>
+										<CircleHelpIcon class="size-5" />
+									</Popover.Trigger>
+									<Popover.Content>
 										You will get a polo shirt in this size during the State
 										conference.
-									</HoverCard.Content>
-								</HoverCard.Root>
+									</Popover.Content>
+								</Popover.Root>
 							</div>
 							<Select.Trigger>
-								<Select.Value />
+								<span>
+									{formData.tShirtSize
+										? tShirtMap.get(formData.tShirtSize)
+										: ''}
+								</span>
 							</Select.Trigger>
 							<Select.Content>
 								{#each tShirtMap as [abbr, size]}
@@ -390,15 +353,11 @@
 				<div>
 					<div>
 						<Select.Root
-							selected={formData.foundBy
-								? {
-										value: formData.foundBy,
-										label: formData.foundBy,
-									}
-								: undefined}
-							onSelectedChange={(v) => {
+							type="single"
+							value={formData.foundBy}
+							onValueChange={(v) => {
 								if (v) {
-									formData.foundBy = v.value as
+									formData.foundBy = v as
 										| 'Friend/family'
 										| 'Teacher'
 										| 'JHS website club list'
@@ -418,7 +377,9 @@
 								</Label>
 							</div>
 							<Select.Trigger>
-								<Select.Value />
+								<span>
+									{formData.foundBy}
+								</span>
 							</Select.Trigger>
 							<Select.Content>
 								{#each ['Friend/family', 'Teacher', 'JHS website club list', 'Poster', 'Social media', 'Middle school', 'Club fair', 'Other'] as place}

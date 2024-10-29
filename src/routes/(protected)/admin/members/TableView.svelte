@@ -56,26 +56,25 @@
 					/>
 				</Table.Cell>
 				<Table.Cell>
+					{@const selected = user.tShirtSize
+						? tShirtMap.get(user.tShirtSize)
+						: 'Unspecified'}
 					<Select.Root
-						selected={user.tShirtSize
-							? {
-									value: user.tShirtSize,
-									label: tShirtMap.get(user.tShirtSize),
-								}
-							: { value: 'null', label: 'Unspecified' }}
-						onSelectedChange={async (s) => {
-							if (s)
+						type="single"
+						value={user.tShirtSize ?? 'null'}
+						onValueChange={async (v) => {
+							if (v)
 								await setDoc(
 									doc(db, 'users', user.email),
 									{
-										tShirtSize: s.value,
+										tShirtSize: v,
 									},
 									{ merge: true },
 								);
 						}}
 					>
 						<Select.Trigger class="w-32">
-							<Select.Value placeholder="T-shirt size" />
+							{selected}
 						</Select.Trigger>
 						<Select.Content>
 							{#each tShirtMap.entries() as [value, label]}

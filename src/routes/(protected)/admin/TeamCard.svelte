@@ -183,9 +183,11 @@
 			{#if event.event !== '*Cardboard Boat'}
 				<Dialog.Root bind:open={teamDialogOpen}>
 					<Dialog.Trigger>
-						<Button size="sm" variant="ghost" class="ml-2">
-							<Pencil />
-						</Button>
+						{#snippet child({ props })}
+							<Button size="sm" variant="ghost" class="ml-2" {...props}>
+								<Pencil />
+							</Button>
+						{/snippet}
 					</Dialog.Trigger>
 					<Dialog.Content>
 						<Dialog.Title
@@ -204,7 +206,7 @@
 						</div>
 						<Dialog.Footer>
 							<Button
-								on:click={async () => {
+								onclick={async () => {
 									const el = document.querySelector('#teamNumber');
 									if (el instanceof HTMLInputElement) {
 										await setDoc(
@@ -240,7 +242,7 @@
 			<Button
 				variant="destructive"
 				size="icon"
-				on:click={async () => {
+				onclick={async () => {
 					if (
 						!(await fancyConfirm(
 							'Are you sure',
@@ -268,9 +270,15 @@
 			<div class="flex flex-row gap-1">
 				<Dialog.Root>
 					<Dialog.Trigger>
-						<Button size="icon" class="bg-green-500 hover:bg-green-400">
-							<UserPlus />
-						</Button>
+						{#snippet child({ props })}
+							<Button
+								size="icon"
+								class="bg-green-500 hover:bg-green-400"
+								{...props}
+							>
+								<UserPlus />
+							</Button>
+						{/snippet}
 					</Dialog.Trigger>
 					<Dialog.Content class="max-h-full overflow-y-scroll">
 						<Dialog.Title>Add People</Dialog.Title>
@@ -300,7 +308,7 @@
 										</HoverCard.Content>
 									</HoverCard.Root>
 									<Button
-										on:click={async () => {
+										onclick={async () => {
 											team.members.push({
 												name: person.name,
 												email: person.email,
@@ -350,12 +358,14 @@
 				{#if event.event !== '*Rooming'}
 					<Dialog.Root>
 						<Dialog.Trigger>
-							<Button>Team Captain</Button>
+							{#snippet child({ props })}
+								<Button {...props}>Team Captain</Button>
+							{/snippet}
 						</Dialog.Trigger>
 						<Dialog.Content>
 							<Dialog.Title>Manage team captain</Dialog.Title>
 							<Button
-								on:click={async () => {
+								onclick={async () => {
 									team.teamCaptain = '';
 									team.lastUpdatedBy = $user?.email ?? '';
 									team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
@@ -450,17 +460,22 @@
 			</div>
 			{#if event.event !== '*Rooming'}
 				<div>
-					<Dialog.Root closeOnOutsideClick={false}>
+					<Dialog.Root>
 						{#key dummyVariableToRerender}
 							<StorageList ref="submissions/{event.event}/{team.id}" let:list>
 								<Dialog.Trigger>
-									<Button>
-										Manage Submissions {list?.items.length
-											? `(${list.items.length})`
-											: ''}
-									</Button>
+									{#snippet child({ props })}
+										<Button {...props}>
+											Manage Submissions {list?.items.length
+												? `(${list.items.length})`
+												: ''}
+										</Button>
+									{/snippet}
 								</Dialog.Trigger>
-								<Dialog.Content class="max-h-screen overflow-y-auto">
+								<Dialog.Content
+									interactOutsideBehavior="ignore"
+									class="max-h-screen overflow-y-auto"
+								>
 									<Dialog.Title>Manage Submissions</Dialog.Title>
 									<Button
 										onclick={() => {
@@ -507,32 +522,32 @@
 														</UploadTask>
 													{:else}
 														<div class="flex w-full flex-row items-center">
-															{#snippet submissionsList(
-																link: string,
-																meta: FullMetadata,
-															)}
-																<SimpleTooltip
-																	message={new Date(
-																		meta.timeCreated,
-																	).toLocaleString()}
-																>
-																	<a href={link} target="_blank">
-																		{meta.name}
-																	</a>
-																</SimpleTooltip>
-															{/snippet}
 															<DownloadURL ref={submission} let:link>
 																<StorageMetadata
 																	ref={submission}
 																	link={link ?? ''}
-																	withMetadata={submissionsList}
-																></StorageMetadata>
+																>
+																	{#snippet withMetadata(
+																		link: string,
+																		meta: FullMetadata,
+																	)}
+																		<SimpleTooltip
+																			message={new Date(
+																				meta.timeCreated,
+																			).toLocaleString()}
+																		>
+																			<a href={link} target="_blank">
+																				{meta.name}
+																			</a>
+																		</SimpleTooltip>
+																	{/snippet}
+																</StorageMetadata>
 															</DownloadURL>
 															<div class="flex flex-grow"></div>
 															<Button
 																variant="ghost"
 																size="icon"
-																on:click={async () => {
+																onclick={async () => {
 																	if (submission instanceof File) return;
 																	await deleteObject(submission);
 																	team.lastUpdatedBy = $user?.email ?? '';
@@ -551,7 +566,7 @@
 									</ul>
 									<Button
 										class="mt-4"
-										on:click={() => submissionsFileUpload?.click()}
+										onclick={() => submissionsFileUpload?.click()}
 									>
 										Upload
 									</Button>
@@ -604,19 +619,21 @@
 	<Card.Content>
 		<div class="mb-4">
 			<Collapsible.Root>
-				<Collapsible.Trigger asChild let:builder>
-					<Button
-						builders={[builder]}
-						variant="ghost"
-						size="sm"
-						class="flex w-full items-center p-2"
-					>
-						Manage Requests {#if team.requests?.length}
-							({team.requests.length})
-						{/if}
-						<div class="flex-1"></div>
-						<ChevronsUpDown />
-					</Button>
+				<Collapsible.Trigger>
+					{#snippet child({ props })}
+						<Button
+							variant="ghost"
+							size="sm"
+							class="flex w-full items-center p-2"
+							{...props}
+						>
+							Manage Requests {#if team.requests?.length}
+								({team.requests.length})
+							{/if}
+							<div class="flex-1"></div>
+							<ChevronsUpDown />
+						</Button>
+					{/snippet}
 				</Collapsible.Trigger>
 				<Collapsible.Content class="px-2">
 					<ul>
@@ -633,7 +650,7 @@
 									</HoverCard.Content>
 								</HoverCard.Root>
 								<Button
-									on:click={async () => {
+									onclick={async () => {
 										team.members.push({
 											name: request.name,
 											email: request.email,
@@ -668,7 +685,7 @@
 									size="icon"
 									class="h-5"
 									variant="ghost"
-									on:click={async () => {
+									onclick={async () => {
 										team.requests = team.requests?.filter(
 											(r) =>
 												r.email !== request.email && r.name !== request.name,
@@ -695,9 +712,11 @@
 						{/each}
 						<Dialog.Root>
 							<Dialog.Trigger>
-								<Button size="icon">
-									<Plus />
-								</Button>
+								{#snippet child({ props })}
+									<Button size="icon" {...props}>
+										<Plus />
+									</Button>
+								{/snippet}
 							</Dialog.Trigger>
 							<Dialog.Content class="max-h-full overflow-y-scroll">
 								<Dialog.Title>Create Request</Dialog.Title>
@@ -726,7 +745,7 @@
 												</HoverCard.Content>
 											</HoverCard.Root>
 											<Button
-												on:click={async () => {
+												onclick={async () => {
 													team.requests = [
 														...(team.requests ?? []),
 														{
@@ -772,17 +791,19 @@
 			</Collapsible.Root>
 			<Collapsible.Root>
 				{@const hash = `files-${team.id}`}
-				<Collapsible.Trigger asChild let:builder>
-					<Button
-						builders={[builder]}
-						variant="ghost"
-						size="sm"
-						class="flex w-full items-center p-2"
-					>
-						Manage Files
-						<div class="flex-1"></div>
-						<ChevronsUpDown />
-					</Button>
+				<Collapsible.Trigger>
+					{#snippet child({ props })}
+						<Button
+							variant="ghost"
+							size="sm"
+							class="flex w-full items-center p-2"
+							{...props}
+						>
+							Manage Files
+							<div class="flex-1"></div>
+							<ChevronsUpDown />
+						</Button>
+					{/snippet}
 				</Collapsible.Trigger>
 				<Collapsible.Content class="px-2">
 					{#key dummyVariableToRerender}
@@ -845,7 +866,7 @@
 													<Button
 														variant="ghost"
 														size="icon"
-														on:click={async () => {
+														onclick={async () => {
 															if (file instanceof File) return;
 															await deleteObject(file);
 															team.lastUpdatedBy = $user?.email ?? '';
@@ -863,7 +884,7 @@
 								</ul>
 								<Button
 									class="mt-4"
-									on:click={() => {
+									onclick={() => {
 										const el = document.querySelector(`#${hash}`);
 										if (el instanceof HTMLInputElement) el.click();
 									}}
@@ -940,7 +961,7 @@
 						size="icon"
 						class="h-5"
 						variant="ghost"
-						on:click={async () => {
+						onclick={async () => {
 							team.members.splice(
 								team.members.findIndex(
 									(e) =>

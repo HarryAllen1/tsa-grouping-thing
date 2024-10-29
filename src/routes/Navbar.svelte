@@ -84,12 +84,10 @@
 							</Button>
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content>
-							<DropdownMenu.Item on:click={downloadAsJSON}>
+							<DropdownMenu.Item onclick={downloadAsJSON}>
 								JSON
 							</DropdownMenu.Item>
-							<DropdownMenu.Item on:click={downloadAsCSV}>
-								CSV
-							</DropdownMenu.Item>
+							<DropdownMenu.Item onclick={downloadAsCSV}>CSV</DropdownMenu.Item>
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
 					<Button
@@ -123,20 +121,22 @@
 					</svg>
 				</Button>
 				<Dropdown.Root>
-					<Dropdown.Trigger asChild let:builder>
-						<Button builders={[builder]} size="icon" variant="ghost">
-							<Avatar.Root>
-								<Avatar.Image src={$profilePhoto} />
-								<Avatar.Fallback>
-									{@const split = $user?.displayName?.split(' ')}
-									{#if split}
-										{split[0].slice(0, 1)}{split[1]?.slice(0, 1)}
-									{:else}
-										{$user?.email?.slice(0, 2)}
-									{/if}
-								</Avatar.Fallback>
-							</Avatar.Root>
-						</Button>
+					<Dropdown.Trigger>
+						{#snippet child({ props })}
+							<Button size="icon" variant="ghost" {...props}>
+								<Avatar.Root>
+									<Avatar.Image src={$profilePhoto} />
+									<Avatar.Fallback>
+										{@const split = $user?.displayName?.split(' ')}
+										{#if split}
+											{split[0].slice(0, 1)}{split[1]?.slice(0, 1)}
+										{:else}
+											{$user?.email?.slice(0, 2)}
+										{/if}
+									</Avatar.Fallback>
+								</Avatar.Root>
+							</Button>
+						{/snippet}
 					</Dropdown.Trigger>
 					<Dropdown.Content>
 						<Dropdown.Label class="text-lg">
@@ -155,16 +155,20 @@
 							</Dropdown.Label>
 						{/if}
 						<Dropdown.Separator />
-						<Dropdown.Item href="/account">
-							<UserCog class="mr-2 h-4 w-4" />
-							<span>Account Settings</span>
+						<Dropdown.Item>
+							{#snippet child({ props })}
+								<a href="/account" {...props}>
+									<UserCog class="mr-2 h-4 w-4" />
+									<span>Account Settings</span>
+								</a>
+							{/snippet}
 						</Dropdown.Item>
 						<!-- <Dropdown.Item href="/changelog">
 							<Clock class="mr-2 h-4 w-4" />
 							<span>Changelog</span>
 						</Dropdown.Item> -->
 						<Dropdown.Item
-							on:click={async () => {
+							onclick={async () => {
 								signOut(auth);
 							}}
 						>

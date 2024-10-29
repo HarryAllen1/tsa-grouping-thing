@@ -37,11 +37,13 @@
 				{/each}
 			</Collapsible.Content>
 			<Collapsible.Trigger class="w-full">
-				<Button variant="ghost" size="sm" class=" w-full">
-					<ChevronUp
-						class="transition-transform {collapsibleOpen ? '' : 'rotate-180'}"
-					/>
-				</Button>
+				{#snippet child({ props })}
+					<Button variant="ghost" size="sm" class=" w-full" {...props}>
+						<ChevronUp
+							class="transition-transform {collapsibleOpen ? '' : 'rotate-180'}"
+						/>
+					</Button>
+				{/snippet}
 			</Collapsible.Trigger>
 		</Collapsible.Root>
 	{/if}
@@ -115,7 +117,7 @@
 						),
 					) || event.teamCreationActuallyLocked
 				)}
-				on:click={async () => {
+				onclick={async () => {
 					let lowestNotTaken = 1;
 					while (event.teams.some((t) => t.teamNumber === lowestNotTaken)) {
 						lowestNotTaken++;

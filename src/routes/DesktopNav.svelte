@@ -43,16 +43,21 @@
 					<Dropdown.Content>
 						<Dropdown.Group>
 							{#each navItem as navItem}
-								<Dropdown.Item
-									href={navItem.href}
-									class={cn(
-										'transition-colors hover:text-foreground/80',
-										$page.url.pathname === navItem.href
-											? 'text-foreground'
-											: 'text-foreground/60',
-									)}
-								>
-									{navItem.title.replace('Admin ', '')}
+								<Dropdown.Item>
+									{#snippet child({ props })}
+										<a
+											href={navItem.href}
+											class={cn(
+												'transition-colors hover:text-foreground/80',
+												$page.url.pathname === navItem.href
+													? 'text-foreground'
+													: 'text-foreground/60',
+											)}
+											{...props}
+										>
+											{navItem.title.replace('Admin ', '')}
+										</a>
+									{/snippet}
 								</Dropdown.Item>
 							{/each}
 						</Dropdown.Group>

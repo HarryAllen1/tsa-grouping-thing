@@ -45,17 +45,19 @@
 							<TeamMessages hideBack teamId={team.id} />
 							{#if $blockedMessages.find((message) => message.teamId === team.id)}
 								<Collapsible.Root class="mt-4">
-									<Collapsible.Trigger asChild let:builder>
-										<Button
-											builders={[builder]}
-											variant="ghost"
-											size="sm"
-											class="flex w-full items-center p-2"
-										>
-											Blocked Messages
-											<div class="flex-1"></div>
-											<ChevronsUpDown />
-										</Button>
+									<Collapsible.Trigger>
+										{#snippet child({ props })}
+											<Button
+												variant="ghost"
+												size="sm"
+												class="flex w-full items-center p-2"
+												{...props}
+											>
+												Blocked Messages
+												<div class="flex-1"></div>
+												<ChevronsUpDown />
+											</Button>
+										{/snippet}
 									</Collapsible.Trigger>
 									<Collapsible.Content>
 										{#each $blockedMessages.filter((message) => message.teamId === team.id) as message}
