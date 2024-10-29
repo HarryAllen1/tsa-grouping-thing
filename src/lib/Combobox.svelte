@@ -30,6 +30,8 @@
 		searchBy?: 'label' | 'value';
 	} = $props();
 
+	let triggerRef = $state<HTMLButtonElement>(null!);
+
 	let filteredOptions = $derived(
 		options
 			.map((o) => ({
@@ -50,32 +52,33 @@
 	// We want to refocus the trigger button when the user selects
 	// an item from the list so users can continue navigating the
 	// rest of the form with the keyboard.
-	const closeAndFocusTrigger = async (triggerId: string) => {
+	const closeAndFocusTrigger = async (): Promise<void> => {
 		open = false;
 		await tick();
-
-		document.querySelector<HTMLElement>(`#${CSS.escape(triggerId)}`)?.focus();
+		triggerRef.focus();
 	};
 </script>
 
-<Popover.Root bind:open let:ids>
-	<Popover.Trigger asChild let:builder>
-		<Button
-			class={cn(
-				'kiosk:h-12 kiosk:text-lg w-64 justify-between truncate',
-				triggerClass,
-			)}
-			aria-expanded={open}
-			builders={[builder]}
-			role="combobox"
-			variant="outline"
-		>
-			<span>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				{@html selectedValue.label}
-			</span>
-			<ChevronsUpDown class="kiosk:size-6 ml-2 size-4 shrink-0 opacity-50" />
-		</Button>
+<Popover.Root>
+	<Popover.Trigger bind:ref={triggerRef}>
+		{#snippet child({ props })}
+			<Button
+				class={cn(
+					'kiosk:h-12 kiosk:text-lg w-64 justify-between truncate',
+					triggerClass,
+				)}
+				aria-expanded={open}
+				role="combobox"
+				variant="outline"
+				{...props}
+			>
+				<span>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					{@html selectedValue.label}
+				</span>
+				<ChevronsUpDown class="kiosk:size-6 ml-2 size-4 shrink-0 opacity-50" />
+			</Button>
+		{/snippet}
 	</Popover.Trigger>
 	<Popover.Content
 		class={cn('relative max-h-[50vh] overflow-y-auto p-0', popoverClass)}
@@ -92,7 +95,7 @@
 					onclick={() => {
 						value = '';
 						onSelect(option);
-						closeAndFocusTrigger(ids.trigger);
+						closeAndFocusTrigger();
 					}}
 				>
 					<Check
