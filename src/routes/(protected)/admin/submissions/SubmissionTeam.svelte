@@ -61,8 +61,10 @@
 						<ul>
 							{#each list.items as item}
 								<li class="flex w-full flex-row">
-									{#snippet submissionInfo(link: string, meta: FullMetadata)}
-										<!-- {#if meta.contentType?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif'].some( (ext) => item.name.endsWith(ext), )}
+									<DownloadURL ref={item.fullPath} let:link>
+										<StorageMetadata ref={item.fullPath} link={link ?? ''}>
+											{#snippet withMetadata(link: string, meta: FullMetadata)}
+												<!-- {#if meta.contentType?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif'].some( (ext) => item.name.endsWith(ext), )}
 																<Dialog.Root>
 																	<Dialog.Trigger>
 																		{item.name}
@@ -105,49 +107,44 @@
 																		</audio>
 																	</Dialog.Content>
 																</Dialog.Root> -->
-										{#if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'].includes(meta.contentType ?? '')}
-											<a
-												href="https://docs.google.com/viewer?url={encodeURIComponent(
-													link ?? '',
-												)}"
-												target="_blank"
-												rel="noreferrer"
-												class="w-full text-start">{item.name}</a
-											>
-										{:else}
-											<a
-												href={link}
-												target="_blank"
-												rel="noreferrer"
-												class="flex flex-row items-center"
-											>
-												{item.name}
-												<ArrowUpRight class="h-4 opacity-50" />
-											</a>
-										{/if}
-										<div class="flex-grow"></div>
-										<span>
-											<HoverCard.Root>
-												<HoverCard.Trigger>
-													{new Date(meta.timeCreated).toLocaleString()}
-												</HoverCard.Trigger>
-												<HoverCard.Content>
-													<p>
-														{meta.customMetadata?.userName}
-													</p>
-													<p>
-														{meta.customMetadata?.userEmail}
-													</p>
-												</HoverCard.Content>
-											</HoverCard.Root>
-										</span>
-									{/snippet}
-									<DownloadURL ref={item.fullPath} let:link>
-										<StorageMetadata
-											ref={item.fullPath}
-											link={link ?? ''}
-											withMetadata={submissionInfo}
-										></StorageMetadata>
+												{#if ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'].includes(meta.contentType ?? '')}
+													<a
+														href="https://docs.google.com/viewer?url={encodeURIComponent(
+															link ?? '',
+														)}"
+														target="_blank"
+														rel="noreferrer"
+														class="w-full text-start">{item.name}</a
+													>
+												{:else}
+													<a
+														href={link}
+														target="_blank"
+														rel="noreferrer"
+														class="flex flex-row items-center"
+													>
+														{item.name}
+														<ArrowUpRight class="h-4 opacity-50" />
+													</a>
+												{/if}
+												<div class="flex-grow"></div>
+												<span>
+													<HoverCard.Root>
+														<HoverCard.Trigger>
+															{new Date(meta.timeCreated).toLocaleString()}
+														</HoverCard.Trigger>
+														<HoverCard.Content>
+															<p>
+																{meta.customMetadata?.userName}
+															</p>
+															<p>
+																{meta.customMetadata?.userEmail}
+															</p>
+														</HoverCard.Content>
+													</HoverCard.Root>
+												</span>
+											{/snippet}
+										</StorageMetadata>
 									</DownloadURL>
 								</li>
 							{/each}

@@ -81,7 +81,7 @@
 					{#snippet child({ props })}
 						<a href="/" {...props} class="flex flex-row justify-start gap-2">
 							<div
-								class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
+								class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
 							>
 								<enhanced:img
 									src="$lib/favicon.png"
@@ -118,7 +118,7 @@
 			</Sidebar.Menu>
 		</Sidebar.Group>
 
-		{#if $userDoc.admin}
+		{#if $userDoc?.admin}
 			<Sidebar.Group>
 				<Sidebar.GroupLabel>Admin</Sidebar.GroupLabel>
 				<Sidebar.Menu>
