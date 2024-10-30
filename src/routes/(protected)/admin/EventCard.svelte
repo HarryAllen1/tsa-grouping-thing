@@ -38,6 +38,10 @@
 		changeSearch: (s: string) => void;
 	} = $props();
 
+	event.teamCreationLocked ??= false;
+	event.teamCreationActuallyLocked ??= false;
+	event.onlineSubmissions ??= false;
+
 	let originalName = event.event;
 	const intersect = <T,>(a: T[], b: T[]): T[] => {
 		const setB = new Set(b);
@@ -80,6 +84,7 @@
 							id="show-event-to-everyone"
 							checked={event.showToEveryone ?? false}
 							onCheckedChange={async (e) => {
+								event.showToEveryone = e;
 								await setDoc(
 									doc(db, 'events', event.event),
 									{
@@ -138,7 +143,7 @@
 						<div class="flex items-center space-x-2">
 							<Switch
 								id="lock-team-creation"
-								bind:checked={event.teamCreationLocked}
+								checked={event.teamCreationLocked}
 								onCheckedChange={async (e) => {
 									await setDoc(
 										doc(db, 'events', event.event),
@@ -157,8 +162,9 @@
 						<div class="flex items-center space-x-2">
 							<Switch
 								id="lock-team-creation-but-actually"
-								bind:checked={event.teamCreationActuallyLocked}
+								checked={event.teamCreationActuallyLocked}
 								onCheckedChange={async (e) => {
+									event.teamCreationActuallyLocked = e;
 									await setDoc(
 										doc(db, 'events', event.event),
 										{
@@ -188,7 +194,7 @@
 										},
 									);
 								}}
-								bind:checked={event.onlineSubmissions}
+								checked={event.onlineSubmissions}
 							/>
 							Online submissions
 						</Label>
