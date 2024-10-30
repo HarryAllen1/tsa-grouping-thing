@@ -166,14 +166,14 @@
 								.map((m) => m.email)
 								.some((m) => resultMemberSet.has(m))}
 							<AddResultDialog {event} editing id={team.id}>
-								{#snippet edit()}
-									<Button>Edit result</Button>
+								{#snippet edit({ props })}
+									<Button {...props}>Edit result</Button>
 								{/snippet}
 							</AddResultDialog>
 						{:else}
 							<AddResultDialog members={team.members} id={team.id} {event}>
-								{#snippet add()}
-									<Button>Add result</Button>
+								{#snippet add({ props })}
+									<Button {...props}>Add result</Button>
 								{/snippet}
 							</AddResultDialog>
 						{/if}

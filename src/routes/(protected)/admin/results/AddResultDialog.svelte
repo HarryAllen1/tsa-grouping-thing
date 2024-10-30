@@ -29,8 +29,20 @@
 		onOpenChange,
 		members,
 	}: {
-		edit?: Snippet<[Record<string, unknown>]>;
-		add?: Snippet<[Record<string, unknown>]>;
+		edit?: Snippet<
+			[
+				{
+					props: Record<string, unknown>;
+				},
+			]
+		>;
+		add?: Snippet<
+			[
+				{
+					props: Record<string, unknown>;
+				},
+			]
+		>;
 		event: EventDoc;
 		editing?: boolean;
 		id?: string;
@@ -84,14 +96,14 @@
 		{#snippet child({ props })}
 			{#if editing}
 				{#if edit}
-					{@render edit(props)}
+					{@render edit({ props })}
 				{:else}
 					<Button variant="ghost" size="icon" class="h-6" {...props}>
 						<Pencil />
 					</Button>
 				{/if}
 			{:else if add}
-				{@render add(props)}
+				{@render add({ props })}
 			{:else}
 				<Button id={id.replaceAll('-', '').replace(/\d/, '')}>Add</Button>
 			{/if}
