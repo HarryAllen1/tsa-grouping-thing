@@ -105,9 +105,7 @@
 			{@render renderTeams(event.teams)}
 		{/if}
 	</Card.Content>
-	{#if !event.locked && !(event.teamCreationLocked && event.teams.length >= event.perChapter) && event.teams.filter( (t) => t.requests
-					?.map((r) => r.email)
-					.includes($user?.email ?? ''), ).length === 0}
+	{#if !event.locked && !(event.teamCreationLocked && event.teams.length >= event.perChapter)}
 		<Card.Footer>
 			<Button
 				disabled={!!(

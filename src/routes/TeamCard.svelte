@@ -128,40 +128,36 @@
 					<div class="flex w-full flex-row gap-2">
 						<Tooltip.Root>
 							<Tooltip.Trigger>
-								{#snippet child({ props })}
-									<Button
-										variant="destructive"
-										onclick={async () => {
-											const teamButMutable = team;
-											teamButMutable.members.splice(
-												teamButMutable.members.findIndex(
-													(e) => e.email.toLowerCase() === ($user?.email ?? ''),
-												),
-												1,
-											);
-											teamButMutable.lastUpdatedBy = $user?.email ?? '';
-											teamButMutable.lastUpdatedTime = new Timestamp(
-												Date.now() / 1000,
-												0,
-											);
-											await setDoc(
-												doc(db, 'events', event.event ?? ''),
-												{
-													teams: event.teams.filter(
-														(t) => t.members.length > 0,
-													),
-													lastUpdatedBy: $user?.email ?? '',
-												},
-												{
-													merge: true,
-												},
-											);
-										}}
-										{...props}
-									>
-										<LogOut />
-									</Button>
-								{/snippet}
+								<Button
+									variant="destructive"
+									onclick={async () => {
+										console.log('adsf');
+										const teamButMutable = team;
+										teamButMutable.members.splice(
+											teamButMutable.members.findIndex(
+												(e) => e.email.toLowerCase() === ($user?.email ?? ''),
+											),
+											1,
+										);
+										teamButMutable.lastUpdatedBy = $user?.email ?? '';
+										teamButMutable.lastUpdatedTime = new Timestamp(
+											Date.now() / 1000,
+											0,
+										);
+										await setDoc(
+											doc(db, 'events', event.event ?? ''),
+											{
+												teams: event.teams.filter((t) => t.members.length > 0),
+												lastUpdatedBy: $user?.email ?? '',
+											},
+											{
+												merge: true,
+											},
+										);
+									}}
+								>
+									<LogOut />
+								</Button>
 							</Tooltip.Trigger>
 							<Tooltip.Content>Leave team</Tooltip.Content>
 						</Tooltip.Root>
