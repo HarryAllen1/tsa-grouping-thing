@@ -8,7 +8,6 @@
 		analytics,
 		auth,
 		db,
-		userDoc,
 		storage,
 		user,
 		type UserDoc,
