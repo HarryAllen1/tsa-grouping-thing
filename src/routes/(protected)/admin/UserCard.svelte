@@ -1,13 +1,16 @@
 <script lang="ts">
 	import type { UserDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
-	import UserCog from 'lucide-svelte/icons/user-cog';
 
 	let { user }: { user: UserDoc } = $props();
 </script>
 
 <div class="space-y-1">
 	<h4 class="text-md font-semibold">{user.name}</h4>
+	<div class="flex flex-row gap-2">
+		<Button variant="outline" href="/events/{user.email}">Edit events</Button>
+		<Button variant="outline" href="/account/{user.email}">Edit account</Button>
+	</div>
 	<div>
 		<p>
 			Grade: {user.grade}
@@ -40,12 +43,4 @@
 			{/each}
 		</div>
 	</div>
-	<Button
-		class="size-8"
-		variant="ghost"
-		size="icon"
-		href="/account/{user.email}"
-	>
-		<UserCog />
-	</Button>
 </div>

@@ -18,6 +18,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
+	import * as Popover from '$lib/components/ui/popover';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
@@ -299,14 +300,14 @@
 										duration: 200,
 									}}
 								>
-									<HoverCard.Root>
-										<HoverCard.Trigger>
-											<a href="/events/{person.email}">{person.name}</a>
-										</HoverCard.Trigger>
-										<HoverCard.Content>
+									<Popover.Root>
+										<Popover.Trigger>
+											{person.name}
+										</Popover.Trigger>
+										<Popover.Content>
 											<UserCard user={person} />
-										</HoverCard.Content>
-									</HoverCard.Root>
+										</Popover.Content>
+									</Popover.Root>
 									<Button
 										onclick={async () => {
 											team.members.push({
@@ -639,16 +640,16 @@
 					<ul>
 						{#each team.requests ?? [] as request}
 							<li class="flex flex-row">
-								<HoverCard.Root>
-									<HoverCard.Trigger>{request.name}</HoverCard.Trigger>
-									<HoverCard.Content>
+								<Popover.Root>
+									<Popover.Trigger>{request.name}</Popover.Trigger>
+									<Popover.Content>
 										<UserCard
 											user={$allUsersCollection.find(
 												(u) => u.email === request.email,
 											) ?? { email: '', events: [], name: '' }}
 										/>
-									</HoverCard.Content>
-								</HoverCard.Root>
+									</Popover.Content>
+								</Popover.Root>
 								<Button
 									onclick={async () => {
 										team.members.push({
@@ -736,14 +737,14 @@
 												duration: 200,
 											}}
 										>
-											<HoverCard.Root>
-												<HoverCard.Trigger>
+											<Popover.Root>
+												<Popover.Trigger>
 													{person.name}
-												</HoverCard.Trigger>
-												<HoverCard.Content>
+												</Popover.Trigger>
+												<Popover.Content>
 													<UserCard user={person} />
-												</HoverCard.Content>
-											</HoverCard.Root>
+												</Popover.Content>
+											</Popover.Root>
 											<Button
 												onclick={async () => {
 													team.requests = [
@@ -931,20 +932,18 @@
 						duration: 200,
 					}}
 				>
-					<HoverCard.Root>
-						<HoverCard.Trigger
-							href="/events/{encodeURIComponent(teamMember.email)}"
-						>
+					<Popover.Root>
+						<Popover.Trigger>
 							{teamMember.name}
-						</HoverCard.Trigger>
-						<HoverCard.Content>
+						</Popover.Trigger>
+						<Popover.Content>
 							<UserCard
 								user={$allUsersCollection.find(
 									(u) => u.email === teamMember.email,
 								) ?? { email: '', events: [], name: '' }}
 							/>
-						</HoverCard.Content>
-					</HoverCard.Root>
+						</Popover.Content>
+					</Popover.Root>
 
 					{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 						<Tooltip.Root>
