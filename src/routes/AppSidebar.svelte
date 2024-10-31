@@ -79,7 +79,16 @@
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton>
 					{#snippet child({ props })}
-						<a href="/" {...props} class="flex flex-row justify-start gap-2">
+						<a
+							href="/"
+							{...props}
+							onclick={() => {
+								if (sidebar.isMobile) {
+									sidebar.setOpen(false);
+								}
+							}}
+							class="flex flex-row justify-start gap-2"
+						>
 							<div
 								class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
 							>
@@ -105,7 +114,15 @@
 					<Sidebar.MenuItem>
 						<Sidebar.MenuButton>
 							{#snippet child({ props })}
-								<a href={item.href} {...props}>
+								<a
+									href={item.href}
+									onclick={() => {
+										if (sidebar.isMobile) {
+											sidebar.setOpen(false);
+										}
+									}}
+									{...props}
+								>
 									<item.icon />
 									<span>
 										{item.title}
@@ -126,7 +143,15 @@
 						<Sidebar.MenuItem>
 							<Sidebar.MenuButton>
 								{#snippet child({ props })}
-									<a href={item.href} {...props}>
+									<a
+										href={item.href}
+										onclick={() => {
+											if (sidebar.isMobile) {
+												sidebar.setOpen(false);
+											}
+										}}
+										{...props}
+									>
 										<item.icon />
 										<span>
 											{item.title}
