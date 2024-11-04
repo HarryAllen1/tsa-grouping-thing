@@ -81,6 +81,8 @@
 		}
 	});
 
+	let sidebarOpen = $state(false);
+
 	onNavigate(() => {
 		$panelOpen = false;
 	});
@@ -149,7 +151,7 @@
 
 {#await isAuthReady then}
 	<FirebaseApp {analytics} {auth} firestore={db} {storage}>
-		<Sidebar.Provider>
+		<Sidebar.Provider bind:open={sidebarOpen}>
 			<Tooltip.Provider>
 				<ThemeWrapper>
 					<ProgressBar class="text-primary" />

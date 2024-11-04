@@ -84,13 +84,13 @@
 							{...props}
 							onclick={() => {
 								if (sidebar.isMobile) {
-									sidebar.setOpen(false);
+									sidebar.setOpenMobile(false);
 								}
 							}}
 							class="flex flex-row justify-start gap-2"
 						>
 							<div
-								class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
+								class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
 							>
 								<enhanced:img
 									src="$lib/favicon.png"
@@ -118,7 +118,7 @@
 									href={item.href}
 									onclick={() => {
 										if (sidebar.isMobile) {
-											sidebar.setOpen(false);
+											sidebar.setOpenMobile(false);
 										}
 									}}
 									{...props}
@@ -147,7 +147,7 @@
 										href={item.href}
 										onclick={() => {
 											if (sidebar.isMobile) {
-												sidebar.setOpen(false);
+												sidebar.setOpenMobile(false);
 											}
 										}}
 										{...props}

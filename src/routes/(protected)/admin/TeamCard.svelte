@@ -18,7 +18,6 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import * as Popover from '$lib/components/ui/popover';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
@@ -300,14 +299,14 @@
 										duration: 200,
 									}}
 								>
-									<Popover.Root>
-										<Popover.Trigger>
-											{person.name}
-										</Popover.Trigger>
-										<Popover.Content>
+									<HoverCard.Root>
+										<HoverCard.Trigger>
+											<a href="/events/{person.email}">{person.name}</a>
+										</HoverCard.Trigger>
+										<HoverCard.Content>
 											<UserCard user={person} />
-										</Popover.Content>
-									</Popover.Root>
+										</HoverCard.Content>
+									</HoverCard.Root>
 									<Button
 										onclick={async () => {
 											team.members.push({
@@ -600,7 +599,7 @@
 
 									<p>
 										Allowed file types: all image files, all audio files, all
-										video files, pdfs, and Word docs (.doc, .docx).
+										video files, PDFs, and Word docs (.doc, .docx).
 									</p>
 									<p>250MB max file size.</p>
 									<p>
@@ -640,16 +639,16 @@
 					<ul>
 						{#each team.requests ?? [] as request}
 							<li class="flex flex-row">
-								<Popover.Root>
-									<Popover.Trigger>{request.name}</Popover.Trigger>
-									<Popover.Content>
+								<HoverCard.Root>
+									<HoverCard.Trigger>{request.name}</HoverCard.Trigger>
+									<HoverCard.Content>
 										<UserCard
 											user={$allUsersCollection.find(
 												(u) => u.email === request.email,
 											) ?? { email: '', events: [], name: '' }}
 										/>
-									</Popover.Content>
-								</Popover.Root>
+									</HoverCard.Content>
+								</HoverCard.Root>
 								<Button
 									onclick={async () => {
 										team.members.push({
@@ -737,14 +736,14 @@
 												duration: 200,
 											}}
 										>
-											<Popover.Root>
-												<Popover.Trigger>
+											<HoverCard.Root>
+												<HoverCard.Trigger>
 													{person.name}
-												</Popover.Trigger>
-												<Popover.Content>
+												</HoverCard.Trigger>
+												<HoverCard.Content>
 													<UserCard user={person} />
-												</Popover.Content>
-											</Popover.Root>
+												</HoverCard.Content>
+											</HoverCard.Root>
 											<Button
 												onclick={async () => {
 													team.requests = [
@@ -932,18 +931,20 @@
 						duration: 200,
 					}}
 				>
-					<Popover.Root>
-						<Popover.Trigger>
+					<HoverCard.Root>
+						<HoverCard.Trigger
+							href="/events/{encodeURIComponent(teamMember.email)}"
+						>
 							{teamMember.name}
-						</Popover.Trigger>
-						<Popover.Content>
+						</HoverCard.Trigger>
+						<HoverCard.Content>
 							<UserCard
 								user={$allUsersCollection.find(
 									(u) => u.email === teamMember.email,
 								) ?? { email: '', events: [], name: '' }}
 							/>
-						</Popover.Content>
-					</Popover.Root>
+						</HoverCard.Content>
+					</HoverCard.Root>
 
 					{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 						<Tooltip.Root>
