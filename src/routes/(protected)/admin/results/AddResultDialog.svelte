@@ -13,6 +13,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { Progress } from '$lib/components/ui/progress';
+	import { Textarea } from '$lib/components/ui/textarea';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { deleteObject } from 'firebase/storage';
 	import { Minus, Pencil, X } from 'lucide-svelte';
@@ -259,7 +260,7 @@
 			</StorageList>
 		{/key}
 
-		<Input bind:value={note} placeholder="Add note..." />
+		<Textarea bind:value={note} placeholder="Add note..." />
 
 		<Dialog.Footer>
 			<Button variant="outline" onclick={() => fileInput?.click()}>
