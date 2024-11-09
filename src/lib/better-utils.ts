@@ -53,7 +53,7 @@ export const mediaQuery = (query: string): Readable<boolean> => {
 
 export const isDesktop = mediaQuery('(min-width: 768px)');
 
-export const InfoComponent = derived(isDesktop, ($isDesktop) =>
+export const infoComponent = derived(isDesktop, ($isDesktop) =>
 	$isDesktop ? Dialog : Drawer,
 );
 

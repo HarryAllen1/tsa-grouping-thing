@@ -1,5 +1,5 @@
 export {
-	InfoComponent,
+	infoComponent,
 	canScroll,
 	isDesktop,
 	mediaQuery,

@@ -301,7 +301,7 @@
 								>
 									<Popover.Root>
 										<Popover.Trigger>
-											<a href="/events/{person.email}">{person.name}</a>
+											{person.name}
 										</Popover.Trigger>
 										<Popover.Content>
 											<UserCard user={person} />

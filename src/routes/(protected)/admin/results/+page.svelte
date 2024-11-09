@@ -1,10 +1,18 @@
 <script lang="ts">
-	import { db, eventsCollection, user } from '$lib';
+	import {
+		db,
+		eventsCollection,
+		user,
+		type UserDoc,
+		allUsersCollection,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
+	import * as Popover from '$lib/components/ui/popover';
 	import { X } from 'lucide-svelte';
 	import AddResultDialog from './AddResultDialog.svelte';
 	import { doc, setDoc } from 'firebase/firestore';
+	import UserCard from '../UserCard.svelte';
 
 	const rerenderMap: Record<string, number> = {};
 	const rerender = (event: string) => {
@@ -46,12 +54,22 @@
 									>
 										<div>
 											{#each result.members as member, i}
-												<a href="/events/{member.email}">
-													<!-- DO NOT FORMAT -->
-													{member.name}{#if member.email === $user.email}
-														{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
-													{/if}
-												</a>
+												<Popover.Root>
+													<Popover.Trigger>
+														<!-- DO NOT FORMAT -->
+														{member.name}{#if member.email === $user.email}
+															{' '}(you){/if}{#if i < result.members.length - 1},
+															{' '}
+														{/if}
+													</Popover.Trigger>
+													<Popover.Content>
+														<UserCard
+															user={$allUsersCollection.find(
+																(u) => u.email === member.email,
+															) as UserDoc}
+														/>
+													</Popover.Content>
+												</Popover.Root>
 											{/each}
 										</div>
 										<AddResultDialog
