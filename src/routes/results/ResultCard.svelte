@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { storage, user, md, type EventDoc, type Result } from '$lib';
+	import { md, storage, user, type EventDoc, type Result } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -73,7 +73,10 @@
 			{event.event}
 		</Card.Title>
 		<Card.Description>
-			Top {event.perChapter} teams go to state
+			Top {event.perChapter > 1 ? event.perChapter : ''}
+			{event.maxTeamSize === 1 ? 'individual' : 'team'}{event.perChapter > 1
+				? 's'
+				: ''} advance{event.perChapter > 1 ? '' : 's'} to the January Qualifier
 		</Card.Description>
 	</Card.Header>
 	<Card.Content>

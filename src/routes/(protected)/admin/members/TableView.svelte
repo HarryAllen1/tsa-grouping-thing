@@ -6,7 +6,7 @@
 		user as userStore,
 		type UserDoc,
 	} from '$lib';
-	import * as HoverCard from '$lib/components/ui/hover-card';
+	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Table from '$lib/components/ui/table';
@@ -31,14 +31,14 @@
 			<Table.Row>
 				<Table.Cell>{user.washingtonId}</Table.Cell>
 				<Table.Cell>
-					<HoverCard.Root>
-						<HoverCard.Trigger>
+					<Popover.Root>
+						<Popover.Trigger>
 							{user.name}
-						</HoverCard.Trigger>
-						<HoverCard.Content>
+						</Popover.Trigger>
+						<Popover.Content>
 							<UserCard {user} />
-						</HoverCard.Content>
-					</HoverCard.Root>
+						</Popover.Content>
+					</Popover.Root>
 				</Table.Cell>
 				<Table.Cell>
 					<Switch

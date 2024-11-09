@@ -1,11 +1,5 @@
 <script lang="ts">
-	import {
-		db,
-		eventsCollection,
-		isMobileOrTablet,
-		noHtmlMd,
-		userDoc,
-	} from '$lib';
+	import { db, eventsCollection, isDesktop, noHtmlMd, userDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
@@ -159,7 +153,7 @@
 			(d) => d.data()?.openAIAPIKey,
 		);
 
-		if (!isMobileOrTablet)
+		if ($isDesktop)
 			document.querySelector<HTMLInputElement>('#newMessageInput')?.focus();
 
 		if (

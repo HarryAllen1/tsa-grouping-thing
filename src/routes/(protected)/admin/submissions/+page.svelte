@@ -38,7 +38,7 @@
 		{#each $eventsCollection.filter((e) => !['*Rooming', '*Cardboard Boat'].includes(e.event)) as event (event.event)}
 			<SubmissionEvent {event} />
 		{:else}
-			<p>harry is an idiot</p>
+			<p>Loading...</p>
 		{/each}
 	{/key}
 </div>

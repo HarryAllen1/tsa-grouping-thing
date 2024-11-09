@@ -11,9 +11,9 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import * as Popover from '$lib/components/ui/popover';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { deleteDoc, deleteField, doc, setDoc } from 'firebase/firestore';
@@ -527,19 +527,14 @@
 						<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 							{#each peopleNotInTeams as person (person.email)}
 								<li>
-									<HoverCard.Root>
-										<HoverCard.Trigger
-											href="/events/{encodeURIComponent(
-												person.email.toLowerCase(),
-											)}"
-											class="underline"
-										>
+									<Popover.Root>
+										<Popover.Trigger class="underline">
 											{person.name}
-										</HoverCard.Trigger>
-										<HoverCard.Content>
+										</Popover.Trigger>
+										<Popover.Content>
 											<UserCard user={person} />
-										</HoverCard.Content>
-									</HoverCard.Root>
+										</Popover.Content>
+									</Popover.Root>
 								</li>
 							{/each}
 						</ul>
@@ -606,23 +601,18 @@
 						<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 							{#each event.members as person (person.email)}
 								<li>
-									<HoverCard.Root>
-										<HoverCard.Trigger
-											href="/events/{encodeURIComponent(
-												person.email.toLowerCase(),
-											)}"
-											class="underline"
-										>
+									<Popover.Root>
+										<Popover.Trigger class="underline">
 											{person.name}
-										</HoverCard.Trigger>
-										<HoverCard.Content>
+										</Popover.Trigger>
+										<Popover.Content>
 											<UserCard
 												user={$allUsersCollection.find(
 													(u) => u.email === person.email,
 												) ?? { email: '', events: [], name: '' }}
 											/>
-										</HoverCard.Content>
-									</HoverCard.Root>
+										</Popover.Content>
+									</Popover.Root>
 								</li>
 							{/each}
 						</ul>
@@ -670,23 +660,18 @@
 						<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 							{#each peopleInUnfilledRooms as person (person.email)}
 								<li>
-									<HoverCard.Root>
-										<HoverCard.Trigger
-											href="/events/{encodeURIComponent(
-												person.email.toLowerCase(),
-											)}"
-											class="underline"
-										>
+									<Popover.Root>
+										<Popover.Trigger class="underline">
 											{person.name}
-										</HoverCard.Trigger>
-										<HoverCard.Content>
+										</Popover.Trigger>
+										<Popover.Content>
 											<UserCard
 												user={$allUsersCollection.find(
 													(u) => u.email === person.email,
 												) ?? { email: '', events: [], name: '' }}
 											/>
-										</HoverCard.Content>
-									</HoverCard.Root>
+										</Popover.Content>
+									</Popover.Root>
 								</li>
 							{/each}
 						</ul>

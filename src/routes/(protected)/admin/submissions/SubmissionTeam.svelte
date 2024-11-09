@@ -2,7 +2,7 @@
 	import { StorageMetadata, type EventDoc, type Team } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
-	import * as HoverCard from '$lib/components/ui/hover-card';
+	import * as Popover from '$lib/components/ui/popover';
 	import { getBlob, type FullMetadata } from 'firebase/storage';
 	import JSZip from 'jszip';
 	import { ArrowUpRight } from 'lucide-svelte';
@@ -129,19 +129,19 @@
 												{/if}
 												<div class="flex-grow"></div>
 												<span>
-													<HoverCard.Root>
-														<HoverCard.Trigger>
+													<Popover.Root>
+														<Popover.Trigger>
 															{new Date(meta.timeCreated).toLocaleString()}
-														</HoverCard.Trigger>
-														<HoverCard.Content>
+														</Popover.Trigger>
+														<Popover.Content>
 															<p>
 																{meta.customMetadata?.userName}
 															</p>
 															<p>
 																{meta.customMetadata?.userEmail}
 															</p>
-														</HoverCard.Content>
-													</HoverCard.Root>
+														</Popover.Content>
+													</Popover.Root>
 												</span>
 											{/snippet}
 										</StorageMetadata>

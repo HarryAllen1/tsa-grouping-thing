@@ -1,4 +1,11 @@
-export { canScroll, isMobileOrTablet, removeRef, sleep } from './better-utils';
+export {
+	InfoComponent,
+	canScroll,
+	isDesktop,
+	mediaQuery,
+	removeRef,
+	sleep,
+} from './better-utils';
 export { default as Combobox } from './Combobox.svelte';
 export { MAX_EVENTS, MIN_EVENTS, POINT_OF_CONTACT_EMAIL } from './constants';
 export { downloadURL } from './download';

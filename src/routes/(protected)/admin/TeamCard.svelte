@@ -19,9 +19,9 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import * as Popover from '$lib/components/ui/popover';
 	import { Progress } from '$lib/components/ui/progress';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -299,14 +299,14 @@
 										duration: 200,
 									}}
 								>
-									<HoverCard.Root>
-										<HoverCard.Trigger>
+									<Popover.Root>
+										<Popover.Trigger>
 											<a href="/events/{person.email}">{person.name}</a>
-										</HoverCard.Trigger>
-										<HoverCard.Content>
+										</Popover.Trigger>
+										<Popover.Content>
 											<UserCard user={person} />
-										</HoverCard.Content>
-									</HoverCard.Root>
+										</Popover.Content>
+									</Popover.Root>
 									<Button
 										onclick={async () => {
 											team.members.push({
@@ -386,8 +386,8 @@
 							<ul>
 								{#each team.members as teamMember (teamMember.email)}
 									<li>
-										<HoverCard.Root>
-											<HoverCard.Trigger>
+										<Popover.Root>
+											<Popover.Trigger>
 												<button
 													onclick={async () => {
 														team.teamCaptain = teamMember?.email ?? '';
@@ -410,15 +410,15 @@
 												>
 													{teamMember.name}
 												</button>
-											</HoverCard.Trigger>
-											<HoverCard.Content>
+											</Popover.Trigger>
+											<Popover.Content>
 												<UserCard
 													user={$allUsersCollection.find(
 														(u) => u.email === teamMember.email,
 													) ?? { email: '', events: [], name: '' }}
 												/>
-											</HoverCard.Content>
-										</HoverCard.Root>
+											</Popover.Content>
+										</Popover.Root>
 										{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 											<Tooltip.Root>
 												<Tooltip.Trigger>
@@ -639,16 +639,16 @@
 					<ul>
 						{#each team.requests ?? [] as request}
 							<li class="flex flex-row">
-								<HoverCard.Root>
-									<HoverCard.Trigger>{request.name}</HoverCard.Trigger>
-									<HoverCard.Content>
+								<Popover.Root>
+									<Popover.Trigger>{request.name}</Popover.Trigger>
+									<Popover.Content>
 										<UserCard
 											user={$allUsersCollection.find(
 												(u) => u.email === request.email,
 											) ?? { email: '', events: [], name: '' }}
 										/>
-									</HoverCard.Content>
-								</HoverCard.Root>
+									</Popover.Content>
+								</Popover.Root>
 								<Button
 									onclick={async () => {
 										team.members.push({
@@ -736,14 +736,14 @@
 												duration: 200,
 											}}
 										>
-											<HoverCard.Root>
-												<HoverCard.Trigger>
+											<Popover.Root>
+												<Popover.Trigger>
 													{person.name}
-												</HoverCard.Trigger>
-												<HoverCard.Content>
+												</Popover.Trigger>
+												<Popover.Content>
 													<UserCard user={person} />
-												</HoverCard.Content>
-											</HoverCard.Root>
+												</Popover.Content>
+											</Popover.Root>
 											<Button
 												onclick={async () => {
 													team.requests = [
@@ -931,20 +931,18 @@
 						duration: 200,
 					}}
 				>
-					<HoverCard.Root>
-						<HoverCard.Trigger
-							href="/events/{encodeURIComponent(teamMember.email)}"
-						>
+					<Popover.Root>
+						<Popover.Trigger>
 							{teamMember.name}
-						</HoverCard.Trigger>
-						<HoverCard.Content>
+						</Popover.Trigger>
+						<Popover.Content>
 							<UserCard
 								user={$allUsersCollection.find(
 									(u) => u.email === teamMember.email,
 								) ?? { email: '', events: [], name: '' }}
 							/>
-						</HoverCard.Content>
-					</HoverCard.Root>
+						</Popover.Content>
+					</Popover.Root>
 
 					{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 						<Tooltip.Root>

@@ -11,9 +11,9 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import { doc, setDoc } from 'firebase/firestore';
@@ -87,14 +87,14 @@
 				class="flex flex-row items-center gap-2"
 			>
 				<p>Completed intake form</p>
-				<HoverCard.Root>
-					<HoverCard.Trigger>
+				<Popover.Root>
+					<Popover.Trigger>
 						<CircleHelp class="size-5" />
-					</HoverCard.Trigger>
-					<HoverCard.Content>
+					</Popover.Trigger>
+					<Popover.Content>
 						Turn off to force the user to re-complete the intake form.
-					</HoverCard.Content>
-				</HoverCard.Root>
+					</Popover.Content>
+				</Popover.Root>
 			</Label>
 		</div>
 		<div class="flex items-center space-x-2">
