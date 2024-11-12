@@ -20,8 +20,8 @@ user.subscribe(async ($u) => {
 				...$doc,
 				name:
 					$doc?.firstName && $doc?.lastName
-						? `${$doc.preferredFirstName ? `${$doc.preferredFirstName} (${$doc.firstName})` : $doc?.firstName} ${$doc?.lastName}`
-						: $doc?.name,
+						? `${$doc.preferredFirstName ? `${$doc.preferredFirstName.trim()} (${$doc.firstName.trim()})` : $doc?.firstName.trim()} ${$doc?.lastName.trim()}`
+						: $doc?.name.trim(),
 			}),
 		);
 		allUsersCollection = derived(
@@ -31,8 +31,8 @@ user.subscribe(async ($u) => {
 					...$doc,
 					name:
 						$doc?.firstName && $doc?.lastName
-							? `${$doc.preferredFirstName ? `${$doc.preferredFirstName} (${$doc.firstName})` : $doc?.firstName} ${$doc?.lastName}`
-							: $doc?.name,
+							? `${$doc.preferredFirstName ? `${$doc.preferredFirstName.trim()} (${$doc.firstName.trim()})` : $doc?.firstName.trim()} ${$doc?.lastName.trim()}`
+							: $doc?.name.trim(),
 				})),
 		);
 		eventsCollection = collectionStore<EventDoc>(db, 'events');

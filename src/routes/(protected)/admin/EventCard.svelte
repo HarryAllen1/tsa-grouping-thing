@@ -25,6 +25,7 @@
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import TeamCard from './TeamCard.svelte';
 	import UserCard from './UserCard.svelte';
+	import { openUserDialog } from './user-dialog';
 
 	let {
 		hidden,
@@ -527,14 +528,12 @@
 						<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 							{#each peopleNotInTeams as person (person.email)}
 								<li>
-									<Popover.Root>
-										<Popover.Trigger class="underline">
-											{person.name}
-										</Popover.Trigger>
-										<Popover.Content>
-											<UserCard user={person} />
-										</Popover.Content>
-									</Popover.Root>
+									<button
+										class="underline"
+										onclick={() => openUserDialog(person.email)}
+									>
+										{person.name}
+									</button>
 								</li>
 							{/each}
 						</ul>
@@ -660,18 +659,12 @@
 						<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 							{#each peopleInUnfilledRooms as person (person.email)}
 								<li>
-									<Popover.Root>
-										<Popover.Trigger class="underline">
-											{person.name}
-										</Popover.Trigger>
-										<Popover.Content>
-											<UserCard
-												user={$allUsersCollection.find(
-													(u) => u.email === person.email,
-												) ?? { email: '', events: [], name: '' }}
-											/>
-										</Popover.Content>
-									</Popover.Root>
+									<button
+										class="underline"
+										onclick={() => openUserDialog(person.email)}
+									>
+										{person.name}
+									</button>
 								</li>
 							{/each}
 						</ul>

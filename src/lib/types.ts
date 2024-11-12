@@ -22,6 +22,7 @@ export interface EventDoc {
 
 export interface Result {
 	members: BasicUser[];
+	/** @deprecated */
 	rubricPaths: string[];
 	id: ReturnType<typeof crypto.randomUUID>;
 	note?: string;

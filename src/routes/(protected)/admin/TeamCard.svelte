@@ -21,7 +21,6 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import * as Popover from '$lib/components/ui/popover';
 	import { Progress } from '$lib/components/ui/progress';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -48,7 +47,7 @@
 	import { flip } from 'svelte/animate';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import CardboardBoatDialog from '../../CardboardBoatDialog.svelte';
-	import UserCard from './UserCard.svelte';
+	import { openUserDialog } from './user-dialog';
 
 	let { team, event }: { team: Team; event: EventDoc } = $props();
 
@@ -299,14 +298,9 @@
 										duration: 200,
 									}}
 								>
-									<Popover.Root>
-										<Popover.Trigger>
-											{person.name}
-										</Popover.Trigger>
-										<Popover.Content>
-											<UserCard user={person} />
-										</Popover.Content>
-									</Popover.Root>
+									<button onclick={() => openUserDialog(person.email)}>
+										{person.name}
+									</button>
 									<Button
 										onclick={async () => {
 											team.members.push({
@@ -386,39 +380,28 @@
 							<ul>
 								{#each team.members as teamMember (teamMember.email)}
 									<li>
-										<Popover.Root>
-											<Popover.Trigger>
-												<button
-													onclick={async () => {
-														team.teamCaptain = teamMember?.email ?? '';
-														team.lastUpdatedBy = $user?.email ?? '';
-														team.lastUpdatedTime = new Timestamp(
-															Date.now() / 1000,
-															0,
-														);
-														await setDoc(
-															doc(db, 'events', event.event ?? ''),
-															{
-																teams: event.teams,
-																lastUpdatedBy: $user?.email ?? '',
-															},
-															{
-																merge: true,
-															},
-														);
-													}}
-												>
-													{teamMember.name}
-												</button>
-											</Popover.Trigger>
-											<Popover.Content>
-												<UserCard
-													user={$allUsersCollection.find(
-														(u) => u.email === teamMember.email,
-													) ?? { email: '', events: [], name: '' }}
-												/>
-											</Popover.Content>
-										</Popover.Root>
+										<button
+											onclick={async () => {
+												team.teamCaptain = teamMember?.email ?? '';
+												team.lastUpdatedBy = $user?.email ?? '';
+												team.lastUpdatedTime = new Timestamp(
+													Date.now() / 1000,
+													0,
+												);
+												await setDoc(
+													doc(db, 'events', event.event ?? ''),
+													{
+														teams: event.teams,
+														lastUpdatedBy: $user?.email ?? '',
+													},
+													{
+														merge: true,
+													},
+												);
+											}}
+										>
+											{teamMember.name}
+										</button>
 										{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 											<Tooltip.Root>
 												<Tooltip.Trigger>
@@ -639,16 +622,9 @@
 					<ul>
 						{#each team.requests ?? [] as request}
 							<li class="flex flex-row">
-								<Popover.Root>
-									<Popover.Trigger>{request.name}</Popover.Trigger>
-									<Popover.Content>
-										<UserCard
-											user={$allUsersCollection.find(
-												(u) => u.email === request.email,
-											) ?? { email: '', events: [], name: '' }}
-										/>
-									</Popover.Content>
-								</Popover.Root>
+								<button onclick={() => openUserDialog(request.email)}>
+									{request.name}
+								</button>
 								<Button
 									onclick={async () => {
 										team.members.push({
@@ -736,14 +712,9 @@
 												duration: 200,
 											}}
 										>
-											<Popover.Root>
-												<Popover.Trigger>
-													{person.name}
-												</Popover.Trigger>
-												<Popover.Content>
-													<UserCard user={person} />
-												</Popover.Content>
-											</Popover.Root>
+											<button onclick={() => openUserDialog(person.email)}>
+												{person.name}
+											</button>
 											<Button
 												onclick={async () => {
 													team.requests = [
@@ -931,18 +902,9 @@
 						duration: 200,
 					}}
 				>
-					<Popover.Root>
-						<Popover.Trigger>
-							{teamMember.name}
-						</Popover.Trigger>
-						<Popover.Content>
-							<UserCard
-								user={$allUsersCollection.find(
-									(u) => u.email === teamMember.email,
-								) ?? { email: '', events: [], name: '' }}
-							/>
-						</Popover.Content>
-					</Popover.Root>
+					<button onclick={() => openUserDialog(teamMember.email)} class="text-start">
+						{teamMember.name}
+					</button>
 
 					{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 						<Tooltip.Root>
