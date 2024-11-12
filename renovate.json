@@ -1,6 +1,12 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": [
+		"github>whitesource/merge-confidence:beta",
+		"config:base",
+		"group:allNonMajor",
+		":semanticCommitTypeAll(chore)"
+	],
+	"pin": {
+		"enabled": false
+	}
 }
