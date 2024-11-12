@@ -681,8 +681,8 @@
 			{#each event.teams.slice(0, 4) as team (team.id)}
 				<TeamCard {event} {team} />
 			{/each}
-			<Collapsible.Root bind:open={collapsibleOpen}>
-				<Collapsible.Content>
+			<Collapsible.Root bind:open={collapsibleOpen} class="contents">
+				<Collapsible.Content class="contents">
 					{#each event.teams.slice(4) as team (team.id)}
 						<TeamCard {event} {team} />
 					{/each}
