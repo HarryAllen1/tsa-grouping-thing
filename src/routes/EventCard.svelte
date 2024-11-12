@@ -27,11 +27,11 @@
 			<TeamCard {event} {team} />
 		{/each}
 	{:else}
-		<Collapsible.Root bind:open={collapsibleOpen} class="contents">
-			{#each teams.slice(0, 4) as team (team.id)}
-				<TeamCard {event} {team} />
-			{/each}
-			<Collapsible.Content class="contents">
+		{#each teams.slice(0, 4) as team (team.id)}
+			<TeamCard {event} {team} />
+		{/each}
+		<Collapsible.Root bind:open={collapsibleOpen}>
+			<Collapsible.Content>
 				{#each teams.slice(4) as team (team.id)}
 					<TeamCard {event} {team} />
 				{/each}
