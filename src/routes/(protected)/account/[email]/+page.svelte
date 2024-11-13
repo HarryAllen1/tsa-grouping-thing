@@ -234,7 +234,7 @@
 							</div>
 							<Select.Trigger>
 								<span>
-									{formData.grade}
+									{formData.gender}
 								</span>
 							</Select.Trigger>
 							<Select.Content>
