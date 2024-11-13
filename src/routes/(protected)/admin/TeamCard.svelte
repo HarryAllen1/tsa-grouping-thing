@@ -118,9 +118,11 @@
 						);
 						Promise.all(refs.map((r) => uploadBytes(r[0], r[1])))
 							.then(() => {
+								dummyVariableToRerender++;
 								res('Uploaded!');
 							})
 							.catch((error) => {
+								dummyVariableToRerender++;
 								rej(String(error));
 							});
 					});
@@ -902,7 +904,10 @@
 						duration: 200,
 					}}
 				>
-					<button onclick={() => openUserDialog(teamMember.email)} class="text-start">
+					<button
+						onclick={() => openUserDialog(teamMember.email)}
+						class="text-start"
+					>
 						{teamMember.name}
 					</button>
 
