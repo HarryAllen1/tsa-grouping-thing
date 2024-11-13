@@ -119,7 +119,12 @@
 								.map((m) => m.email)
 								.includes($user?.email?.toLowerCase() ?? ''),
 						);
-						if (event.maxTeamSize === 1) {
+						if (
+							event.maxTeamSize === 1 &&
+							((event.teamCreationLocked &&
+								event.teams.length < event.perChapter) ||
+								!event.teamCreationLocked)
+						) {
 							if (state && !membersTeam) {
 								let lowestNotTaken = 1;
 								while (
