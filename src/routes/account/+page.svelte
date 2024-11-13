@@ -174,9 +174,21 @@
 							}
 						}}
 					>
-						<Label>
-							Grade<span class="text-red-500 dark:text-red-400">*</span>
-						</Label>
+						<div class="flex flex-row items-center gap-1">
+							<Label>
+								Grade<span class="text-red-500 dark:text-red-400">*</span>
+							</Label>
+
+							<Popover.Root>
+								<Popover.Trigger>
+									<CircleHelpIcon class="size-5" />
+								</Popover.Trigger>
+								<Popover.Content>
+									National TSA requires this information.
+								</Popover.Content>
+							</Popover.Root>
+						</div>
+
 						<Select.Trigger>
 							<span>
 								{formData.grade}
@@ -406,6 +418,12 @@
 									class="text-red-500 dark:text-red-400">*</span
 								>
 							</Label>
+							<Popover.Root>
+								<Popover.Trigger>
+									<CircleHelpIcon class="size-5" />
+								</Popover.Trigger>
+								<Popover.Content>Statistics 👍</Popover.Content>
+							</Popover.Root>
 						</div>
 						<Select.Trigger>
 							<span>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {
 		db,
+		fancyConfirm,
 		eventsCollection,
 		MAX_EVENTS,
 		MIN_EVENTS,
@@ -59,8 +60,18 @@
 		<div class="flex items-center space-x-2">
 			<Switch
 				id="{hash}admin"
-				checked={user.admin}
+				bind:checked={user.admin}
 				onCheckedChange={async (e) => {
+					if (
+						e &&
+						!(await fancyConfirm(
+							`Are you sure?`,
+							`Are you sure you want to make ${user.name} an admin?`,
+						))
+					) {
+						user.admin = false;
+						return;
+					}
 					await setDoc(
 						doc(db, 'users', user.email),
 						{ admin: e, lastUpdatedBy: $userStore?.email ?? '' },
