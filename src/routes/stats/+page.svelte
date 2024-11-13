@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { allUsersCollection, eventsCollection, userDoc } from '$lib';
+	import {
+		allUsersCollection,
+		eventsCollection,
+		userDoc,
+		MIN_EVENTS,
+	} from '$lib';
 	import { barX, plot } from '@observablehq/plot';
 	import colors from 'tailwindcss/colors';
 	import ColorKey from './ColorKey.svelte';
@@ -105,6 +110,19 @@
 	<p>
 		Total members: {$allUsersCollection.filter(
 			(u) => u.events.length > 0 && u.completedIntakeForm,
+		).length}
+	</p>
+	<p>
+		Members with at least {MIN_EVENTS} events: {$allUsersCollection.filter(
+			(u) => u.events.length >= MIN_EVENTS && u.completedIntakeForm,
+		).length}
+	</p>
+	<p>
+		Members with {MIN_EVENTS - 2} to {MIN_EVENTS - 1} events: {$allUsersCollection.filter(
+			(u) =>
+				u.events.length >= MIN_EVENTS - 2 &&
+				u.events.length < MIN_EVENTS &&
+				u.completedIntakeForm,
 		).length}
 	</p>
 	<p>
