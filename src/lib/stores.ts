@@ -18,6 +18,7 @@ user.subscribe(async ($u) => {
 			docStore<UserDoc>(db, `users/${$u?.email}`) as Readable<UserDoc>,
 			($doc) => ({
 				...$doc,
+				admin: !!$doc?.admin,
 				name:
 					$doc?.firstName && $doc?.lastName
 						? `${$doc.preferredFirstName ? `${$doc.preferredFirstName.trim()} (${$doc.firstName.trim()})` : $doc?.firstName.trim()} ${$doc?.lastName.trim()}`
@@ -29,6 +30,8 @@ user.subscribe(async ($u) => {
 			($users) =>
 				$users.map(($doc) => ({
 					...$doc,
+					// allow confirmation check
+					admin: !!$doc?.admin,
 					name:
 						$doc?.firstName && $doc?.lastName
 							? `${$doc.preferredFirstName ? `${$doc.preferredFirstName.trim()} (${$doc.firstName.trim()})` : $doc?.firstName.trim()} ${$doc?.lastName.trim()}`
