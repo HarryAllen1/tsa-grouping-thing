@@ -13,7 +13,7 @@
 
 <tfoot
 	bind:this={ref}
-	class={cn('bg-primary font-medium text-primary-foreground', className)}
+	class={cn('bg-muted/50 font-medium', className)}
 	{...restProps}
 >
 	{@render children?.()}

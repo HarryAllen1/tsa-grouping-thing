@@ -106,7 +106,6 @@
 					id={event.event}
 					class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
 					onCheckedChange={async (state) => {
-						if (state === 'indeterminate') return;
 						if (
 							event.locked ||
 							(!eventMap[event.event] &&

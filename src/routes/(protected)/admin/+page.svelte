@@ -92,7 +92,7 @@
 		minTeamSize: number;
 		maxTeamSize: number;
 		perChapter: number;
-		locked: boolean | 'indeterminate' | undefined;
+		locked: boolean | undefined;
 	} = {
 		event: '',
 		minTeamSize: 1,
