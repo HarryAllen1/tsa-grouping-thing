@@ -106,7 +106,9 @@
 			{:else if add}
 				{@render add({ props })}
 			{:else}
-				<Button id={id.replaceAll('-', '').replace(/\d/, '')}>Add</Button>
+				<Button id={id.replaceAll('-', '').replace(/\d/, '')} {...props}>
+					Add
+				</Button>
 			{/if}
 		{/snippet}
 	</Dialog.Trigger>
