@@ -20,6 +20,8 @@
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import Download from 'lucide-svelte/icons/download';
+	import Lock from 'lucide-svelte/icons/lock';
+	import LockOpen from 'lucide-svelte/icons/lock-open';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import Settings from 'lucide-svelte/icons/settings';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
@@ -67,7 +69,14 @@
 <Card.Root class={hidden ? 'hidden' : ''}>
 	<Card.Header>
 		<Card.Title class="flex flex-row items-center">
-			<span>{event.event}</span>
+			<span>
+				{event.event}
+				{#if event.locked}
+					<Lock />
+				{:else if event.teamCreationLocked}
+					<LockOpen />
+				{/if}
+			</span>
 			<div class="flex-grow"></div>
 			<Dialog.Root bind:open={editEventDialogOpen}>
 				<Dialog.Trigger>

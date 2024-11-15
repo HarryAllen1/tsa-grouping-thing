@@ -19,6 +19,7 @@ user.subscribe(async ($u) => {
 			($doc) => ({
 				...$doc,
 				admin: !!$doc?.admin,
+				random: !!$doc?.random,
 				name:
 					$doc?.firstName && $doc?.lastName
 						? `${$doc.preferredFirstName ? `${$doc.preferredFirstName.trim()} (${$doc.firstName.trim()})` : $doc?.firstName.trim()} ${$doc?.lastName.trim()}`
@@ -32,6 +33,7 @@ user.subscribe(async ($u) => {
 					...$doc,
 					// allow confirmation check
 					admin: !!$doc?.admin,
+					random: !!$doc?.random,
 					name:
 						$doc?.firstName && $doc?.lastName
 							? `${$doc.preferredFirstName ? `${$doc.preferredFirstName.trim()} (${$doc.firstName.trim()})` : $doc?.firstName.trim()} ${$doc?.lastName.trim()}`

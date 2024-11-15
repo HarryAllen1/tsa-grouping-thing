@@ -96,13 +96,17 @@
 
 	<div class="mb-4 flex flex-col gap-2">
 		{#each $events.filter((e) => !e.hideInSignup) as event (event.event)}
+			{@const disabled =
+				event.locked ||
+				(!eventMap[event.event] &&
+					($userDoc?.events.length ?? 0) >= MAX_EVENTS) ||
+				(event.teamCreationLocked &&
+					event.maxTeamSize === 1 &&
+					event.teams.length >= event.perChapter)}
 			<div class="flex items-center space-x-2">
 				<Checkbox
 					checked={eventMap[event.event]}
-					disabled={event.locked ||
-						(!eventMap[event.event] &&
-							($userDoc?.events.length ?? 0) >= MAX_EVENTS) ||
-						!$userDoc?.events}
+					{disabled}
 					id={event.event}
 					class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
 					onCheckedChange={async (state) => {
@@ -180,9 +184,7 @@
 				/>
 				<Label
 					for={event.event}
-					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {event.locked ||
-					(!eventMap[event.event] &&
-						($userDoc?.events.length ?? 0) >= MAX_EVENTS)
+					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {disabled
 						? 'opacity-50'
 						: ''} {event.locked ? 'line-through' : ''}"
 				>

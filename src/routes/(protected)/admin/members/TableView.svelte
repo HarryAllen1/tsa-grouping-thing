@@ -12,9 +12,13 @@
 	import * as Table from '$lib/components/ui/table';
 	import { doc, setDoc } from 'firebase/firestore';
 	import UserCard from '../UserCard.svelte';
+	import DataTable from './DataTable.svelte';
+	import { columns } from './columns';
 
 	let { results }: { results: UserDoc[] } = $props();
 </script>
+
+<DataTable data={results} {columns} />
 
 <Table.Root>
 	<Table.Header>
