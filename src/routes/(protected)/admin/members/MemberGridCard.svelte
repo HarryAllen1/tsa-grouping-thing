@@ -18,7 +18,8 @@
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import { doc, setDoc } from 'firebase/firestore';
-	import { ChevronsUpDown, Save } from 'lucide-svelte';
+	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+	import Save from 'lucide-svelte/icons/save';
 	import CircleHelp from 'lucide-svelte/icons/circle-help';
 	import UserCog from 'lucide-svelte/icons/user-cog';
 

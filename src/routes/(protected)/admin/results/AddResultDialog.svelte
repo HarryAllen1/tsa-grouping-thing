@@ -16,7 +16,9 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { deleteObject } from 'firebase/storage';
-	import { Minus, Pencil, X } from 'lucide-svelte';
+	import Minus from 'lucide-svelte/icons/minus';
+	import Pencil from 'lucide-svelte/icons/pencil';
+	import X from 'lucide-svelte/icons/x';
 	import { type Snippet } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';

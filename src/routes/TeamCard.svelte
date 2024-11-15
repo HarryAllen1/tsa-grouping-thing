@@ -30,15 +30,13 @@
 		getDownloadURL,
 		type FullMetadata,
 	} from 'firebase/storage';
-	import {
-		ChevronsUpDown,
-		Crown,
-		LogOut,
-		Minus,
-		Plus,
-		UserPlus,
-		X,
-	} from 'lucide-svelte';
+	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+	import Crown from 'lucide-svelte/icons/crown';
+	import LogOut from 'lucide-svelte/icons/log-out';
+	import Minus from 'lucide-svelte/icons/minus';
+	import Plus from 'lucide-svelte/icons/plus';
+	import UserPlus from 'lucide-svelte/icons/user-plus';
+	import X from 'lucide-svelte/icons/x';
 	import type { Snippet } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';

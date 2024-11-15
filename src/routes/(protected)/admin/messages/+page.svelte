@@ -5,7 +5,7 @@
 	import TeamMessages from '../../../TeamMessages.svelte';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Button } from '$lib/components/ui/button';
-	import { ChevronsUpDown } from 'lucide-svelte';
+	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import { setContext } from 'svelte';
 
 	const blockedMessages = collectionStore<

@@ -14,7 +14,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import { Lock } from 'lucide-svelte';
+	import Lock from 'lucide-svelte/icons/lock';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
 	let {

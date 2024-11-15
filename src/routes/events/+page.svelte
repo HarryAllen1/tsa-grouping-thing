@@ -4,7 +4,7 @@
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import { Lock } from 'lucide-svelte';
+	import Lock from 'lucide-svelte/icons/lock';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
 	const user = userStore(auth);

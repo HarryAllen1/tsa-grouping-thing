@@ -12,7 +12,7 @@
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
-	import { Lock } from 'lucide-svelte';
+	import Lock from 'lucide-svelte/icons/lock';
 	import { derived as derivedStore } from 'svelte/store';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 

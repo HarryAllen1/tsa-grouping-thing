@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { cn } from '$lib/utils';
-	import { RotateCw } from 'lucide-svelte';
+	import RotateCw from 'lucide-svelte/icons/rotate-cw';
 	import type { HTMLImgAttributes } from 'svelte/elements';
 
 	let {

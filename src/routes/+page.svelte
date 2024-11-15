@@ -18,7 +18,9 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import { ChevronsUpDown, Minus, Plus } from 'lucide-svelte';
+	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+	import Minus from 'lucide-svelte/icons/minus';
+	import Plus from 'lucide-svelte/icons/plus';
 	import { mount } from 'svelte';
 	import { persisted } from 'svelte-persisted-store';
 	import Copyable from './Copyable.svelte';

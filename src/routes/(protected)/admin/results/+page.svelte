@@ -9,7 +9,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Popover from '$lib/components/ui/popover';
-	import { X } from 'lucide-svelte';
+	import X from 'lucide-svelte/icons/x';
 	import AddResultDialog from './AddResultDialog.svelte';
 	import { doc, setDoc } from 'firebase/firestore';
 	import UserCard from '../UserCard.svelte';

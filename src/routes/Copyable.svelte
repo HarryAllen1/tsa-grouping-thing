@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { Copy } from 'lucide-svelte';
+	import Copy  from 'lucide-svelte/icons/copy';
 	import { toast } from 'svelte-sonner';
 
 	let { text }: { text: string } = $props();
