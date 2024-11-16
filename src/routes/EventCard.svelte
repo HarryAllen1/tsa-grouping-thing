@@ -30,8 +30,10 @@
 		{#each teams.slice(0, 4) as team (team.id)}
 			<TeamCard {event} {team} />
 		{/each}
-		<Collapsible.Root bind:open={collapsibleOpen} class="contents">
-			<Collapsible.Content class="contents">
+		<Collapsible.Root bind:open={collapsibleOpen}>
+			<Collapsible.Content
+				class="{collapsibleOpen ? 'flex' : ''} flex-col gap-4"
+			>
 				{#each teams.slice(4) as team (team.id)}
 					<TeamCard {event} {team} />
 				{/each}

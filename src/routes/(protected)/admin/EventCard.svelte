@@ -72,9 +72,9 @@
 			<span>
 				{event.event}
 				{#if event.locked}
-					<Lock />
+					<Lock class="inline-block" />
 				{:else if event.teamCreationLocked}
-					<LockOpen />
+					<LockOpen class="inline-block" />
 				{/if}
 			</span>
 			<div class="flex-grow"></div>
@@ -687,18 +687,21 @@
 				<TeamCard {event} {team} />
 			{/each}
 		{:else}
+			{console.log(event.event)}
 			{#each event.teams.slice(0, 4) as team (team.id)}
 				<TeamCard {event} {team} />
 			{/each}
-			<Collapsible.Root bind:open={collapsibleOpen} class="contents">
-				<Collapsible.Content class="contents">
+			<Collapsible.Root bind:open={collapsibleOpen}>
+				<Collapsible.Content
+					class="{collapsibleOpen ? 'flex' : ''} flex-col gap-4"
+				>
 					{#each event.teams.slice(4) as team (team.id)}
 						<TeamCard {event} {team} />
 					{/each}
 				</Collapsible.Content>
 				<Collapsible.Trigger class="w-full">
 					{#snippet child({ props })}
-						<Button variant="ghost" size="sm" class="w-full" {...props}>
+						<Button variant="ghost" size="sm" class="mt-4 w-full" {...props}>
 							<ChevronUp
 								class="transition-transform {collapsibleOpen
 									? ''
