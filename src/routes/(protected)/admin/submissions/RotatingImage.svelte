@@ -13,7 +13,7 @@
 		clickableImage?: boolean;
 	} = $props();
 
-	let rotation = 0;
+	let rotation = $state(0);
 	let classes = $derived(
 		cn(
 			rotation % 4 === 1 && 'rotate-90',

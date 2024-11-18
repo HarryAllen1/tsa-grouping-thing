@@ -114,14 +114,14 @@
 														)}"
 														target="_blank"
 														rel="noreferrer"
-														class="w-full text-start">{item.name}</a
+														class="w-full break-words text-start">{item.name}</a
 													>
 												{:else}
 													<a
 														href={link}
 														target="_blank"
 														rel="noreferrer"
-														class="flex flex-row items-center"
+														class="flex flex-row items-center break-words"
 													>
 														{item.name}
 														<ArrowUpRight class="h-4 opacity-50" />
