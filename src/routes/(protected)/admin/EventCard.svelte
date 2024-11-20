@@ -687,7 +687,6 @@
 				<TeamCard {event} {team} />
 			{/each}
 		{:else}
-			{console.log(event.event)}
 			{#each event.teams.slice(0, 4) as team (team.id)}
 				<TeamCard {event} {team} />
 			{/each}

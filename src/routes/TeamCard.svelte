@@ -129,7 +129,6 @@
 								<Button
 									variant="destructive"
 									onclick={async () => {
-										console.log('adsf');
 										const teamButMutable = team;
 										teamButMutable.members.splice(
 											teamButMutable.members.findIndex(
