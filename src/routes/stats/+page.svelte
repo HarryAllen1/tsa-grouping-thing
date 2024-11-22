@@ -117,14 +117,15 @@
 			(u) => u.events.length >= MIN_EVENTS && u.completedIntakeForm,
 		).length}
 	</p>
-	<p>
-		Members with {MIN_EVENTS - 2} to {MIN_EVENTS - 1} events: {$allUsersCollection.filter(
-			(u) =>
-				u.events.length >= MIN_EVENTS - 2 &&
-				u.events.length < MIN_EVENTS &&
-				u.completedIntakeForm,
-		).length}
-	</p>
+	{#each { length: MIN_EVENTS } as _, i}
+		{@const num = MIN_EVENTS - i - 1}
+		<p>
+			Members with {num} events: {$allUsersCollection.filter(
+				(u) => u.events.length === num && u.completedIntakeForm,
+			).length}
+		</p>
+	{/each}
+
 	<p>
 		Events requiring eliminations: {$eventsCollection.reduce(
 			(acc, e) =>
