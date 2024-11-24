@@ -1,6 +1,6 @@
-# Registering for Regionals and State
+# Registering for the January Qualifier and State
 
-The WA regionals and state registration page is really bad. As this team creation wizard's database is different from WTSA's, normally, a lot of work (sometimes hours) must be put in to transfer data across systems. This can be rather tedious, as the event modification page looks like this:
+The WA January Qualifier and state registration page is really bad. As this team creation wizard's database is different from WTSA's, normally, a lot of work (sometimes hours) must be put in to transfer data across systems. This can be rather tedious, as the event modification page looks like this:
 
 ![registration eyesore](./registration%20eyesore.png)
 
@@ -12,7 +12,7 @@ Before registering anyone for any event, every member needs to first be register
 
 There are two ways to nationally register students: [assisted](#assisted) (which uses some features of the Team Creation site) or [manually](#manually).
 
-Use the assisted method when you are registering a large number of members (such as during regionals registration). Otherwise, use the manual method (which can oftentimes end up faster with small numbers of members).
+Use the assisted method when you are registering a large number of members (such as during the January Qualifier registration). Otherwise, use the manual method (which can oftentimes end up faster with small numbers of members).
 
 ### Assisted
 
@@ -83,7 +83,19 @@ The title for everyone except board members should be "Member."
 
 Only after has National membership been submitted can members be added to any State level event.
 
-To register for Washington events, head to their [registration page](https://www.registermychapter.com/tsa/wa/Register.asp), and log in with the same username and password. Then, you'll need to manually add every single person you just added to the Nationals page to the State page. There is no way to automatically do this. Have fun!
+To register for Washington events, head to their [registration page](https://www.registermychapter.com/tsa/wa/Register.asp), and log in with the same username and password.
+
+When you first log in, you'll see a page with a questionnaire. Let Mr. Shelton fill this out.
+
+![questionnaire](questionnaire.png)
+
+Before you assign students their events, you'll need to register them. At the bottom of the page, click "Add Students." There will be a search bar. Don't put anything there, and just click "Search." For every member that payed the qualifier fee, under "Status," change it to "January Qualifier."
+
+::: danger
+It may be tempting to change the status of every member shown. **_If you do this, go back over and ensure that everybody registered has payed the fee. Failure to do so will charge us thousands of dollars which we don't have._**
+:::
+
+Then, you'll need to manually add every single person you just added to the Nationals page to the State page. There is no way to automatically do this. Have fun!
 
 If you need to check for errors in the registration (like exceeding event limits), click the "View Registration" button at the bottom of the page.
 
