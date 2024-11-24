@@ -24,7 +24,7 @@ Scroll down and click the "Bulk CSV Upload" button.
 
 ![add members page](./membership-bulk-upload.png)
 
-The site will then ask you to upload a CSV file (don't worry if you don't know what this is). To get this file, go to the [members page](https://tsa-grouping-thing.vercel.app/admin/members) of the team creation site and click the download button below the large "Members" text.
+The site will then ask you to upload a CSV file (don't worry if you don't know what this is). To get this file, go to the [members page](https://teaming.jhstsa.org/admin/members) of the team creation site and click the download button below the large "Members" text.
 
 ![download button](./download-members-csv.png)
 
