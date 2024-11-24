@@ -8,7 +8,15 @@ So, to help streamline the transferring of events and other data, the Team Creat
 
 ## Registering Students for Membership
 
-Before registering anyone for any event, every member needs to first be registered to the [National TSA page](https://tsamembership.registermychapter.com/). Once logged in, click the "Add Members" button under the tabs.
+Before registering anyone for any event, every member needs to first be registered to the [National TSA page](https://tsamembership.registermychapter.com/).
+
+There are two ways to nationally register students: [assisted](#assisted) (which uses some features of the Team Creation site) or [manually](#manually).
+
+Use the assisted method when you are registering a large number of members (such as during regionals registration). Otherwise, use the manual method (which can oftentimes end up faster with small numbers of members).
+
+### Assisted
+
+Once logged in, click the "Add Members" button under the tabs.
 
 ![membership page](./membership-members.png)
 
@@ -22,7 +30,7 @@ The site will then ask you to upload a CSV file (don't worry if you don't know w
 
 This will download the members CSV file, and alert you to do a few things first.
 
-### Fixing up the Data
+#### Fixing up the Data
 
 ::: danger
 Although it may not seem like it, this step is required.
@@ -46,13 +54,30 @@ Some cells have restrictions on the value they can hold. If they do not adhere t
 
 After you edit all the necessary cells, save the file. If Excel prompts you to "change the file type to preserve formatting," click no. The file type must remain as a CSV.
 
-### Uploading the Data
+#### Uploading the Data
 
 After you've saved the file, go back to the National membership site and drag the CSV file to the blue box. Go through each row to ensure that the information is correct. If an item is red, click the pencil icon on the right and fix the error. The red fields are required. Then, click "Save and Finish" (at the bottom).
 
-Before you can register anyone for any WA events, they need to be affiliated first. In the second to the left column of the Members tab, select all the members and click the red "Submit Membership" button towards the top of the page, underneath the tabs. Once you submit membership, the names of members cannot be changed, so make sure all names are correct before submission.
+Before you can register anyone for any WA events, they need to be affiliated first. In the second to the left column of the Members tab, select all the members and click the red "Submit Membership" button towards the top of the page, underneath the tabs and click through all of the disclamers.
+
+::: danger
+When you click "Submit Membership," the total charge should be $0.00. IF THIS IS ANYTHING OTHER THAN THAT, DO NOT PROCEED -- YOU WILL CHARGE JHS TSA WITH THOUSANDS OF DOLLARS WHICH WE DON'T HAVE!!!
+![membership price](membership-price.png)
+:::
+
+![submit membership](submit-membership.png)
+
+Once you submit membership, the names of members cannot be changed, so make sure all names are correct before submission.
 
 If you find out that a member's name is incorrect, there is no way to change the name or delete the member. You will instead have to create a new member and hopefully not get confused between the two almost duplicate members. So, make sure that all information is correct before membership submission.
+
+### Manually
+
+Go to the [members page on the team creation site](https://teaming.jhstsa.org/admin/members).
+
+Then, log in to the [National membership page](https://tsamembership.registermychapter.com/). It's best to split your screen into two, but you can use the grid view to add all necessary data. Use the "Bulk Member Entry" accordion section in the national site to speed up this process.
+
+The title for everyone except board members should be "Member."
 
 ## Registering for the State Conference
 
@@ -61,3 +86,7 @@ Only after has National membership been submitted can members be added to any St
 To register for Washington events, head to their [registration page](https://www.registermychapter.com/tsa/wa/Register.asp), and log in with the same username and password. Then, you'll need to manually add every single person you just added to the Nationals page to the State page. There is no way to automatically do this. Have fun!
 
 If you need to check for errors in the registration (like exceeding event limits), click the "View Registration" button at the bottom of the page.
+
+You can use the team creation site's [member page](https://teaming.jhstsa.org/admin/members) list view to assist with this (it might be best to split your screen). The number in parenthesis is the team number. If there is a crown, the member is a team captain.
+
+![list view](list-view.png)

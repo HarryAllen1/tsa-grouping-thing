@@ -117,6 +117,7 @@
 			(u) => u.events.length >= MIN_EVENTS && u.completedIntakeForm,
 		).length}
 	</p>
+	<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
 	{#each { length: MIN_EVENTS } as _, i}
 		{@const num = MIN_EVENTS - i - 1}
 		<p>
