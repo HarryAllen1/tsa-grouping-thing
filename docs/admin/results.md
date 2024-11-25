@@ -6,7 +6,7 @@ This page exists to help to determine placement of eliminations. It also provide
 
 Go to the [admin results](https://teaming.jhstsa.org/admin/results) page and find the event for which you want to add results for. Click Add and fill in the inputs for the data. If you want to add a rubric, click the Upload Rubric button to the left of the Add button. This rubric will be shown to every user in the team when the click the "View rubric" button next to their result.
 
-![view rubric button](view-rubric)
+![view rubric button](view-rubric.png)
 
 ## Modifying Existing Results
 

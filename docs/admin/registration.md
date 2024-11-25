@@ -102,3 +102,7 @@ If you need to check for errors in the registration (like exceeding event limits
 You can use the team creation site's [member page](https://teaming.jhstsa.org/admin/members) list view to assist with this (it might be best to split your screen). The number in parenthesis is the team number. If there is a crown, the member is a team captain.
 
 ![list view](list-view.png)
+
+Once you finish registration, you will need to email the WTSA Executive Director our rooming list so that we actually get hotel rooms. Completing this is far less important compared to previous steps. Submitting registration first increases our chances of gaining a good hotel/getting a choice of hotel.
+
+You can see the steps for generating a rooming template on the [rooming page](./rooming.md). Do not actually email the Executive Director the email template. Email it to Mr. Shelton who will, in turn, forward it to the Executive Director.
