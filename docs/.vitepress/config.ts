@@ -66,12 +66,12 @@ export default defineConfig({
 						link: '/admin/cardboard-boat',
 					},
 					{
-						text: 'Logs',
-						link: '/admin/logs',
-					},
-					{
 						text: 'Registration',
 						link: '/admin/registration',
+					},
+					{
+						text: 'Resetting the System',
+						link: '/admin/resetting',
 					},
 				],
 			},

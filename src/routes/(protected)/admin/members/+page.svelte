@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { allUsersCollection, db, fancyConfirm, type UserDoc } from '$lib';
+	import {
+		MIN_EVENTS,
+		allUsersCollection,
+		db,
+		fancyConfirm,
+		type UserDoc,
+	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
@@ -217,8 +223,14 @@
 		placeholder="Search"
 	/>
 
-	<p>Red = not enough events</p>
-	<p>Yellow = doesn't have a team for all events</p>
+	<p><span class="text-red-500">Red</span> = not enough events</p>
+	<p>
+		<span class="text-orange-500">Orange</span> = doesn't have teams for {MIN_EVENTS}
+		events
+	</p>
+	<p>
+		<span class="text-yellow-500">Yellow</span> = doesn't have a team for all events
+	</p>
 	<p class="mb-4">
 		Event format: [event name] ([team number] [👑 if team captain])
 	</p>
