@@ -380,7 +380,7 @@
 		{/if}
 
 		<div
-			class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
+			class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 sm:items-start xl:grid-cols-3"
 		>
 			{#each signedUpEvents as event (event.event)}
 				<EventCard {event} {eventData} />

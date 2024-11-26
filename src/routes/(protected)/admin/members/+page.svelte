@@ -237,7 +237,7 @@
 
 	{#if view === 'grid'}
 		<div
-			class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
+			class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 sm:items-start xl:grid-cols-3"
 		>
 			{#each $allUsersCollection.toSorted( (a, b) => (sortBy === 'firstName' ? a.name : (a.lastName ?? '')).localeCompare(sortBy === 'firstName' ? b.name : (b.lastName ?? '')), ) as user (user.email)}
 				<MemberGridCard
