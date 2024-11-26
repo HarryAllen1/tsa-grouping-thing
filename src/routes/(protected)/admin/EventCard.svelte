@@ -6,6 +6,7 @@
 		md,
 		user,
 		type EventData,
+		type EventDoc,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -45,7 +46,6 @@
 	event.teamCreationActuallyLocked ??= false;
 	event.onlineSubmissions ??= false;
 
-	let originalName = event.event;
 	const intersect = <T,>(a: T[], b: T[]): T[] => {
 		const setB = new Set(b);
 		return [...new Set(a)].filter((x) => setB.has(x));
@@ -214,8 +214,6 @@
 							<Dialog.Description>Requires saving</Dialog.Description>
 						</Dialog.Header>
 
-						<Label for="eventName">Event name</Label>
-						<Input type="text" bind:value={event.event} id="eventName" />
 						<Label for="eventDesc">Event description</Label>
 						<Input type="text" bind:value={event.description} id="eventDesc" />
 						<Label for="minTeamSize">Min team size</Label>
@@ -293,22 +291,30 @@
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
 										{
+											id: event.id,
 											event: event.event,
-											description: event.description || deleteField(),
+											description:
+												event.description ||
+												(deleteField() as unknown as string),
 											minTeamSize: event.minTeamSize,
 											maxTeamSize: event.maxTeamSize,
 											perChapter: event.perChapter,
+											locked: event.locked,
+											teamCreationLocked: event.teamCreationLocked,
+											teamCreationActuallyLocked:
+												event.teamCreationActuallyLocked,
+											onlineSubmissions: event.onlineSubmissions,
+											showToEveryone: event.showToEveryone,
+											hideInSignup: event.hideInSignup,
+											submissionDescription: event.submissionDescription,
 											lastUpdatedBy: $user?.email ?? '',
 											teams: event.teams ?? [],
-										},
+										} satisfies EventDoc,
 										{
 											merge: true,
 										},
 									);
-									if (originalName !== event.event) {
-										await deleteDoc(doc(db, 'events', originalName));
-										originalName = event.event;
-									}
+
 									editEventDialogOpen = false;
 								}}
 							>

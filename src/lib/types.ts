@@ -18,6 +18,7 @@ export interface EventDoc {
 	showToEveryone?: boolean;
 	hideInSignup?: boolean;
 	teamCreationActuallyLocked?: boolean;
+	lastUpdatedBy?: string;
 }
 
 export interface Result {

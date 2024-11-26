@@ -73,6 +73,10 @@ export default defineConfig({
 						text: 'Resetting the System',
 						link: '/admin/resetting',
 					},
+					{
+						text: 'Weird Quirks',
+						link: '/admin/quirks',
+					},
 				],
 			},
 		],
