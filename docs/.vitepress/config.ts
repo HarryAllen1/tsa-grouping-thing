@@ -36,6 +36,10 @@ export default defineConfig({
 						text: 'Statistics',
 						link: '/member/stats',
 					},
+					{
+						text: 'Theming',
+						link: '/member/theming',
+					},
 				],
 			},
 			{
