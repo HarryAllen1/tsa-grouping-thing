@@ -51,13 +51,13 @@ This is exclusively for returning files which don't fit in the aforementioned ca
 
 Unfortunately, this is due to how teams are stored internally. Changing it would make the app stupidly slow. If this really bothers you, remove that member from the team and re-add them.
 
-## There are too many ways to lock things
-
-Yes, but they are all needed. When you open the event settings (cog icon in the top right of each event), there are three locking options:
-
 ## It's impossible to change an event's name
 
 Yes. It's to prone to user error later.
+
+## There are too many ways to lock things
+
+Yes, but they are all needed. When you open the event settings (cog icon in the top right of each event), there are three locking options:
 
 ### Lock event
 
