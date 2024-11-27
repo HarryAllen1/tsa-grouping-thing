@@ -85,6 +85,10 @@ Only after has National membership been submitted can members be added to any St
 
 To register for Washington events, head to their [registration page](https://www.registermychapter.com/tsa/wa/Register.asp), and log in with the same username and password.
 
+::: info
+The State/January Qualifier password can be different from the National affiliation page due to password restrictions. If this is the case, ask Mr. Shelton for both (and ensure you keep track of both).
+:::
+
 When you first log in, you'll see a page with a questionnaire. Let Mr. Shelton fill this out.
 
 ![questionnaire](questionnaire.png)
