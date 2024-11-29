@@ -102,7 +102,10 @@
 					($userDoc?.events.length ?? 0) >= MAX_EVENTS) ||
 				(event.teamCreationLocked &&
 					event.maxTeamSize === 1 &&
-					event.teams.length >= event.perChapter)}
+					event.teams.length >= event.perChapter) ||
+				(event.teamCreationLocked &&
+					event.teams.reduce((acc, curr) => acc + curr.members.length, 0) >=
+						event.perChapter * event.maxTeamSize)}
 			<div class="flex items-center space-x-2">
 				<Checkbox
 					checked={eventMap[event.event]}
