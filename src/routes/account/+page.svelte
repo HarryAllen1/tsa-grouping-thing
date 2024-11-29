@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { db, tShirtMap, user, userDoc } from '$lib';
+	import { db, settings, tShirtMap, user, userDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import * as Alert from '$lib/components/ui/alert';
+	import CircleAlert from 'lucide-svelte/icons/circle-alert';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -56,6 +58,8 @@
 	const capitalizeFirstLetter = (str: string) =>
 		`${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
 
+	let locked = $derived(!!($settings?.lockAccounts || $userDoc.locked));
+
 	onMount(async () => {
 		const userDoc = await getDoc(doc(db, 'users', $user.email ?? ''));
 		const userData = userDoc.data()!;
@@ -89,6 +93,16 @@
 	>
 		Account
 	</h1>
+	{#if locked}
+		<Alert.Root variant="destructive" class="mb-4">
+			<CircleAlert class="size-4" />
+			<Alert.Title>Account Locked</Alert.Title>
+			<Alert.Description>
+				Your account is currently locked. You cannot change your information. If
+				any information is incorrect, please contact a board member.
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
 	<form
 		class="flex flex-col gap-2"
 		onsubmit={async (e) => {
@@ -126,6 +140,7 @@
 					required
 					pattern="^[a-zA-Z\- ]+"
 					bind:value={formData.firstName}
+					disabled={locked}
 				/>
 			</div>
 			<p class="text-sm text-muted-foreground">
@@ -141,6 +156,7 @@
 				<Input
 					pattern="^[a-zA-Z\- ]*"
 					bind:value={formData.preferredFirstName}
+					disabled={locked}
 				/>
 			</div>
 			<p class="text-sm text-muted-foreground">Optional.</p>
@@ -154,6 +170,7 @@
 					required
 					pattern="^[a-zA-Z\- ]+"
 					bind:value={formData.lastName}
+					disabled={locked}
 				/>
 			</div>
 			<p class="text-sm text-muted-foreground">
@@ -173,6 +190,7 @@
 								formData.grade = v as '9' | '10' | '11' | '12';
 							}
 						}}
+						disabled={locked}
 					>
 						<div class="flex flex-row items-center gap-1">
 							<Label>
@@ -234,6 +252,7 @@
 						min="1000000"
 						max="9999999"
 						type="number"
+						disabled={locked}
 					/>
 				</div>
 			</div>
@@ -252,6 +271,7 @@
 									| 'Non-Disclosed';
 							}
 						}}
+						disabled={locked}
 					>
 						<div class="flex flex-row items-center gap-1">
 							<Label class="flex flex-row items-center gap-1">
@@ -304,6 +324,7 @@
 									| 'White/Caucasian';
 							}
 						}}
+						disabled={locked}
 					>
 						<div class="flex flex-row items-center gap-1">
 							<Label class="flex flex-row items-center gap-1">
@@ -355,6 +376,7 @@
 									: never;
 							}
 						}}
+						disabled={locked}
 					>
 						<div class="flex flex-row items-center gap-1">
 							<Label class="flex flex-row items-center gap-1">
@@ -411,6 +433,7 @@
 									| 'Other';
 							}
 						}}
+						disabled={locked}
 					>
 						<div class="flex flex-row items-center gap-1">
 							<Label class="flex flex-row items-center gap-1">
@@ -443,7 +466,7 @@
 			<input required hidden bind:value={formData.foundBy} name="foundBy" />
 		</div>
 		<div class="mt-2 flex w-full flex-row justify-end">
-			<Button type="submit">Save</Button>
+			<Button type="submit" disabled={locked}>Save</Button>
 		</div>
 	</form>
 </div>

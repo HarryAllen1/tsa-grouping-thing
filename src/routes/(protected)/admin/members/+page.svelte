@@ -4,11 +4,13 @@
 		allUsersCollection,
 		db,
 		fancyConfirm,
+		settings,
 		type UserDoc,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import { csvFormat } from 'd3';
@@ -21,6 +23,7 @@
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import Download from 'lucide-svelte/icons/download';
+	import CircleHelp from 'lucide-svelte/icons/circle-help';
 	import CopyButton from './CopyButton.svelte';
 	import MemberGridCard from './MemberGridCard.svelte';
 	import TableView from './TableView.svelte';
@@ -150,6 +153,29 @@
 	<div class="mb-2 flex items-center space-x-2">
 		<Switch bind:checked={hidePeopleWithoutEvents} id="hide-people" />
 		<Label for="hide-people">Hide people without events</Label>
+	</div>
+	<div class="mb-2 flex items-center space-x-2">
+		{#if $settings}
+			<Switch
+				checked={$settings!.lockAccounts}
+				onCheckedChange={async (state) => {
+					await setDoc(settings.ref!, { lockAccounts: state }, { merge: true });
+				}}
+				id="lock-account"
+			/>
+		{/if}
+		<div class="flex flex-row items-center gap-1">
+			<Label for="lock-account">Lock all accounts</Label>
+			<Popover.Root>
+				<Popover.Trigger>
+					<CircleHelp class="size-5" />
+				</Popover.Trigger>
+				<Popover.Content>
+					Prevents all members from editing their account information (name,
+					gender, etc.)
+				</Popover.Content>
+			</Popover.Root>
+		</div>
 	</div>
 	<div class="flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
 		<div>

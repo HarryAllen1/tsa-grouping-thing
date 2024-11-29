@@ -61,7 +61,7 @@
 		<div class="flex items-center space-x-2">
 			<Switch
 				id="{hash}admin"
-				bind:checked={user.admin}
+				checked={user.admin}
 				onCheckedChange={async (e) => {
 					if (
 						e &&
@@ -125,6 +125,34 @@
 				}}
 			/>
 			<Label for="{hash}random">Random switch</Label>
+		</div>
+		<div class="flex items-center space-x-2">
+			<Switch
+				id="{hash}account-locked"
+				checked={user.locked}
+				onCheckedChange={async (e) => {
+					await setDoc(
+						doc(db, 'users', user.email),
+						{ locked: e, lastUpdatedBy: $userStore?.email ?? '' },
+						{ merge: true },
+					);
+				}}
+			/>
+			<Label
+				for="{hash}account-locked"
+				class="flex flex-row items-center gap-2"
+			>
+				<p>Lock account</p>
+				<Popover.Root>
+					<Popover.Trigger>
+						<CircleHelp class="size-5" />
+					</Popover.Trigger>
+					<Popover.Content>
+						Prevents this user from changing their account details (gender,
+						t-shirt, name, etc.)
+					</Popover.Content>
+				</Popover.Root>
+			</Label>
 		</div>
 		<Label>
 			<span class="mb-2"> T-shirt size </span>

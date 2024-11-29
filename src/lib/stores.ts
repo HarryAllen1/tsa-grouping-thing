@@ -41,6 +41,11 @@ user.subscribe(async ($u) => {
 				})),
 		);
 		eventsCollection = collectionStore<EventDoc>(db, 'events');
-		settings = docStore<SettingsDoc>(db, 'settings/settings');
+		settings = docStore<SettingsDoc>(db, 'settings/settings', {
+			enableOnlineSubmissions: false,
+			alert: '',
+			openAIAPIKey: '',
+			lockAccounts: false,
+		});
 	}
 });

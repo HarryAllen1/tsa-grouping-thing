@@ -78,6 +78,7 @@ export interface UserDoc {
 	completedIntakeForm?: boolean;
 	studentId?: number;
 	foundBy?: string;
+	locked?: boolean;
 }
 
 export interface MailDoc {
@@ -100,6 +101,7 @@ export interface SettingsDoc {
 	enableOnlineSubmissions: boolean;
 	alert: string;
 	openAIAPIKey: string;
+	lockAccounts: boolean;
 }
 
 export interface EventData extends EventDoc {
