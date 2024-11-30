@@ -58,11 +58,20 @@
 			: fuse.search(search).map((r) => r.item),
 	);
 	let results = $derived(
-		resultsPreNumEventsFilter.filter((u) =>
-			numberOfEvents.includes(
-				u.events.length.toString() as '0' | '1' | '2' | '3' | '4' | '5' | '6',
-			),
-		),
+		numberOfEvents.length === 6
+			? resultsPreNumEventsFilter
+			: resultsPreNumEventsFilter.filter((u) =>
+					numberOfEvents.includes(
+						u.events.length.toString() as
+							| '0'
+							| '1'
+							| '2'
+							| '3'
+							| '4'
+							| '5'
+							| '6',
+					),
+				),
 	);
 </script>
 
