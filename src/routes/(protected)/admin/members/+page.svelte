@@ -262,7 +262,7 @@
 			<div id="randomSwitch" class="mb-2 flex items-center space-x-2">
 				<Select.Root type="multiple" bind:value={numberOfEvents}>
 					<Select.Trigger class="w-[180px]">
-						{numberOfEvents.toSorted().join(', ') || 'All'}
+						{numberOfEvents.toSorted().join(', ') || 'None'}
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
