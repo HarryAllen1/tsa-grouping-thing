@@ -22,8 +22,8 @@
 		setDoc,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import Download from 'lucide-svelte/icons/download';
 	import CircleHelp from 'lucide-svelte/icons/circle-help';
+	import Download from 'lucide-svelte/icons/download';
 	import CopyButton from './CopyButton.svelte';
 	import MemberGridCard from './MemberGridCard.svelte';
 	import TableView from './TableView.svelte';
@@ -33,6 +33,16 @@
 	let sortBy = $state<'firstName' | 'lastName'>('firstName');
 	let view = $state('grid');
 	let showRandomSwitch = $state<'null' | 'false' | 'true'>('null');
+	// max number of events is always 6
+	let numberOfEvents = $state<('0' | '1' | '2' | '3' | '4' | '5' | '6')[]>([
+		'0',
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6',
+	]);
 
 	let fuse = $derived(
 		new Fuse($allUsersCollection, {
@@ -40,12 +50,19 @@
 			threshold: 0.2,
 		}),
 	);
-	let results = $derived(
+	let resultsPreNumEventsFilter = $derived(
 		search === ''
 			? $allUsersCollection
 					.toSorted((a, b) => a.name.localeCompare(b.name))
 					.filter((u) => !hidePeopleWithoutEvents || u.events.length > 0)
 			: fuse.search(search).map((r) => r.item),
+	);
+	let results = $derived(
+		resultsPreNumEventsFilter.filter((u) =>
+			numberOfEvents.includes(
+				u.events.length.toString() as '0' | '1' | '2' | '3' | '4' | '5' | '6',
+			),
+		),
 	);
 </script>
 
@@ -240,7 +257,27 @@
 				</Select.Root>
 			</div>
 		</div>
+		<div>
+			<Label for="randomSwitch">Number of events</Label>
+			<div id="randomSwitch" class="mb-2 flex items-center space-x-2">
+				<Select.Root type="multiple" bind:value={numberOfEvents}>
+					<Select.Trigger class="w-[180px]">
+						{numberOfEvents.toSorted().join(', ') || 'All'}
+					</Select.Trigger>
+					<Select.Content>
+						<Select.Group>
+							{#each [0, 1, 2, 3, 4, 5, 6] as i}
+								<Select.Item label={i.toString()} value={i.toString()}>
+									{i}
+								</Select.Item>
+							{/each}
+						</Select.Group>
+					</Select.Content>
+				</Select.Root>
+			</div>
+		</div>
 	</div>
+
 	<Input
 		class="mb-4"
 		bind:value={search}
