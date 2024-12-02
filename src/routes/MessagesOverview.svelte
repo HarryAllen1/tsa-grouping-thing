@@ -44,7 +44,7 @@
 	}
 }) as team, i (i)}
 	<button
-		class="relative flex w-full select-none rounded-sm px-2 py-1.5 text-start text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+		class="hover:bg-accent hover:text-accent-foreground relative flex w-full rounded-sm px-2 py-1.5 text-start text-sm outline-hidden select-none"
 		onclick={() => {
 			$selected = team.id;
 		}}

@@ -98,8 +98,8 @@
 <Card.Root
 	class={team.members.length > event.maxTeamSize ||
 	team.members.length < event.minTeamSize
-		? 'bg-red-300 bg-opacity-20 dark:bg-red-950'
-		: 'bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5'}
+		? 'bg-red-300/20 dark:bg-red-950/20'
+		: 'bg-black/5 dark:bg-white/5'}
 >
 	<Card.Header>
 		<Card.Title class="flex flex-row items-center">
@@ -379,7 +379,7 @@
 																		ref={submission}
 																	></StorageMetadata>
 																</DownloadURL>
-																<div class="flex flex-grow"></div>
+																<div class="flex grow"></div>
 																<Button
 																	variant="ghost"
 																	size="icon"

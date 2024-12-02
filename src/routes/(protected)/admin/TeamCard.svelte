@@ -153,10 +153,10 @@
 	}}
 	class="{team.members.length > event.maxTeamSize ||
 	team.members.length < event.minTeamSize
-		? 'bg-red-300  bg-opacity-20 dark:bg-red-950'
+		? 'bg-red-300/20 dark:bg-red-950/20'
 		: team.members.length === event.maxTeamSize
 			? 'bg-green-300 dark:bg-green-950'
-			: 'bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5'} relative"
+			: 'bg-black/5 dark:bg-white/5'} relative"
 >
 	{#if dropping}
 		<div
@@ -239,7 +239,7 @@
 			{:else}
 				<CardboardBoatDialog teamId={team.id} {event} />
 			{/if}
-			<div class="flex-grow"></div>
+			<div class="grow"></div>
 			<Button
 				variant="destructive"
 				size="icon"
@@ -528,7 +528,7 @@
 																	{/snippet}
 																</StorageMetadata>
 															</DownloadURL>
-															<div class="flex flex-grow"></div>
+															<div class="flex grow"></div>
 															<Button
 																variant="ghost"
 																size="icon"
@@ -832,7 +832,7 @@
 															{/snippet}
 														</StorageMetadata>
 													</DownloadURL>
-													<div class="flex flex-grow"></div>
+													<div class="flex grow"></div>
 													<Button
 														variant="ghost"
 														size="icon"

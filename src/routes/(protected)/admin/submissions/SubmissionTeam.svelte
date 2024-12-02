@@ -114,7 +114,7 @@
 														)}"
 														target="_blank"
 														rel="noreferrer"
-														class="w-full break-words text-start">{item.name}</a
+														class="w-full text-start break-words">{item.name}</a
 													>
 												{:else}
 													<a
@@ -127,7 +127,7 @@
 														<ArrowUpRight class="h-4 opacity-50" />
 													</a>
 												{/if}
-												<div class="flex-grow"></div>
+												<div class="grow"></div>
 												<span>
 													<Popover.Root>
 														<Popover.Trigger>

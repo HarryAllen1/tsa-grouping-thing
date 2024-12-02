@@ -85,13 +85,13 @@
 	>
 		<Input
 			placeholder="Search..."
-			class="flex h-11 w-full rounded-md border-none bg-transparent py-3 text-sm outline-none ring-0 placeholder:text-muted-foreground focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50"
+			class="placeholder:text-muted-foreground flex h-11 w-full rounded-md border-none bg-transparent py-3 text-sm ring-0 outline-hidden focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50"
 			bind:value
 		/>
 		<div class="flex flex-col border-t">
 			{#each filteredOptions as option}
 				<button
-					class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+					class="hover:bg-accent hover:text-accent-foreground relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50"
 					onclick={() => {
 						value = '';
 						onSelect(option);

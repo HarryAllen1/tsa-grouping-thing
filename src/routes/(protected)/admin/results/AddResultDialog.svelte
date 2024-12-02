@@ -218,7 +218,7 @@
 											{submission.name}
 										</a>
 									</DownloadURL>
-									<div class="flex flex-grow"></div>
+									<div class="flex grow"></div>
 									<Button
 										variant="ghost"
 										size="icon"

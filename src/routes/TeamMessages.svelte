@@ -242,7 +242,7 @@
 			<SendHorizontal />
 		</Button>
 	</div>
-	<p class="text-sm text-muted-foreground">
+	<p class="text-muted-foreground text-sm">
 		Board members and advisors can see all messages.
 	</p>
 </form>

@@ -80,7 +80,7 @@
 
 <div class="container mb-4">
 	<h1
-		class="mb-6 mt-8 w-full scroll-m-20 text-start text-4xl font-extrabold tracking-tight lg:text-5xl"
+		class="mt-8 mb-6 w-full scroll-m-20 text-start text-4xl font-extrabold tracking-tight lg:text-5xl"
 	>
 		Intake Form
 	</h1>
@@ -116,7 +116,7 @@
 				</Label>
 				<Input bind:value={formData.firstName} />
 			</div>
-			<p class="text-sm text-muted-foreground">
+			<p class="text-muted-foreground text-sm">
 				This name should match your first name in Skyward. Please use the
 				correct spacing and capitalization.
 			</p>
@@ -126,7 +126,7 @@
 				<Label>Preferred name</Label>
 				<Input bind:value={formData.preferredFirstName} />
 			</div>
-			<p class="text-sm text-muted-foreground">Optional.</p>
+			<p class="text-muted-foreground text-sm">Optional.</p>
 		</div>
 		<div>
 			<div>
@@ -135,7 +135,7 @@
 				</Label>
 				<Input bind:value={formData.lastName} />
 			</div>
-			<p class="text-sm text-muted-foreground">
+			<p class="text-muted-foreground text-sm">
 				This should match your last name in Skyward. Please use the correct
 				spacing and capitalization.
 			</p>

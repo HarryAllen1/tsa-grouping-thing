@@ -42,22 +42,22 @@
 </script>
 
 <h1
-	class="mb-6 mt-8 w-full scroll-m-20 text-start text-4xl font-extrabold tracking-tight lg:text-5xl"
+	class="mt-8 mb-6 w-full scroll-m-20 text-start text-4xl font-extrabold tracking-tight lg:text-5xl"
 >
 	Choose Events
 </h1>
-<p class="leading-7 [&:not(:first-child)]:mt-6">
+<p class="leading-7 not-first:mt-6">
 	You may choose up to {MAX_EVENTS} events. You must have at at least {MIN_EVENTS}
 	events. Crossed out events are locked, likely due to eliminations.
 </p>
-<p class="leading-7 [&:not(:first-child)]:mt-6">
+<p class="leading-7 not-first:mt-6">
 	If you are having trouble choosing events, here are some resources:
 </p>
 <ul class="my-6 ml-6 list-disc [&>li]:mt-2">
 	<li>
 		<a
 			target="_blank"
-			class="font-medium text-primary underline underline-offset-4"
+			class="text-primary font-medium underline underline-offset-4"
 			href="https://qz.app.do/what-tsa-events-are-for-me"
 			>Competitive event quiz</a
 		>: a form created by the Washington TSA State Officer team to help you
@@ -66,7 +66,7 @@
 	<li>
 		<a
 			target="_blank"
-			class="font-medium text-primary underline underline-offset-4"
+			class="text-primary font-medium underline underline-offset-4"
 			href="https://lwsd.sharepoint.com/:f:/r/sites/GR-JHS-TechnologyStudentAssociation-SCA/Shared%20Documents/2024-25/Event%20Guides?csf=1&web=1&e=5PsOsB"
 			>Event guides</a
 		>: detailed rules and rubrics for each event
@@ -74,7 +74,7 @@
 	<li>
 		<a
 			target="_blank"
-			class="font-medium text-primary underline underline-offset-4"
+			class="text-primary font-medium underline underline-offset-4"
 			href="https://www.washingtontsa.org/high-school-events"
 			>Washington TSA website</a
 		>: Washington-specific guidelines for each event as well as previous year's
@@ -83,7 +83,7 @@
 	<li>
 		<a
 			target="_blank"
-			class="font-medium text-primary underline underline-offset-4"
+			class="text-primary font-medium underline underline-offset-4"
 			href="https://jhstsa.org">JHS TSA website</a
 		>: quick facts about each event
 	</li>
@@ -131,7 +131,7 @@
 			/>
 			<Label
 				for={event.event}
-				class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {event.locked ||
+				class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {event.locked ||
 				(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= MAX_EVENTS)
 					? 'opacity-50'
 					: ''} {event.locked ? 'line-through' : ''}"

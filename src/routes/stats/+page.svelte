@@ -96,7 +96,7 @@
 				}
 			}
 
-			plotEl.classList.add('!bg-transparent');
+			plotEl.classList.add('bg-transparent!');
 			graph?.replaceChildren(plotEl);
 		}
 	});

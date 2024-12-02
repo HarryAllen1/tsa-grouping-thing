@@ -44,7 +44,7 @@
 
 <div class="container mt-6">
 	<h1
-		class="mb-4 mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+		class="mt-4 mb-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>
 		Crossed out events are locked, likely due to eliminations.
 	</h1>
@@ -77,7 +77,7 @@
 				/>
 				<Label
 					for={event.event}
-					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {event.locked
+					class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {event.locked
 						? 'line-through'
 						: ''}"
 				>

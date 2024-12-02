@@ -15,8 +15,8 @@
 
 <div class="flex items-start">
 	<div class="space-y-1 pr-2">
-		<div class="font-semibold leading-none tracking-tight">Customize</div>
-		<div class="text-xs text-muted-foreground">
+		<div class="leading-none font-semibold tracking-tight">Customize</div>
+		<div class="text-muted-foreground text-xs">
 			Pick a style and color for the site.
 		</div>
 	</div>
@@ -45,11 +45,11 @@
 					onclick={() => {
 						$config.theme = theme.name;
 					}}
-					class={cn('justify-start', isActive && 'border-2 border-primary')}
+					class={cn('justify-start', isActive && 'border-primary border-2')}
 					style="--theme-primary: hsl({theme.activeColor[$mode ?? 'dark']})"
 				>
 					<span
-						class="mr-1 flex h-5 w-5 shrink-0 -translate-x-1 items-center justify-center rounded-full bg-[--theme-primary]"
+						class="bg-primary mr-1 flex h-5 w-5 shrink-0 -translate-x-1 items-center justify-center rounded-full"
 					>
 						{#if isActive}
 							<Check class="h-4 w-4 text-white" />
@@ -71,7 +71,7 @@
 					onclick={() => {
 						$config.radius = valueFloat;
 					}}
-					class={cn($config.radius === valueFloat && 'border-2 border-primary')}
+					class={cn($config.radius === valueFloat && 'border-primary border-2')}
 				>
 					{value}
 				</Button>
@@ -85,7 +85,7 @@
 				variant="outline"
 				size="sm"
 				onclick={() => setMode('light')}
-				class={cn($mode === 'light' && 'border-2 border-primary')}
+				class={cn($mode === 'light' && 'border-primary border-2')}
 			>
 				<Sun class="mr-1 size-4 -translate-x-1" />
 				Light
@@ -94,7 +94,7 @@
 				variant="outline"
 				size="sm"
 				onclick={() => setMode('dark')}
-				class={cn($mode === 'dark' && 'border-2 border-primary')}
+				class={cn($mode === 'dark' && 'border-primary border-2')}
 			>
 				<Moon class="mr-1 size-4 -translate-x-1" />
 				Dark

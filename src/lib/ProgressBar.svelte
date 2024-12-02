@@ -262,14 +262,14 @@
 		aria-valuenow={width}
 		aria-valuemin={0}
 		aria-valuemax={1}
-		class="fixed left-0 top-0 z-50 h-[3px] transition-[width_0.21s_ease-in-out] {className}"
+		class="fixed top-0 left-0 z-50 h-[3px] transition-[width_0.21s_ease-in-out] {className}"
 		class:running
 		class:svelte-progress-bar-hiding={completed}
 		style={barStyle}
 	>
 		{#if running}
 			<div
-				class="absolute right-0 top-0 h-[5px] w-[100px] translate-y-[-4px] rotate-[2.5deg] shadow-[0_0_8px]"
+				class="absolute top-0 right-0 h-[5px] w-[100px] translate-y-[-4px] rotate-[2.5deg] shadow-[0_0_8px]"
 				style={leaderColorStyle}
 			></div>
 		{/if}

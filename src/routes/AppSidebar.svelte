@@ -90,7 +90,7 @@
 							class="flex flex-row justify-start gap-2"
 						>
 							<div
-								class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
+								class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
 							>
 								<enhanced:img
 									src="$lib/favicon.png"
@@ -284,7 +284,7 @@
 						{/snippet}
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Content
-						class="w-[--bits-dropdown-menu-anchor-width] min-w-56 rounded-lg"
+						class="w-(--bits-dropdown-menu-anchor-width) min-w-56 rounded-lg"
 						side={sidebar.isMobile ? 'bottom' : 'right'}
 						align="end"
 						sideOffset={4}

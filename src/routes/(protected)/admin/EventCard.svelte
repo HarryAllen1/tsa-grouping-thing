@@ -77,7 +77,7 @@
 					<LockOpen class="inline-block" />
 				{/if}
 			</span>
-			<div class="flex-grow"></div>
+			<div class="grow"></div>
 			<Dialog.Root bind:open={editEventDialogOpen}>
 				<Dialog.Trigger>
 					<Button size="icon" variant="ghost">
@@ -276,7 +276,7 @@
 							>
 								Delete Event
 							</Button>
-							<div class="flex-grow"></div>
+							<div class="grow"></div>
 							<Button
 								class="mr-2"
 								variant="ghost"
@@ -469,7 +469,7 @@
 							</Dialog.Content>
 						</Dialog.Root>
 					</div>
-					<p class="prose mb-4 text-sm text-inherit dark:prose-invert">
+					<p class="prose dark:prose-invert mb-4 text-sm text-inherit">
 						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						{@html md.render(event.submissionDescription || '(none)')}
 					</p>

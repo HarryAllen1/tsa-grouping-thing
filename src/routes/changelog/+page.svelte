@@ -7,7 +7,7 @@
 		Changes Since Last Year
 	</h1>
 
-	<div class="prose mt-4 max-w-full dark:prose-invert">
+	<div class="prose dark:prose-invert mt-4 max-w-full">
 		<ul>
 			<li>
 				<strong>New domain</strong>: This app now runs off of

@@ -10,7 +10,7 @@
 </script>
 
 <CommandPrimitive.Separator
-	class={cn('-mx-1 h-px bg-border', className)}
+	class={cn('bg-border -mx-1 h-px', className)}
 	bind:ref
 	{...restProps}
 />
