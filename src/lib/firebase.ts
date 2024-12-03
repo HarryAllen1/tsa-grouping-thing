@@ -1,8 +1,5 @@
 import { dev } from '$app/environment';
-import {
-	PUBLIC_FIREBASE_API_KEY,
-	PUBLIC_FIREBASE_EMULATORS,
-} from '$env/static/public';
+import { env } from '$env/dynamic/public';
 import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
@@ -18,7 +15,7 @@ import { connectStorageEmulator, getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
 	apiKey:
-		PUBLIC_FIREBASE_API_KEY ||
+		env.PUBLIC_FIREBASE_API_KEY ||
 		/* restricted key */ 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
 	authDomain: 'tsa-grouping-thing.firebaseapp.com',
 	projectId: 'tsa-grouping-thing',
@@ -35,7 +32,7 @@ export const storage = getStorage(app);
 export const analytics = getAnalytics(app);
 export const functions = getFunctions(app);
 
-if (PUBLIC_FIREBASE_EMULATORS === 'true') {
+if (env.PUBLIC_FIREBASE_EMULATORS === 'true') {
 	connectAuthEmulator(auth, 'http://127.0.0.1:9099');
 	connectFirestoreEmulator(db, '127.0.0.1', 8080);
 	connectStorageEmulator(storage, '127.0.0.1', 9199);
