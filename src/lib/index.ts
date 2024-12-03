@@ -1,6 +1,6 @@
 export {
-	infoComponent,
 	canScroll,
+	infoComponent,
 	isDesktop,
 	mediaQuery,
 	removeRef,
@@ -23,6 +23,7 @@ export {
 	sendEmail,
 	storage,
 } from './firebase';
+export { setEvents } from './functions';
 export { md, noHtmlMd } from './md';
 export { default as ProgressBar } from './ProgressBar.svelte';
 export { default as SimpleTooltip } from './SimpleTooltip.svelte';

@@ -4,25 +4,18 @@ service cloud.firestore {
   match /databases/{database}/documents {
   	match /users/{user} {
       allow read: if request.auth != null;
-      allow write: if
-        request.auth != null &&
-        (
-          get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin ||
-          get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.email == request.auth.token.email
-        );
-      allow delete: if get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
+      allow write: if false;
     }
     match /mail/{email} {
-    	allow create: if request.auth != null;
-      allow update, delete, read: if false;
+      allow read, write: if false;
     }
     match /settings/{setting} {
     	allow read: if request.auth != null;
       allow write: if get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
     }
     match /{document=**} {
-      allow write: if request.auth != null;
-      allow read: if true;
+      allow write: if false;
+      allow read: if request.auth != null;
     }
   }
 }

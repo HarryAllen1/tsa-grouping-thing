@@ -1,10 +1,17 @@
 <script lang="ts">
-	import type { EventDoc, UserDoc } from '$lib';
-	import { auth, db, MAX_EVENTS, MIN_EVENTS } from '$lib';
+	import {
+		auth,
+		db,
+		MAX_EVENTS,
+		MIN_EVENTS,
+		setEvents,
+		type EventDoc,
+		type UserDoc,
+	} from '$lib';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
-	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import Lock from 'lucide-svelte/icons/lock';
+	import { toast } from 'svelte-sonner';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
 	const user = userStore(auth);
@@ -113,76 +120,18 @@
 					id={event.event}
 					class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
 					onCheckedChange={async (state) => {
-						if (
-							event.locked ||
-							(!eventMap[event.event] &&
-								($userDoc?.events.length ?? 0) >= MAX_EVENTS)
-						)
-							return;
-
-						const membersTeam = event.teams.find((t) =>
-							t.members
-								.map((m) => m.email)
-								.includes($user?.email?.toLowerCase() ?? ''),
-						);
-						if (
-							event.maxTeamSize === 1 &&
-							((event.teamCreationLocked &&
-								event.teams.length < event.perChapter) ||
-								!event.teamCreationLocked)
-						) {
-							if (state && !membersTeam) {
-								let lowestNotTaken = 1;
-								while (
-									event.teams.some((t) => t.teamNumber === lowestNotTaken)
-								) {
-									lowestNotTaken++;
-								}
-
-								event.teams.push({
-									members: [
-										{
-											name: $userDoc?.name ?? '',
-											email: $user?.email ?? '',
-										},
-									],
-									lastUpdatedBy: $user?.email ?? '',
-									id: crypto.randomUUID(),
-									teamNumber: lowestNotTaken,
-								});
-							} else if (!state && membersTeam) {
-								membersTeam.members.splice(
-									membersTeam.members.findIndex(
-										(e) => e.email.toLowerCase() === ($user?.email ?? ''),
-									),
-									1,
-								);
-							}
-							await setDoc(
-								doc(db, 'events', event.event),
-								{
-									teams: event.teams.filter((t) => t.members.length > 0),
-									lastUpdated: new Timestamp(Date.now() / 1000, 0),
-									lastUpdatedBy: $user?.email ?? '',
-								},
-								{
-									merge: true,
-								},
-							);
-						}
-						await setDoc(
-							doc(db, 'users', $user?.email ?? ''),
-							{
-								events: eventMap[event.event]
-									? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
-									: [...($userDoc?.events ?? []), event.event],
-								lastUpdated: new Timestamp(Date.now() / 1000, 0),
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
+						console.log(eventMap);
+						await setEvents({
+							user: $user?.email ?? '',
+							events: state
+								? [
+										...Object.keys(eventMap).filter((e) => eventMap[e]),
+										event.event,
+									]
+								: Object.keys(eventMap).filter((e) => e !== event.event),
+						}).catch((error: Error) => {
+							toast.error(error.message);
+						});
 					}}
 				/>
 				<Label
