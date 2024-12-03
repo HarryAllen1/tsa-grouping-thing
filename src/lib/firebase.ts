@@ -17,7 +17,9 @@ import { getPerformance } from 'firebase/performance';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-	apiKey: PUBLIC_FIREBASE_API_KEY || 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
+	apiKey:
+		PUBLIC_FIREBASE_API_KEY ||
+		/* restricted key */ 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
 	authDomain: 'tsa-grouping-thing.firebaseapp.com',
 	projectId: 'tsa-grouping-thing',
 	storageBucket: 'tsa-grouping-thing.appspot.com',
