@@ -2,11 +2,11 @@
 
 For team creation. Originally thrown together in like 2 days which is why a lot of the pages' code is absolute shit
 
-Docs: https://docs.teaming.jhstsa.org/
+Docs: [https://docs.teaming.jhstsa.org/](https://docs.teaming.jhstsa.org/)
 
 ## Development
 
-You'll need NodeJS installed
+You'll need Node.js installed
 
 Install dependencies with
 

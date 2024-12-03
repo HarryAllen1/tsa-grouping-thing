@@ -1,11 +1,20 @@
 import { dev } from '$app/environment';
-import { PUBLIC_FIREBASE_API_KEY } from '$env/static/public';
+import {
+	PUBLIC_FIREBASE_API_KEY,
+	PUBLIC_FIREBASE_EMULATORS,
+} from '$env/static/public';
 import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import {
+	connectFirestoreEmulator,
+	doc,
+	getFirestore,
+	setDoc,
+} from 'firebase/firestore';
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { getPerformance } from 'firebase/performance';
-import { getStorage } from 'firebase/storage';
+import { connectStorageEmulator, getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
 	apiKey: PUBLIC_FIREBASE_API_KEY || 'AIzaSyA-_aVUnDt3gOHjtoFwO4S1vSGSnZtCvAU',
@@ -22,6 +31,14 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const analytics = getAnalytics(app);
+export const functions = getFunctions(app);
+
+if (PUBLIC_FIREBASE_EMULATORS === 'true') {
+	connectAuthEmulator(auth, 'http://127.0.0.1:9099');
+	connectFirestoreEmulator(db, '127.0.0.1', 8080);
+	connectStorageEmulator(storage, '127.0.0.1', 9199);
+	connectFunctionsEmulator(functions, '127.0.0.1', 5001);
+}
 
 if (!dev) getPerformance(app);
 
