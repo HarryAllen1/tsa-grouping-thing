@@ -98,7 +98,7 @@
 <Card.Root
 	class={team.members.length > event.maxTeamSize ||
 	team.members.length < event.minTeamSize
-		? 'bg-red-300/20 dark:bg-red-950/20'
+		? 'bg-red-300/20 dark:bg-red-950'
 		: 'bg-black/5 dark:bg-white/5'}
 >
 	<Card.Header>
