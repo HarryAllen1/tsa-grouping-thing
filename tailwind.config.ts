@@ -1,13 +1,12 @@
 import typography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
-import { fontFamily } from 'tailwindcss/defaultTheme';
+import defaultConfig from 'tailwindcss/defaultTheme';
 import tailwindcssAnimate from 'tailwindcss-animate';
 
 const config: Config = {
 	darkMode: 'class',
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	plugins: [typography(), tailwindcssAnimate],
-	safelist: ['[&>strong]:text-red-500'],
 	theme: {
 		container: {
 			center: true,
@@ -68,7 +67,7 @@ const config: Config = {
 				sm: 'calc(var(--radius) - 4px)',
 			},
 			fontFamily: {
-				sans: ['Inter', ...fontFamily.sans],
+				sans: ['Inter', ...defaultConfig.fontFamily.sans],
 			},
 		},
 	},
