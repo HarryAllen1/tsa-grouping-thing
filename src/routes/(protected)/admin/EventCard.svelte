@@ -291,25 +291,15 @@
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
 										{
-											id: event.id,
-											event: event.event,
 											description:
 												event.description ||
 												(deleteField() as unknown as string),
 											minTeamSize: event.minTeamSize,
 											maxTeamSize: event.maxTeamSize,
 											perChapter: event.perChapter,
-											locked: event.locked,
-											teamCreationLocked: event.teamCreationLocked,
-											teamCreationActuallyLocked:
-												event.teamCreationActuallyLocked,
-											onlineSubmissions: event.onlineSubmissions,
-											showToEveryone: event.showToEveryone,
-											hideInSignup: event.hideInSignup,
-											submissionDescription: event.submissionDescription,
 											lastUpdatedBy: $user?.email ?? '',
 											teams: event.teams ?? [],
-										} satisfies EventDoc,
+										} satisfies Partial<EventDoc>,
 										{
 											merge: true,
 										},
