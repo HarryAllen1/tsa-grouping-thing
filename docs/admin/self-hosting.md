@@ -37,3 +37,5 @@ Initially, Microsoft since that was initially easiest. However, LWSD did somethi
 Go to Settings -> Authorized domains and add all of the domains you will be using.
 
 ## Fixing up the app
+
+Look for instances of contact info and the `lwsd.org` domain and the `jhstsa.org` domain and change those to whatever you're doing. The app should work. I'm not sure if it actually will though, since I've never actually ever tried using this guide.
