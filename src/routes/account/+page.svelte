@@ -293,11 +293,10 @@
 							</span>
 						</Select.Trigger>
 						<Select.Content>
-							{#each ['Male', 'Female', 'Opt-Out', 'Non-Disclosed'] as gender}
-								<Select.Item value={gender}>
-									{gender}
-								</Select.Item>
-							{/each}
+							<Select.Item value="Male">Male</Select.Item>
+							<Select.Item value="Female">Female</Select.Item>
+							<Select.Item value="Non-Disclosed">Non-Binary</Select.Item>
+							<Select.Item value="Opt-Out">Opt-Out</Select.Item>
 						</Select.Content>
 					</Select.Root>
 				</div>
