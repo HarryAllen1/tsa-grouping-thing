@@ -1,26 +1,23 @@
 <script lang="ts">
 	import {
-		auth,
 		db,
+		eventsCollection,
 		MAX_EVENTS,
 		MIN_EVENTS,
 		setEvents,
-		type EventDoc,
+		user,
 		type UserDoc,
 	} from '$lib';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
 	import Lock from 'lucide-svelte/icons/lock';
 	import { toast } from 'svelte-sonner';
-	import { collectionStore, docStore, userStore } from 'sveltefire';
-
-	const user = userStore(auth);
+	import { docStore } from 'sveltefire';
 
 	const userDoc = docStore<UserDoc>(db, `users/${$user?.email}`);
-	const events = collectionStore<EventDoc>(db, 'events');
 
-	let eventMap = $derived(
-		$events
+	let eventMap = $state(
+		$eventsCollection
 			.filter((e) => !e.hideInSignup)
 			.reduce(
 				(acc, curr) => {
@@ -30,6 +27,20 @@
 				{} as { [event: string]: boolean },
 			),
 	);
+
+	$effect(() => {
+		if ($eventsCollection.length > 0 && $user) {
+			eventMap = $eventsCollection
+				.filter((e) => !e.hideInSignup)
+				.reduce(
+					(acc, curr) => {
+						acc[curr.event] = $userDoc?.events.includes(curr.event) ?? false;
+						return acc;
+					},
+					{} as { [event: string]: boolean },
+				);
+		}
+	});
 </script>
 
 <svelte:head>
@@ -102,50 +113,46 @@
 	{/if}
 
 	<div class="mb-4 flex flex-col gap-2">
-		{#each $events.filter((e) => !e.hideInSignup) as event (event.event)}
-			{@const disabled =
-				event.locked ||
-				(!eventMap[event.event] &&
-					($userDoc?.events.length ?? 0) >= MAX_EVENTS) ||
-				(event.teamCreationLocked &&
-					event.maxTeamSize === 1 &&
-					event.teams.length >= event.perChapter) ||
-				(event.teamCreationLocked &&
-					event.teams.reduce((acc, curr) => acc + curr.members.length, 0) >=
-						event.perChapter * event.maxTeamSize)}
-			<div class="flex items-center space-x-2">
-				<Checkbox
-					checked={eventMap[event.event]}
-					{disabled}
-					id={event.event}
-					class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
-					onCheckedChange={async (state) => {
-						console.log(eventMap);
-						await setEvents({
-							user: $user?.email ?? '',
-							events: state
-								? [
-										...Object.keys(eventMap).filter((e) => eventMap[e]),
-										event.event,
-									]
-								: Object.keys(eventMap).filter((e) => e !== event.event),
-						}).catch((error: Error) => {
-							toast.error(error.message);
-						});
-					}}
-				/>
-				<Label
-					for={event.event}
-					class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {disabled
-						? 'opacity-50'
-						: ''} {event.locked ? 'line-through' : ''}"
-				>
-					<span class="ml-2">{event.event}</span>
-				</Label>
-				{#if event.locked}
-					<Lock />
-				{/if}
-			</div>
-		{/each}
+		{#if Object.keys(eventMap).length}
+			{#each $eventsCollection.filter((e) => !e.hideInSignup) as event (event.event)}
+				{@const disabled =
+					event.locked ||
+					(!eventMap[event.event] &&
+						($userDoc?.events.length ?? 0) >= MAX_EVENTS) ||
+					(event.teamCreationLocked &&
+						event.maxTeamSize === 1 &&
+						event.teams.length >= event.perChapter) ||
+					(event.teamCreationLocked &&
+						event.teams.reduce((acc, curr) => acc + curr.members.length, 0) >=
+							event.perChapter * event.maxTeamSize)}
+				<div class="flex items-center space-x-2">
+					<Checkbox
+						bind:checked={eventMap[event.event]}
+						{disabled}
+						id={event.event}
+						class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
+						onCheckedChange={async () => {
+							await setEvents({
+								user: $user?.email ?? '',
+								events: Object.keys(eventMap).filter((e) => eventMap[e]),
+							}).catch((error: Error) => {
+								toast.error(error.message);
+							});
+						}}
+					/>
+					<Label
+						for={event.event}
+						class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {disabled
+							? 'opacity-50'
+							: ''} {event.locked ? 'line-through' : ''}"
+					>
+						<span class="ml-2">{event.event}</span>
+					</Label>
+					{#if event.locked}
+						<Lock />
+					{/if}
+				</div>
+			{/each}
+		{/if}
 	</div>
 </div>
