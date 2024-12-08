@@ -6,33 +6,23 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 	{
 		region: 'us-west1',
 	},
-	async (event) => {
-		const user = event.data;
+	async ({ data: user }) => {
+		if (!user) throw new HttpsError('invalid-argument', 'User data is missing');
 		if (!allowedDomains.has(user.email?.split('@')[1] ?? '')) {
 			throw new HttpsError('invalid-argument', 'Unauthorized email');
 		}
 		const doc = db.doc(`users/${user.email}`);
 		if (!(await doc.get()).exists) {
-			await doc.set(
-				{
-					email: user.email,
-					name: user.displayName ?? '',
-					uid: user.uid,
-					events: [],
-				},
-				{
-					merge: true,
-				},
-			);
+			await doc.update({
+				email: user.email,
+				name: user.displayName ?? '',
+				uid: user.uid,
+				events: [],
+			});
 		} else {
-			await doc.set(
-				{
-					uid: user.uid,
-				},
-				{
-					merge: true,
-				},
-			);
+			await doc.update({
+				uid: user.uid,
+			});
 		}
 	},
 );
