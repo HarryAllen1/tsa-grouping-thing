@@ -291,14 +291,11 @@
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
 										{
-											description:
-												event.description ||
-												(deleteField() as unknown as string),
+											description: event.description || '',
 											minTeamSize: event.minTeamSize,
 											maxTeamSize: event.maxTeamSize,
 											perChapter: event.perChapter,
 											lastUpdatedBy: $user?.email ?? '',
-											teams: event.teams ?? [],
 										} satisfies Partial<EventDoc>,
 										{
 											merge: true,
