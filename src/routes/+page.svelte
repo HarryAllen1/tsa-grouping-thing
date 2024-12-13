@@ -345,14 +345,14 @@
 				$settings.alert
 					.replaceAll(
 						'{{washingtonId}}',
-						$userDoc?.washingtonId
-							? $userDoc.washingtonId.toString()
+						Number($userDoc?.washingtonId) > 0
+							? $userDoc.washingtonId!.toString()
 							: 'Unassigned',
 					)
 					.replaceAll(
 						'{{nationalId}}',
-						$userDoc?.nationalId
-							? $userDoc.nationalId.toString()
+						Number($userDoc?.nationalId) > 0
+							? $userDoc.nationalId!.toString()
 							: 'Unassigned',
 					)
 					.replaceAll('{{firstName}}', $userDoc?.firstName ?? '')
