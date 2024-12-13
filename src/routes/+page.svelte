@@ -345,9 +345,16 @@
 				$settings.alert
 					.replaceAll(
 						'{{washingtonId}}',
-						$userDoc?.washingtonId?.toString() ?? '',
+						$userDoc?.washingtonId
+							? $userDoc.washingtonId.toString()
+							: 'Unassigned',
 					)
-					.replaceAll('{{nationalId}}', $userDoc?.nationalId?.toString() ?? '')
+					.replaceAll(
+						'{{nationalId}}',
+						$userDoc?.nationalId
+							? $userDoc.nationalId.toString()
+							: 'Unassigned',
+					)
 					.replaceAll('{{firstName}}', $userDoc?.firstName ?? '')
 					.replaceAll('{{lastName}}', $userDoc?.lastName ?? ''),
 			)}
