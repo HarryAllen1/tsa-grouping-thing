@@ -308,14 +308,18 @@
 							user.events.length > MAX_EVENTS + 1
 								? 'text-red-500'
 								: user.events
-											.map(
-												(e) =>
-													$eventsCollection
-														.find((ev) => ev.event === e)
-														?.teams.find((t) =>
-															t.members.find((m) => m.email === user.email),
-														) ?? null,
-											)
+											.map((e) => {
+												const event = $eventsCollection.find(
+													(ev) => ev.event === e,
+												);
+												return (
+													event?.teams.find(
+														(t) =>
+															t.members.find((m) => m.email === user.email) &&
+															t.members.length >= event.minTeamSize,
+													) ?? null
+												);
+											})
 											.filter(Boolean).length < MIN_EVENTS
 									? 'text-orange-500'
 									: user.events
@@ -346,7 +350,13 @@
 							?.teams.find((t) =>
 								t.members.find((m) => m.email === user.email),
 							)}
-						<p class:text-red-500={!maybeTeam}>
+						<p
+							class:text-yellow-500={maybeTeam &&
+								maybeTeam?.members.length <
+									$eventsCollection.find((ev) => ev.event === event)!
+										.minTeamSize}
+							class:text-red-500={!maybeTeam}
+						>
 							{event}
 
 							{#if maybeTeam}
