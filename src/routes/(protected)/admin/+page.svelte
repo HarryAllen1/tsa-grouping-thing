@@ -8,6 +8,7 @@
 		fancyConfirm,
 		sleep,
 		type EventData,
+		type EventDoc,
 	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -246,7 +247,7 @@
 						{
 							teamCreationLocked: true,
 							lastUpdatedBy: $user?.email ?? '',
-						},
+						} satisfies Partial<EventDoc>,
 						{
 							merge: true,
 						},
@@ -255,6 +256,24 @@
 			}}
 		>
 			Disable all team creation
+		</Button>
+		<Button
+			onclick={() => {
+				for (const event of eventData) {
+					setDoc(
+						doc(db, 'events', event.event ?? ''),
+						{
+							locked: true,
+							lastUpdatedBy: $user?.email ?? '',
+						} satisfies Partial<EventDoc>,
+						{
+							merge: true,
+						},
+					);
+				}
+			}}
+		>
+			Lock all events
 		</Button>
 		<Alert />
 		<Button
