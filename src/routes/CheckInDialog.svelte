@@ -81,9 +81,9 @@
 			</Dialog.Description>
 		</Dialog.Header>
 
-		<Label
-			>As of right now, how prepared do you feel your team is for this event?</Label
-		>
+		<Label>
+			As of right now, how prepared do you feel you/your team is for this event?
+		</Label>
 		<Select.Root
 			type="single"
 			bind:value={selectedPreparationLevel}

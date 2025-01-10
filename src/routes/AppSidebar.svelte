@@ -20,6 +20,7 @@
 	import UserPen from 'lucide-svelte/icons/user-pen';
 	import Users from 'lucide-svelte/icons/users';
 	import { downloadAsCSV, downloadAsJSON } from './download';
+	import Check from 'lucide-svelte/icons/check';
 
 	const navItems = [
 		{
@@ -63,6 +64,11 @@
 			title: 'Results',
 			href: '/admin/results',
 			icon: ListCheck,
+		},
+		{
+			title: 'Check-ins',
+			href: '/admin/checkins',
+			icon: Check,
 		},
 		// {
 		// 	title: 'Messages',

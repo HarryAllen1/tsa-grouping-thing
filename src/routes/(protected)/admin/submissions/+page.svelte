@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>Admin Result Management — JHS TSA Teaming</title>
+	<title>Admin Submission Management — JHS TSA Teaming</title>
 </svelte:head>
 
 <div class="container pt-8">
