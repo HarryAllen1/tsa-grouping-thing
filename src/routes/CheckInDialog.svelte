@@ -149,6 +149,7 @@
 					team.checkInComplete = true;
 					team.lastUpdatedBy = $user?.email ?? '';
 					team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+					team.preparationLevelDescription = preparationLevelDescription;
 					await setDoc(
 						doc(db, 'events', event.event ?? ''),
 						{
