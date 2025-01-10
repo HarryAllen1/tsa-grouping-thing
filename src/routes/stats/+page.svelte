@@ -100,6 +100,12 @@
 			graph?.replaceChildren(plotEl);
 		}
 	});
+
+	let teamsWithPreparedness = $derived(
+		$eventsCollection
+			.flatMap((e) => e.teams)
+			.filter((t) => typeof t.preparationLevel !== 'undefined'),
+	);
 </script>
 
 <svelte:head>
@@ -112,33 +118,52 @@
 			(u) => u.events.length > 0 && u.completedIntakeForm,
 		).length}
 	</p>
-	<p>
-		Members with at least {MIN_EVENTS} events: {$allUsersCollection.filter(
-			(u) => u.events.length >= MIN_EVENTS && u.completedIntakeForm,
-		).length}
-	</p>
-	<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
-	{#each { length: MIN_EVENTS } as _, i}
-		{@const num = MIN_EVENTS - i - 1}
+	{#if $userDoc.admin}
 		<p>
-			Members with {num} events: {$allUsersCollection.filter(
-				(u) => u.events.length === num && u.completedIntakeForm,
+			Members with at least {MIN_EVENTS} events: {$allUsersCollection.filter(
+				(u) => u.events.length >= MIN_EVENTS && u.completedIntakeForm,
 			).length}
 		</p>
-	{/each}
+		<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
+		{#each { length: MIN_EVENTS } as _, i}
+			{@const num = MIN_EVENTS - i - 1}
+			<p>
+				Members with {num} events: {$allUsersCollection.filter(
+					(u) => u.events.length === num && u.completedIntakeForm,
+				).length}
+			</p>
+		{/each}
 
-	<p>
-		Events requiring eliminations: {$eventsCollection.reduce(
-			(acc, e) =>
-				e.teams.length > e.perChapter ||
-				$allUsersCollection.filter((u) => u.events.includes(e.event)).length /
-					e.maxTeamSize >
-					e.perChapter
-					? acc + 1
-					: acc,
-			0,
-		)}
-	</p>
+		<p>
+			Events requiring eliminations: {$eventsCollection.reduce(
+				(acc, e) =>
+					e.teams.length > e.perChapter ||
+					$allUsersCollection.filter((u) => u.events.includes(e.event)).length /
+						e.maxTeamSize >
+						e.perChapter
+						? acc + 1
+						: acc,
+				0,
+			)}
+		</p>
+
+		{#if teamsWithPreparedness.length > 0}
+			<p>
+				Teams who submitted their preparedness: {teamsWithPreparedness.length}
+			</p>
+			<p>
+				Average preparedness: {Math.round(
+					(teamsWithPreparedness.reduce(
+						(acc, curr) => acc + Number(curr.preparationLevel),
+						0,
+					) /
+						teamsWithPreparedness.length) *
+						100,
+				) / 100}
+			</p>
+		{/if}
+	{/if}
+
 	<ColorKey />
 	<div bind:this={graph}></div>
 
