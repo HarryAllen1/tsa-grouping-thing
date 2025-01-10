@@ -81,7 +81,9 @@
 			</Dialog.Description>
 		</Dialog.Header>
 
-		<Label>How prepared do you feel your team is for this event?</Label>
+		<Label
+			>As of right now, how prepared do you feel your team is for this event?</Label
+		>
 		<Select.Root
 			type="single"
 			bind:value={selectedPreparationLevel}
@@ -89,6 +91,7 @@
 				team.preparationLevel = value;
 				team.lastUpdatedBy = $user?.email ?? '';
 				team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+
 				await setDoc(
 					doc(db, 'events', event.event ?? ''),
 					{
@@ -169,6 +172,7 @@
 					team.lastUpdatedBy = $user?.email ?? '';
 					team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
 					team.preparationLevelDescription = preparationLevelDescription;
+					team.checkInSubmittedTime = new Timestamp(Date.now() / 1000, 0);
 					await setDoc(
 						doc(db, 'events', event.event ?? ''),
 						{

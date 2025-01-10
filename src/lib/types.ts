@@ -45,6 +45,7 @@ export interface Team {
 	checkInComplete?: boolean;
 	preparationLevel?: string;
 	preparationLevelDescription?: string;
+	checkInSubmittedTime?: Timestamp;
 }
 
 export interface SimpleMessage {
