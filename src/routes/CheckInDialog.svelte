@@ -44,7 +44,26 @@
 	);
 </script>
 
-<Dialog.Root bind:open={checkInDialogOpen}>
+<Dialog.Root
+	bind:open={checkInDialogOpen}
+	onOpenChange={async (state) => {
+		if (!state) {
+			team.lastUpdatedBy = $user?.email ?? '';
+			team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+			team.preparationLevelDescription = preparationLevelDescription;
+			await setDoc(
+				doc(db, 'events', event.event ?? ''),
+				{
+					teams: event.teams,
+					lastUpdatedBy: $user?.email ?? '',
+				},
+				{
+					merge: true,
+				},
+			);
+		}
+	}}
+>
 	<Dialog.Trigger
 		class={buttonVariants({
 			variant: team.checkInComplete ? 'outline' : 'default',
