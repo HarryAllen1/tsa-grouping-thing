@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { db, type EventDoc, type Team, user } from '$lib';
+	import { db, type EventDoc, type Team, user, userDoc } from '$lib';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
@@ -173,6 +173,11 @@
 					team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
 					team.preparationLevelDescription = preparationLevelDescription;
 					team.checkInSubmittedTime = new Timestamp(Date.now() / 1000, 0);
+					team.checkInSubmittedBy = {
+						email: $userDoc.email ?? '',
+						name: $userDoc.name ?? '',
+					};
+
 					await setDoc(
 						doc(db, 'events', event.event ?? ''),
 						{

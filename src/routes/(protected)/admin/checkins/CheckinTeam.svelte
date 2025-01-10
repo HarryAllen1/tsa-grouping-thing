@@ -84,6 +84,15 @@
 					</Select.Content>
 				</Select.Root>
 			</div>
+			{#if team.checkInComplete}
+				{@const date = team.checkInSubmittedTime?.toDate()}
+				<p class="text-sm">
+					Check in completed at {date?.toString()}
+				</p>
+				<p class="text-sm">
+					Check in completed bt {team.checkInSubmittedBy?.name ?? 'Unknown'}
+				</p>
+			{/if}
 
 			<div>
 				<Label>
