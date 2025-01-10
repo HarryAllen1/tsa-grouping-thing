@@ -90,7 +90,7 @@
 					Check in completed at {date?.toString()}
 				</p>
 				<p class="text-sm">
-					Check in completed bt {team.checkInSubmittedBy?.name ?? 'Unknown'}
+					Check in completed by {team.checkInSubmittedBy?.name ?? 'Unknown'}
 				</p>
 			{/if}
 
