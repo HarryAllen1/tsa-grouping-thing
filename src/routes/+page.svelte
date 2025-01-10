@@ -25,6 +25,7 @@
 	import { persisted } from 'svelte-persisted-store';
 	import Copyable from './Copyable.svelte';
 	import EventCard from './EventCard.svelte';
+	import * as Alert from '$lib/components/ui/alert';
 
 	const yellowMode = persisted('yellowMode', false);
 	let alertEl = $state<HTMLDivElement>();
@@ -140,6 +141,18 @@
 			}))
 			.filter((r) => r.requests.length > 0),
 	);
+
+	let eventsWithCheckIn = $derived(
+		signedUpEvents.filter(
+			(e) =>
+				e.eventStatusCheckInEnabled &&
+				e.teams.find((t) =>
+					t.members.find((u) => u.email === $userDoc.email),
+				) &&
+				!e.teams.find((t) => t.members.find((u) => u.email === $userDoc.email))
+					?.checkInComplete,
+		),
+	);
 </script>
 
 <svelte:head>
@@ -154,6 +167,24 @@
 	>
 		Edit events
 	</Button>
+
+	{#if eventsWithCheckIn.length > 0}
+		<Alert.Root variant="destructive" class="mb-4">
+			<Alert.Title class="text-2xl font-bold">
+				You have incomplete check-ins
+			</Alert.Title>
+			<Alert.Description>
+				Check-ins are required for your progress for the January Qualifier and
+				the State Conference to be gauged. Please complete your check-ins for
+				the following events:
+				<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+					{#each eventsWithCheckIn as event}
+						<li>{event.event}</li>
+					{/each}
+				</ul>
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
 
 	{#if requests.length}
 		<div class="w-full">

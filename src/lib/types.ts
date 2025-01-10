@@ -19,6 +19,7 @@ export interface EventDoc {
 	hideInSignup?: boolean;
 	teamCreationActuallyLocked?: boolean;
 	lastUpdatedBy?: string;
+	eventStatusCheckInEnabled?: boolean;
 }
 
 export interface Result {
@@ -41,6 +42,9 @@ export interface Team {
 	cardboardBoatOnlyPeopleInBoat?: BasicUser[];
 	teamName?: string;
 	messages?: Message[];
+	checkInComplete?: boolean;
+	preparationLevel?: string;
+	preparationLevelDescription?: string;
 }
 
 export interface SimpleMessage {

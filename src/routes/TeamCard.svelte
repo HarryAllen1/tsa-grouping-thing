@@ -41,6 +41,7 @@
 	import { flip } from 'svelte/animate';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import CardboardBoatDialog from './CardboardBoatDialog.svelte';
+	import CheckInDialog from './CheckInDialog.svelte';
 
 	let {
 		event,
@@ -129,18 +130,14 @@
 								<Button
 									variant="destructive"
 									onclick={async () => {
-										const teamButMutable = team;
-										teamButMutable.members.splice(
-											teamButMutable.members.findIndex(
+										team.members.splice(
+											team.members.findIndex(
 												(e) => e.email.toLowerCase() === ($user?.email ?? ''),
 											),
 											1,
 										);
-										teamButMutable.lastUpdatedBy = $user?.email ?? '';
-										teamButMutable.lastUpdatedTime = new Timestamp(
-											Date.now() / 1000,
-											0,
-										);
+										team.lastUpdatedBy = $user?.email ?? '';
+										team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
 										await setDoc(
 											doc(db, 'events', event.event ?? ''),
 											{
@@ -225,18 +222,15 @@
 												{person.name}
 												<Button
 													onclick={async () => {
-														const teamButMutable = team;
-														if (
-															teamButMutable.members.length >= event.maxTeamSize
-														) {
+														if (team.members.length >= event.maxTeamSize) {
 															return alert('Your team is full');
 														}
-														teamButMutable.members.push({
+														team.members.push({
 															name: person.name,
 															email: person.email,
 														});
-														teamButMutable.lastUpdatedBy = $user?.email ?? '';
-														teamButMutable.lastUpdatedTime = new Timestamp(
+														team.lastUpdatedBy = $user?.email ?? '';
+														team.lastUpdatedTime = new Timestamp(
 															Date.now() / 1000,
 															0,
 														);
@@ -276,13 +270,9 @@
 						<div class="flex w-full flex-row gap-2">
 							<Button
 								onclick={async () => {
-									const teamButMutable = team;
-									teamButMutable.teamCaptain = $user?.email ?? '';
-									teamButMutable.lastUpdatedBy = $user?.email ?? '';
-									teamButMutable.lastUpdatedTime = new Timestamp(
-										Date.now() / 1000,
-										0,
-									);
+									team.teamCaptain = $user?.email ?? '';
+									team.lastUpdatedBy = $user?.email ?? '';
+									team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
 									await setDoc(
 										doc(db, 'events', event.event ?? ''),
 										{
@@ -724,4 +714,9 @@
 			{/each}
 		</ul>
 	</Card.Content>
+	{#if team.members.find((e) => e.email === $userDoc.email) && event.eventStatusCheckInEnabled}
+		<Card.Footer>
+			<CheckInDialog {event} {team} />
+		</Card.Footer>
+	{/if}
 </Card.Root>

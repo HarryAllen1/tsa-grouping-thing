@@ -208,6 +208,25 @@
 							/>
 							Online submissions
 						</Label>
+						<Label class="flex flex-row items-center gap-2">
+							<Switch
+								onCheckedChange={async (checked) => {
+									event.eventStatusCheckInEnabled = checked;
+									await setDoc(
+										doc(db, 'events', event.event ?? ''),
+										{
+											eventStatusCheckInEnabled: checked,
+											lastUpdatedBy: $user?.email ?? '',
+										},
+										{
+											merge: true,
+										},
+									);
+								}}
+								checked={event.eventStatusCheckInEnabled}
+							/>
+							Enable event status check-in
+						</Label>
 
 						<Dialog.Header>
 							<Dialog.Title>Event Details</Dialog.Title>
