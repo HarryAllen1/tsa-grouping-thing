@@ -18,7 +18,7 @@
 	>
 		{event.event}
 	</h2>
-	<Label class="flex flex-row items-center gap-2">
+	<Label class="mb-4 flex flex-row items-center gap-2">
 		<Switch
 			onCheckedChange={async (checked) => {
 				event.eventStatusCheckInEnabled = checked;

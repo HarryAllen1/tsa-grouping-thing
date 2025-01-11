@@ -448,6 +448,7 @@
 								<Dialog.Title>Edit submission description</Dialog.Title>
 								<p>Markdown is allowed</p>
 								<Textarea
+									autosize
 									placeholder="Submission description"
 									class="w-full"
 									bind:value={submissionDescription}

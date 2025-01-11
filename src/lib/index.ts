@@ -1,6 +1,7 @@
+export { autosize } from './autosize';
 export {
-	infoComponent,
 	canScroll,
+	infoComponent,
 	isDesktop,
 	mediaQuery,
 	removeRef,
@@ -10,8 +11,8 @@ export { default as Combobox } from './Combobox.svelte';
 export { MAX_EVENTS, MIN_EVENTS, POINT_OF_CONTACT_EMAIL } from './constants';
 export { downloadURL } from './download';
 export {
-	default as FancyConfirm,
 	closeConfirmationDialog,
+	default as FancyConfirm,
 	fancyConfirm,
 } from './FancyConfirm.svelte';
 export {

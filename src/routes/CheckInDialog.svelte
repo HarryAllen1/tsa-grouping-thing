@@ -124,6 +124,7 @@
 			please briefly describe your plan of work. (required)
 		</Label>
 		<Textarea
+			autosize
 			required
 			id="checkinResponse"
 			bind:value={preparationLevelDescription}

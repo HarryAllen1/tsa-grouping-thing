@@ -2,13 +2,19 @@
 	import type { WithElementRef, WithoutChildren } from 'bits-ui';
 	import type { HTMLTextareaAttributes } from 'svelte/elements';
 	import { cn } from '$lib/utils.js';
+	import { autosize } from '$lib';
 
 	let {
 		ref = $bindable(null),
 		value = $bindable(),
 		class: className,
+		autosize: shouldAutosize = false,
 		...restProps
-	}: WithoutChildren<WithElementRef<HTMLTextareaAttributes>> = $props();
+	}: WithoutChildren<WithElementRef<HTMLTextareaAttributes>> & {
+		autosize?: boolean;
+	} = $props();
+
+	let action = $derived(shouldAutosize ? autosize : () => void 0);
 </script>
 
 <textarea
@@ -19,4 +25,5 @@
 	)}
 	bind:value
 	{...restProps}
+	use:action
 ></textarea>

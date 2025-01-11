@@ -44,6 +44,7 @@
 			</Dialog.Description>
 		</Dialog.Header>
 		<Textarea
+			autosize
 			placeholder="Something something something..."
 			spellcheck
 			autocomplete="off"

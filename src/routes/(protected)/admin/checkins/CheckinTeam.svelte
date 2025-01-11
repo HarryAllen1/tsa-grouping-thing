@@ -131,15 +131,17 @@
 				</Select.Root>
 			</div>
 
+			{@const id = `checkinResponse-${event.event.slice(0, 4)}-${team.teamNumber}`}
 			<div>
-				<Label for="checkinResponse">
+				<Label for={id}>
 					Please briefly elaborate on your response. If you feel you are
 					well-prepared, please comment on your progress. If you feel
 					unprepared, please briefly describe your plan of work. (required)
 				</Label>
 				<Textarea
+					autosize
 					required
-					id="checkinResponse"
+					{id}
 					bind:value={preparationLevelDescription}
 				/>
 			</div>
