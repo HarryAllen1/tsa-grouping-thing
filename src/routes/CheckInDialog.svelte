@@ -166,7 +166,11 @@
 			</Button>
 			<Button
 				onclick={async () => {
-					if (!team.preparationLevel || !team.preparationLevelDescription) {
+					if (
+						!team.preparationLevel ||
+						!team.preparationLevelDescription ||
+						preparationLevelDescription.length === 0
+					) {
 						return alert('Please fill out all fields');
 					}
 					team.checkInComplete = true;
