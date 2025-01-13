@@ -168,7 +168,6 @@
 				onclick={async () => {
 					if (
 						!team.preparationLevel ||
-						!team.preparationLevelDescription ||
 						preparationLevelDescription.length === 0
 					) {
 						return alert('Please fill out all fields');
