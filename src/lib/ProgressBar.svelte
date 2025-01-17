@@ -262,9 +262,12 @@
 		aria-valuenow={width}
 		aria-valuemin={0}
 		aria-valuemax={1}
-		class="fixed top-0 left-0 z-50 h-[3px] transition-[width_0.21s_ease-in-out] {className}"
-		class:running
-		class:svelte-progress-bar-hiding={completed}
+		class={[
+			'fixed top-0 left-0 z-50 h-[3px] transition-[width_0.21s_ease-in-out]',
+			className,
+			running,
+			completed && 'svelte-progress-bar-hiding',
+		]}
 		style={barStyle}
 	>
 		{#if running}

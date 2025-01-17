@@ -12,7 +12,7 @@
 	{@const maybeTeam = $eventsCollection
 		.find((e) => e.event === event)
 		?.teams.find((t) => t.members.find((m) => m.email === user.email))}
-	<p class:text-red-500={!maybeTeam}>
+	<p class={[!maybeTeam && 'text-red-500']}>
 		{event}
 
 		{#if maybeTeam}

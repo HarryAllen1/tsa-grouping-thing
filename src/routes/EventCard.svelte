@@ -71,7 +71,7 @@
 						? 'room'
 						: 'team'}
 				</li>
-				<li class:text-red-500={event.teams.length > event.perChapter}>
+				<li class={[event.teams.length > event.perChapter && 'text-red-500']}>
 					Max {event.perChapter}
 					{event.event === '*Rooming' ? 'rooms' : 'teams'} per chapter (currently
 					{event.teams.length})

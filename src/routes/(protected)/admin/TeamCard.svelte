@@ -155,7 +155,7 @@
 	team.members.length < event.minTeamSize
 		? 'bg-red-300/20 dark:bg-red-950'
 		: team.members.length === event.maxTeamSize
-			? 'bg-green-300 dark:bg-green-950'
+			? 'bg-green-300/20 dark:bg-green-950'
 			: 'bg-black/5 dark:bg-white/5'} relative"
 >
 	{#if dropping}
@@ -292,10 +292,13 @@
 								.sort((a, b) => a?.name?.localeCompare(b?.name))
 								.filter( (m) => (event.event === '*Rooming' ? m.events.length > 0 : true), ) as person (person.email)}
 								<li
-									class:text-green-500={$allUsersCollection
-										.filter((m) => m.events.includes(event.event ?? ''))
-										.find((e) => e.email === (person?.email ?? ''))}
-									class="flex flex-row items-center"
+									class={[
+										'flex flex-row items-center',
+										$allUsersCollection
+											.filter((m) => m.events.includes(event.event ?? ''))
+											.find((e) => e.email === (person?.email ?? '')) &&
+											'text-green-600',
+									]}
 									animate:flip={{
 										duration: 200,
 									}}
@@ -706,10 +709,13 @@
 												?.map((r) => r.email)
 												.includes(u.email)) as person (person.email)}
 										<li
-											class:text-green-500={$allUsersCollection
-												.filter((m) => m.events.includes(event.event ?? ''))
-												.find((e) => e.email === (person?.email ?? ''))}
-											class="flex flex-row items-center"
+											class={[
+												'flex flex-row items-center',
+												$allUsersCollection
+													.filter((m) => m.events.includes(event.event ?? ''))
+													.find((e) => e.email === (person?.email ?? '')) &&
+													'text-green-500',
+											]}
 											animate:flip={{
 												duration: 200,
 											}}
@@ -894,12 +900,15 @@
 		<ul>
 			{#each team.members as teamMember (teamMember.email)}
 				<li
-					class:text-green-500={$allUsersCollection
-						.filter((m) => m.events.includes(event.event ?? ''))
-						.find(
-							(e) => e.email?.toLowerCase() === teamMember.email.toLowerCase(),
-						)}
-					class="flex flex-row items-center gap-2"
+					class={[
+						'flex flex-row items-center gap-2',
+						$allUsersCollection
+							.filter((m) => m.events.includes(event.event ?? ''))
+							.find(
+								(e) =>
+									e.email?.toLowerCase() === teamMember.email.toLowerCase(),
+							) && 'text-green-600 dark:text-green-500',
+					]}
 					animate:flip={{
 						duration: 200,
 					}}

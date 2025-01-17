@@ -351,11 +351,14 @@
 								t.members.find((m) => m.email === user.email),
 							)}
 						<p
-							class:text-yellow-500={maybeTeam &&
-								maybeTeam?.members.length <
-									$eventsCollection.find((ev) => ev.event === event)!
-										.minTeamSize}
-							class:text-red-500={!maybeTeam}
+							class={[
+								!maybeTeam && 'text-red-500',
+								maybeTeam &&
+									maybeTeam?.members.length <
+										$eventsCollection.find((ev) => ev.event === event)!
+											.minTeamSize &&
+									'text-yellow-500',
+							]}
 						>
 							{event}
 

@@ -376,7 +376,7 @@
 				<li>
 					Max {event.maxTeamSize} people per team
 				</li>
-				<li class:text-red-500={event.teams.length > event.perChapter}>
+				<li class={[event.teams.length > event.perChapter && 'text-red-500']}>
 					Max {event.perChapter} teams per chapter (currently {event.teams
 						.length})
 				</li>
