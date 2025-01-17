@@ -15,6 +15,10 @@
 <div class="my-4">
 	<h2
 		class="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+		id={event.event
+			.toLowerCase()
+			.replace(' (washington only)', '')
+			.replaceAll(' ', '-')}
 	>
 		{event.event}
 	</h2>
