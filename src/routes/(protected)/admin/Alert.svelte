@@ -20,7 +20,7 @@
 	<Dialog.Trigger>
 		<Button>Manage Alert</Button>
 	</Dialog.Trigger>
-	<Dialog.Content>
+	<Dialog.Content class="max-h-screen overflow-y-auto">
 		<Dialog.Header>
 			<Dialog.Title>Manage Alert</Dialog.Title>
 			<Dialog.Description>
