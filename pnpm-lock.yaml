@@ -112,8 +112,8 @@ importers:
         specifier: 22.10.8
         version: 22.10.8
       bits-ui:
-        specifier: 1.0.0-next.77
-        version: 1.0.0-next.77(svelte@5.19.2)
+        specifier: 1.0.0-next.78
+        version: 1.0.0-next.78(svelte@5.19.2)
       eslint:
         specifier: 9.18.0
         version: 9.18.0(jiti@2.4.2)
@@ -2185,8 +2185,8 @@ packages:
   birpc@0.2.19:
     resolution: {integrity: sha512-5WeXXAvTmitV1RqJFppT5QtUiz2p1mRSYU000Jkft5ZUCLJIk4uQriYNO50HknxKwM6jd8utNc66K1qGIwwWBQ==}
 
-  bits-ui@1.0.0-next.77:
-    resolution: {integrity: sha512-IV0AyVEvsRkXv4s/fl4iea5E9W2b9EBf98s9mRMKMc1xHxM9MmtM2r6MZMqftHQ/c+gHTIt3A9EKuTlh7uay8w==}
+  bits-ui@1.0.0-next.78:
+    resolution: {integrity: sha512-jZjG2ObZ/CNyCNaXecpItC7hRXqJAgEfMhr06/eNrf3wHiiPyhdcy4OkzLcJyxeOrDyj+xma8cZTd3JRWqJdAw==}
     engines: {node: '>=18', pnpm: '>=8.7.0'}
     peerDependencies:
       svelte: ^5.11.0
@@ -6474,7 +6474,7 @@ snapshots:
 
   birpc@0.2.19: {}
 
-  bits-ui@1.0.0-next.77(svelte@5.19.2):
+  bits-ui@1.0.0-next.78(svelte@5.19.2):
     dependencies:
       '@floating-ui/core': 1.6.9
       '@floating-ui/dom': 1.6.13
@@ -8431,7 +8431,7 @@ snapshots:
 
   vaul-svelte@1.0.0-next.3(svelte@5.19.2):
     dependencies:
-      bits-ui: 1.0.0-next.77(svelte@5.19.2)
+      bits-ui: 1.0.0-next.78(svelte@5.19.2)
       svelte: 5.19.2
       svelte-toolbelt: 0.4.6(svelte@5.19.2)
 
