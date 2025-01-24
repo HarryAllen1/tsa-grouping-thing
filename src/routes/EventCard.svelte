@@ -93,7 +93,7 @@
 		{#if event.locked}
 			<p>
 				This event is locked, likely due to eliminations. If this doesn't seem
-				correct, contact a board member.
+				correct, contact a JHS TSA board member.
 			</p>
 		{/if}
 

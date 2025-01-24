@@ -203,7 +203,7 @@
 												You can only be in rooms with people of the same gender
 												(this is district policy)
 											</AlertTitle>
-											If something seems wrong, contact a board member.
+											If something seems wrong, contact a JHS TSA board member.
 										</Alert>
 									{:else}
 										<Dialog.Description>

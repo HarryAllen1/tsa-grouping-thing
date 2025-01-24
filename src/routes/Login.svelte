@@ -59,7 +59,7 @@
 						case 'auth/popup-blocked': {
 							fancyConfirm(
 								'Please enable popups for this site.',
-								"An error with the login popup occurred. Make sure that you have popups enabled by clicking the window icon in the right of the address bar. If logging in still doesn't work, contact a board member.",
+								"An error with the login popup occurred. Make sure that you have popups enabled by clicking the window icon in the right of the address bar. If logging in still doesn't work, contact a JHS TSA board member.",
 								[['Ok', true]],
 							);
 							break;
@@ -68,7 +68,7 @@
 						case 'auth/account-exists-with-different-credential': {
 							fancyConfirm(
 								'Account already exists',
-								`It seems like you previously signed in with your email, and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact harry at ${POINT_OF_CONTACT_EMAIL} to fix this. In the meantime, please login using your email.`,
+								`It seems like you previously signed in with your email and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact harry at ${POINT_OF_CONTACT_EMAIL} to fix this. In the meantime, please login using your email.`,
 							);
 							break;
 						}
@@ -76,7 +76,7 @@
 						default: {
 							fancyConfirm(
 								'An error occurred while logging in.',
-								`Please try again or contact a board member for assistance. (error code/message: ${err.message})`,
+								`Please try again or contact a JHS TSA board member for assistance. (error code/message: ${err.message})`,
 								[['Ok', true]],
 							);
 							break;

@@ -40,10 +40,16 @@
 						'The link you clicked has expired. Please request a new one.',
 						[['Ok', true]],
 					);
+				} else if (err.code === 'auth/invalid-action-code') {
+					fancyConfirm(
+						'Invalid link',
+						'It looks like you clicked an old link. Please make sure you are clicking only the most recently requested email link, and avoid requesting multiple email links. Make sure you check your junk folder.',
+						[['Ok', true]],
+					);
 				} else {
 					fancyConfirm(
 						'An error occurred while logging in.',
-						`Please try again or contact a board member for assistance. (error code/message: ${err.message})`,
+						`Please try again or contact a JHS TSA board member for assistance. (error code/message: ${err.message})`,
 						[['Ok', true]],
 					);
 				}

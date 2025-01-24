@@ -99,7 +99,7 @@
 			<Alert.Title>Account Locked</Alert.Title>
 			<Alert.Description>
 				Your account is currently locked. You cannot change your information. If
-				any information is incorrect, please contact a board member.
+				any information is incorrect, please contact a JHS TSA board member.
 			</Alert.Description>
 		</Alert.Root>
 	{/if}
