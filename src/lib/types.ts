@@ -47,6 +47,7 @@ export interface Team {
 	preparationLevelDescription?: string;
 	checkInSubmittedTime?: Timestamp;
 	checkInSubmittedBy?: BasicUser;
+	random?: boolean;
 }
 
 export interface SimpleMessage {

@@ -446,6 +446,29 @@
 					Lock team
 				</Label>
 			</div>
+			<div>
+				<Label class="flex flex-row items-center gap-2">
+					<Switch
+						onCheckedChange={async (checked) => {
+							team.random = checked;
+							team.lastUpdatedBy = $user?.email ?? '';
+							team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+							await setDoc(
+								doc(db, 'events', event.event ?? ''),
+								{
+									teams: event.teams,
+									lastUpdatedBy: $user?.email ?? '',
+								},
+								{
+									merge: true,
+								},
+							);
+						}}
+						checked={team.random ?? false}
+					/>
+					Random switch
+				</Label>
+			</div>
 			{#if event.event !== '*Rooming'}
 				<div>
 					<Dialog.Root>
