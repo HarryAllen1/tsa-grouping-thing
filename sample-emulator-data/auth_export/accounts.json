@@ -1,1 +1,25 @@
-{"kind":"identitytoolkit#DownloadAccountResponse","users":[{"localId":"JZgz2dpCBsHJKuhjKk0sL9VSq5Rc","createdAt":"1733194618946","lastLoginAt":"1733194620522","displayName":"Peach Olive","providerUserInfo":[{"providerId":"microsoft.com","rawId":"7370947411483856699893110523336027966797","federatedId":"7370947411483856699893110523336027966797","displayName":"Peach Olive","email":"peach.olive.833@lwsd.org","screenName":"olive_peach"}],"validSince":"1733195328","email":"peach.olive.833@lwsd.org","emailVerified":true,"disabled":false}]}
+{
+	"kind": "identitytoolkit#DownloadAccountResponse",
+	"users": [
+		{
+			"localId": "JZgz2dpCBsHJKuhjKk0sL9VSq5Rc",
+			"createdAt": "1733194618946",
+			"lastLoginAt": "1733194620522",
+			"displayName": "Peach Olive",
+			"providerUserInfo": [
+				{
+					"providerId": "microsoft.com",
+					"rawId": "7370947411483856699893110523336027966797",
+					"federatedId": "7370947411483856699893110523336027966797",
+					"displayName": "Peach Olive",
+					"email": "peach.olive.833@lwsd.org",
+					"screenName": "olive_peach"
+				}
+			],
+			"validSince": "1733195328",
+			"email": "peach.olive.833@lwsd.org",
+			"emailVerified": true,
+			"disabled": false
+		}
+	]
+}

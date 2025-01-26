@@ -119,9 +119,11 @@
 				}
 
 				if (email.startsWith('s-')) {
-					await fancyConfirm('Invalid email', 'Please use your new email (starting with your 7-digit student ID).', [
-						['Ok', true],
-					]);
+					await fancyConfirm(
+						'Invalid email',
+						'Please use your new email (starting with your 7-digit student ID).',
+						[['Ok', true]],
+					);
 					return;
 				}
 
