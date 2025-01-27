@@ -22,6 +22,7 @@
 	import Save from 'lucide-svelte/icons/save';
 	import CircleHelp from 'lucide-svelte/icons/circle-help';
 	import UserCog from 'lucide-svelte/icons/user-cog';
+	import ToggleRight from 'lucide-svelte/icons/toggle-right';
 
 	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 
@@ -352,6 +353,7 @@
 							)}
 						<p
 							class={[
+								'flex flex-row',
 								!maybeTeam && 'text-red-500',
 								maybeTeam &&
 									maybeTeam?.members.length <
@@ -364,6 +366,10 @@
 
 							{#if maybeTeam}
 								({maybeTeam.teamNumber}{#if maybeTeam.teamCaptain?.toLowerCase() === user.email?.toLowerCase()}👑{/if})
+							{/if}
+
+							{#if maybeTeam?.random}
+								<ToggleRight class="ml-2" />
 							{/if}
 						</p>
 					{/each}

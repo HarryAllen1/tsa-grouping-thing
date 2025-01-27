@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { UserDoc } from '$lib';
+	import { eventsCollection, type EventDoc, type UserDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
+	import ToggleRight from 'lucide-svelte/icons/toggle-right';
 
 	let { user }: { user: UserDoc } = $props();
 </script>
@@ -36,9 +37,21 @@
 		{/if}
 		<p>Events ({user.events.length}):</p>
 		<div class="flex flex-col">
-			{#each user.events as event}
-				<a href="/admin?q={encodeURIComponent(event)}" class="underline">
-					{event}
+			{#each user.events.map( (event) => $eventsCollection.find((e) => e.event === event), ) as EventDoc[] as event}
+				{@const team = event.teams.find((team) =>
+					team.members.some((t) => t.email === user.email),
+				)}
+				<a
+					href="/admin?q={encodeURIComponent(event.event)}"
+					class="flex flex-row underline"
+				>
+					{event.event}
+					{#if team?.teamCaptain === user.email}
+						(👑)
+					{/if}
+					{#if team?.random}
+						<ToggleRight class="ml-2" />
+					{/if}
 				</a>
 			{/each}
 		</div>

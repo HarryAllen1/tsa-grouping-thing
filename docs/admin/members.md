@@ -57,6 +57,8 @@ Upon viewing events, the format is as follows:
 [event name] ([team number] [👑 if team captain])
 ```
 
+<svg xmlns="http://www.w3.org/2000/svg" style="display: inline" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="6" ry="6"/><circle cx="16" cy="12" r="2"/></svg> appears when the random switch for that team is on.
+
 If you need to use the grid view and need to view everyone's events, at the top of the page, click the "Expand all events" button. This will have the equivalent effect of manually expanding everyone's events.
 
 ![expand all events](expand-all-events.png)
