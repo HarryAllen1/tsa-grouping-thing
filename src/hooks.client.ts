@@ -16,7 +16,13 @@ if (!dev)
 		replaysOnErrorSampleRate: 1,
 
 		// If you don't want to use Session Replay, just remove the line below:
-		integrations: [replayIntegration()],
+		integrations: [
+			replayIntegration(),
+			Sentry.feedbackAsyncIntegration({
+				colorScheme: 'system',
+				isEmailRequired: true,
+			}),
+		],
 	});
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`

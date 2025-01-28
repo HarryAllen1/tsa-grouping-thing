@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { auth, fancyConfirm } from '$lib';
+	import { captureException } from '@sentry/sveltekit';
 	import confetti from 'canvas-confetti';
 	import {
 		isSignInWithEmailLink,
@@ -34,6 +35,8 @@
 
 			await signInWithEmailLink(auth, email, $page.url.href).catch((error) => {
 				const err = error as AuthError;
+				captureException(err);
+
 				if (err.code === 'auth/expired-action-code') {
 					fancyConfirm(
 						'Link expired',
@@ -43,7 +46,8 @@
 				} else if (err.code === 'auth/invalid-action-code') {
 					fancyConfirm(
 						'Invalid link',
-						'It looks like you clicked an old link. Please make sure you are clicking only the most recently requested email link, and avoid requesting multiple email links. Make sure you check your junk folder.',
+						`<p>It looks like you clicked an old link. Please make sure you are clicking only the most recently requested email link, and avoid requesting multiple email links. Make sure you check your junk folder.</p>
+<p>Also, when you click an email link, all old email links will stop working.</p>`,
 						[['Ok', true]],
 					);
 				} else {

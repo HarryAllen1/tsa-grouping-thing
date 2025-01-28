@@ -11,6 +11,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import { captureException, captureMessage } from '@sentry/sveltekit';
 	import confetti from 'canvas-confetti';
 	import {
 		OAuthProvider,
@@ -54,6 +55,7 @@
 					}
 				} catch (error: unknown) {
 					const err = error as AuthError;
+					captureException(err);
 					switch (err.code) {
 						case 'auth/canclled-popup-request':
 						case 'auth/popup-blocked': {
@@ -69,6 +71,14 @@
 							fancyConfirm(
 								'Account already exists',
 								`It seems like you previously signed in with your email and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact harry at ${POINT_OF_CONTACT_EMAIL} to fix this. In the meantime, please login using your email.`,
+							);
+							break;
+						}
+
+						case 'auth/admin-restricted-operation': {
+							fancyConfirm(
+								'An account cannot be created at this time',
+								'If you see this message and have an account, please try logging in with email.',
 							);
 							break;
 						}
@@ -133,15 +143,16 @@
 				});
 
 				localStorage.setItem('jhs-tsa-sign-in-email', email);
+				email = '';
 
 				await fancyConfirm(
 					'Check your email',
-					'We sent you a link to sign in. <span class="text-destructive">If you do not see it, check your spam folder.</span> This email can take up to 5 minutes to show up.',
+					'We sent you a link to sign in. <span class="text-destructive">If you do not see it, check your spam folder.</span> This email can take up to 5 minutes to show up. This email will be from <b>noreply@jhstsa.org</b>.',
 					[['Ok', true]],
 				);
 			}}
 		>
-			<div class="grid w-full max-w-sm items-center gap-1.5">
+			<div class="grid w-full items-center gap-1.5">
 				<Label for="email">Email</Label>
 				<Input
 					type="email"

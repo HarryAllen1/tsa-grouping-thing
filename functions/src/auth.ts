@@ -1,5 +1,4 @@
 import { beforeUserCreated, HttpsError } from 'firebase-functions/identity';
-import { user } from 'firebase-functions/v1/auth';
 import { allowedDomains, db } from './firebase';
 
 export const onlyAllowLWSDEmails = beforeUserCreated(
@@ -8,6 +7,9 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 	},
 	async (event) => {
 		const user = event.data;
+		if (!user) {
+			throw new HttpsError('invalid-argument', 'User not found');
+		}
 		if (!allowedDomains.has(user.email?.split('@')[1] ?? '')) {
 			throw new HttpsError('invalid-argument', 'Unauthorized email');
 		}
@@ -36,8 +38,3 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 		}
 	},
 );
-
-export const onUserDelete = user().onDelete(async (user) => {
-	const doc = db.doc(`users/${user.email}`);
-	await doc.delete();
-});
