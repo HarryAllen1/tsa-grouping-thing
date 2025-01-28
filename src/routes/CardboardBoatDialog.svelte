@@ -1,12 +1,12 @@
 <script lang="ts">
-import { Button } from '$lib/components/ui/button';
-import * as Dialog from '$lib/components/ui/dialog';
-import { Input } from '$lib/components/ui/input';
-import { Label } from '$lib/components/ui/label';
-import { db } from "$lib/firebase";
-import type { EventDoc } from '$lib/types';
-import { doc, setDoc } from 'firebase/firestore';
-import Pencil from 'lucide-svelte/icons/pencil';
+	import { Button } from '$lib/components/ui/button';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
+	import { db } from '$lib/firebase';
+	import type { EventDoc } from '$lib/types';
+	import { doc, setDoc } from 'firebase/firestore';
+	import Pencil from 'lucide-svelte/icons/pencil';
 
 	let { teamId, event }: { teamId: string; event: EventDoc } = $props();
 
