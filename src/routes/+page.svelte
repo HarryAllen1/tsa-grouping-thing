@@ -21,7 +21,7 @@
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import Minus from 'lucide-svelte/icons/minus';
 	import Plus from 'lucide-svelte/icons/plus';
-	import { mount } from 'svelte';
+	import { mount, onDestroy, unmount } from 'svelte';
 	import { persisted } from 'svelte-persisted-store';
 	import Copyable from './Copyable.svelte';
 	import EventCard from './EventCard.svelte';
@@ -29,18 +29,22 @@
 	const yellowMode = persisted('yellowMode', false);
 	let alertEl = $state<HTMLDivElement>();
 
+	const toUnmount: Record<string, any>[] = [];
+
 	const addAlertStuff = (el: HTMLDivElement | undefined) => {
 		if (!el) return;
 
 		const copyables = el.querySelectorAll('.copyable');
 
 		for (const copyable of copyables as unknown as HTMLElement[]) {
-			mount(Copyable, {
-				target: copyable,
-				props: {
-					text: copyable.textContent ?? '',
-				},
-			});
+			toUnmount.push(
+				mount(Copyable, {
+					target: copyable,
+					props: {
+						text: copyable.textContent ?? '',
+					},
+				}),
+			);
 		}
 	};
 
@@ -152,6 +156,10 @@
 					?.checkInComplete,
 		),
 	);
+
+	onDestroy(() => {
+		toUnmount.forEach((comp) => unmount(comp));
+	});
 </script>
 
 <svelte:head>
