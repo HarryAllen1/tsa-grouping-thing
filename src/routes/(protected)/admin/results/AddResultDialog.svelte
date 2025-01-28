@@ -1,27 +1,23 @@
 <script lang="ts">
-	import {
-		allUsersCollection,
-		Combobox,
-		db,
-		sleep,
-		user,
-		type BasicUser,
-		type EventDoc,
-	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { Progress } from '$lib/components/ui/progress';
 	import { Textarea } from '$lib/components/ui/textarea';
+	import { db } from '$lib/firebase';
+	import { allUsersCollection, user } from '$lib/stores';
+	import type { BasicUser, EventDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { deleteObject } from 'firebase/storage';
 	import Minus from 'lucide-svelte/icons/minus';
+	import Combobox from '$lib/Combobox.svelte';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import X from 'lucide-svelte/icons/x';
 	import { type Snippet } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
+	import { sleep } from '$lib/better-utils';
 
 	let {
 		event,

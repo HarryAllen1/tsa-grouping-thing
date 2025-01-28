@@ -1,7 +1,9 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
+	import { db } from '$lib/firebase';
+	import { tShirtMap } from '$lib/t-shirt';
+	import type { UserDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
-	import { db, tShirtMap, type UserDoc } from '$lib';
 
 	let {
 		user,

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { auth, db, type UserDoc } from '$lib';
+	import { auth, db } from '$lib/firebase';
+	import type { UserDoc } from '$lib/types';
 	import { docStore, userStore } from 'sveltefire';
 
 	let { children } = $props();

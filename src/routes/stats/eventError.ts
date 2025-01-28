@@ -1,4 +1,4 @@
-import type { EventDoc, UserDoc } from '$lib';
+import type { EventDoc, UserDoc } from '$lib/types';
 
 export const eventError = (
 	event: string,

@@ -1,17 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import {
-		auth,
-		db,
-		sleep,
-		MAX_EVENTS,
-		MIN_EVENTS,
-		type EventDoc,
-		type UserDoc,
-	} from '$lib';
+	import { sleep } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
+	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
+	import { auth, db } from '$lib/firebase';
+	import type { EventDoc, UserDoc } from '$lib/types';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import Lock from 'lucide-svelte/icons/lock';

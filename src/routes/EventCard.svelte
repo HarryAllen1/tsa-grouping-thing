@@ -1,16 +1,10 @@
 <script lang="ts">
-	import {
-		allUsersCollection,
-		db,
-		user,
-		userDoc,
-		type Team,
-		type EventData,
-		type EventDoc,
-	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
+	import { db } from '$lib/firebase';
+	import { allUsersCollection, user, userDoc } from '$lib/stores';
+	import type { EventData, EventDoc, Team } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import TeamCard from './TeamCard.svelte';

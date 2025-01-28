@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { eventsCollection, type UserDoc } from '$lib';
+	import { eventsCollection } from '$lib/stores';
+	import type { UserDoc } from '$lib/types';
 
 	let {
 		user,

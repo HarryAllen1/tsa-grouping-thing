@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { allUsersCollection, eventsCollection } from '$lib';
 	import { Button } from '$lib/components/ui/button';
+	import { allUsersCollection, eventsCollection } from '$lib/stores';
 	import Copy from 'lucide-svelte/icons/copy';
 	import { toast } from 'svelte-sonner';
 

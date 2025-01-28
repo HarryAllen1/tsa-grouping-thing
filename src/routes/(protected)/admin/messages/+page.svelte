@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { db, eventsCollection, noHtmlMd, type SimpleMessage } from '$lib';
-	import * as Card from '$lib/components/ui/card';
-	import { collectionStore } from 'sveltefire';
-	import TeamMessages from '../../../TeamMessages.svelte';
-	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Button } from '$lib/components/ui/button';
+	import * as Card from '$lib/components/ui/card';
+	import * as Collapsible from '$lib/components/ui/collapsible';
+	import { db } from '$lib/firebase';
+	import { noHtmlMd } from '$lib/md';
+	import { eventsCollection } from '$lib/stores';
+	import type { SimpleMessage } from '$lib/types';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import { setContext } from 'svelte';
+	import { collectionStore } from 'sveltefire';
+	import TeamMessages from '../../../TeamMessages.svelte';
 
 	const blockedMessages = collectionStore<
 		SimpleMessage & {

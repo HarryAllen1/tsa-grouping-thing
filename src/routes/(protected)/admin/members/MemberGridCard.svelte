@@ -1,14 +1,5 @@
 <script lang="ts">
-	import {
-		db,
-		fancyConfirm,
-		eventsCollection,
-		MAX_EVENTS,
-		MIN_EVENTS,
-		tShirtMap,
-		user as userStore,
-		type UserDoc,
-	} from '$lib';
+	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -17,12 +8,17 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
+	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
+	import { db } from '$lib/firebase';
+	import { eventsCollection, user as userStore } from '$lib/stores';
+	import { tShirtMap } from '$lib/t-shirt';
+	import type { UserDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
-	import Save from 'lucide-svelte/icons/save';
 	import CircleHelp from 'lucide-svelte/icons/circle-help';
-	import UserCog from 'lucide-svelte/icons/user-cog';
+	import Save from 'lucide-svelte/icons/save';
 	import ToggleRight from 'lucide-svelte/icons/toggle-right';
+	import UserCog from 'lucide-svelte/icons/user-cog';
 
 	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 

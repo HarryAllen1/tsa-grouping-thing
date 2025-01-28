@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { db, user, type EventDoc } from '$lib';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
+	import { db } from '$lib/firebase';
+	import { user } from '$lib/stores';
+	import type { EventDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
 	import CheckinTeam from './CheckinTeam.svelte';
 

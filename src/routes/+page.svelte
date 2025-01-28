@@ -1,21 +1,21 @@
 <script lang="ts">
-	import {
-		MIN_EVENTS,
-		allUsersCollection,
-		db,
-		eventsCollection,
-		md,
-		sendEmail,
-		settings,
-		user,
-		userDoc,
-		type EventDoc,
-	} from '$lib';
+	import * as Alert from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Label } from '$lib/components/ui/label';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
+	import { MIN_EVENTS } from '$lib/constants';
+	import { db, sendEmail } from '$lib/firebase';
+	import { md } from '$lib/md';
+	import {
+		allUsersCollection,
+		eventsCollection,
+		settings,
+		user,
+		userDoc,
+	} from '$lib/stores';
+	import type { EventDoc } from '$lib/types';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
@@ -25,7 +25,6 @@
 	import { persisted } from 'svelte-persisted-store';
 	import Copyable from './Copyable.svelte';
 	import EventCard from './EventCard.svelte';
-	import * as Alert from '$lib/components/ui/alert';
 
 	const yellowMode = persisted('yellowMode', false);
 	let alertEl = $state<HTMLDivElement>();

@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { md, storage, user, type EventDoc, type Result } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import { storage } from '$lib/firebase';
+	import { md } from '$lib/md';
+	import { user } from '$lib/stores';
+	import type { EventDoc, Result } from '$lib/types';
 	import { listAll, ref } from 'firebase/storage';
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import { DownloadURL } from 'sveltefire';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { allUsersCollection } from '$lib';
+	import { allUsersCollection } from '$lib/stores';
 	import { barX, plot } from '@observablehq/plot';
 
 	let graph = $state<HTMLDivElement>();

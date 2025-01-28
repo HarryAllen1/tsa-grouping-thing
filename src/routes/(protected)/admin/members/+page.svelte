@@ -1,18 +1,15 @@
 <script lang="ts">
-	import {
-		MIN_EVENTS,
-		allUsersCollection,
-		db,
-		fancyConfirm,
-		settings,
-		type UserDoc,
-	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
+	import { MIN_EVENTS } from '$lib/constants';
+	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
+	import { db } from '$lib/firebase';
+	import { allUsersCollection, settings } from '$lib/stores';
+	import type { UserDoc } from '$lib/types';
 	import { csvFormat } from 'd3';
 	import {
 		collection,

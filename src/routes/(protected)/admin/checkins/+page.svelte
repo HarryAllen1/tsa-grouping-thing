@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { eventsCollection } from '$lib';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
+	import { eventsCollection } from '$lib/stores';
 	import CheckinEvent from './CheckinEvent.svelte';
 	import { hideEmpty } from './state';
 </script>

@@ -1,17 +1,18 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { db, tShirtMap } from '$lib';
+	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
+	import { db } from '$lib/firebase';
+	import { tShirtMap } from '$lib/t-shirt';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
-	const email = $page.params.email;
+	const email = page.params.email;
 
 	let initialized = $state(false);
 

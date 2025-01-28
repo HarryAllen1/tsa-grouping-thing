@@ -1,9 +1,10 @@
 import { type User } from 'firebase/auth';
 import { persisted } from 'svelte-persisted-store';
-import { derived, type Readable } from 'svelte/store';
+import { derived, get, type Readable } from 'svelte/store';
 import { collectionStore, docStore, userStore } from 'sveltefire';
 import { auth, db } from './firebase';
 import type { EventDoc, SettingsDoc, UserDoc } from './types';
+import { setUser } from '@sentry/sveltekit';
 
 export const user = userStore(auth) as Readable<User>;
 export let userDoc: Readable<UserDoc>;
@@ -26,6 +27,7 @@ user.subscribe(async ($u) => {
 						: $doc?.name.trim(),
 			}),
 		);
+		setUser(get(userDoc));
 		allUsersCollection = derived(
 			collectionStore<UserDoc>(db, 'users') as Readable<UserDoc[]>,
 			($users) =>

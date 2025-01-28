@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { StorageMetadata, type EventDoc, type Team } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Popover from '$lib/components/ui/popover';
+	import StorageMetadata from '$lib/StorageMetadata.svelte';
+	import type { EventDoc, Team } from '$lib/types';
 	import { getBlob, type FullMetadata } from 'firebase/storage';
 	import JSZip from 'jszip';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';

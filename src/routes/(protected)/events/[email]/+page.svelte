@@ -1,16 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import {
-		auth,
-		db,
-		MAX_EVENTS,
-		MIN_EVENTS,
-		type EventDoc,
-		type UserDoc,
-	} from '$lib';
+	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
+	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
+	import { auth, db } from '$lib/firebase';
+	import type { EventDoc, UserDoc } from '$lib/types';
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
 	import Lock from 'lucide-svelte/icons/lock';
 	import { derived as derivedStore } from 'svelte/store';
@@ -19,7 +14,7 @@
 	const actualUser = userStore(auth);
 	const user = derivedStore(actualUser, ($u) => ({
 		...$u,
-		email: decodeURIComponent($page.params.email),
+		email: decodeURIComponent(page.params.email),
 	}));
 
 	const userDoc = docStore<UserDoc>(db, `users/${$user.email}`);

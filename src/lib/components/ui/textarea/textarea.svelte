@@ -1,8 +1,8 @@
 <script lang="ts">
+	import { autosize } from '$lib/autosize';
+	import { cn } from '$lib/utils.js';
 	import type { WithElementRef, WithoutChildren } from 'bits-ui';
 	import type { HTMLTextareaAttributes } from 'svelte/elements';
-	import { cn } from '$lib/utils.js';
-	import { autosize } from '$lib';
 
 	let {
 		ref = $bindable(null),

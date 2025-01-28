@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { auth, db, tShirtMap, user, userDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
-	import * as Popover from '$lib/components/ui/popover';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
-	import { doc, getDoc, setDoc } from 'firebase/firestore';
+	import { auth, db } from '$lib/firebase';
+	import { user, userDoc } from '$lib/stores';
+	import { tShirtMap } from '$lib/t-shirt';
 	import { updateProfile } from 'firebase/auth';
+	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';

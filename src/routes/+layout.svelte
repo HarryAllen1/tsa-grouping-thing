@@ -1,21 +1,16 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { goto, onNavigate } from '$app/navigation';
-	import { page } from '$app/stores';
-	import {
-		FancyConfirm,
-		ProgressBar,
-		analytics,
-		auth,
-		db,
-		storage,
-		user,
-		type UserDoc,
-	} from '$lib';
+	import { page } from '$app/state';
+	import FancyConfirm from '$lib/FancyConfirm.svelte';
+	import ProgressBar from '$lib/ProgressBar.svelte';
 	import ThemeWrapper from '$lib/ThemeWrapper.svelte';
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { analytics, auth, db, storage } from '$lib/firebase';
+	import { user } from '$lib/stores';
+	import type { UserDoc } from '$lib/types';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import { ModeWatcher } from 'mode-watcher';
@@ -153,25 +148,25 @@
 			<Tooltip.Provider>
 				<ThemeWrapper>
 					<ProgressBar class="text-primary" />
-					{#if $page.route.id !== '/intake' && $user}
+					{#if page.route.id !== '/intake' && $user}
 						<AppSidebar />
 					{/if}
 					<div class="w-full">
-						{#if $page.route.id !== '/intake' && $user}
+						{#if page.route.id !== '/intake' && $user}
 							<div class="w-full p-4">
 								<Sidebar.Trigger />
 							</div>
 						{/if}
 						<div class="flex w-full flex-col items-center">
 							{#if !dev}
-								{#key $page.route.id}
+								{#key page.route.id}
 									<PageView />
 								{/key}
 							{/if}
 							<SignedIn>
 								{#key $user}
 									{@render children()}
-									<!-- {#if $page.route.id !== '/intake' && !$page.route.id?.includes('account')}
+									<!-- {#if page.route.id !== '/intake' && !page.route.id?.includes('account')}
 							<div class="fixed bottom-8 right-8">
 								<Popover.Root
 									onOpenChange={(e) => {
@@ -200,7 +195,7 @@
 								{/key}
 							</SignedIn>
 							<SignedOut>
-								{#if $page.route.id === '/email-link'}
+								{#if page.route.id === '/email-link'}
 									{@render children()}
 								{:else}
 									<div class="mt-6">

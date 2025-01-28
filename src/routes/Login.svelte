@@ -1,21 +1,21 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import {
-		auth,
 		closeConfirmationDialog,
 		fancyConfirm,
-		POINT_OF_CONTACT_EMAIL,
-	} from '$lib';
+	} from '$lib/FancyConfirm.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { captureException, captureMessage } from '@sentry/sveltekit';
+	import { POINT_OF_CONTACT_EMAIL } from '$lib/constants';
+	import { auth } from '$lib/firebase';
+	import { captureException } from '@sentry/sveltekit';
 	import confetti from 'canvas-confetti';
 	import {
-		OAuthProvider,
 		browserLocalPersistence,
+		OAuthProvider,
 		sendSignInLinkToEmail,
 		setPersistence,
 		signInWithPopup,
@@ -70,7 +70,7 @@
 						case 'auth/account-exists-with-different-credential': {
 							fancyConfirm(
 								'Account already exists',
-								`It seems like you previously signed in with your email and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact harry at ${POINT_OF_CONTACT_EMAIL} to fix this. In the meantime, please login using your email.`,
+								`It seems like you previously signed in with your email and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact Harry at ${POINT_OF_CONTACT_EMAIL} to fix this. In the meantime, please login using your email.`,
 							);
 							break;
 						}
@@ -138,7 +138,7 @@
 				}
 
 				await sendSignInLinkToEmail(auth, email, {
-					url: `${$page.url.origin}/email-link`,
+					url: `${page.url.origin}/email-link`,
 					handleCodeInApp: true,
 				});
 

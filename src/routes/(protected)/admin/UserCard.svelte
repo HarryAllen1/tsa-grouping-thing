@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { eventsCollection, type EventDoc, type UserDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
+	import { eventsCollection } from '$lib/stores';
+	import type { EventDoc, UserDoc } from '$lib/types';
 	import ToggleRight from 'lucide-svelte/icons/toggle-right';
 
 	let { user }: { user: UserDoc } = $props();

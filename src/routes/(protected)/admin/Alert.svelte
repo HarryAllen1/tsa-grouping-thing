@@ -1,9 +1,9 @@
 <script lang="ts">
-	import * as Dialog from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
+	import * as Dialog from '$lib/components/ui/dialog';
 	import { Textarea } from '$lib/components/ui/textarea';
+	import { db } from '$lib/firebase';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
-	import { db } from '$lib';
 	import { onMount } from 'svelte';
 
 	let open = $state(false);

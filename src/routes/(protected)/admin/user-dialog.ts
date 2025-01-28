@@ -1,5 +1,6 @@
+import { allUsersCollection } from '$lib/stores';
+import type { UserDoc } from '$lib/types';
 import { get, writable } from 'svelte/store';
-import { allUsersCollection, type UserDoc } from '$lib';
 
 export const openUserDialog = (email: string) => {
 	currentUserDialogUser.set(

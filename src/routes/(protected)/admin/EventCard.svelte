@@ -1,13 +1,5 @@
 <script lang="ts">
-	import {
-		allUsersCollection,
-		db,
-		fancyConfirm,
-		md,
-		user,
-		type EventData,
-		type EventDoc,
-	} from '$lib';
+	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -17,7 +9,10 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import { deleteDoc, deleteField, doc, setDoc } from 'firebase/firestore';
+	import { db } from '$lib/firebase';
+	import { allUsersCollection, user } from '$lib/stores';
+	import type { EventData, EventDoc } from '$lib/types';
+	import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import Download from 'lucide-svelte/icons/download';
@@ -29,6 +24,7 @@
 	import TeamCard from './TeamCard.svelte';
 	import UserCard from './UserCard.svelte';
 	import { openUserDialog } from './user-dialog';
+	import { md } from '$lib/md';
 
 	let {
 		hidden,

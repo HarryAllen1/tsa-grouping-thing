@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { db, user, type EventDoc, type Team } from '$lib';
-	import * as Card from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
+	import * as Card from '$lib/components/ui/card';
 	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import { doc, setDoc, Timestamp } from 'firebase/firestore';
+	import { db } from '$lib/firebase';
+	import { user } from '$lib/stores';
+	import type { EventDoc, Team } from '$lib/types';
+	import { doc, setDoc } from 'firebase/firestore';
 	import { hideEmpty } from './state';
 
 	let {

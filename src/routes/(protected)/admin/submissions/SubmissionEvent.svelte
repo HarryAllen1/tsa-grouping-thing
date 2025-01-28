@@ -1,13 +1,16 @@
 <script lang="ts">
-	import { db, md, storage, user, type EventDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Textarea } from '$lib/components/ui/textarea';
+	import { db, storage } from '$lib/firebase';
+	import { md } from '$lib/md';
+	import { user } from '$lib/stores';
+	import type { EventDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
+	import { getBlob, listAll, ref } from 'firebase/storage';
+	import JSZip from 'jszip';
 	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
 	import SubmissionTeam from './SubmissionTeam.svelte';
-	import JSZip from 'jszip';
-	import { getBlob, listAll, ref } from 'firebase/storage';
 
 	let {
 		event,

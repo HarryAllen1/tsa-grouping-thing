@@ -1,8 +1,9 @@
 <script lang="ts">
-	import type { EventDoc, UserDoc } from '$lib';
-	import { auth, db, MAX_EVENTS, MIN_EVENTS } from '$lib';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
+	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
+	import { auth, db } from '$lib/firebase';
+	import type { EventDoc, UserDoc } from '$lib/types';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import Lock from 'lucide-svelte/icons/lock';
 	import { collectionStore, docStore, userStore } from 'sveltefire';

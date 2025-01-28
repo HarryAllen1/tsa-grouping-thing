@@ -1,18 +1,14 @@
 <script lang="ts">
-	import {
-		db,
-		eventsCollection,
-		user,
-		type UserDoc,
-		allUsersCollection,
-	} from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Popover from '$lib/components/ui/popover';
-	import X from 'lucide-svelte/icons/x';
-	import AddResultDialog from './AddResultDialog.svelte';
+	import { db } from '$lib/firebase';
+	import { allUsersCollection, eventsCollection, user } from '$lib/stores';
+	import type { UserDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
+	import X from 'lucide-svelte/icons/x';
 	import UserCard from '../UserCard.svelte';
+	import AddResultDialog from './AddResultDialog.svelte';
 
 	const rerenderMap: Record<string, number> = {};
 	const rerender = (event: string) => {

@@ -1,15 +1,18 @@
 <script lang="ts">
-	import { auth, profilePhoto, userDoc } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import Customizer from '$lib/Customizer.svelte';
+	import { auth } from '$lib/firebase';
+	import { profilePhoto, userDoc } from '$lib/stores';
+	import { setUser } from '@sentry/sveltekit';
 	import { signOut } from 'firebase/auth';
 	import BookOpenText from 'lucide-svelte/icons/book-open-text';
 	import CalendarCheck from 'lucide-svelte/icons/calendar-check';
 	import ChartBar from 'lucide-svelte/icons/chart-bar';
+	import Check from 'lucide-svelte/icons/check';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import Download from 'lucide-svelte/icons/download';
 	import ListCheck from 'lucide-svelte/icons/list-check';
@@ -20,7 +23,6 @@
 	import UserPen from 'lucide-svelte/icons/user-pen';
 	import Users from 'lucide-svelte/icons/users';
 	import { downloadAsCSV, downloadAsJSON } from './download';
-	import Check from 'lucide-svelte/icons/check';
 
 	const navItems = [
 		{
@@ -321,6 +323,7 @@
 						<DropdownMenu.Item
 							onclick={() => {
 								signOut(auth);
+								setUser(null);
 							}}
 						>
 							<LogOut class="mr-2 h-4 w-4" />

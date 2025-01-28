@@ -1,11 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import {
-		allUsersCollection,
-		eventsCollection,
-		userDoc,
-		MIN_EVENTS,
-	} from '$lib';
+	import { MIN_EVENTS } from '$lib/constants';
+	import { allUsersCollection, eventsCollection, userDoc } from '$lib/stores';
 	import { barX, plot } from '@observablehq/plot';
 	import colors from 'tailwindcss/colors';
 	import ColorKey from './ColorKey.svelte';

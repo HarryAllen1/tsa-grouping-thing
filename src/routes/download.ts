@@ -1,4 +1,5 @@
-import { db, removeRef } from '$lib';
+import { removeRef } from '$lib/better-utils';
+import { db } from '$lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
 export const downloadAsJSON = async () => {

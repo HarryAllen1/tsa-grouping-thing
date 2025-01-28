@@ -1,19 +1,8 @@
 <script lang="ts">
-	import {
-		POINT_OF_CONTACT_EMAIL,
-		SimpleTooltip,
-		StorageMetadata,
-		allUsersCollection,
-		db,
-		fancyConfirm,
-		md,
-		sleep,
-		storage,
-		user,
-		userDoc,
-		type EventDoc,
-		type Team,
-	} from '$lib';
+	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
+	import SimpleTooltip from '$lib/SimpleTooltip.svelte';
+	import StorageMetadata from '$lib/StorageMetadata.svelte';
+	import { sleep } from '$lib/better-utils';
 	import * as Alert from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -24,6 +13,11 @@
 	import { Progress } from '$lib/components/ui/progress';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { POINT_OF_CONTACT_EMAIL } from '$lib/constants';
+	import { db, storage } from '$lib/firebase';
+	import { md } from '$lib/md';
+	import { allUsersCollection, user, userDoc } from '$lib/stores';
+	import type { EventDoc, Team } from '$lib/types';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import {

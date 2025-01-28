@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { db, eventsCollection, isDesktop, noHtmlMd, userDoc } from '$lib';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
@@ -15,6 +14,10 @@
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
 	import { getContext, onMount } from 'svelte';
 	import { selected } from './messages';
+	import { eventsCollection, userDoc } from '$lib/stores';
+	import { db } from '$lib/firebase';
+	import { isDesktop } from '$lib/better-utils';
+	import { noHtmlMd } from '$lib/md';
 
 	let {
 		teamId,

@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { eventsCollection, noHtmlMd, user, userDoc } from '$lib';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Separator } from '$lib/components/ui/separator';
+	import { noHtmlMd } from '$lib/md';
+	import { eventsCollection, user, userDoc } from '$lib/stores';
 	import { selected } from './messages';
 
 	let teams = $derived(

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { eventsCollection } from '$lib';
+	import { eventsCollection } from '$lib/stores';
 	import ResultCard from './ResultCard.svelte';
 </script>
 

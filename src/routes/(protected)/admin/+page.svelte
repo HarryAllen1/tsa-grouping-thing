@@ -1,15 +1,7 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import {
-		allUsersCollection,
-		auth,
-		db,
-		eventsCollection,
-		fancyConfirm,
-		sleep,
-		type EventData,
-		type EventDoc,
-	} from '$lib';
+	import { page } from '$app/state';
+	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
+	import { sleep } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -18,6 +10,9 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
+	import { auth, db } from '$lib/firebase';
+	import { allUsersCollection, eventsCollection } from '$lib/stores';
+	import type { EventData, EventDoc } from '$lib/types';
 	import {
 		collection,
 		deleteField,
@@ -35,9 +30,7 @@
 
 	const user = userStore(auth);
 
-	let search = $state(
-		decodeURIComponent($page.url.searchParams.get('q') ?? ''),
-	);
+	let search = $state(decodeURIComponent(page.url.searchParams.get('q') ?? ''));
 
 	const changeSearch = (s: string) => {
 		search = s;
