@@ -22,6 +22,7 @@
 	import OfflineNotifier from './OfflineNotifier.svelte';
 	import { panelOpen } from './messages-panel';
 	import { mouseThing } from './senuka-put-stuff-here';
+	import { setUser } from '@sentry/sveltekit';
 
 	navigator.vibrate ||= (pattern: number | number[]) => !!pattern;
 
@@ -35,9 +36,11 @@
 
 	const unsub = onAuthStateChanged(auth, async (user) => {
 		if (user && !user?.email?.endsWith('@lwsd.org') && !dev) {
+			setUser(null);
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
 		} else if (user) {
+			setUser(user as { email: string });
 			let userDoc = await getDoc(
 				doc(db, 'users', auth.currentUser?.email ?? ''),
 			);
