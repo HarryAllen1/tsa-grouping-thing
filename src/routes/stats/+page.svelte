@@ -102,6 +102,18 @@
 			.flatMap((e) => e.teams)
 			.filter((t) => typeof t.preparationLevel !== 'undefined'),
 	);
+
+	let totalTeams = $derived(
+		$eventsCollection
+			.filter((event) => !['*Rooming', '*Cardboard Boat'].includes(event.event))
+			.flatMap((e) => e.teams).length,
+	);
+	let teamsWithRandomSwitch = $derived(
+		$eventsCollection
+			.filter((event) => !['*Rooming', '*Cardboard Boat'].includes(event.event))
+			.flatMap((e) => e.teams)
+			.filter((t) => t.random).length,
+	);
 </script>
 
 <svelte:head>
@@ -158,6 +170,12 @@
 				) / 100}
 			</p>
 		{/if}
+
+		<p>
+			Percent of teams with random switch: {Math.round(
+				(teamsWithRandomSwitch / totalTeams) * 100,
+			)}%
+		</p>
 	{/if}
 
 	<ColorKey />
