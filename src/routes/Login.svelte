@@ -9,7 +9,10 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { POINT_OF_CONTACT_EMAIL } from '$lib/constants';
+	import {
+		POINT_OF_CONTACT_EMAIL,
+		POINT_OF_CONTACT_NAME,
+	} from '$lib/constants';
 	import { auth } from '$lib/firebase';
 	import { captureException } from '@sentry/sveltekit';
 	import confetti from 'canvas-confetti';
@@ -70,7 +73,7 @@
 						case 'auth/account-exists-with-different-credential': {
 							fancyConfirm(
 								'Account already exists',
-								`It seems like you previously signed in with your email and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact Harry at ${POINT_OF_CONTACT_EMAIL} to fix this. In the meantime, please login using your email.`,
+								`It seems like you previously signed in with your email and are now trying to sign in with Microsoft. Unfortunately, you are now stuck with the email link. If this really bothers, you, please contact ${POINT_OF_CONTACT_NAME} at ${POINT_OF_CONTACT_EMAIL} to fix this. In the meantime, please login using your email.`,
 							);
 							break;
 						}
@@ -166,3 +169,7 @@
 		</form>
 	</Card.Content>
 </Card.Root>
+<p class="mx-16 max-w-md p-6 text-center text-gray-500 md:mx-48 lg:mx-96">
+	If any nontrivial error occurs when logging in, please contact a JHS TSA Board
+	Member.
+</p>

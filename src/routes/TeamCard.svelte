@@ -9,7 +9,10 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Progress } from '$lib/components/ui/progress';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { POINT_OF_CONTACT_EMAIL } from '$lib/constants';
+	import {
+		POINT_OF_CONTACT_EMAIL,
+		POINT_OF_CONTACT_NAME,
+	} from '$lib/constants';
 	import { analytics, db, sendEmail } from '$lib/firebase';
 	import { md } from '$lib/md';
 	import { allUsersCollection, user, userDoc } from '$lib/stores';
@@ -434,8 +437,8 @@
 									<p>250MB max file size.</p>
 									<p>
 										If you need to submit a file type not listed or need to
-										upload a file larger than 250MB, please contact Harry (<a
-											href="mailto:{POINT_OF_CONTACT_EMAIL}"
+										upload a file larger than 250MB, please contact {POINT_OF_CONTACT_NAME}
+										(<a href="mailto:{POINT_OF_CONTACT_EMAIL}"
 											>{POINT_OF_CONTACT_EMAIL}</a
 										>).
 									</p>
