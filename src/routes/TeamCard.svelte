@@ -10,6 +10,7 @@
 	import { Progress } from '$lib/components/ui/progress';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import {
+		CHAPTER_ID,
 		POINT_OF_CONTACT_EMAIL,
 		POINT_OF_CONTACT_NAME,
 	} from '$lib/constants';
@@ -107,7 +108,7 @@
 				{:else if event.maxTeamSize === 1 && team.members.length === 1}
 					Individual Event
 				{:else}
-					Team 2082-{team.teamNumber}
+					Team {CHAPTER_ID}-{team.teamNumber}
 				{/if}
 			</span>
 			{#if event.event === '*Cardboard Boat' && !team.locked && !event.locked && team.members.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}

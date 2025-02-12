@@ -10,6 +10,7 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
+	import { CHAPTER_ID } from '$lib/constants';
 	import { auth, db } from '$lib/firebase';
 	import { allUsersCollection, eventsCollection } from '$lib/stores';
 	import type { EventData, EventDoc } from '$lib/types';
@@ -47,7 +48,7 @@
 						name: m.name,
 						email: m.email,
 					})),
-					teamNumbers: e.teams.map((t) => `2082-${t.teamNumber}`),
+					teamNumbers: e.teams.map((t) => `${CHAPTER_ID}-${t.teamNumber}`),
 					waId: allMembers.map((m) => m.washingtonId).filter(Boolean),
 				};
 			})

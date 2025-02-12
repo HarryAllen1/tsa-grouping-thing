@@ -14,6 +14,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import {
+		CHAPTER_ID,
 		POINT_OF_CONTACT_EMAIL,
 		POINT_OF_CONTACT_NAME,
 	} from '$lib/constants';
@@ -175,7 +176,7 @@
 							u.email.toLowerCase() === team.members[0].email.toLowerCase(),
 					)?.washingtonId}
 				{:else}
-					Team 2082-{team.teamNumber}
+					Team {CHAPTER_ID}-{team.teamNumber}
 				{/if}
 			</span>
 			{#if event.event !== '*Cardboard Boat'}

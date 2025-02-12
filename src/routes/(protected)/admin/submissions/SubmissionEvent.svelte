@@ -2,6 +2,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Textarea } from '$lib/components/ui/textarea';
+	import { CHAPTER_ID } from '$lib/constants';
 	import { db, storage } from '$lib/firebase';
 	import { md } from '$lib/md';
 	import { user } from '$lib/stores';
@@ -100,7 +101,7 @@
 				onclick={async () => {
 					const zip = new JSZip();
 					for (const team of event.teams) {
-						const teamFolder = zip.folder(`2082-${team.teamNumber}`);
+						const teamFolder = zip.folder(`${CHAPTER_ID}-${team.teamNumber}`);
 						const submissions = await listAll(
 							ref(storage, `submissions/${event.event}/${team.id}`),
 						);

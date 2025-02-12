@@ -2,6 +2,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Popover from '$lib/components/ui/popover';
+	import { CHAPTER_ID } from '$lib/constants';
 	import StorageMetadata from '$lib/StorageMetadata.svelte';
 	import type { EventDoc, Team } from '$lib/types';
 	import { getBlob, type FullMetadata } from 'firebase/storage';
@@ -195,7 +196,7 @@
 						const a = document.createElement('a');
 
 						a.href = url;
-						a.download = `2082-${team.teamNumber} ${event.event}.zip`;
+						a.download = `${CHAPTER_ID}-${team.teamNumber} ${event.event}.zip`;
 						a.click();
 						URL.revokeObjectURL(url);
 					}}
