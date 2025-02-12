@@ -301,8 +301,7 @@
 							variant="ghost"
 							size="sm"
 							class="member-collapsible flex w-full items-center p-2 {user
-								.events.length < MIN_EVENTS ||
-							user.events.length > MAX_EVENTS + 1
+								.events.length < MIN_EVENTS || user.events.length > 6
 								? 'text-red-500'
 								: user.events
 											.map((e) => {
