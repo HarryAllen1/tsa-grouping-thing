@@ -82,6 +82,12 @@
 		},
 		"patchedDependencies": {
 			"@sentry/sveltekit@9.0.1": "patches/@sentry__sveltekit@9.0.1.patch"
-		}
+		},
+		"onlyBuiltDependencies": [
+			"@sentry/cli",
+			"esbuild",
+			"protobufjs",
+			"sharp"
+		]
 	}
 }
