@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@sentry/sveltekit@9.0.1':
+    hash: 508d8bf503f12e0bc787347d284cce0f987c8b3c98072bda5bf06720c66caa71
+    path: patches/@sentry__sveltekit@9.0.1.patch
+
 importers:
 
   .:
@@ -13,7 +18,7 @@ importers:
         version: 0.6.16
       '@sentry/sveltekit':
         specifier: 9.0.1
-        version: 9.0.1(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.30.0)(@sveltejs/kit@2.17.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0)))(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0)))(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0))
+        version: 9.0.1(patch_hash=508d8bf503f12e0bc787347d284cce0f987c8b3c98072bda5bf06720c66caa71)(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.30.0)(@sveltejs/kit@2.17.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0)))(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0)))(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0))
       '@tanstack/table-core':
         specifier: 8.21.2
         version: 8.21.2
@@ -5488,7 +5493,7 @@ snapshots:
       magic-string: 0.30.7
       svelte: 5.20.0
 
-  '@sentry/sveltekit@9.0.1(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.30.0)(@sveltejs/kit@2.17.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0)))(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0)))(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0))':
+  '@sentry/sveltekit@9.0.1(patch_hash=508d8bf503f12e0bc787347d284cce0f987c8b3c98072bda5bf06720c66caa71)(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.30.0)(@sveltejs/kit@2.17.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0)))(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0)))(svelte@5.20.0)(vite@6.1.0(@types/node@22.13.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.0))':
     dependencies:
       '@sentry/core': 9.0.1
       '@sentry/node': 9.0.1
