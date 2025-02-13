@@ -1,11 +1,11 @@
+import { setUser } from '@sentry/sveltekit';
+import { setUserId } from 'firebase/analytics';
 import { type User } from 'firebase/auth';
 import { persisted } from 'svelte-persisted-store';
 import { derived, get, type Readable } from 'svelte/store';
 import { collectionStore, docStore, userStore } from 'sveltefire';
 import { analytics, auth, db } from './firebase';
 import type { EventDoc, SettingsDoc, UserDoc } from './types';
-import { setUser } from '@sentry/sveltekit';
-import { setUserId, setUserProperties } from 'firebase/analytics';
 
 export const user = userStore(auth) as Readable<User>;
 export let userDoc: Readable<UserDoc>;

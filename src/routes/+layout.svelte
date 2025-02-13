@@ -11,6 +11,7 @@
 	import { analytics, auth, db, storage } from '$lib/firebase';
 	import { user } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
+	import { setUser } from '@sentry/sveltekit';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import { ModeWatcher } from 'mode-watcher';
@@ -22,7 +23,6 @@
 	import OfflineNotifier from './OfflineNotifier.svelte';
 	import { panelOpen } from './messages-panel';
 	import { mouseThing } from './senuka-put-stuff-here';
-	import { setUser } from '@sentry/sveltekit';
 
 	navigator.vibrate ||= (pattern: number | number[]) => !!pattern;
 
