@@ -1,9 +1,13 @@
 import { dev } from '$app/environment';
-import { handleErrorWithSentry, replayIntegration } from '@sentry/sveltekit';
-import * as Sentry from '@sentry/sveltekit';
+import {
+	feedbackAsyncIntegration,
+	handleErrorWithSentry,
+	init,
+	replayIntegration,
+} from '@sentry/sveltekit';
 
 if (!dev)
-	Sentry.init({
+	init({
 		dsn: 'https://0c7f0ce6a3dd0adedc74dfa71107da37@o4504343003791360.ingest.us.sentry.io/4507561453748224',
 		tracesSampleRate: 1,
 
@@ -18,7 +22,7 @@ if (!dev)
 		// If you don't want to use Session Replay, just remove the line below:
 		integrations: [
 			replayIntegration(),
-			Sentry.feedbackAsyncIntegration({
+			feedbackAsyncIntegration({
 				colorScheme: 'system',
 				isEmailRequired: true,
 			}),
