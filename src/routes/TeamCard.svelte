@@ -544,153 +544,151 @@
 					{/if}
 				</StorageList>
 				{#if team.requests?.length}
-					<Collapsible.Root>
-						<Collapsible.Trigger>
-							{#snippet child({ props })}
-								<Button
-									variant="ghost"
-									size="sm"
-									class="flex w-full items-center p-2"
-									{...props}
-								>
-									Manage Requests {#if team.requests?.length}
-										({team.requests.filter(
-											(r) =>
-												!event.teams
-													.filter((t) =>
-														t.members.some(
-															(u) =>
-																u.email.toLowerCase() !==
-																$user.email?.toLowerCase(),
-														),
-													)
-													.flatMap((t) => t.members)
-													.some(
-														(u) =>
-															u.email.toLowerCase() === r.email.toLowerCase(),
-													),
-										).length})
-									{/if}
-									<div class="flex-1"></div>
-									<ChevronsUpDown />
-								</Button>
-							{/snippet}
-						</Collapsible.Trigger>
-						<Collapsible.Content class="px-2">
-							<ul>
-								{#each team.requests.filter((r) => !event.teams
-											.filter( (t) => t.members.some((u) => u.email.toLowerCase() !== $user.email?.toLowerCase()), )
-											.flatMap((t) => t.members)
-											.some((u) => u.email.toLowerCase() === r.email.toLowerCase())) ?? [] as request}
-									<li class="flex flex-row">
-										{request.name}
-										<Button
-											onclick={async () => {
-												if (team.members.length >= event.maxTeamSize) {
-													return alert('Your team is full');
-												}
-												team.members.push({
-													name: request.name,
-													email: request.email,
-												});
-												team.lastUpdatedBy = $user?.email ?? '';
-												team.lastUpdatedTime = new Timestamp(
-													Date.now() / 1000,
-													0,
-												);
-												team.requests = team.requests?.filter(
-													(r) =>
-														r.email !== request.email &&
-														r.name !== request.name,
-												);
-												await setDoc(
-													doc(db, 'events', event.event ?? ''),
-													{
-														teams: event.teams,
-														lastUpdatedBy: $user?.email ?? '',
-													},
-													{
-														merge: true,
-													},
-												);
+					{@const actualRequests = team.requests?.filter(
+						(r) =>
+							!event.teams
+								.filter((t) =>
+									t.members.some(
+										(u) => u.email.toLowerCase() !== $user.email?.toLowerCase(),
+									),
+								)
+								.flatMap((t) => t.members)
+								.some((u) => u.email.toLowerCase() === r.email.toLowerCase()),
+					)}
+					{#if actualRequests?.length}
+						<Collapsible.Root>
+							<Collapsible.Trigger>
+								{#snippet child({ props })}
+									<Button
+										variant="ghost"
+										size="sm"
+										class="flex w-full items-center p-2"
+										{...props}
+									>
+										Manage Requests {#if actualRequests.length}
+											({actualRequests.length})
+										{/if}
+										<div class="flex-1"></div>
+										<ChevronsUpDown />
+									</Button>
+								{/snippet}
+							</Collapsible.Trigger>
+							<Collapsible.Content class="px-2">
+								<ul>
+									{#each team.requests.filter((r) => !event.teams
+												.filter( (t) => t.members.some((u) => u.email.toLowerCase() !== $user.email?.toLowerCase()), )
+												.flatMap((t) => t.members)
+												.some((u) => u.email.toLowerCase() === r.email.toLowerCase())) ?? [] as request}
+										<li class="flex flex-row">
+											{request.name}
+											<Button
+												onclick={async () => {
+													if (team.members.length >= event.maxTeamSize) {
+														return alert('Your team is full');
+													}
+													team.members.push({
+														name: request.name,
+														email: request.email,
+													});
+													team.lastUpdatedBy = $user?.email ?? '';
+													team.lastUpdatedTime = new Timestamp(
+														Date.now() / 1000,
+														0,
+													);
+													team.requests = team.requests?.filter(
+														(r) =>
+															r.email !== request.email &&
+															r.name !== request.name,
+													);
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: event.teams,
+															lastUpdatedBy: $user?.email ?? '',
+														},
+														{
+															merge: true,
+														},
+													);
 
-												let members = team.members
-													.map((m) => m.name)
-													.join(', ');
-												const lastComma = members.lastIndexOf(',');
-												if (lastComma !== -1) {
-													members =
-														members.slice(0, lastComma) +
-														' and' +
-														members.slice(lastComma + 1);
-												}
+													let members = team.members
+														.map((m) => m.name)
+														.join(', ');
+													const lastComma = members.lastIndexOf(',');
+													if (lastComma !== -1) {
+														members =
+															members.slice(0, lastComma) +
+															' and' +
+															members.slice(lastComma + 1);
+													}
 
-												sendEmail(
-													request.email,
-													`${event.event} team request approved`,
-													`Your request to join ${members}'s team for ${event.event} has been approved.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-												);
-												confetti();
-												navigator.vibrate(100);
-											}}
-											size="icon"
-											class="h-5"
-											variant="ghost"
-										>
-											<Plus />
-										</Button>
-										<Button
-											size="icon"
-											class="h-5"
-											variant="ghost"
-											onclick={async () => {
-												team.requests = team.requests?.filter(
-													(r) =>
-														r.email !== request.email &&
-														r.name !== request.name,
-												);
-												team.lastUpdatedBy = $user?.email ?? '';
-												team.lastUpdatedTime = new Timestamp(
-													Date.now() / 1000,
-													0,
-												);
-												let members = team.members
-													.map((m) => m.name)
-													.join(', ');
-												const lastComma = members.lastIndexOf(',');
-												if (lastComma !== -1) {
-													members =
-														members.slice(0, lastComma) +
-														' and' +
-														members.slice(lastComma + 1);
-												}
+													sendEmail(
+														request.email,
+														`${event.event} team request approved`,
+														`Your request to join ${members}'s team for ${event.event} has been approved.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+													);
+													confetti();
+													navigator.vibrate(100);
+												}}
+												size="icon"
+												class="h-5"
+												variant="ghost"
+											>
+												<Plus />
+											</Button>
+											<Button
+												size="icon"
+												class="h-5"
+												variant="ghost"
+												onclick={async () => {
+													team.requests = team.requests?.filter(
+														(r) =>
+															r.email !== request.email &&
+															r.name !== request.name,
+													);
+													team.lastUpdatedBy = $user?.email ?? '';
+													team.lastUpdatedTime = new Timestamp(
+														Date.now() / 1000,
+														0,
+													);
+													let members = team.members
+														.map((m) => m.name)
+														.join(', ');
+													const lastComma = members.lastIndexOf(',');
+													if (lastComma !== -1) {
+														members =
+															members.slice(0, lastComma) +
+															' and' +
+															members.slice(lastComma + 1);
+													}
 
-												sendEmail(
-													request.email,
-													`${event.event} team request denied`,
-													`Your request to join ${members}'s team for ${event.event} has been denied. Please contact them for more information.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-												);
-												await setDoc(
-													doc(db, 'events', event.event ?? ''),
-													{
-														teams: event.teams,
-														lastUpdatedBy: $user?.email ?? '',
-													},
-													{
-														merge: true,
-													},
-												);
-											}}
-										>
-											<Minus />
-										</Button>
-									</li>
-								{:else}
-									<li>No requests</li>
-								{/each}
-							</ul>
-						</Collapsible.Content>
-					</Collapsible.Root>
+													sendEmail(
+														request.email,
+														`${event.event} team request denied`,
+														`Your request to join ${members}'s team for ${event.event} has been denied. Please contact them for more information.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
+													);
+													await setDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: event.teams,
+															lastUpdatedBy: $user?.email ?? '',
+														},
+														{
+															merge: true,
+														},
+													);
+												}}
+											>
+												<Minus />
+											</Button>
+										</li>
+									{:else}
+										<li>No requests</li>
+									{/each}
+								</ul>
+							</Collapsible.Content>
+						</Collapsible.Root>
+					{/if}
 				{/if}
 			{/if}
 		</div>
