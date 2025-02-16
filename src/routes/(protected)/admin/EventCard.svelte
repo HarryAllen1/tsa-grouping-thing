@@ -413,7 +413,7 @@
 				email: string;
 			}[],
 		)}
-		{@const peopleNotInTeams =
+		{@const peopleNotInTeams = (
 			event.event === '*Rooming'
 				? $allUsersCollection.filter(
 						(m) =>
@@ -428,7 +428,8 @@
 							!peopleInTeams.some(
 								(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
 							),
-					)}
+					)
+		).toSorted((a, b) => a.name.localeCompare(b.name))}
 		<div>
 			{#if event.event !== '*Rooming'}
 				<div class="flex flex-col gap-2">
