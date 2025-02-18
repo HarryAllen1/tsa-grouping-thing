@@ -22,7 +22,7 @@
 
 	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 
-	const hash = Math.random().toString(36).slice(7);
+	const hash = $props.id();
 	const values = $state({
 		nationalId: user.nationalId,
 		washingtonId: user.washingtonId,
@@ -139,14 +139,40 @@
 				for="{hash}account-locked"
 				class="flex flex-row items-center gap-2"
 			>
-				<p>Lock account</p>
+				<p>Lock account details</p>
 				<Popover.Root>
 					<Popover.Trigger>
 						<CircleHelp class="size-5" />
 					</Popover.Trigger>
 					<Popover.Content>
 						Prevents this user from changing their account details (gender,
-						t-shirt, name, etc.)
+						t-shirt, name, etc.). Members can still change their events with
+						this setting on.
+					</Popover.Content>
+				</Popover.Root>
+			</Label>
+		</div>
+		<div class="flex items-center space-x-2">
+			<Switch
+				id="{hash}account-locked"
+				checked={user.eventsLocked}
+				onCheckedChange={async (e) => {
+					await setDoc(
+						doc(db, 'users', user.email),
+						{ eventsLocked: e, lastUpdatedBy: $userStore?.email ?? '' },
+						{ merge: true },
+					);
+				}}
+			/>
+			<Label for="{hash}events-locked" class="flex flex-row items-center gap-2">
+				<p>Lock events</p>
+				<Popover.Root>
+					<Popover.Trigger>
+						<CircleHelp class="size-5" />
+					</Popover.Trigger>
+					<Popover.Content>
+						Prevents this user from changing their events. The user can still
+						change their teams. Lock the team to prevent this.
 					</Popover.Content>
 				</Popover.Root>
 			</Label>

@@ -86,6 +86,7 @@ export interface UserDoc {
 	studentId?: number;
 	foundBy?: string;
 	locked?: boolean;
+	eventsLocked?: boolean;
 }
 
 export interface MailDoc {

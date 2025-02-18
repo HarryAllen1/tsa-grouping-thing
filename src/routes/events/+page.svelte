@@ -1,10 +1,12 @@
 <script lang="ts">
+	import * as Alert from '$lib/components/ui/alert';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
 	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
+	import CircleAlert from 'lucide-svelte/icons/circle-alert';
 	import Lock from 'lucide-svelte/icons/lock';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
@@ -36,6 +38,17 @@
 	>
 		Edit Events
 	</h1>
+	{#if $userDoc?.eventsLocked}
+		<Alert.Root variant="destructive" class="mb-4">
+			<CircleAlert class="size-4" />
+			<Alert.Title>Events Locked</Alert.Title>
+			<Alert.Description>
+				Your events are currently locked. This is likely because you were
+				eliminated from TSA or left TSA. If this seems like a mistake, please
+				contact a JHS TSA Board Member.
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
 	<h1
 		class="mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>
@@ -89,7 +102,7 @@
 		{MIN_EVENTS} events.
 	</p>
 
-	{#if ($userDoc?.events.length ?? 1) >= MAX_EVENTS}
+	{#if ($userDoc?.events.length ?? 1) >= MAX_EVENTS && !$userDoc?.eventsLocked}
 		<p class="mb-4">
 			Remove one or more events if you want to change your events.
 		</p>
@@ -98,6 +111,7 @@
 	<div class="mb-4 flex flex-col gap-2">
 		{#each $events.filter((e) => !e.hideInSignup) as event (event.event)}
 			{@const disabled =
+				$userDoc?.eventsLocked ||
 				event.locked ||
 				(!eventMap[event.event] &&
 					($userDoc?.events.length ?? 0) >= MAX_EVENTS) ||
