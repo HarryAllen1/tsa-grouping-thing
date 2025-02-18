@@ -648,7 +648,8 @@
 							name: string;
 							email: string;
 						}[],
-					)}
+					)
+					.toSorted((a, b) => a.name.localeCompare(b.name))}
 				<Collapsible.Root>
 					<Collapsible.Trigger>
 						{#snippet child({ props })}
