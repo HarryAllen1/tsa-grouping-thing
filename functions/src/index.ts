@@ -1,1 +1,2 @@
-export { onUserDelete, onlyAllowLWSDEmails } from './auth';
+export { onlyAllowLWSDEmails } from './auth';
+export { logEventChanges } from './db';

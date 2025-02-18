@@ -35,6 +35,9 @@ importers:
       d3:
         specifier: 7.9.0
         version: 7.9.0
+      diff:
+        specifier: ^7.0.0
+        version: 7.0.0
       firebase:
         specifier: 11.3.1
         version: 11.3.1
@@ -99,6 +102,9 @@ importers:
       '@types/d3':
         specifier: 7.4.3
         version: 7.4.3
+      '@types/diff':
+        specifier: ^7.0.1
+        version: 7.0.1
       '@types/eslint':
         specifier: 9.6.1
         version: 9.6.1
@@ -1418,8 +1424,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rollup/wasm-node@4.34.7':
-    resolution: {integrity: sha512-z1emZoL6Fgc9+UIGfJOiOBtZL/iSFmd75DqUHuS7M5guMpKJBt1tjclkZHBPQUuhsG4Gein1GF+5XInl6vt8IA==}
+  '@rollup/wasm-node@4.34.8':
+    resolution: {integrity: sha512-+bu9Ce1VDob+hfEQYPwC03Lds+ACDlGVwuWeLZE2fN+O52O74RZ0F5engVpv7i2YDyTyj4oU/NKO4pjSXMdn6g==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
@@ -1789,6 +1795,9 @@ packages:
 
   '@types/d3@7.4.3':
     resolution: {integrity: sha512-lZXZ9ckh5R8uiFVt8ogUNf+pIrK4EsWrx2Np75WvF/eTpJ0FMHNhjXk8CKEx/+gpHbNQyJWehbFaTvqmHWB3ww==}
+
+  '@types/diff@7.0.1':
+    resolution: {integrity: sha512-R/BHQFripuhW6XPXy05hIvXJQdQ4540KnTvEFHSLjXfHYM41liOLKgIJEyYYiQe796xpaMHfe4Uj/p7Uvng2vA==}
 
   '@types/eslint@9.6.1':
     resolution: {integrity: sha512-FXx2pKgId/WyYo2jXw63kk7/+TY7u7AziEJxJAnSFzHlqTAS3Ync6SvgYAN/k4/PQpnnVuzoMuVnByKK2qp0ag==}
@@ -2419,6 +2428,10 @@ packages:
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
+
+  diff@7.0.0:
+    resolution: {integrity: sha512-PJWHUb1RFevKCwaFA9RlG5tCd+FO5iRh9A8HEtkmBH2Li03iJriB6m6JIN4rGz3K3JLawI7/veA1xzRKP6ISBw==}
+    engines: {node: '>=0.3.1'}
 
   dotenv@16.4.7:
     resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
@@ -5299,7 +5312,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.34.6':
     optional: true
 
-  '@rollup/wasm-node@4.34.7':
+  '@rollup/wasm-node@4.34.8':
     dependencies:
       '@types/estree': 1.0.6
     optionalDependencies:
@@ -5779,6 +5792,8 @@ snapshots:
       '@types/d3-timer': 3.0.2
       '@types/d3-transition': 3.0.9
       '@types/d3-zoom': 3.0.8
+
+  '@types/diff@7.0.1': {}
 
   '@types/eslint@9.6.1':
     dependencies:
@@ -6444,6 +6459,8 @@ snapshots:
   devlop@1.1.0:
     dependencies:
       dequal: 2.0.3
+
+  diff@7.0.0: {}
 
   dotenv@16.4.7: {}
 
@@ -7890,7 +7907,7 @@ snapshots:
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.2
-      rollup: '@rollup/wasm-node@4.34.7'
+      rollup: '@rollup/wasm-node@4.34.8'
     optionalDependencies:
       '@types/node': 22.13.4
       fsevents: 2.3.3
@@ -7900,7 +7917,7 @@ snapshots:
     dependencies:
       esbuild: 0.24.2
       postcss: 8.5.2
-      rollup: '@rollup/wasm-node@4.34.7'
+      rollup: '@rollup/wasm-node@4.34.8'
     optionalDependencies:
       '@types/node': 22.13.4
       fsevents: 2.3.3
