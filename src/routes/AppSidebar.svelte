@@ -14,6 +14,7 @@
 	import ChartBar from 'lucide-svelte/icons/chart-bar';
 	import Check from 'lucide-svelte/icons/check';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+	import ClipboardList from 'lucide-svelte/icons/clipboard-list';
 	import Download from 'lucide-svelte/icons/download';
 	import ListCheck from 'lucide-svelte/icons/list-check';
 	import LogOut from 'lucide-svelte/icons/log-out';
@@ -71,6 +72,11 @@
 			title: 'Check-ins',
 			href: '/admin/checkins',
 			icon: Check,
+		},
+		{
+			title: 'Event Logs',
+			href: '/admin/logs',
+			icon: ClipboardList,
 		},
 		// {
 		// 	title: 'Messages',
