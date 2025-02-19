@@ -2,7 +2,6 @@
 	import { buttonVariants } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import type { EventDoc } from '$lib/types';
-	import { sort } from 'd3';
 	import { diffWords } from 'diff';
 	import Maximize from 'lucide-svelte/icons/maximize';
 
@@ -13,16 +12,19 @@
 	let { beforeData, afterData }: Props = $props();
 
 	const sortJSON = (object: object) => {
+		console.log(object, '1');
 		if (Array.isArray(object)) {
 			for (let i = 0; i < object.length; i++) {
 				object[i] = sortJSON(object[i]);
 			}
 			return object;
-		} else if (typeof object != 'object') return object;
+		} else if (typeof object !== 'object') return object;
 
-		var keys = Object.keys(object);
-		keys = keys.sort();
-		var newObject = {};
+		if ('ref' in object) {
+			delete object.ref;
+		}
+		const keys = Object.keys(object).toSorted();
+		const newObject = {};
 		for (let i = 0; i < keys.length; i++) {
 			// @ts-ignore
 			newObject[keys[i]] = sortJSON(object[keys[i]]);
