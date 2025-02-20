@@ -87,6 +87,7 @@ export interface UserDoc {
 	foundBy?: string;
 	locked?: boolean;
 	eventsLocked?: boolean;
+	lockRooming?: boolean;
 }
 
 export interface MailDoc {

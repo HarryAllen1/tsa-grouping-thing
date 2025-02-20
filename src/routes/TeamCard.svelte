@@ -89,7 +89,8 @@
 						),
 					),
 			)
-			.sort((a, b) => a.name.localeCompare(b.name));
+			.sort((a, b) => a.name.localeCompare(b.name))
+			.filter((user) => !user.lockRooming);
 </script>
 
 <Card.Root
@@ -184,20 +185,20 @@
 								</Dialog.Trigger>
 							{/if}
 
-							<Dialog.Content class="max-h-screen overflow-y-scroll">
+							<Dialog.Content class="max-h-screen overflow-y-auto">
 								<Dialog.Title>Add People</Dialog.Title>
 								{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-									<Alert class="dark:brightness-200">
+									<Alert>
 										<AlertTitle>
 											This {event.event === '*Rooming' ? 'room' : 'team'} is full</AlertTitle
 										>
 									</Alert>
 								{:else}
 									{#if event.event === '*Rooming'}
-										<Alert variant="destructive" class="dark:brightness-200">
+										<Alert variant="destructive">
 											<AlertTitle>
 												You can only be in rooms with people of the same gender
-												(this is district policy)
+												(this is district policy).
 											</AlertTitle>
 											If something seems wrong, contact a JHS TSA board member.
 										</Alert>

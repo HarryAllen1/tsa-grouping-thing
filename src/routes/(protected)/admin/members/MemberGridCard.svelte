@@ -125,6 +125,33 @@
 		</div>
 		<div class="flex items-center space-x-2">
 			<Switch
+				id="{hash}room-lock"
+				checked={user.lockRooming ?? false}
+				onCheckedChange={async (e) => {
+					await setDoc(
+						doc(db, 'users', user.email),
+						{
+							lockRooming: e,
+							lastUpdatedBy: $userStore?.email ?? '',
+						},
+						{ merge: true },
+					);
+				}}
+			/>
+			<Label for="{hash}room-lock" class="flex flex-row items-center gap-2">
+				<p>Prevent rooming</p>
+				<Popover.Root>
+					<Popover.Trigger>
+						<CircleHelp class="size-5" />
+					</Popover.Trigger>
+					<Popover.Content>
+						Prevents this user from being added to room.
+					</Popover.Content>
+				</Popover.Root>
+			</Label>
+		</div>
+		<div class="flex items-center space-x-2">
+			<Switch
 				id="{hash}account-locked"
 				checked={user.locked}
 				onCheckedChange={async (e) => {
