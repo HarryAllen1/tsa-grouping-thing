@@ -449,7 +449,7 @@
 						</div>
 					{/if}
 				</div>
-			{:else if !event.locked && !(event.teams.some( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) || event.event === 'Technology Bowl') && team.members.length < event.maxTeamSize}
+			{:else if !event.locked /* event isn't locked */ && !event.teams.some( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) /* user isn't in a different team */ && team.members.length < event.maxTeamSize && /* ensure user is of the same gender as room */ (event.event === '*Rooming' ? (['Male', 'Female'].includes($userDoc.gender ?? '') ? $allUsersCollection.find((u) => u.email === team.members[0].email)?.gender === $userDoc.gender : true) : true)}
 				{#if team.requests?.find((u) => u.email === $user?.email)}
 					<Button disabled>Requested</Button>
 				{:else}
