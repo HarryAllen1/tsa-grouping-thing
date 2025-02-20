@@ -3,6 +3,7 @@
 	import { auth, db } from '$lib/firebase';
 	import type { UserDoc } from '$lib/types';
 	import { docStore, userStore } from 'sveltefire';
+	import UserDialog from './admin/UserDialog.svelte';
 
 	let { children } = $props();
 
@@ -19,3 +20,5 @@
 {#if $userDoc}
 	{@render children()}
 {/if}
+
+<UserDialog />

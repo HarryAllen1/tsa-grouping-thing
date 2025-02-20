@@ -38,7 +38,9 @@
 		{/if}
 		<p>Events ({user.events.length}):</p>
 		<div class="flex flex-col">
-			{#each user.events.map( (event) => $eventsCollection.find((e) => e.event === event), ) as EventDoc[] as event}
+			{#each user.events
+				.map((event) => $eventsCollection.find((e) => e.event === event))
+				.filter(Boolean) as EventDoc[] as event}
 				{@const team = event.teams.find((team) =>
 					team.members.some((t) => t.email === user.email),
 				)}

@@ -27,7 +27,6 @@
 	import { downloadAsJSON } from '../../download';
 	import Alert from './Alert.svelte';
 	import EventCard from './EventCard.svelte';
-	import UserDialog from './UserDialog.svelte';
 
 	const user = userStore(auth);
 
@@ -369,5 +368,3 @@
 		{/each}
 	</div>
 </div>
-
-<UserDialog />
