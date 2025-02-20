@@ -12,7 +12,6 @@
 	let { beforeData, afterData }: Props = $props();
 
 	const sortJSON = (object: object) => {
-		console.log(object, '1');
 		if (Array.isArray(object)) {
 			for (let i = 0; i < object.length; i++) {
 				object[i] = sortJSON(object[i]);

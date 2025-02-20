@@ -1,9 +1,28 @@
-import { removeRef } from '$lib/better-utils';
 import { db } from '$lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
+const sortJSON = (object: object) => {
+	if (Array.isArray(object)) {
+		for (let i = 0; i < object.length; i++) {
+			object[i] = sortJSON(object[i]);
+		}
+		return object;
+	} else if (typeof object !== 'object' || object === null) return object;
+
+	if (object !== null && 'ref' in object) {
+		delete object.ref;
+	}
+	const keys = Object.keys(object).toSorted();
+	const newObject = {};
+	for (let i = 0; i < keys.length; i++) {
+		// @ts-ignore
+		newObject[keys[i]] = sortJSON(object[keys[i]]);
+	}
+	return newObject;
+};
+
 export const downloadAsJSON = async () => {
-	const teamsJSON = removeRef({
+	const teamsJSON = sortJSON({
 		events: (await getDocs(collection(db, 'events'))).docs.map((d) => ({
 			...d.data(),
 		})),
