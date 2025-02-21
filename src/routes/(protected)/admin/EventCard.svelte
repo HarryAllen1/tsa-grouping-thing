@@ -333,13 +333,15 @@
 					class="mr-2"
 					onclick={() => {
 						let csv = `Room number,first1,last1,first2,last2,first3,last3,first4,last4\n`;
-						for (const team of event.teams) {
+						for (const team of event.teams.toSorted(
+							(a, b) => a.teamNumber - b.teamNumber,
+						)) {
 							csv += `${team.teamNumber},${team.members
 								.map((m) => {
 									const person = $allUsersCollection.find(
 										(u) => u.email.toLowerCase() === m.email.toLowerCase(),
 									);
-									return `"${person?.firstName}","${person?.lastName}"`;
+									return `"${person?.preferredFirstName || person?.firstName}","${person?.lastName}"`;
 								})
 								.join(',')}\n`;
 						}
