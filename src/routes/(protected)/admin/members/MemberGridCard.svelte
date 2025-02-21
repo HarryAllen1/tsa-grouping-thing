@@ -145,7 +145,8 @@
 						<CircleHelp class="size-5" />
 					</Popover.Trigger>
 					<Popover.Content>
-						Prevents this user from being added to room.
+						Prevents this user from being added to room. Enable this if a
+						student is rooming with a parent.
 					</Popover.Content>
 				</Popover.Root>
 			</Label>

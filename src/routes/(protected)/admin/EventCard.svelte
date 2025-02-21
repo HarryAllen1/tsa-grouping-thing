@@ -420,7 +420,8 @@
 							m.events.length > 0 &&
 							!peopleInTeams.some(
 								(e) => e.email?.toLowerCase() === m.email?.toLowerCase(),
-							),
+							) &&
+							!m.lockRooming,
 					)
 				: $allUsersCollection.filter(
 						(m) =>
