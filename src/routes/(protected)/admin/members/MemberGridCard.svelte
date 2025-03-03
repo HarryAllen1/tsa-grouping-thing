@@ -6,9 +6,8 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
-	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
-	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
+	import { MIN_EVENTS } from '$lib/constants';
 	import { db } from '$lib/firebase';
 	import { eventsCollection, user as userStore } from '$lib/stores';
 	import { tShirtMap } from '$lib/t-shirt';
@@ -205,33 +204,7 @@
 				</Popover.Root>
 			</Label>
 		</div>
-		<Label>
-			<span class="mb-2"> T-shirt size </span>
-			<Select.Root
-				type="single"
-				value={user.tShirtSize ?? 'null'}
-				onValueChange={async (v) => {
-					if (v)
-						await setDoc(
-							doc(db, 'users', user.email),
-							{
-								tShirtSize: v,
-							},
-							{ merge: true },
-						);
-				}}
-			>
-				<Select.Trigger class="mt-2 w-full">
-					{selectedTShirt ?? 'T-Shirt Size'}
-				</Select.Trigger>
-				<Select.Content>
-					{#each tShirtMap.entries() as [value, label]}
-						<Select.Item {value}>{label}</Select.Item>
-					{/each}
-					<Select.Item value="null">Unspecified</Select.Item>
-				</Select.Content>
-			</Select.Root>
-		</Label>
+
 		<div class="flex w-full max-w-sm flex-col gap-1.5">
 			<Label for="{hash}natid">National ID</Label>
 			<div class="flex flex-row gap-2">
@@ -290,62 +263,6 @@
 				</Button>
 			</div>
 		</div>
-		<Label>
-			<span class="mb-2"> Gender </span>
-			<Select.Root
-				type="single"
-				value={user.gender ?? 'null'}
-				onValueChange={async (v) => {
-					if (v)
-						await setDoc(
-							doc(db, 'users', user.email),
-							{
-								gender: v,
-							},
-							{ merge: true },
-						);
-				}}
-			>
-				<Select.Trigger class="mt-2 w-full">
-					{(user.gender || user.gender === 'null') ?? 'Unspecified'}
-				</Select.Trigger>
-				<Select.Content>
-					<Select.Item value="Male">Male</Select.Item>
-					<Select.Item value="Female">Female</Select.Item>
-					<Select.Item value="Non-Binary">Non-Binary</Select.Item>
-					<Select.Item value="null">Unspecified</Select.Item>
-				</Select.Content>
-			</Select.Root>
-		</Label>
-
-		<Label>
-			<span class="mb-2"> Demographic </span>
-			<Select.Root
-				type="single"
-				value={user.demographic ?? 'null'}
-				onValueChange={async (v) => {
-					if (v)
-						await setDoc(
-							doc(db, 'users', user.email),
-							{
-								demographic: v,
-							},
-							{ merge: true },
-						);
-				}}
-			>
-				<Select.Trigger class="mt-2 w-full">
-					{user.demographic}
-				</Select.Trigger>
-				<Select.Content>
-					{#each ['Opt-Out', 'Non-Disclosed', 'American Indian/Alaskan Native', 'Black / African-American', 'Asian/Asian-American/Pacific Islander', 'Hispanic/Latino', 'Mixed Race', 'White/Caucasian'] as demographic}
-						<Select.Item value={demographic}>
-							{demographic}
-						</Select.Item>
-					{/each}
-				</Select.Content>
-			</Select.Root>
-		</Label>
 
 		<div class="w-full">
 			<Collapsible.Root>
