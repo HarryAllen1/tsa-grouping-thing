@@ -695,6 +695,25 @@
 				</Collapsible.Root>
 			{/if}
 		</div>
+
+		<Button
+			onclick={async () => {
+				event.teams.sort((a, b) => a.teamNumber - b.teamNumber);
+				await setDoc(
+					doc(db, 'events', event.event ?? ''),
+					{
+						teams: event.teams,
+						lastUpdatedBy: $user?.email ?? '',
+					},
+					{
+						merge: true,
+					},
+				);
+			}}
+		>
+			Sort Teams
+		</Button>
+
 		<!-- teams loop -->
 		{#if event.teams.length <= 5}
 			{#each event.teams as team (team.id)}
