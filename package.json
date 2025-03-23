@@ -32,7 +32,7 @@
 		"markdown-it": "14.1.0",
 		"mode-watcher": "0.5.1",
 		"svelte-persisted-store": "0.12.0",
-		"svelte-sonner": "0.3.28",
+		"svelte-sonner": "https://pkg.pr.new/wobsoriano/svelte-sonner@126",
 		"sveltefire": "0.4.5",
 		"tailwind-merge": "3.0.2",
 		"tailwind-variants": "1.0.0",
@@ -75,9 +75,6 @@
 	},
 	"type": "module",
 	"pnpm": {
-		"overrides": {
-			"rollup": "npm:@rollup/wasm-node"
-		},
 		"peerDependencyRules": {
 			"allowedVersions": {
 				"firebase": "^11.0.0",
@@ -86,6 +83,7 @@
 			}
 		},
 		"onlyBuiltDependencies": [
+			"@firebase/util",
 			"@sentry/cli",
 			"esbuild",
 			"protobufjs",
