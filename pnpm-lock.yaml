@@ -66,8 +66,8 @@ importers:
         specifier: 3.0.1
         version: 3.0.1
       tailwind-variants:
-        specifier: 0.3.1
-        version: 0.3.1(tailwindcss@4.0.8)
+        specifier: 1.0.0
+        version: 1.0.0(tailwindcss@4.0.8)
       vaul-svelte:
         specifier: 1.0.0-next.6
         version: 1.0.0-next.6(svelte@5.20.2)
@@ -1424,8 +1424,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rollup/wasm-node@4.34.8':
-    resolution: {integrity: sha512-+bu9Ce1VDob+hfEQYPwC03Lds+ACDlGVwuWeLZE2fN+O52O74RZ0F5engVpv7i2YDyTyj4oU/NKO4pjSXMdn6g==}
+  '@rollup/wasm-node@4.35.0':
+    resolution: {integrity: sha512-mVs1GGfgeDCcMCFN5FystW0B5XjwhARAnomDBm2wTITTAioNr+YrUJ4UPjV33iXiLH1xAKWuUo30Od5HzrfQyA==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
@@ -3663,14 +3663,14 @@ packages:
   tabbable@6.2.0:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
 
-  tailwind-merge@2.5.4:
-    resolution: {integrity: sha512-0q8cfZHMu9nuYP/b5Shb7Y7Sh1B7Nnl5GqNr1U+n2p6+mybvRtayrQ+0042Z5byvTA8ihjlP8Odo8/VnHbZu4Q==}
-
   tailwind-merge@3.0.1:
     resolution: {integrity: sha512-AvzE8FmSoXC7nC+oU5GlQJbip2UO7tmOhOfQyOmPhrStOGXHU08j8mZEHZ4BmCqY5dWTCo4ClWkNyRNx1wpT0g==}
 
-  tailwind-variants@0.3.1:
-    resolution: {integrity: sha512-krn67M3FpPwElg4FsZrOQd0U26o7UDH/QOkK8RNaiCCrr052f6YJPBUfNKnPo/s/xRzNPtv1Mldlxsg8Tb46BQ==}
+  tailwind-merge@3.0.2:
+    resolution: {integrity: sha512-l7z+OYZ7mu3DTqrL88RiKrKIqO3NcpEO8V/Od04bNpvk0kiIFndGEoqfuzvj4yuhRkHKjRkII2z+KS2HfPcSxw==}
+
+  tailwind-variants@1.0.0:
+    resolution: {integrity: sha512-2WSbv4ulEEyuBKomOunut65D8UZwxrHoRfYnxGcQNnHqlSCp2+B7Yz2W+yrNDrxRodOXtGD/1oCcKGNBnUqMqA==}
     engines: {node: '>=16.x', pnpm: '>=7.x'}
     peerDependencies:
       tailwindcss: '*'
@@ -5273,7 +5273,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.34.6':
     optional: true
 
-  '@rollup/wasm-node@4.34.8':
+  '@rollup/wasm-node@4.35.0':
     dependencies:
       '@types/estree': 1.0.6
     optionalDependencies:
@@ -7676,13 +7676,13 @@ snapshots:
 
   tabbable@6.2.0: {}
 
-  tailwind-merge@2.5.4: {}
-
   tailwind-merge@3.0.1: {}
 
-  tailwind-variants@0.3.1(tailwindcss@4.0.8):
+  tailwind-merge@3.0.2: {}
+
+  tailwind-variants@1.0.0(tailwindcss@4.0.8):
     dependencies:
-      tailwind-merge: 2.5.4
+      tailwind-merge: 3.0.2
       tailwindcss: 4.0.8
 
   tailwindcss-animate@1.0.7(tailwindcss@4.0.8):
@@ -7824,7 +7824,7 @@ snapshots:
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.2
-      rollup: '@rollup/wasm-node@4.34.8'
+      rollup: '@rollup/wasm-node@4.35.0'
     optionalDependencies:
       '@types/node': 22.13.4
       fsevents: 2.3.3
@@ -7834,7 +7834,7 @@ snapshots:
     dependencies:
       esbuild: 0.24.2
       postcss: 8.5.2
-      rollup: '@rollup/wasm-node@4.34.8'
+      rollup: '@rollup/wasm-node@4.35.0'
     optionalDependencies:
       '@types/node': 22.13.4
       fsevents: 2.3.3
