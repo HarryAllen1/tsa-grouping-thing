@@ -5,6 +5,17 @@ export default defineConfig({
 	title: 'TSA Team Creation Wizard Docs',
 	cleanUrls: true,
 	themeConfig: {
+		socialLinks: [
+			{
+				icon: 'github',
+				link: 'https://github.com/HarryAllen1/tsa-grouping-thing',
+			},
+		],
+		editLink: {
+			pattern:
+				'https://github.com/HarryAllen1/tsa-grouping-thing/edit/main/docs/:path',
+			text: 'Edit this page on GitHub',
+		},
 		search: {
 			provider: 'local',
 		},
