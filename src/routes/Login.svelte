@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import { page } from '$app/state';
 	import {
 		closeConfirmationDialog,
 		fancyConfirm,
 	} from '$lib/FancyConfirm.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
-	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
 	import {
 		POINT_OF_CONTACT_EMAIL,
 		POINT_OF_CONTACT_NAME,
@@ -19,7 +16,6 @@
 	import {
 		browserLocalPersistence,
 		OAuthProvider,
-		sendSignInLinkToEmail,
 		setPersistence,
 		signInWithPopup,
 		type AuthError,
@@ -30,7 +26,7 @@
 	provider.addScope('openid');
 	provider.addScope('profile');
 
-	let email = $state('');
+	// let email = $state('');
 </script>
 
 <Card.Root class="mx-16 max-w-md md:mx-48 lg:mx-96">
@@ -38,9 +34,9 @@
 		<Card.Title>Login</Card.Title>
 	</Card.Header>
 	<Card.Content>
-		<h2 class="font-semibold">
+		<!-- <h2 class="font-semibold">
 			If you created an account before the 2024/25 school year:
-		</h2>
+		</h2> -->
 		<Button
 			onclick={async () => {
 				await setPersistence(auth, browserLocalPersistence);
@@ -116,7 +112,7 @@
 			</svg>
 			Sign in with Microsoft
 		</Button>
-		<h2 class="my-2 font-semibold">Otherwise, sign in with email</h2>
+		<!-- <h2 class="my-2 font-semibold">Otherwise, sign in with email</h2>
 		<form
 			class="flex flex-col gap-2"
 			onsubmit={async (e) => {
@@ -166,7 +162,7 @@
 			</div>
 
 			<Button type="submit" class="self-end">Log in</Button>
-		</form>
+		</form> -->
 	</Card.Content>
 </Card.Root>
 <p class="mx-16 max-w-md p-6 text-center text-gray-500 md:mx-48 lg:mx-96">
