@@ -18,9 +18,9 @@
 	import type { EventDoc } from '$lib/types';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
-	import Minus from 'lucide-svelte/icons/minus';
-	import Plus from 'lucide-svelte/icons/plus';
+	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+	import Minus from '@lucide/svelte/icons/minus';
+	import Plus from '@lucide/svelte/icons/plus';
 	import { mount, onDestroy, unmount } from 'svelte';
 	import { persisted } from 'svelte-persisted-store';
 	import Copyable from './Copyable.svelte';
@@ -29,7 +29,7 @@
 	const yellowMode = persisted('yellowMode', false);
 	let alertEl = $state<HTMLDivElement>();
 
-	const toUnmount: Record<string, any>[] = [];
+	const toUnmount: Record<string, object>[] = [];
 
 	const addAlertStuff = (el: HTMLDivElement | undefined) => {
 		if (!el) return;
@@ -158,7 +158,7 @@
 	);
 
 	onDestroy(() => {
-		toUnmount.forEach((comp) => unmount(comp));
+		for (const comp of toUnmount) unmount(comp);
 	});
 </script>
 

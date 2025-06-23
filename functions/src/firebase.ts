@@ -4,4 +4,4 @@ import { getFirestore } from 'firebase-admin/firestore';
 initializeApp();
 
 export const db = getFirestore();
-export const allowedDomains = new Set(['lwsd.org', 'kampmusic.org']);
+export const allowedDomains = new Set(['lwsd.org', 'uw.edu', 'kcl.ac.uk']);

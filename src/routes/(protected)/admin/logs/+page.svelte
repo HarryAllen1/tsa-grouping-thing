@@ -13,9 +13,9 @@
 		where,
 		type DocumentData,
 	} from 'firebase/firestore';
-	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
-	import ChevronRight from 'lucide-svelte/icons/chevron-right';
-	import ChevronsLeft from 'lucide-svelte/icons/chevrons-left';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
 	import { onMount } from 'svelte';
 	import { columns, type FirestoreLog } from './columns';
 	import DataTable from './DataTable.svelte';

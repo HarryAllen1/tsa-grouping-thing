@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Check from 'lucide-svelte/icons/check';
-	import Moon from 'lucide-svelte/icons/moon';
-	import Reset from 'lucide-svelte/icons/rotate-ccw';
-	import Sun from 'lucide-svelte/icons/sun';
+	import Check from '@lucide/svelte/icons/check';
+	import Moon from '@lucide/svelte/icons/moon';
+	import Reset from '@lucide/svelte/icons/rotate-ccw';
+	import Sun from '@lucide/svelte/icons/sun';
 
 	import { Button } from '$lib/components/ui/button';
 	import { Label } from '$lib/components/ui/label';
@@ -46,7 +46,9 @@
 						$config.theme = theme.name;
 					}}
 					class={cn('justify-start', isActive && 'border-primary border-2')}
-					style="--theme-primary: hsl({theme.activeColor[$mode ?? 'dark']})"
+					style="--theme-primary: hsl({theme.activeColor[
+						mode.current ?? 'dark'
+					]})"
 				>
 					<span
 						class="mr-1 flex h-5 w-5 shrink-0 -translate-x-1 items-center justify-center rounded-full bg-(--theme-primary)"
@@ -85,7 +87,7 @@
 				variant="outline"
 				size="sm"
 				onclick={() => setMode('light')}
-				class={cn($mode === 'light' && 'border-primary border-2')}
+				class={cn(mode.current === 'light' && 'border-primary border-2')}
 			>
 				<Sun class="mr-1 size-4 -translate-x-1" />
 				Light
@@ -94,7 +96,7 @@
 				variant="outline"
 				size="sm"
 				onclick={() => setMode('dark')}
-				class={cn($mode === 'dark' && 'border-primary border-2')}
+				class={cn(mode.current === 'dark' && 'border-primary border-2')}
 			>
 				<Moon class="mr-1 size-4 -translate-x-1" />
 				Dark

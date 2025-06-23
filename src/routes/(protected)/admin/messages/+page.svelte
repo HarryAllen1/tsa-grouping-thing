@@ -6,7 +6,7 @@
 	import { noHtmlMd } from '$lib/md';
 	import { eventsCollection } from '$lib/stores';
 	import type { SimpleMessage } from '$lib/types';
-	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import { setContext } from 'svelte';
 	import { collectionStore } from 'sveltefire';
 	import TeamMessages from '../../../TeamMessages.svelte';

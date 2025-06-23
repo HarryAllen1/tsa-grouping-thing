@@ -7,7 +7,7 @@
 	import type { EventDoc, Team } from '$lib/types';
 	import { getBlob, type FullMetadata } from 'firebase/storage';
 	import JSZip from 'jszip';
-	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
+	import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
 	import { hideEmpty } from './state';

@@ -19,8 +19,8 @@
 		setDoc,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import CircleHelp from 'lucide-svelte/icons/circle-help';
-	import Download from 'lucide-svelte/icons/download';
+	import CircleHelp from '@lucide/svelte/icons/circle-help';
+	import Download from '@lucide/svelte/icons/download';
 	import CopyButton from './CopyButton.svelte';
 	import MemberGridCard from './MemberGridCard.svelte';
 	import TableView from './TableView.svelte';

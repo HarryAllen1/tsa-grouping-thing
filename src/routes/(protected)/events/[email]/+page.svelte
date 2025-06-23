@@ -7,7 +7,7 @@
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
 	import { doc, setDoc, Timestamp } from 'firebase/firestore';
-	import Lock from 'lucide-svelte/icons/lock';
+	import Lock from '@lucide/svelte/icons/lock';
 	import { derived as derivedStore } from 'svelte/store';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
@@ -53,7 +53,7 @@
 				<Checkbox
 					checked={eventMap[event.event]}
 					id={event.event}
-					class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
+					class="flex size-6 items-center justify-center [&_svg]:size-6"
 					onCheckedChange={async () => {
 						await setDoc(
 							doc(db, 'users', $user?.email ?? ''),

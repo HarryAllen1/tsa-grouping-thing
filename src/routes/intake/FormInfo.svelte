@@ -9,7 +9,7 @@
 	import { tShirtMap } from '$lib/t-shirt';
 	import { updateProfile } from 'firebase/auth';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
-	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
+	import CircleHelpIcon from '@lucide/svelte/icons/circle-help';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
@@ -145,10 +145,12 @@
 	</div>
 	<div>
 		<div>
-			<Label>Preferred first name (if not the same as your Skyward name)</Label>
+			<Label>Preferred first name (if different from your Skyward name)</Label>
 			<Input pattern="^[a-zA-Z\- ]*" bind:value={formData.preferredFirstName} />
 		</div>
-		<p class="text-muted-foreground text-sm">Optional.</p>
+		<p class="text-muted-foreground text-sm">
+			Optional. This will be on your name tag at the State Conference.
+		</p>
 	</div>
 	<div>
 		<div>
@@ -267,7 +269,7 @@
 							</Popover.Content>
 						</Popover.Root>
 					</div>
-					<Select.Trigger>
+					<Select.Trigger class="w-full">
 						<span>
 							{formData.gender}
 						</span>
@@ -317,7 +319,7 @@
 							</Popover.Content>
 						</Popover.Root>
 					</div>
-					<Select.Trigger>
+					<Select.Trigger class="w-full">
 						<span>
 							{formData.demographic}
 						</span>
@@ -325,7 +327,7 @@
 					<Select.Content>
 						{#each ['Opt-Out', 'Non-Disclosed', 'American Indian/Alaskan Native', 'Black / African-American', 'Asian/Asian-American/Pacific Islander', 'Hispanic/Latino', 'Mixed Race', 'White/Caucasian'] as demographic}
 							<Select.Item value={demographic}>
-								{demographic}
+								{demographic.replace(' / ', '/')}
 							</Select.Item>
 						{/each}
 					</Select.Content>
@@ -369,7 +371,7 @@
 							</Popover.Content>
 						</Popover.Root>
 					</div>
-					<Select.Trigger>
+					<Select.Trigger class="w-full">
 						<span>
 							{formData.tShirtSize ? tShirtMap.get(formData.tShirtSize) : ''}
 						</span>
@@ -418,7 +420,7 @@
 							<Popover.Content>Statistics 👍</Popover.Content>
 						</Popover.Root>
 					</div>
-					<Select.Trigger>
+					<Select.Trigger class="w-full">
 						<span>
 							{formData.foundBy}
 						</span>

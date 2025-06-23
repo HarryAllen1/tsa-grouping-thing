@@ -8,7 +8,7 @@
 	import { user } from '$lib/stores';
 	import type { EventDoc, Result } from '$lib/types';
 	import { listAll, ref } from 'firebase/storage';
-	import ChevronUp from 'lucide-svelte/icons/chevron-up';
+	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import { DownloadURL } from 'sveltefire';
 
 	let {
@@ -28,6 +28,7 @@
 		{#each result.members as member, i}
 			<!-- DO NOT FORMAT -->
 			{member.name}{#if member.email === $user.email}
+				<!-- eslint-disable-next-line svelte/no-useless-mustaches -->
 				{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
 			{/if}
 		{/each}

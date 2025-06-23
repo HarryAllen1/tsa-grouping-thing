@@ -20,7 +20,7 @@
 	};
 
 	// Internal private state.
-	let running = $state(false);
+
 	let updater: ReturnType<typeof setInterval> | null = $state(null);
 	let completed = $state(false);
 	let width = $state(0);
@@ -124,9 +124,7 @@
 		noNavigationProgress = false,
 	}: Props = $props();
 
-	$effect(() => {
-		running = busy;
-	});
+	let running = $derived(busy);
 
 	/** Reset the progress bar back to the beginning, leaving it in a running state. */
 	export const reset = (minimum = defaultMinimum) => {

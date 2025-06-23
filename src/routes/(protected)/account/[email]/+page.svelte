@@ -8,7 +8,7 @@
 	import { db } from '$lib/firebase';
 	import { tShirtMap } from '$lib/t-shirt';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
-	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
+	import CircleHelpIcon from '@lucide/svelte/icons/circle-help';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
@@ -124,10 +124,12 @@
 		</div>
 		<div>
 			<div>
-				<Label>Preferred name</Label>
+				<Label>Preferred first name</Label>
 				<Input bind:value={formData.preferredFirstName} />
 			</div>
-			<p class="text-muted-foreground text-sm">Optional.</p>
+			<p class="text-muted-foreground text-sm">
+				Optional. This will be on your name tag at the State Conference.
+			</p>
 		</div>
 		<div>
 			<div>

@@ -1,7 +1,6 @@
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
 import svelte from 'eslint-plugin-svelte';
-import tailwindcss from 'eslint-plugin-tailwindcss';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import ts from 'typescript-eslint';
@@ -11,10 +10,9 @@ export default [
 	js.configs.recommended,
 	...ts.configs.recommended,
 	...svelte.configs['flat/recommended'],
-	eslintPluginUnicorn.configs['flat/recommended'],
+	eslintPluginUnicorn.configs['recommended'],
 	prettier,
 	...svelte.configs['flat/prettier'],
-	...tailwindcss.configs['flat/recommended'],
 	{
 		languageOptions: {
 			globals: {
@@ -40,6 +38,8 @@ export default [
 		},
 		rules: {
 			'svelte/valid-compile': 'off',
+			'svelte/require-each-key': 'off',
+			'svelte/no-dom-manipulating': 'off',
 		},
 	},
 	{
@@ -53,6 +53,8 @@ export default [
 			'functions/',
 			'src/lib/components/ui/',
 			'src/lib/utils.ts',
+			'vite.config.js.timestamp-*',
+			'vite.config.ts.timestamp-*',
 		],
 	},
 ];

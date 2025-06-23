@@ -22,7 +22,7 @@
 		setDoc,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import Filter from 'lucide-svelte/icons/filter';
+	import Filter from '@lucide/svelte/icons/filter';
 	import { userStore } from 'sveltefire';
 	import { downloadAsJSON } from '../../download';
 	import Alert from './Alert.svelte';
@@ -285,7 +285,7 @@
 				if (
 					!(await fancyConfirm(
 						'This is (almost) irreversable',
-						`A backup JSON file has been downloaded in the event that old data needs to be recovered. Once this process is completed, all data will be gone, forever. If anything needs to be restored, email this file to Harry, and some of the data will be restored. It is impossible to restore everything (like any files), so make sure that this is actually intentional.`,
+						`A backup JSON file has been downloaded in the event that old data needs to be recovered. Once this process is completed, all data will be gone, forever. If anything needs to be restored, email this file to Harry (harry_allen@outlook.com), and some of the data will be restored. It is impossible to restore everything (like any files), so make sure that this is actually intentional.`,
 					))
 				) {
 					return;

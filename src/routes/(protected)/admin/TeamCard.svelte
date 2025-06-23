@@ -30,17 +30,17 @@
 		uploadBytes,
 		type FullMetadata,
 	} from 'firebase/storage';
-	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
-	import Crown from 'lucide-svelte/icons/crown';
-	import FileUp from 'lucide-svelte/icons/file-up';
-	import Lightbulb from 'lucide-svelte/icons/lightbulb';
-	import Mail from 'lucide-svelte/icons/mail';
-	import Minus from 'lucide-svelte/icons/minus';
-	import Pencil from 'lucide-svelte/icons/pencil';
-	import Plus from 'lucide-svelte/icons/plus';
-	import Trash2 from 'lucide-svelte/icons/trash-2';
-	import UserPlus from 'lucide-svelte/icons/user-plus';
-	import X from 'lucide-svelte/icons/x';
+	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+	import Crown from '@lucide/svelte/icons/crown';
+	import FileUp from '@lucide/svelte/icons/file-up';
+	import Lightbulb from '@lucide/svelte/icons/lightbulb';
+	import Mail from '@lucide/svelte/icons/mail';
+	import Minus from '@lucide/svelte/icons/minus';
+	import Pencil from '@lucide/svelte/icons/pencil';
+	import Plus from '@lucide/svelte/icons/plus';
+	import Trash2 from '@lucide/svelte/icons/trash-2';
+	import UserPlus from '@lucide/svelte/icons/user-plus';
+	import X from '@lucide/svelte/icons/x';
 	import { toast } from 'svelte-sonner';
 	import { flip } from 'svelte/animate';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';

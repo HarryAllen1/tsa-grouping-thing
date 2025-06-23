@@ -16,7 +16,6 @@
 		data: TData[];
 	};
 
-	// eslint-disable-next-line no-undef
 	let { data, columns }: DataTableProps<TData, TValue> = $props();
 
 	let sorting = $state<SortingState>([]);

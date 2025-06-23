@@ -10,10 +10,10 @@
 	import type { BasicUser, EventDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { deleteObject } from 'firebase/storage';
-	import Minus from 'lucide-svelte/icons/minus';
+	import Minus from '@lucide/svelte/icons/minus';
 	import Combobox from '$lib/Combobox.svelte';
-	import Pencil from 'lucide-svelte/icons/pencil';
-	import X from 'lucide-svelte/icons/x';
+	import Pencil from '@lucide/svelte/icons/pencil';
+	import X from '@lucide/svelte/icons/x';
 	import { type Snippet } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';

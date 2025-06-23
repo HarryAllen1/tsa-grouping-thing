@@ -10,8 +10,8 @@
 	import { settings, user, userDoc } from '$lib/stores';
 	import { tShirtMap } from '$lib/t-shirt';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
-	import CircleAlert from 'lucide-svelte/icons/circle-alert';
-	import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
+	import CircleAlert from '@lucide/svelte/icons/circle-alert';
+	import CircleHelpIcon from '@lucide/svelte/icons/circle-help';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
@@ -153,7 +153,7 @@
 		<div>
 			<div>
 				<Label>
-					Preferred first name (if not the same as your Skyward name)
+					Preferred first name (if different from your Skyward name)
 				</Label>
 				<Input
 					pattern="^[a-zA-Z\- ]*"
@@ -161,7 +161,9 @@
 					disabled={locked}
 				/>
 			</div>
-			<p class="text-muted-foreground text-sm">Optional.</p>
+			<p class="text-muted-foreground text-sm">
+				Optional. This will be on your name tag at the State Conference.
+			</p>
 		</div>
 		<div>
 			<div>
@@ -209,7 +211,7 @@
 							</Popover.Root>
 						</div>
 
-						<Select.Trigger>
+						<Select.Trigger class="w-full">
 							<span>
 								{formData.grade}
 							</span>
@@ -289,7 +291,7 @@
 								</Popover.Content>
 							</Popover.Root>
 						</div>
-						<Select.Trigger>
+						<Select.Trigger class="w-full">
 							<span>
 								{formData.gender}
 							</span>
@@ -298,7 +300,7 @@
 							<Select.Item value="Male">Male</Select.Item>
 							<Select.Item value="Female">Female</Select.Item>
 							<Select.Item value="Non-Disclosed">Non-Binary</Select.Item>
-							<Select.Item value="Opt-Out">Opt-Out</Select.Item>
+							<Select.Item value="Non-Disclosed">Other</Select.Item>
 						</Select.Content>
 					</Select.Root>
 				</div>
@@ -340,7 +342,7 @@
 								</Popover.Content>
 							</Popover.Root>
 						</div>
-						<Select.Trigger>
+						<Select.Trigger class="w-full">
 							<span>
 								{formData.demographic}
 							</span>
@@ -348,7 +350,7 @@
 						<Select.Content>
 							{#each ['Opt-Out', 'Non-Disclosed', 'American Indian/Alaskan Native', 'Black / African-American', 'Asian/Asian-American/Pacific Islander', 'Hispanic/Latino', 'Mixed Race', 'White/Caucasian'] as demographic}
 								<Select.Item value={demographic}>
-									{demographic}
+									{demographic.replace(' / ', '/')}
 								</Select.Item>
 							{/each}
 						</Select.Content>
@@ -394,7 +396,7 @@
 								</Popover.Content>
 							</Popover.Root>
 						</div>
-						<Select.Trigger>
+						<Select.Trigger class="w-full">
 							<span>
 								{formData.tShirtSize ? tShirtMap.get(formData.tShirtSize) : ''}
 							</span>
@@ -449,7 +451,7 @@
 								<Popover.Content>Statistics 👍</Popover.Content>
 							</Popover.Root>
 						</div>
-						<Select.Trigger>
+						<Select.Trigger class="w-full">
 							<span>
 								{formData.foundBy}
 							</span>

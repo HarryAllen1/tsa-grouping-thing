@@ -9,7 +9,7 @@
 	import type { EventDoc, UserDoc } from '$lib/types';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import Lock from 'lucide-svelte/icons/lock';
+	import Lock from '@lucide/svelte/icons/lock';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
 	let {

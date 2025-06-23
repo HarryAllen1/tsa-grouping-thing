@@ -6,7 +6,7 @@
 	import { db } from '$lib/firebase';
 	import type { EventDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
-	import Pencil from 'lucide-svelte/icons/pencil';
+	import Pencil from '@lucide/svelte/icons/pencil';
 
 	let { teamId, event }: { teamId: string; event: EventDoc } = $props();
 

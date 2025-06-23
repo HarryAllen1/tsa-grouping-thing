@@ -10,14 +10,13 @@
 	import { MIN_EVENTS } from '$lib/constants';
 	import { db } from '$lib/firebase';
 	import { eventsCollection, user as userStore } from '$lib/stores';
-	import { tShirtMap } from '$lib/t-shirt';
 	import type { UserDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
-	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
-	import CircleHelp from 'lucide-svelte/icons/circle-help';
-	import Save from 'lucide-svelte/icons/save';
-	import ToggleRight from 'lucide-svelte/icons/toggle-right';
-	import UserCog from 'lucide-svelte/icons/user-cog';
+	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+	import CircleHelp from '@lucide/svelte/icons/circle-help';
+	import Save from '@lucide/svelte/icons/save';
+	import ToggleRight from '@lucide/svelte/icons/toggle-right';
+	import UserCog from '@lucide/svelte/icons/user-cog';
 
 	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 
@@ -26,10 +25,6 @@
 		nationalId: user.nationalId,
 		washingtonId: user.washingtonId,
 	});
-
-	let selectedTShirt = $derived(
-		user.tShirtSize ? tShirtMap.get(user.tShirtSize) : 'Unspecified',
-	);
 </script>
 
 <Card.Root class={show ? '' : 'hidden'}>

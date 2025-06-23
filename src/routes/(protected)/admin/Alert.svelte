@@ -35,10 +35,12 @@
 						Counter (must be correctly formatted parsable <a
 							href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format"
 							target="_blank">Date string</a
-						>): {'<div class="counter">Fri Mar 01 2024 17:00:00 GMT-0800 (Pacific Standard Time)</div>'}
+						>): &lt;div class="counter"&gt;Fri Mar 01 2024 17:00:00 GMT-0800
+						(Pacific Standard Time)&lt;/div&gt;
 					</li>
 					<li>
-						Copyable: {'<span class="copyable">copyable thing here</span>'}
+						Copyable: &lt;span class="copyable"&gt;copyable thing
+						here&lt;/span&gt;
 					</li>
 				</ul>
 			</Dialog.Description>

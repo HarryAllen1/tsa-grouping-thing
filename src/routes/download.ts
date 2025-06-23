@@ -14,9 +14,9 @@ const sortJSON = (object: object) => {
 	}
 	const keys = Object.keys(object).toSorted();
 	const newObject = {};
-	for (let i = 0; i < keys.length; i++) {
-		// @ts-ignore
-		newObject[keys[i]] = sortJSON(object[keys[i]]);
+	for (const key of keys) {
+		// @ts-expect-error typescript is stupid sometimes
+		newObject[key] = sortJSON(object[key]);
 	}
 	return newObject;
 };

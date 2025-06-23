@@ -6,8 +6,8 @@
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
 	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import CircleAlert from 'lucide-svelte/icons/circle-alert';
-	import Lock from 'lucide-svelte/icons/lock';
+	import CircleAlert from '@lucide/svelte/icons/circle-alert';
+	import Lock from '@lucide/svelte/icons/lock';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
 	const user = userStore(auth);
@@ -43,9 +43,9 @@
 			<CircleAlert class="size-4" />
 			<Alert.Title>Events Locked</Alert.Title>
 			<Alert.Description>
-				Your events are currently locked. This is likely because you were
-				eliminated from TSA or left TSA. If this seems like a mistake, please
-				contact a JHS TSA Board Member.
+				Your events are currently locked. This is likely because some deadline
+				or event is approaching, you were eliminated from TSA, or you left TSA.
+				If this seems like a mistake, please contact a JHS TSA Board Member.
 			</Alert.Description>
 		</Alert.Root>
 	{/if}
@@ -98,8 +98,9 @@
 		</li>
 	</ul>
 	<p class="mb-4">
-		Currently at {$userDoc?.events.length} out of {MAX_EVENTS} events. Minimum is
-		{MIN_EVENTS} events.
+		Currently at {$userDoc?.events.length} out of a maximum of {MAX_EVENTS} events.
+		The minimum number of events is
+		{MIN_EVENTS}.
 	</p>
 
 	{#if ($userDoc?.events.length ?? 1) >= MAX_EVENTS && !$userDoc?.eventsLocked}
@@ -126,7 +127,7 @@
 					checked={eventMap[event.event]}
 					{disabled}
 					id={event.event}
-					class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
+					class="flex size-6 items-center justify-center [&_svg]:size-6"
 					onCheckedChange={async (state) => {
 						if (
 							event.locked ||

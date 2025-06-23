@@ -10,8 +10,8 @@
 		getDoc,
 		setDoc,
 	} from 'firebase/firestore';
-	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
-	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import SendHorizontal from '@lucide/svelte/icons/send-horizontal';
 	import { getContext, onMount } from 'svelte';
 	import { selected } from './messages';
 	import { eventsCollection, userDoc } from '$lib/stores';

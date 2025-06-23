@@ -26,13 +26,13 @@
 		getDownloadURL,
 		type FullMetadata,
 	} from 'firebase/storage';
-	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
-	import Crown from 'lucide-svelte/icons/crown';
-	import LogOut from 'lucide-svelte/icons/log-out';
-	import Minus from 'lucide-svelte/icons/minus';
-	import Plus from 'lucide-svelte/icons/plus';
-	import UserPlus from 'lucide-svelte/icons/user-plus';
-	import X from 'lucide-svelte/icons/x';
+	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+	import Crown from '@lucide/svelte/icons/crown';
+	import LogOut from '@lucide/svelte/icons/log-out';
+	import Minus from '@lucide/svelte/icons/minus';
+	import Plus from '@lucide/svelte/icons/plus';
+	import UserPlus from '@lucide/svelte/icons/user-plus';
+	import X from '@lucide/svelte/icons/x';
 	import type { Snippet } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
@@ -117,8 +117,8 @@
 			{/if}
 		</Card.Title>
 		<div class="flex flex-col gap-1 lg:flex-row">
-			{#if team.locked || event.locked}
-				<p>This team is currently locked from editing.</p>
+			{#if (team.locked || event.locked) && team.members.some((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
+				<p class="text-sm">Your team is currently locked from editing.</p>
 			{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 				<div class="flex flex-col gap-2">
 					<div class="flex w-full flex-row gap-2">

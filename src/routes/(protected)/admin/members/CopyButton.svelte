@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { allUsersCollection, eventsCollection } from '$lib/stores';
-	import Copy from 'lucide-svelte/icons/copy';
+	import Copy from '@lucide/svelte/icons/copy';
 	import { toast } from 'svelte-sonner';
 
 	const copyStuff = () => {

@@ -100,7 +100,7 @@
 	let teamsWithPreparedness = $derived(
 		$eventsCollection
 			.flatMap((e) => e.teams)
-			.filter((t) => typeof t.preparationLevel !== 'undefined'),
+			.filter((t) => t.preparationLevel !== undefined),
 	);
 
 	let totalTeams = $derived(

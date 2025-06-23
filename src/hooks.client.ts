@@ -1,6 +1,5 @@
 import { dev } from '$app/environment';
 import {
-	feedbackAsyncIntegration,
 	handleErrorWithSentry,
 	init,
 	replayIntegration,
@@ -20,13 +19,7 @@ if (!dev)
 		replaysOnErrorSampleRate: 1,
 
 		// If you don't want to use Session Replay, just remove the line below:
-		integrations: [
-			replayIntegration(),
-			feedbackAsyncIntegration({
-				colorScheme: 'system',
-				isEmailRequired: true,
-			}),
-		],
+		integrations: [replayIntegration()],
 	});
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`

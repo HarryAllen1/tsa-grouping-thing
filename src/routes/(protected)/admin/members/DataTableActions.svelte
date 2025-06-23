@@ -2,7 +2,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import type { UserDoc } from '$lib/types';
-	import Ellipsis from 'lucide-svelte/icons/ellipsis';
+	import Ellipsis from '@lucide/svelte/icons/ellipsis';
 
 	let { user }: { user: UserDoc } = $props();
 </script>

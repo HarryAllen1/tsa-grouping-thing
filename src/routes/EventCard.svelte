@@ -6,7 +6,7 @@
 	import { allUsersCollection, user, userDoc } from '$lib/stores';
 	import type { EventData, EventDoc, Team } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
-	import ChevronUp from 'lucide-svelte/icons/chevron-up';
+	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import TeamCard from './TeamCard.svelte';
 
 	let { event, eventData }: { event: EventDoc; eventData: EventData[] } =
@@ -85,7 +85,7 @@
 
 	<Card.Content class="flex flex-col gap-4">
 		{#if event.locked}
-			<p>
+			<p class="text-sm [&:not(:first-child)]:mt-6">
 				This event is locked, likely due to eliminations. If this doesn't seem
 				correct, contact a JHS TSA board member.
 			</p>

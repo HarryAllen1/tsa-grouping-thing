@@ -6,7 +6,7 @@
 	import { allUsersCollection, eventsCollection, user } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
-	import X from 'lucide-svelte/icons/x';
+	import X from '@lucide/svelte/icons/x';
 	import UserCard from '../UserCard.svelte';
 	import AddResultDialog from './AddResultDialog.svelte';
 
@@ -54,7 +54,9 @@
 													<Popover.Trigger>
 														<!-- DO NOT FORMAT -->
 														{member.name}{#if member.email === $user.email}
+															<!-- eslint-disable-next-line svelte/no-useless-mustaches -->
 															{' '}(you){/if}{#if i < result.members.length - 1},
+															<!-- eslint-disable-next-line svelte/no-useless-mustaches -->
 															{' '}
 														{/if}
 													</Popover.Trigger>

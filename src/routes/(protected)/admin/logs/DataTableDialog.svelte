@@ -3,7 +3,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import type { EventDoc } from '$lib/types';
 	import { diffWords } from 'diff';
-	import Maximize from 'lucide-svelte/icons/maximize';
+	import Maximize from '@lucide/svelte/icons/maximize';
 
 	interface Props {
 		beforeData: EventDoc;
@@ -24,9 +24,9 @@
 		}
 		const keys = Object.keys(object).toSorted();
 		const newObject = {};
-		for (let i = 0; i < keys.length; i++) {
-			// @ts-ignore
-			newObject[keys[i]] = sortJSON(object[keys[i]]);
+		for (const key of keys) {
+			// @ts-expect-error typescirpt is stpupid sometimes
+			newObject[key] = sortJSON(object[key]);
 		}
 		return newObject;
 	};

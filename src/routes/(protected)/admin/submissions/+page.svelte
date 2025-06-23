@@ -3,7 +3,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
 	import { eventsCollection } from '$lib/stores';
-	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
+	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import { hideEmpty } from './state';
 	import SubmissionEvent from './SubmissionEvent.svelte';
 

@@ -10,7 +10,7 @@
 	import { doc, setDoc } from 'firebase/firestore';
 	import { getBlob, listAll, ref } from 'firebase/storage';
 	import JSZip from 'jszip';
-	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
+	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import SubmissionTeam from './SubmissionTeam.svelte';
 
 	let {
