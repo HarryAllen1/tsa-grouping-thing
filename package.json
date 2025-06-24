@@ -41,7 +41,7 @@
 		"@lucide/svelte": "^0.522.0",
 		"@sveltejs/adapter-vercel": "5.7.2",
 		"@sveltejs/enhanced-img": "0.6.0",
-		"@sveltejs/kit": "2.22.0",
+		"@sveltejs/kit": "2.21.2",
 		"@sveltejs/vite-plugin-svelte": "5.1.0",
 		"@tailwindcss/typography": "0.5.16",
 		"@tailwindcss/vite": "4.1.10",
