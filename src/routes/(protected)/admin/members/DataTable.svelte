@@ -6,10 +6,14 @@
 	import * as Table from '$lib/components/ui/table/index.js';
 	import {
 		type ColumnDef,
+		type ColumnFiltersState,
 		type SortingState,
 		getCoreRowModel,
+		getFilteredRowModel,
 		getSortedRowModel,
 	} from '@tanstack/table-core';
+	import { watch } from 'runed';
+	import { search } from './search.svelte';
 
 	type DataTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
@@ -19,6 +23,14 @@
 	let { data, columns }: DataTableProps<TData, TValue> = $props();
 
 	let sorting = $state<SortingState>([]);
+	let columnFilters = $state<ColumnFiltersState>([]);
+
+	watch(
+		() => search.current,
+		() => {
+			table.getColumn('name')?.setFilterValue(search.current);
+		},
+	);
 
 	const table = createSvelteTable({
 		get data() {
@@ -27,12 +39,20 @@
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
+		getFilteredRowModel: getFilteredRowModel(),
 		onSortingChange: (updater) => {
 			sorting = typeof updater === 'function' ? updater(sorting) : updater;
+		},
+		onColumnFiltersChange: (updater) => {
+			columnFilters =
+				typeof updater === 'function' ? updater(columnFilters) : updater;
 		},
 		state: {
 			get sorting() {
 				return sorting;
+			},
+			get columnFilters() {
+				return columnFilters;
 			},
 		},
 	});

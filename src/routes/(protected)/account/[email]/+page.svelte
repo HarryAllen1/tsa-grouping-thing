@@ -171,7 +171,7 @@
 								</Popover.Root>
 							</div>
 
-							<Select.Trigger>
+							<Select.Trigger class="w-full">
 								<span>
 									{formData.grade}
 								</span>
@@ -247,7 +247,7 @@
 									</Popover.Content>
 								</Popover.Root>
 							</div>
-							<Select.Trigger>
+							<Select.Trigger class="w-full">
 								<span>
 									{formData.gender}
 								</span>
@@ -298,7 +298,7 @@
 									</Popover.Content>
 								</Popover.Root>
 							</div>
-							<Select.Trigger>
+							<Select.Trigger class="w-full">
 								<span>
 									{formData.demographic}
 								</span>
@@ -346,7 +346,7 @@
 									</Popover.Content>
 								</Popover.Root>
 							</div>
-							<Select.Trigger>
+							<Select.Trigger class="w-full">
 								<span>
 									{formData.tShirtSize
 										? tShirtMap.get(formData.tShirtSize)
@@ -396,7 +396,7 @@
 									<Popover.Content>Statistics 👍</Popover.Content>
 								</Popover.Root>
 							</div>
-							<Select.Trigger>
+							<Select.Trigger class="w-full">
 								<span>
 									{formData.foundBy}
 								</span>

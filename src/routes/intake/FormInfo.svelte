@@ -278,7 +278,7 @@
 						<Select.Item value="Male">Male</Select.Item>
 						<Select.Item value="Female">Female</Select.Item>
 						<Select.Item value="Non-Disclosed">Non-Binary</Select.Item>
-						<Select.Item value="Opt-Out">Opt-Out</Select.Item>
+						<Select.Item value="Non-Disclosed">Other</Select.Item>
 					</Select.Content>
 				</Select.Root>
 			</div>

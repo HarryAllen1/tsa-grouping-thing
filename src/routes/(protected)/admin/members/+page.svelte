@@ -8,6 +8,7 @@
 	import { MIN_EVENTS } from '$lib/constants';
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import { db } from '$lib/firebase';
+	import { watch } from 'runed';
 	import { allUsersCollection, settings } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
 	import { csvFormat } from 'd3';
@@ -24,11 +25,24 @@
 	import CopyButton from './CopyButton.svelte';
 	import MemberGridCard from './MemberGridCard.svelte';
 	import TableView from './TableView.svelte';
+	import { search } from './search.svelte';
 
-	let search = $state('');
 	let hidePeopleWithoutEvents = $state(false);
 	let sortBy = $state<'firstName' | 'lastName'>('firstName');
-	let view = $state('grid');
+	let view = $state<'grid' | 'list'>('grid');
+
+	watch(
+		() => view,
+		() => {
+			if (view === 'grid') {
+				hidePeopleWithoutEvents = true;
+				sortBy = 'firstName';
+				showRandomSwitch = 'null';
+				numberOfEvents = ['0', '1', '2', '3', '4', '5', '6'];
+			}
+		},
+	);
+
 	let showRandomSwitch = $state<'null' | 'false' | 'true'>('null');
 	// max number of events is always 6
 	let numberOfEvents = $state<('0' | '1' | '2' | '3' | '4' | '5' | '6')[]>([
@@ -48,11 +62,11 @@
 		}),
 	);
 	let resultsPreNumEventsFilter = $derived(
-		search === ''
+		search.current === ''
 			? $allUsersCollection
 					.toSorted((a, b) => a.name.localeCompare(b.name))
 					.filter((u) => !hidePeopleWithoutEvents || u.events.length > 0)
-			: fuse.search(search).map((r) => r.item),
+			: fuse.search(search.current).map((r) => r.item),
 	);
 	let results = $derived(
 		numberOfEvents.length === 6
@@ -174,7 +188,11 @@
 	</div>
 
 	<div class="mb-2 flex items-center space-x-2">
-		<Switch bind:checked={hidePeopleWithoutEvents} id="hide-people" />
+		<Switch
+			bind:checked={hidePeopleWithoutEvents}
+			disabled={view === 'list'}
+			id="hide-people"
+		/>
 		<Label for="hide-people">Hide people without events</Label>
 	</div>
 	<div class="mb-2 flex items-center space-x-2">
@@ -204,7 +222,11 @@
 		<div>
 			<Label for="sortBy">Sort by</Label>
 			<div id="sortBy" class="mb-2 flex items-center space-x-2">
-				<Select.Root type="single" bind:value={sortBy}>
+				<Select.Root
+					disabled={view === 'list'}
+					type="single"
+					bind:value={sortBy}
+				>
 					<Select.Trigger class="w-[180px]">
 						{sortBy === 'firstName' ? 'First Name' : 'Last Name'}
 					</Select.Trigger>
@@ -240,7 +262,11 @@
 		<div>
 			<Label for="randomSwitch">See...</Label>
 			<div id="randomSwitch" class="mb-2 flex items-center space-x-2">
-				<Select.Root type="single" bind:value={showRandomSwitch}>
+				<Select.Root
+					disabled={view === 'list'}
+					type="single"
+					bind:value={showRandomSwitch}
+				>
 					<Select.Trigger class="w-[180px]">
 						{showRandomSwitch === 'null'
 							? 'everybody'
@@ -266,7 +292,11 @@
 		<div>
 			<Label for="randomSwitch">Number of events</Label>
 			<div id="randomSwitch" class="mb-2 flex items-center space-x-2">
-				<Select.Root type="multiple" bind:value={numberOfEvents}>
+				<Select.Root
+					disabled={view === 'list'}
+					type="multiple"
+					bind:value={numberOfEvents}
+				>
 					<Select.Trigger class="w-[180px]">
 						{numberOfEvents.toSorted().join(', ') || 'None'}
 					</Select.Trigger>
@@ -286,7 +316,7 @@
 
 	<Input
 		class="mb-4"
-		bind:value={search}
+		bind:value={search.current}
 		type="search"
 		id="search"
 		placeholder="Search"
@@ -319,6 +349,10 @@
 			{/each}
 		</div>
 	{:else}
-		<TableView {results} />
+		<TableView
+			results={$allUsersCollection
+				.filter((m) => m.events.length > 0)
+				.toSorted((a, b) => a.firstName?.localeCompare(b.firstName ?? '') ?? 0)}
+		/>
 	{/if}
 </div>
