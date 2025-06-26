@@ -7,6 +7,8 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@source inline("bg-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone}-{50,{100..900..100},950}");
+
 @utility container {
 	margin-inline: auto;
 	padding-inline: 2rem;
