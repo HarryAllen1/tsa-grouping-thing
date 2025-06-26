@@ -1,12 +1,11 @@
 <script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { Label } from '$lib/components/ui/label';
+	import { cn } from '$lib/utils.js';
 	import Check from '@lucide/svelte/icons/check';
 	import Moon from '@lucide/svelte/icons/moon';
 	import Reset from '@lucide/svelte/icons/rotate-ccw';
 	import Sun from '@lucide/svelte/icons/sun';
-
-	import { Button } from '$lib/components/ui/button';
-	import { Label } from '$lib/components/ui/label';
-	import { cn } from '$lib/utils.js';
 	import { mode, setMode } from 'mode-watcher';
 	import { Input } from './components/ui/input';
 	import { config } from './config.js';
@@ -26,7 +25,8 @@
 		class="ml-auto rounded-[0.5rem]"
 		onclick={() => {
 			$config.radius = 0.5;
-			$config.theme = 'zinc';
+			$config.theme = 'default';
+			$config.background = null;
 		}}
 	>
 		<Reset />
@@ -45,10 +45,8 @@
 					onclick={() => {
 						$config.theme = theme.name;
 					}}
-					class={cn('justify-start', isActive && 'border-primary border-2')}
-					style="--theme-primary: hsl({theme.activeColor[
-						mode.current ?? 'dark'
-					]})"
+					class={cn('justify-start', isActive && '!border-primary border-2')}
+					style="--theme-primary: {theme.primaryColor[mode.current ?? 'dark']}"
 				>
 					<span
 						class="mr-1 flex h-5 w-5 shrink-0 -translate-x-1 items-center justify-center rounded-full bg-(--theme-primary)"
@@ -73,7 +71,9 @@
 					onclick={() => {
 						$config.radius = valueFloat;
 					}}
-					class={cn($config.radius === valueFloat && 'border-primary border-2')}
+					class={cn(
+						$config.radius === valueFloat && '!border-primary border-2',
+					)}
 				>
 					{value}
 				</Button>
@@ -87,7 +87,7 @@
 				variant="outline"
 				size="sm"
 				onclick={() => setMode('light')}
-				class={cn(mode.current === 'light' && 'border-primary border-2')}
+				class={cn(mode.current === 'light' && '!border-primary border-2')}
 			>
 				<Sun class="mr-1 size-4 -translate-x-1" />
 				Light
@@ -96,7 +96,7 @@
 				variant="outline"
 				size="sm"
 				onclick={() => setMode('dark')}
-				class={cn(mode.current === 'dark' && 'border-primary border-2')}
+				class={cn(mode.current === 'dark' && '!border-primary border-2')}
 			>
 				<Moon class="mr-1 size-4 -translate-x-1" />
 				Dark

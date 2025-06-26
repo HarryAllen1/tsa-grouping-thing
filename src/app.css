@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-/* @import './themes.css' layer(base); */
+@import './themes.css' layer(base);
 @import './default-colors.css';
 
 @plugin '@tailwindcss/typography';

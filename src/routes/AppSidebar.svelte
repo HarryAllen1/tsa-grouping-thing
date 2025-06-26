@@ -1,11 +1,12 @@
 <script lang="ts">
 	import * as Avatar from '$lib/components/ui/avatar';
+	import * as Drawer from '$lib/components/ui/drawer';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import * as Popover from '$lib/components/ui/popover';
 	import * as Sidebar from '$lib/components/ui/sidebar';
+	import Customizer from '$lib/Customizer.svelte';
 	import { auth } from '$lib/firebase';
 	import { profilePhoto, userDoc } from '$lib/stores';
-	import { setUser } from '@sentry/sveltekit';
-	import { signOut } from 'firebase/auth';
 	import BookOpenText from '@lucide/svelte/icons/book-open-text';
 	import CalendarCheck from '@lucide/svelte/icons/calendar-check';
 	import ChartBar from '@lucide/svelte/icons/chart-bar';
@@ -13,12 +14,14 @@
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import ClipboardList from '@lucide/svelte/icons/clipboard-list';
 	import Download from '@lucide/svelte/icons/download';
-	import ListCheck from '@lucide/svelte/icons/list-check';
 	import LogOut from '@lucide/svelte/icons/log-out';
 	import NotebookText from '@lucide/svelte/icons/notebook-text';
+	import Paintbrush from '@lucide/svelte/icons/paintbrush';
 	import Trophy from '@lucide/svelte/icons/trophy';
 	import UserPen from '@lucide/svelte/icons/user-pen';
 	import Users from '@lucide/svelte/icons/users';
+	import { setUser } from '@sentry/sveltekit';
+	import { signOut } from 'firebase/auth';
 	import { downloadAsCSV, downloadAsJSON } from './download';
 
 	const navItems = [
@@ -40,7 +43,7 @@
 		{
 			title: 'Results',
 			href: '/results',
-			icon: ListCheck,
+			icon: Trophy,
 		},
 	];
 	const adminNavItems = [
@@ -209,7 +212,7 @@
 					{/snippet}
 				</Sidebar.MenuButton>
 			{/if}
-			<!-- <Sidebar.MenuItem>
+			<Sidebar.MenuItem>
 				<Drawer.Root>
 					<Drawer.Trigger>
 						{#snippet child({ props })}
@@ -243,7 +246,7 @@
 						<Customizer />
 					</Popover.Content>
 				</Popover.Root>
-			</Sidebar.MenuItem> -->
+			</Sidebar.MenuItem>
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton>
 					{#snippet child({ props })}

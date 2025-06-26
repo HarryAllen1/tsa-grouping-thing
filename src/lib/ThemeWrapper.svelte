@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { config } from './config.js';
-	import { generateRandomHSLString } from './themes.js';
+	import { getRandomTailwindColor } from './themes.js';
 
 	let {
 		children,
@@ -12,9 +12,18 @@
 	} = $props();
 
 	$effect(() => {
-		document.body.className = `theme-${$config.theme ?? defaultTheme}`;
-		document.body.style.setProperty('--radius', `${$config.radius ?? 0.5}rem`);
-		document.body.style.backgroundImage = `url(${$config.background ?? ''})`;
+		document.body.dataset.theme = $config.theme ?? defaultTheme;
+		if ($config.theme === 'mono') {
+			document.body.style.removeProperty('--radius');
+		} else {
+			document.body.style.setProperty(
+				'--radius',
+				`${$config.radius ?? 0.5}rem`,
+			);
+		}
+		if (($config.background ?? '').length > 0) {
+			document.body.style.backgroundImage = `url(${$config.background ?? ''})`;
+		}
 		if ($config.theme === 'random') {
 			for (const prop of `--background
 --foreground
@@ -35,12 +44,7 @@
 --destructive
 --destructive-foreground
 --ring`.split('\n')) {
-				document.body.style.setProperty(
-					prop,
-					prop === '--ring'
-						? Math.random().toString()
-						: generateRandomHSLString(),
-				);
+				document.body.style.setProperty(prop, getRandomTailwindColor());
 			}
 		} else {
 			for (const prop of `--background
