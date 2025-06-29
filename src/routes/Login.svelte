@@ -29,7 +29,7 @@
 	// let email = $state('');
 </script>
 
-<Card.Root class="mx-16 max-w-md md:mx-48 lg:mx-96">
+<Card.Root class="w-xs md:w-sm">
 	<Card.Header>
 		<Card.Title>Login</Card.Title>
 	</Card.Header>
@@ -164,8 +164,8 @@
 			<Button type="submit" class="self-end">Log in</Button>
 		</form> -->
 	</Card.Content>
+	<Card.Footer class="text-muted-foreground">
+		If any nontrivial error occurs when logging in, please contact a JHS TSA
+		Board Member.
+	</Card.Footer>
 </Card.Root>
-<p class="mx-16 max-w-md p-6 text-center text-gray-500 md:mx-48 lg:mx-96">
-	If any nontrivial error occurs when logging in, please contact a JHS TSA Board
-	Member.
-</p>

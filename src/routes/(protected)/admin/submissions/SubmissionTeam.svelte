@@ -2,6 +2,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Popover from '$lib/components/ui/popover';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { CHAPTER_ID } from '$lib/constants';
 	import StorageMetadata from '$lib/StorageMetadata.svelte';
 	import type { EventDoc, Team } from '$lib/types';
@@ -10,7 +11,7 @@
 	import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
-	import { hideEmpty } from './state';
+	import { hideEmpty, showMemberNames } from './state';
 
 	let {
 		event,
@@ -29,11 +30,23 @@
 		<Card.Root>
 			<Card.Header>
 				<Card.Title>
-					{team.members
-						.map((m) =>
-							m.email === team.teamCaptain ? `👑${m.name}👑` : m.name,
-						)
-						.join(', ')} ({team.teamNumber})
+					{#if $showMemberNames}
+						{team.members
+							.map((m) =>
+								m.email === team.teamCaptain ? `👑${m.name}👑` : m.name,
+							)
+							.join(', ')} ({team.teamNumber})
+					{:else}
+						<Tooltip.Root>
+							<Tooltip.Trigger>
+								Team {team.teamNumber} ({team.members.length} members)
+							</Tooltip.Trigger>
+							<Tooltip.Content>
+								View team member names by clicking the "Show team member names"
+								switch at the top of the page.
+							</Tooltip.Content>
+						</Tooltip.Root>
+					{/if}
 				</Card.Title>
 				{@const resultMemberSet = new Set(
 					event.results?.flatMap((r) => r.members).map((m) => m.email),

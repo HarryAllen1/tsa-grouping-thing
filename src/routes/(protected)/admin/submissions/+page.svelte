@@ -4,7 +4,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { eventsCollection } from '$lib/stores';
 	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
-	import { hideEmpty } from './state';
+	import { hideEmpty, showMemberNames } from './state';
 	import SubmissionEvent from './SubmissionEvent.svelte';
 
 	let count = $state(0);
@@ -19,11 +19,6 @@
 		Submissions
 	</h1>
 
-	<Label class="my-2 flex items-center space-x-2">
-		<Switch bind:checked={$hideEmpty} />
-		<span>Hide teams without submissions</span>
-	</Label>
-
 	<Button
 		variant="ghost"
 		class="my-2"
@@ -33,6 +28,15 @@
 	>
 		<RefreshCw /> Refresh all
 	</Button>
+
+	<Label class="my-2 flex items-center space-x-2">
+		<Switch bind:checked={$hideEmpty} />
+		<span>Hide teams without submissions</span>
+	</Label>
+	<Label class="my-2 flex items-center space-x-2">
+		<Switch bind:checked={$showMemberNames} />
+		<span>Show team member names</span>
+	</Label>
 
 	{#key count}
 		{#each $eventsCollection.filter((e) => !['*Rooming', '*Cardboard Boat'].includes(e.event)) as event (event.event)}

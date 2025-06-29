@@ -1,8 +1,8 @@
 # Event Logs
 
-Shows actions performed by every user for every event.
+This page shows actions performed by every user for every event. Useful for tracking member complaints or curing curiosity.
 
-It does not log:
+It does **NOT** log:
 
 - Changes people make to their account (name, gender, events, etc.),
 - Results changes, or
