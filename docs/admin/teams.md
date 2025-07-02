@@ -79,3 +79,7 @@ The number of members in a team cannot exceed this limit.
 #### Max teams per chapter
 
 The number of teams that can be created. This has no effect until the "lock team creation when full" toggle is selected, beyond information about the event.
+
+#### Submission description
+
+See [the corresponding page the submissions documentation](./submissions.md#editing-submission-requirements).

@@ -89,7 +89,7 @@ Yep. Just ignore it.
 
 ## Team numbers are out of order
 
-The order is determined by the order of which the teams were created, not the team number. There is no way to order the teams as order doesn't (shouldn't!) matter.
+The order is determined by the order of which the teams were created, not the team number. Click the "Sort Teams" right above the first team to sort all the teams in the event in numerical order of team number.
 
 ## Some things update in realtime, others don't
 
