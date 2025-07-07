@@ -11,6 +11,16 @@ The [members page](https://teaming.jhstsa.org/admin/members) is a useful tool to
 - Modifying a member's information
 - Registering member's for the January Qualifier and State conference
 
+## Those buttons at the top
+
+### Expand all events
+
+By default, there is a collapsible which hides members' events to avoid the page becoming to long. Sometimes you just need to scroll through them uninterrupted, so click this button to expand every members' events.
+
+### Download
+
+This downloads a .csv file (basically a simple spreadsheet) which is used for uploading members to TSA Nationals (which you must do at the start of every school year before any state-level registration). See the [registration page](./registration.md#assisted) for more information.
+
 ## Random Switch
 
 This switch can be used for whatever you like -- use it for keeping track of who you registered, who paid their fees, or whatever else.

@@ -8,9 +8,10 @@
 	import { MIN_EVENTS } from '$lib/constants';
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import { db } from '$lib/firebase';
-	import { watch } from 'runed';
 	import { allUsersCollection, settings } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
+	import CircleHelp from '@lucide/svelte/icons/circle-help';
+	import Download from '@lucide/svelte/icons/download';
 	import { csvFormat } from 'd3';
 	import {
 		collection,
@@ -20,12 +21,10 @@
 		setDoc,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import CircleHelp from '@lucide/svelte/icons/circle-help';
-	import Download from '@lucide/svelte/icons/download';
-	import CopyButton from './CopyButton.svelte';
+	import { watch } from 'runed';
 	import MemberGridCard from './MemberGridCard.svelte';
-	import TableView from './TableView.svelte';
 	import { search } from './search.svelte';
+	import TableView from './TableView.svelte';
 
 	let hidePeopleWithoutEvents = $state(false);
 	let sortBy = $state<'firstName' | 'lastName'>('firstName');
@@ -111,7 +110,7 @@
 			Expand all events
 		</Button>
 
-		<CopyButton />
+		<!-- <CopyButton /> -->
 		<Button
 			size="icon"
 			onclick={() => {
