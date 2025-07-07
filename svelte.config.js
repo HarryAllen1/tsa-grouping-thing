@@ -1,4 +1,4 @@
-import adapterVercel from '@sveltejs/adapter-vercel';
+import adapterCloudflare from '@sveltejs/adapter-cloudflare';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -8,9 +8,7 @@ const config = {
 	preprocess: [vitePreprocess()],
 
 	kit: {
-		adapter: adapterVercel({
-			runtime: 'nodejs22.x',
-		}),
+		adapter: adapterCloudflare(),
 	},
 };
 
