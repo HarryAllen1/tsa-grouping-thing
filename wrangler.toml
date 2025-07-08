@@ -1,5 +1,4 @@
 name = "tsa-grouping-thing"
-main = ".svelte-kit/cloudflare/_worker.js"
 pages_build_output_dir=".svelte-kit/cloudflare"
 compatibility_date =  "2025-01-01"
 compatibility_flags = [ "nodejs_compat" ]
