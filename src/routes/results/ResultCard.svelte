@@ -37,7 +37,7 @@
 				.map((u) => u.email.toLowerCase())
 				.includes($user.email?.toLowerCase() ?? '') && (rubs.items.length > 0 || result.note)}
 				<Dialog.Root>
-					<Dialog.Trigger class="underline">View Rubric</Dialog.Trigger>
+					<Dialog.Trigger class="underline">View rubric</Dialog.Trigger>
 					<Dialog.Content class="max-h-screen overflow-y-auto">
 						<Dialog.Title>Rubric</Dialog.Title>
 						{#if result.note}
