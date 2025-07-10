@@ -165,7 +165,7 @@
 
 				for (const member of (await getDocs(collection(db, 'users'))).docs) {
 					const data = member.data() as UserDoc;
-					await (data.grade === 12
+					await (data.grade === 12 || data.events.length === 0
 						? deleteDoc(member.ref)
 						: setDoc(
 								member.ref,
@@ -174,6 +174,10 @@
 									random: false,
 									events: [],
 									washingtonId: deleteField(),
+									completedIntakeForm: deleteField(),
+									eventsLocked: deleteField(),
+									lockRooming: deleteField(),
+									locked: deleteField(),
 								},
 								{
 									merge: true,

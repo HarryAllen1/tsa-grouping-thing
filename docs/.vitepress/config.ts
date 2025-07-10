@@ -89,6 +89,10 @@ export default defineConfig({
 						link: '/admin/resetting',
 					},
 					{
+						text: 'Backups',
+						link: '/admin/backups',
+					},
+					{
 						text: 'Weird Quirks',
 						link: '/admin/quirks',
 					},

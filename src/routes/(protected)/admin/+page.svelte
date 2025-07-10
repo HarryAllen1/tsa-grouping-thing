@@ -275,7 +275,7 @@
 				if (
 					!(await fancyConfirm(
 						'Are you sure you want to reset the system?',
-						"This will delete all members without events (excluding admins and advisors), all members' events, all teams (not including the events themselves), all rooms, all results, all statistics, all files (like returned rubrics and submissions), and all messages (including blocked messages).",
+						'This will delete all teams (not including the events themselves), all rooms, all results, most statistics, all files (like returned rubrics and submissions), and all messages (including blocked messages).',
 					))
 				) {
 					return;
@@ -284,7 +284,7 @@
 				await sleep(500);
 				if (
 					!(await fancyConfirm(
-						'This is (almost) irreversable',
+						'This is (almost) irreversible',
 						`A backup JSON file has been downloaded in the event that old data needs to be recovered. Once this process is completed, all data will be gone, forever. If anything needs to be restored, email this file to Harry (harry_allen@outlook.com), and some of the data will be restored. It is impossible to restore everything (like any files), so make sure that this is actually intentional.`,
 					))
 				) {
@@ -303,23 +303,22 @@
 					return;
 				}
 
-				for (const member of (await getDocs(collection(db, 'users'))).docs) {
-					const data = member.data();
-					data.events = [];
-					data.washingtonId = deleteField();
-					data.completedIntakeForm = false;
-					await setDoc(member.ref, data);
-				}
 				for (const event of (await getDocs(collection(db, 'events'))).docs) {
 					const data = event.data();
 					if (data.event === '*Rooming') {
 						await setDoc(event.ref, {
 							...data,
-							teams: [],
-							results: [],
 							allowGenderMixing: false,
 							hideInSignup: true,
 							showToEveryone: false,
+							locked: false,
+						});
+					}
+					if (data.event === '*Cardboard Boat') {
+						await setDoc(event.ref, {
+							...data,
+							showToEveryone: false,
+							hideInSignup: true,
 							locked: false,
 						});
 					}
@@ -327,6 +326,7 @@
 						...data,
 						locked: deleteField(),
 						teams: [],
+						results: [],
 						onlineSubmissions: deleteField(),
 						teamCreationLocked: deleteField(),
 						ref: deleteField(),
@@ -344,7 +344,7 @@
 				);
 			}}
 		>
-			Reset system
+			Reset teams
 		</Button>
 	</div>
 	<div

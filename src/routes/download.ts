@@ -23,6 +23,7 @@ const sortJSON = (object: object) => {
 
 export const downloadAsJSON = async () => {
 	const teamsJSON = sortJSON({
+		createdAt: Date.now(),
 		events: (await getDocs(collection(db, 'events'))).docs.map((d) => ({
 			...d.data(),
 		})),
