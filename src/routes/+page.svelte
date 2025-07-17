@@ -25,6 +25,8 @@
 	import { persisted } from 'svelte-persisted-store';
 	import Copyable from './Copyable.svelte';
 	import EventCard from './EventCard.svelte';
+	import { sendRequestApproval } from '$lib/functions';
+	import { toast } from 'svelte-sonner';
 
 	const yellowMode = persisted('yellowMode', false);
 	let alertEl = $state<HTMLDivElement>();
@@ -228,72 +230,14 @@
 											const event = actualEvent.teams;
 											if (!event) return;
 
-											let lowestNotTaken = 1;
-											while (
-												actualEvent.teams.some(
-													(t) => t.teamNumber === lowestNotTaken,
-												)
-											) {
-												lowestNotTaken++;
+											try {
+												await sendRequestApproval({
+													event: request.event,
+													teamId: request.team?.id ?? '',
+												});
+											} catch (error) {
+												toast.error(`Failed to approve request: ${error}`);
 											}
-											const teamUserIsIn = event?.find(
-												(t) =>
-													t.members
-														.map((u) => u.email.toLowerCase())
-														.includes($user?.email?.toLowerCase() ?? '') &&
-													!t.locked,
-											) ?? {
-												members: [],
-												requests: [],
-												lastUpdatedBy: '',
-												lastUpdatedTime: new Timestamp(0, 0),
-												id: crypto.randomUUID(),
-												teamNumber: 0,
-											};
-											if (
-												teamUserIsIn.members.length >= actualEvent.maxTeamSize
-											) {
-												return alert('Your team is full');
-											}
-											teamUserIsIn.members.push({
-												name: r.name,
-												email: r.email,
-											});
-											teamUserIsIn.lastUpdatedBy = $user?.email ?? '';
-											teamUserIsIn.lastUpdatedTime = new Timestamp(
-												Date.now() / 1000,
-												0,
-											);
-											teamUserIsIn.requests = teamUserIsIn.requests?.filter(
-												(u) => u.email !== r.email,
-											);
-											await setDoc(
-												doc(db, 'events', request.event ?? ''),
-												{
-													teams: signedUpEvents.find(
-														(e) => e.event === request.event,
-													)?.teams,
-													lastUpdatedBy: $user?.email ?? '',
-												},
-												{
-													merge: true,
-												},
-											);
-											let members = teamUserIsIn.members
-												.map((m) => m.name)
-												.join(', ');
-											const lastComma = members.lastIndexOf(',');
-											if (lastComma !== -1) {
-												members =
-													members.slice(0, lastComma) +
-													' and' +
-													members.slice(lastComma + 1);
-											}
-											sendEmail(
-												r.email,
-												`${request.event} team request approved`,
-												`Your request to join ${members}'s team for ${request.event} has been approved.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-											);
 											confetti();
 											navigator.vibrate(100);
 										}}

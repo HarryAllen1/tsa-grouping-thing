@@ -192,7 +192,7 @@
 						</Popover.Root>
 					</div>
 
-					<Select.Trigger>
+					<Select.Trigger class="w-full">
 						<span>
 							{formData.grade}
 						</span>

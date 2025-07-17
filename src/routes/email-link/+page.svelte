@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
@@ -25,7 +26,7 @@
 				) ??
 				'';
 
-			if (!email.endsWith('@lwsd.org')) {
+			if (!email.endsWith('@lwsd.org') && !dev) {
 				await fancyConfirm(
 					'Invalid email',
 					'You must use an LWSD email address to log in.',

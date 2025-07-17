@@ -38,6 +38,7 @@
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import CardboardBoatDialog from './CardboardBoatDialog.svelte';
 	import CheckInDialog from './CheckInDialog.svelte';
+	import { sendRequest } from '$lib/functions';
 
 	let {
 		event,
@@ -455,34 +456,10 @@
 				{:else}
 					<Button
 						onclick={async () => {
-							await setDoc(
-								doc(db, 'events', event.event ?? ''),
-								{
-									teams: event.teams.map((t) => {
-										if (t === team) {
-											t.requests = t.requests ?? [];
-											t.requests.push({
-												name: $userDoc?.name ?? '',
-												email: $user?.email ?? '',
-											});
-										}
-										return t;
-									}),
-									lastUpdatedBy: $user?.email ?? '',
-								},
-								{
-									merge: true,
-								},
-							);
-							sendEmail(
-								team.members.map((m) => m.email),
-								'New team request',
-								`${
-									$userDoc.name ?? 'Someone'
-								} has requested to join your team for ${
-									event.event
-								}. Please go to the <a href="https://teaming.jhstsa.org">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-							);
+							await sendRequest({
+								event: event.event,
+								teamId: team.id,
+							});
 							fancyConfirm(
 								'Request sent',
 								"A email has also been sent to the members of this team notifying them of your request. This email has a habit of going straight to people's junk folder, so you might have to notify them of this request manually.",

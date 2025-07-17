@@ -39,6 +39,17 @@
 			setUser(null);
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
+		} else if (
+			user &&
+			![
+				's-hallen@lwsd.org',
+				'1036145@lwsd.org',
+				'1103909@lwsd.org',
+				'harryall@uw.edu',
+			].includes(user.email?.toLowerCase() ?? '')
+		) {
+			document.documentElement.innerHTML =
+				'The teaming site has been disabled until the start of the 2025-2026 school year for maintenance work. If you need to access rubrics or other teaming information, please contact a board member.';
 		} else if (user) {
 			setUser(user as { email: string });
 			let userDoc = await getDoc(
