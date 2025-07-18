@@ -34,4 +34,4 @@ jobs:
       - name: Deploy to Firebase
         env:
           GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-service-account.json
-        run: pnpm dlx firebase-tools deploy --project tsa-grouping-thing
+        run: GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase-service-account.json" pnpm dlx firebase-tools deploy --project tsa-grouping-thing
