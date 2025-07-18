@@ -31,7 +31,9 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > $HOME/firebase-service-account.json
 
+      - name: Install Firebase CLI
+        run: pnpm install -g firebase-tools
       - name: Deploy to Firebase
         env:
           GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-service-account.json
-        run: GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase-service-account.json" pnpm dlx firebase-tools deploy --project tsa-grouping-thing
+        run: GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase-service-account.json" firebase deploy --project tsa-grouping-thing
