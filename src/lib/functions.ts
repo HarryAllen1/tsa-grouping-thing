@@ -10,6 +10,10 @@ export const sendRequest = httpsCallable<
 	BasicResponse
 >(functions, 'sendRequest');
 export const sendRequestApproval = httpsCallable<
-	{ event: string; teamId: string },
+	{ event: string; teamId: string; userEmail: string },
 	BasicResponse
 >(functions, 'sendRequestApproval');
+export const sendRequestDenial = httpsCallable<
+	{ event: string; teamId: string; userEmail: string },
+	BasicResponse
+>(functions, 'sendRequestDenial');

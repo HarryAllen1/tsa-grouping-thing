@@ -3,12 +3,7 @@ import { env } from '$env/dynamic/public';
 import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
-import {
-	connectFirestoreEmulator,
-	doc,
-	getFirestore,
-	setDoc,
-} from 'firebase/firestore';
+import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { getPerformance } from 'firebase/performance';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
@@ -30,7 +25,7 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const analytics = getAnalytics(app);
-export const functions = getFunctions(app);
+export const functions = getFunctions(app, 'us-west1');
 
 if (env.PUBLIC_FIREBASE_EMULATORS === 'true') {
 	connectAuthEmulator(auth, 'http://127.0.0.1:9099');
@@ -40,19 +35,6 @@ if (env.PUBLIC_FIREBASE_EMULATORS === 'true') {
 }
 
 if (!dev) getPerformance(app);
-
-export const sendEmail = async (
-	to: string | string[],
-	subject: string,
-	body: string,
-) =>
-	setDoc(doc(db, `mail/${Date.now()}`), {
-		to: Array.isArray(to) ? to : [to],
-		message: {
-			subject,
-			html: body,
-		},
-	});
 
 export const lookupMsAzureProfilePhoto = async (accessToken: string) => {
 	const response = await fetch(

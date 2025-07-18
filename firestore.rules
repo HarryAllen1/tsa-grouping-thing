@@ -13,8 +13,8 @@ service cloud.firestore {
       allow delete: if get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
     }
     match /mail/{email} {
-    	allow create: if request.auth != null;
-      allow update, delete, read: if false;
+      // should only be written through request functions
+    	allow read, write: if false;
     }
     match /settings/{setting} {
     	allow read: if request.auth != null;

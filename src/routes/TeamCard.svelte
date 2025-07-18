@@ -14,7 +14,7 @@
 		POINT_OF_CONTACT_EMAIL,
 		POINT_OF_CONTACT_NAME,
 	} from '$lib/constants';
-	import { analytics, db, sendEmail } from '$lib/firebase';
+	import { analytics, db } from '$lib/firebase';
 	import { md } from '$lib/md';
 	import { allUsersCollection, user, userDoc } from '$lib/stores';
 	import type { EventDoc, Team, UserDoc } from '$lib/types';
@@ -38,7 +38,12 @@
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import CardboardBoatDialog from './CardboardBoatDialog.svelte';
 	import CheckInDialog from './CheckInDialog.svelte';
-	import { sendRequest } from '$lib/functions';
+	import {
+		sendRequest,
+		sendRequestApproval,
+		sendRequestDenial,
+	} from '$lib/functions';
+	import { toast } from 'svelte-sonner';
 
 	let {
 		event,
@@ -564,49 +569,23 @@
 													if (team.members.length >= event.maxTeamSize) {
 														return alert('Your team is full');
 													}
-													team.members.push({
-														name: request.name,
-														email: request.email,
-													});
-													team.lastUpdatedBy = $user?.email ?? '';
-													team.lastUpdatedTime = new Timestamp(
-														Date.now() / 1000,
-														0,
-													);
-													team.requests = team.requests?.filter(
-														(r) =>
-															r.email !== request.email &&
-															r.name !== request.name,
-													);
-													await setDoc(
-														doc(db, 'events', event.event ?? ''),
-														{
-															teams: event.teams,
-															lastUpdatedBy: $user?.email ?? '',
-														},
-														{
-															merge: true,
-														},
-													);
-
-													let members = team.members
-														.map((m) => m.name)
-														.join(', ');
-													const lastComma = members.lastIndexOf(',');
-													if (lastComma !== -1) {
-														members =
-															members.slice(0, lastComma) +
-															' and' +
-															members.slice(lastComma + 1);
-													}
-
-													sendEmail(
-														request.email,
-														`${event.event} team request approved`,
-														`Your request to join ${members}'s team for ${event.event} has been approved.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-													);
-													confetti();
-													navigator.vibrate(100);
+													sendRequestApproval({
+														event: event.event,
+														teamId: team?.id ?? '',
+														userEmail: request.email,
+													})
+														.then(() => {
+															toast.success(
+																`Request for ${request.name} approved successfully.`,
+															);
+															confetti();
+															navigator.vibrate(100);
+														})
+														.catch((error) => {
+															toast.error(
+																`Failed to approve request: ${error}`,
+															);
+														});
 												}}
 												size="icon"
 												class="h-5"
@@ -619,42 +598,19 @@
 												class="h-5"
 												variant="ghost"
 												onclick={async () => {
-													team.requests = team.requests?.filter(
-														(r) =>
-															r.email !== request.email &&
-															r.name !== request.name,
-													);
-													team.lastUpdatedBy = $user?.email ?? '';
-													team.lastUpdatedTime = new Timestamp(
-														Date.now() / 1000,
-														0,
-													);
-													let members = team.members
-														.map((m) => m.name)
-														.join(', ');
-													const lastComma = members.lastIndexOf(',');
-													if (lastComma !== -1) {
-														members =
-															members.slice(0, lastComma) +
-															' and' +
-															members.slice(lastComma + 1);
-													}
-
-													sendEmail(
-														request.email,
-														`${event.event} team request denied`,
-														`Your request to join ${members}'s team for ${event.event} has been denied. Please contact them for more information.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-													);
-													await setDoc(
-														doc(db, 'events', event.event ?? ''),
-														{
-															teams: event.teams,
-															lastUpdatedBy: $user?.email ?? '',
-														},
-														{
-															merge: true,
-														},
-													);
+													sendRequestDenial({
+														event: event.event,
+														teamId: team?.id ?? '',
+														userEmail: request.email,
+													})
+														.then(() => {
+															toast.success(
+																`Request for ${request.name} denied successfully.`,
+															);
+														})
+														.catch((error) => {
+															toast.error(`Failed to deny request: ${error}`);
+														});
 												}}
 											>
 												<Minus />

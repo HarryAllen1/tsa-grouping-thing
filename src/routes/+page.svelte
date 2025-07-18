@@ -6,7 +6,7 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
 	import { MIN_EVENTS } from '$lib/constants';
-	import { db, sendEmail } from '$lib/firebase';
+	import { sendRequestApproval, sendRequestDenial } from '$lib/functions';
 	import { md } from '$lib/md';
 	import {
 		allUsersCollection,
@@ -16,17 +16,15 @@
 		userDoc,
 	} from '$lib/stores';
 	import type { EventDoc } from '$lib/types';
-	import confetti from 'canvas-confetti';
-	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import Minus from '@lucide/svelte/icons/minus';
 	import Plus from '@lucide/svelte/icons/plus';
+	import confetti from 'canvas-confetti';
 	import { mount, onDestroy, unmount } from 'svelte';
 	import { persisted } from 'svelte-persisted-store';
+	import { toast } from 'svelte-sonner';
 	import Copyable from './Copyable.svelte';
 	import EventCard from './EventCard.svelte';
-	import { sendRequestApproval } from '$lib/functions';
-	import { toast } from 'svelte-sonner';
 
 	const yellowMode = persisted('yellowMode', false);
 	let alertEl = $state<HTMLDivElement>();
@@ -230,16 +228,21 @@
 											const event = actualEvent.teams;
 											if (!event) return;
 
-											try {
-												await sendRequestApproval({
-													event: request.event,
-													teamId: request.team?.id ?? '',
+											sendRequestApproval({
+												event: request.event,
+												teamId: request.team?.id ?? '',
+												userEmail: r.email,
+											})
+												.then(() => {
+													toast.success(
+														`Request for ${r.name} approved successfully.`,
+													);
+													confetti();
+													navigator.vibrate(100);
+												})
+												.catch((error) => {
+													toast.error(`Failed to approve request: ${error}`);
 												});
-											} catch (error) {
-												toast.error(`Failed to approve request: ${error}`);
-											}
-											confetti();
-											navigator.vibrate(100);
 										}}
 										size="icon"
 										class="h-5"
@@ -252,56 +255,19 @@
 										class="h-5"
 										variant="ghost"
 										onclick={async () => {
-											const event = signedUpEvents.find(
-												(e) => e.event === request.event,
-											)?.teams;
-											const teamUserIsIn = event?.find(
-												(t) =>
-													t.members
-														.map((u) => u.email.toLowerCase())
-														.includes($user?.email?.toLowerCase() ?? '') &&
-													!t.locked,
-											) ?? {
-												members: [],
-												requests: [],
-												lastUpdatedBy: '',
-												lastUpdatedTime: new Timestamp(0, 0),
-											};
-
-											teamUserIsIn.requests = teamUserIsIn.requests?.filter(
-												(u) => u.email !== r.email,
-											);
-											teamUserIsIn.lastUpdatedBy = $user?.email ?? '';
-											teamUserIsIn.lastUpdatedTime = new Timestamp(
-												Date.now() / 1000,
-												0,
-											);
-											let members = teamUserIsIn.members
-												.map((m) => m.name)
-												.join(', ');
-											const lastComma = members.lastIndexOf(',');
-											if (lastComma !== -1) {
-												members =
-													members.slice(0, lastComma) +
-													' and' +
-													members.slice(lastComma + 1);
-											}
-
-											sendEmail(
-												r.email,
-												`${request.event} team request denied`,
-												`Your request to join ${members}'s team for ${request.event} has been denied. Please contact them for more information.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
-											);
-											await setDoc(
-												doc(db, 'events', request.event ?? ''),
-												{
-													teams: event,
-													lastUpdatedBy: $user?.email ?? '',
-												},
-												{
-													merge: true,
-												},
-											);
+											sendRequestDenial({
+												event: request.event,
+												teamId: request.team?.id ?? '',
+												userEmail: r.email,
+											})
+												.then(() => {
+													toast.success(
+														`Request for ${r.name} denied successfully.`,
+													);
+												})
+												.catch((error) => {
+													toast.error(`Failed to deny request: ${error}`);
+												});
 										}}
 									>
 										<Minus />
