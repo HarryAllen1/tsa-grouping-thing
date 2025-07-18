@@ -26,7 +26,12 @@ jobs:
       - name: Install Functions dependencies
         run: cd functions && pnpm install && cd ..
 
+      - name: Add Firebase service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > $HOME/firebase-service-account.json
+
       - name: Deploy to Firebase
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: pnpm dlx firebase-tools deploy --project tsa-grouping-thing --token "${{ secrets.FIREBASE_TOKEN }}"
+          GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-service-account.json
+        run: pnpm dlx firebase-tools deploy --project tsa-grouping-thing
