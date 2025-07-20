@@ -124,7 +124,7 @@ g[aria-label='tip'] {
 	fill: var(--color-white);
 }
 
-html body.yellow[class] {
+html body.yellow {
 	--background: hsl(64 100% 61%);
 	--foreground: hsl(0 0% 0%);
 }
