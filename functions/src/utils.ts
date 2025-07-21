@@ -1,9 +1,7 @@
-import {
-	AuthData,
-	HttpsError,
-} from 'firebase-functions/lib/common/providers/https';
-import { EventDoc, UserDoc } from './types';
+import { DecodedIdToken } from 'firebase-admin/auth';
+import { HttpsError } from 'firebase-functions/https';
 import { db } from './firebase';
+import { EventDoc, UserDoc } from './types';
 
 export const userToName = (user: UserDoc): string =>
 	user.preferredFirstName
@@ -22,7 +20,12 @@ export const getUser = async (email: string): Promise<UserDoc> => {
 };
 
 export const getAuthUser = async (
-	auth: AuthData | undefined,
+	auth:
+		| {
+				uid: string;
+				token: DecodedIdToken;
+		  }
+		| undefined,
 ): Promise<UserDoc> => {
 	if (!auth) {
 		throw new HttpsError(

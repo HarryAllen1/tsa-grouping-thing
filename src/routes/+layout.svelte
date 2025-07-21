@@ -22,6 +22,7 @@
 	import Login from './Login.svelte';
 	import OfflineNotifier from './OfflineNotifier.svelte';
 	import { mouseThing } from './senuka-put-stuff-here';
+	import { config } from '$lib/config';
 
 	navigator.vibrate ||= (pattern: number | number[]) => !!pattern;
 
@@ -30,6 +31,10 @@
 	}: {
 		children: Snippet;
 	} = $props();
+
+	if (($config.theme as string) === 'zinc') {
+		$config.theme = 'default';
+	}
 
 	const isAuthReady = auth.authStateReady();
 

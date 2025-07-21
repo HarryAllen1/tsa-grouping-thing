@@ -19,12 +19,7 @@ export default defineConfig({
 		sveltekit(),
 	],
 	build: {
-		target: 'es2024',
+		target: 'es2023',
 		sourcemap: true,
-	},
-	optimizeDeps: {
-		esbuildOptions: {
-			target: 'es2024',
-		},
 	},
 });
