@@ -7,8 +7,8 @@
 	import * as Select from '$lib/components/ui/select';
 	import { db } from '$lib/firebase';
 	import { tShirtMap } from '$lib/t-shirt';
-	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import CircleHelpIcon from '@lucide/svelte/icons/circle-help';
+	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 

@@ -11,6 +11,7 @@
 		POINT_OF_CONTACT_NAME,
 	} from '$lib/constants';
 	import { auth } from '$lib/firebase';
+	import { microsoftAccessToken } from '$lib/stores';
 	import { captureException } from '@sentry/sveltekit';
 	import confetti from 'canvas-confetti';
 	import {
@@ -49,6 +50,12 @@
 					}
 
 					if (user.user) {
+						console.log(user);
+						$microsoftAccessToken = (
+							user as unknown as {
+								_tokenResponse: { oauthAccessToken: string };
+							}
+						)._tokenResponse.oauthAccessToken;
 						confetti();
 						closeConfirmationDialog();
 					}
@@ -99,7 +106,7 @@
 				height="100%"
 				viewBox="0 0 20 20"
 				width="100%"
-				class="mr-4 aspect-square bg-white p-[1px]"
+				class="mr-2 aspect-square bg-white p-[1px]"
 				preserveAspectRatio="xMidYMid meet"
 				focusable="false"
 			>

@@ -9,7 +9,7 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { analytics, auth, db, storage } from '$lib/firebase';
-	import { user } from '$lib/stores';
+	import { microsoftAccessToken, user } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
 	import { setUser } from '@sentry/sveltekit';
 	import { onAuthStateChanged } from 'firebase/auth';
@@ -51,6 +51,10 @@
 			document.documentElement.innerHTML =
 				'The teaming site has been disabled until the start of the 2025-2026 school year for maintenance work. If you need to access rubrics or other teaming information, please contact a board member.';
 		} else if (user) {
+			// relatively new thing and it's only available upon initial signin
+			if ($microsoftAccessToken.length === 0) {
+				return await auth.signOut();
+			}
 			setUser(user as { email: string });
 			let userDoc = await getDoc(
 				doc(db, 'users', auth.currentUser?.email ?? ''),

@@ -36,16 +36,22 @@ if (env.PUBLIC_FIREBASE_EMULATORS === 'true') {
 
 if (!dev) getPerformance(app);
 
-export const lookupMsAzureProfilePhoto = async (accessToken: string) => {
-	const response = await fetch(
+export const lookupMsAzureProfilePhoto = (accessToken: string) =>
+	graphURLToImage(
 		'https://graph.microsoft.com/v1.0/me/photo/$value',
-		{
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'Content-Type': 'image/jpg',
-			},
-		},
+		accessToken,
 	);
+
+export const graphURLToImage = async (url: string, accessToken: string) => {
+	const response = await fetch(url, {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+			'Content-Type': 'image/jpeg',
+		},
+	});
+	if (!response.ok) {
+		throw new Error(`Failed to fetch image from ${url}`);
+	}
 	const blob = await response.blob();
 	return URL.createObjectURL(blob);
 };
