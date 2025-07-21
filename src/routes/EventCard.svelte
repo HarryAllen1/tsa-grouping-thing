@@ -5,8 +5,8 @@
 	import { db } from '$lib/firebase';
 	import { allUsersCollection, user, userDoc } from '$lib/stores';
 	import type { EventData, EventDoc, Team } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
+	import { doc, updateDoc } from 'firebase/firestore';
 	import TeamCard from './TeamCard.svelte';
 
 	let { event, eventData }: { event: EventDoc; eventData: EventData[] } =
@@ -128,16 +128,10 @@
 						id: crypto.randomUUID(),
 						teamNumber: lowestNotTaken,
 					});
-					await setDoc(
-						doc(db, 'events', event.event ?? ''),
-						{
-							teams: event.teams,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{
-							merge: true,
-						},
-					);
+					await updateDoc(doc(db, 'events', event.event ?? ''), {
+						teams: event.teams,
+						lastUpdatedBy: $user?.email ?? '',
+					});
 				}}
 			>
 				Create {event.event === '*Rooming' ? 'Room' : 'Team'}

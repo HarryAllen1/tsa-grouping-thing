@@ -5,8 +5,8 @@
 	import { db } from '$lib/firebase';
 	import { allUsersCollection, eventsCollection, user } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
 	import X from '@lucide/svelte/icons/x';
+	import { doc, updateDoc } from 'firebase/firestore';
 	import UserCard from '../UserCard.svelte';
 	import AddResultDialog from './AddResultDialog.svelte';
 
@@ -80,18 +80,12 @@
 										/>
 										<Button
 											onclick={async () => {
-												await setDoc(
-													doc(db, 'events', event.event),
-													{
-														results: event.results?.filter(
-															(r) => r.id !== result.id,
-														),
-														lastUpdatedBy: $user?.email ?? '',
-													},
-													{
-														merge: true,
-													},
-												);
+												await updateDoc(doc(db, 'events', event.event), {
+													results: event.results?.filter(
+														(r) => r.id !== result.id,
+													),
+													lastUpdatedBy: $user?.email ?? '',
+												});
 											}}
 											size="icon"
 											variant="ghost"

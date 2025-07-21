@@ -7,9 +7,9 @@
 	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
-	import confetti from 'canvas-confetti';
-	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import Lock from '@lucide/svelte/icons/lock';
+	import confetti from 'canvas-confetti';
+	import { Timestamp, doc, updateDoc } from 'firebase/firestore';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
 	let {
@@ -109,19 +109,13 @@
 					)
 						return;
 
-					await setDoc(
-						doc(db, 'users', $user?.email ?? ''),
-						{
-							events: eventMap[event.event]
-								? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
-								: [...($userDoc?.events ?? []), event.event],
-							lastUpdated: new Timestamp(Date.now() / 1000, 0),
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{
-							merge: true,
-						},
-					);
+					await updateDoc(doc(db, 'users', $user?.email ?? ''), {
+						events: eventMap[event.event]
+							? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
+							: [...($userDoc?.events ?? []), event.event],
+						lastUpdated: new Timestamp(Date.now() / 1000, 0),
+						lastUpdatedBy: $user?.email ?? '',
+					});
 				}}
 			/>
 			<Label
@@ -149,17 +143,11 @@
 	>
 	<Button
 		onclick={async () => {
-			await setDoc(
-				doc(db, 'users', $user?.email ?? ''),
-				{
-					lastUpdated: new Timestamp(Date.now() / 1000, 0),
-					lastUpdatedBy: $user?.email ?? '',
-					completedIntakeForm: true,
-				},
-				{
-					merge: true,
-				},
-			);
+			await updateDoc(doc(db, 'users', $user?.email ?? ''), {
+				lastUpdated: new Timestamp(Date.now() / 1000, 0),
+				lastUpdatedBy: $user?.email ?? '',
+				completedIntakeForm: true,
+			});
 			confetti();
 			await sleep(300);
 			await goto('/');

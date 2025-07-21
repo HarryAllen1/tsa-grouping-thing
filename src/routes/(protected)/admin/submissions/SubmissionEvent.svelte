@@ -7,10 +7,10 @@
 	import { md } from '$lib/md';
 	import { user } from '$lib/stores';
 	import type { EventDoc } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
+	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
+	import { doc, updateDoc } from 'firebase/firestore';
 	import { getBlob, listAll, ref } from 'firebase/storage';
 	import JSZip from 'jszip';
-	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import SubmissionTeam from './SubmissionTeam.svelte';
 
 	let {
@@ -64,18 +64,11 @@
 							{#snippet child({ props })}
 								<Button
 									variant="default"
-									onclick={() => {
-										setDoc(
-											doc(db, 'events', event.event),
-											{
-												submissionDescription:
-													event.submissionDescription ?? '',
-												lastUpdatedBy: $user?.email ?? '',
-											},
-											{
-												merge: true,
-											},
-										);
+									onclick={async () => {
+										await updateDoc(doc(db, 'events', event.event), {
+											submissionDescription: event.submissionDescription ?? '',
+											lastUpdatedBy: $user?.email ?? '',
+										});
 									}}
 									{...props}
 								>

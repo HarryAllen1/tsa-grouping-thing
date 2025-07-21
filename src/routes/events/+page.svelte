@@ -5,9 +5,9 @@
 	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
-	import { Timestamp, doc, setDoc } from 'firebase/firestore';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
 	import Lock from '@lucide/svelte/icons/lock';
+	import { Timestamp, doc, updateDoc } from 'firebase/firestore';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
 	const user = userStore(auth);
@@ -174,31 +174,19 @@
 									1,
 								);
 							}
-							await setDoc(
-								doc(db, 'events', event.event),
-								{
-									teams: event.teams.filter((t) => t.members.length > 0),
-									lastUpdated: new Timestamp(Date.now() / 1000, 0),
-									lastUpdatedBy: $user?.email ?? '',
-								},
-								{
-									merge: true,
-								},
-							);
-						}
-						await setDoc(
-							doc(db, 'users', $user?.email ?? ''),
-							{
-								events: eventMap[event.event]
-									? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
-									: [...($userDoc?.events ?? []), event.event],
+							await updateDoc(doc(db, 'events', event.event), {
+								teams: event.teams.filter((t) => t.members.length > 0),
 								lastUpdated: new Timestamp(Date.now() / 1000, 0),
 								lastUpdatedBy: $user?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
+							});
+						}
+						await updateDoc(doc(db, 'users', $user?.email ?? ''), {
+							events: eventMap[event.event]
+								? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
+								: [...($userDoc?.events ?? []), event.event],
+							lastUpdated: new Timestamp(Date.now() / 1000, 0),
+							lastUpdatedBy: $user?.email ?? '',
+						});
 					}}
 				/>
 				<Label

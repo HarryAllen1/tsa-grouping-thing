@@ -15,26 +15,16 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 		}
 		const doc = db.doc(`users/${user.email}`);
 		if (!(await doc.get()).exists) {
-			await doc.set(
-				{
-					email: user.email,
-					name: user.displayName ?? '',
-					uid: user.uid,
-					events: [],
-				},
-				{
-					merge: true,
-				},
-			);
+			await doc.update({
+				email: user.email,
+				name: user.displayName ?? '',
+				uid: user.uid,
+				events: [],
+			});
 		} else {
-			await doc.set(
-				{
-					uid: user.uid,
-				},
-				{
-					merge: true,
-				},
-			);
+			await doc.update({
+				uid: user.uid,
+			});
 		}
 	},
 );

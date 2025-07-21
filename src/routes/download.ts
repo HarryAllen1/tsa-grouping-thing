@@ -67,7 +67,7 @@ export const downloadAsJSON = async () => {
 	a.style.display = 'none';
 	a.href = url;
 	a.download = 'teams.json';
-	document.body.append(a);
+	document.body.append(a as unknown as string);
 	a.click();
 	URL.revokeObjectURL(url);
 	a.remove();
@@ -92,7 +92,7 @@ export const downloadAsCSV = async () => {
 	a.style.display = 'none';
 	a.href = url;
 	a.download = 'members.csv';
-	document.body.append(a);
+	document.body.append(a as unknown as string);
 	a.click();
 	URL.revokeObjectURL(url);
 	a.remove();

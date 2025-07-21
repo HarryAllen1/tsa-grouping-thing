@@ -18,7 +18,7 @@
 		deleteDoc,
 		deleteField,
 		getDocs,
-		setDoc,
+		updateDoc,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
 	import { watch } from 'runed';
@@ -167,22 +167,16 @@
 					const data = member.data() as UserDoc;
 					await (data.grade === 12 || data.events.length === 0
 						? deleteDoc(member.ref)
-						: setDoc(
-								member.ref,
-								{
-									grade: (data.grade ?? 9) + 1,
-									random: false,
-									events: [],
-									washingtonId: deleteField(),
-									completedIntakeForm: deleteField(),
-									eventsLocked: deleteField(),
-									lockRooming: deleteField(),
-									locked: deleteField(),
-								},
-								{
-									merge: true,
-								},
-							));
+						: updateDoc(member.ref, {
+								grade: (data.grade ?? 9) + 1,
+								random: false,
+								events: [],
+								washingtonId: deleteField(),
+								completedIntakeForm: deleteField(),
+								eventsLocked: deleteField(),
+								lockRooming: deleteField(),
+								locked: deleteField(),
+							}));
 				}
 			}}
 		>
@@ -203,7 +197,7 @@
 			<Switch
 				checked={$settings!.lockAccounts}
 				onCheckedChange={async (state) => {
-					await setDoc(settings.ref!, { lockAccounts: state }, { merge: true });
+					await updateDoc(settings.ref!, { lockAccounts: state });
 				}}
 				id="lock-account"
 			/>

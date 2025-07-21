@@ -3,7 +3,7 @@
 	import { db } from '$lib/firebase';
 	import { tShirtMap } from '$lib/t-shirt';
 	import type { UserDoc } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
+	import { doc, updateDoc } from 'firebase/firestore';
 
 	let {
 		user,
@@ -21,13 +21,9 @@
 	value={user.tShirtSize ?? 'null'}
 	onValueChange={async (v) => {
 		if (v)
-			await setDoc(
-				doc(db, 'users', user.email),
-				{
-					tShirtSize: v,
-				},
-				{ merge: true },
-			);
+			await updateDoc(doc(db, 'users', user.email), {
+				tShirtSize: v,
+			});
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		selectedTShirt = v ? tShirtMap.get(v as any) : 'Unspecified';

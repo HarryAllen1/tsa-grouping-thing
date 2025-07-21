@@ -3,7 +3,7 @@ import { Switch } from '$lib/components/ui/switch';
 import { db } from '$lib/firebase';
 import type { UserDoc } from '$lib/types';
 import type { ColumnDef } from '@tanstack/table-core';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import DataTableActions from './DataTableActions.svelte';
 import DataTableSortButton from './DataTableSortButton.svelte';
 import EventsCell from './EventsCell.svelte';
@@ -37,14 +37,10 @@ export const columns: ColumnDef<UserDoc>[] = [
 			renderComponent(Switch, {
 				checked: row.original.random,
 				onCheckedChange: async (e) => {
-					await setDoc(
-						doc(db, 'users', row.original.email),
-						{
-							random: e,
-							lastUpdatedBy: row.original.email ?? '',
-						},
-						{ merge: true },
-					);
+					await updateDoc(doc(db, 'users', row.original.email), {
+						random: e,
+						lastUpdatedBy: row.original.email ?? '',
+					});
 				},
 			}),
 	},

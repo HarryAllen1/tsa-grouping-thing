@@ -9,9 +9,9 @@
 	import { db } from '$lib/firebase';
 	import { settings, user, userDoc } from '$lib/stores';
 	import { tShirtMap } from '$lib/t-shirt';
-	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
 	import CircleHelpIcon from '@lucide/svelte/icons/circle-help';
+	import { doc, getDoc, updateDoc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
@@ -110,25 +110,19 @@
 		onsubmit={async (e) => {
 			e.preventDefault();
 
-			await setDoc(
-				doc(db, 'users', $user.email ?? ''),
-				{
-					// non-undefined values
-					...Object.fromEntries(
-						Object.keys(formData)
-							.filter((v) => (formData as Record<string, unknown>)[v])
-							.map((a) => [a, (formData as Record<string, unknown>)[a]]),
-					),
-					preferredFirstName:
-						(formData.preferredFirstName?.trim() === formData.firstName.trim()
-							? null
-							: formData.preferredFirstName) || '',
-					grade: Number(formData.grade),
-				},
-				{
-					merge: true,
-				},
-			);
+			await updateDoc(doc(db, 'users', $user.email ?? ''), {
+				// non-undefined values
+				...Object.fromEntries(
+					Object.keys(formData)
+						.filter((v) => (formData as Record<string, unknown>)[v])
+						.map((a) => [a, (formData as Record<string, unknown>)[a]]),
+				),
+				preferredFirstName:
+					(formData.preferredFirstName?.trim() === formData.firstName.trim()
+						? null
+						: formData.preferredFirstName) || '',
+				grade: Number(formData.grade),
+			});
 			toast.success('Saved.');
 			await goto('/');
 		}}

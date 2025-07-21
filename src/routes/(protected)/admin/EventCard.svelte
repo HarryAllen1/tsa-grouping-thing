@@ -10,9 +10,9 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { db } from '$lib/firebase';
+	import { md } from '$lib/md';
 	import { allUsersCollection, user } from '$lib/stores';
-	import type { EventData, EventDoc } from '$lib/types';
-	import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+	import type { EventData, EventDoc, UserDoc } from '$lib/types';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import Download from '@lucide/svelte/icons/download';
@@ -21,10 +21,10 @@
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import Settings from '@lucide/svelte/icons/settings';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
+	import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
 	import TeamCard from './TeamCard.svelte';
 	import UserCard from './UserCard.svelte';
 	import { openUserDialog } from './user-dialog';
-	import { md } from '$lib/md';
 
 	let {
 		hidden,
@@ -91,14 +91,10 @@
 							checked={event.showToEveryone ?? false}
 							onCheckedChange={async (e) => {
 								event.showToEveryone = e;
-								await setDoc(
-									doc(db, 'events', event.event),
-									{
-										showToEveryone: e,
-										lastUpdatedBy: $user?.email ?? '',
-									},
-									{ merge: true },
-								);
+								await updateDoc(doc(db, 'events', event.event), {
+									showToEveryone: e,
+									lastUpdatedBy: $user?.email ?? '',
+								});
 							}}
 						/>
 						<Label for="show-event-to-everyone">
@@ -114,14 +110,10 @@
 							id="show-in-signup"
 							checked={event.hideInSignup ?? false}
 							onCheckedChange={async (e) => {
-								await setDoc(
-									doc(db, 'events', event.event),
-									{
-										hideInSignup: e,
-										lastUpdatedBy: $user?.email ?? '',
-									},
-									{ merge: true },
-								);
+								await updateDoc(doc(db, 'events', event.event), {
+									hideInSignup: e,
+									lastUpdatedBy: $user?.email ?? '',
+								});
 							}}
 						/>
 						<Label for="show-in-signup">Hide in signup page</Label>
@@ -130,16 +122,10 @@
 						<Switch
 							onCheckedChange={async (checked) => {
 								event.locked = checked;
-								await setDoc(
-									doc(db, 'events', event.event ?? ''),
-									{
-										locked: checked,
-										lastUpdatedBy: $user?.email ?? '',
-									},
-									{
-										merge: true,
-									},
-								);
+								await updateDoc(doc(db, 'events', event.event ?? ''), {
+									locked: checked,
+									lastUpdatedBy: $user?.email ?? '',
+								});
 							}}
 							checked={event.locked ?? false}
 						/>
@@ -151,14 +137,10 @@
 								id="lock-team-creation"
 								checked={event.teamCreationLocked}
 								onCheckedChange={async (e) => {
-									await setDoc(
-										doc(db, 'events', event.event),
-										{
-											teamCreationLocked: e,
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{ merge: true },
-									);
+									await updateDoc(doc(db, 'events', event.event), {
+										teamCreationLocked: e,
+										lastUpdatedBy: $user?.email ?? '',
+									});
 								}}
 							/>
 							<Label for="lock-team-creation">
@@ -171,14 +153,10 @@
 								checked={event.teamCreationActuallyLocked}
 								onCheckedChange={async (e) => {
 									event.teamCreationActuallyLocked = e;
-									await setDoc(
-										doc(db, 'events', event.event),
-										{
-											teamCreationActuallyLocked: e,
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{ merge: true },
-									);
+									await updateDoc(doc(db, 'events', event.event), {
+										teamCreationActuallyLocked: e,
+										lastUpdatedBy: $user?.email ?? '',
+									});
 								}}
 							/>
 							<Label for="lock-team-creation-but-actually">
@@ -189,16 +167,10 @@
 							<Switch
 								onCheckedChange={async (checked) => {
 									event.onlineSubmissions = checked;
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											onlineSubmissions: checked,
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{
-											merge: true,
-										},
-									);
+									await updateDoc(doc(db, 'events', event.event ?? ''), {
+										onlineSubmissions: checked,
+										lastUpdatedBy: $user?.email ?? '',
+									});
 								}}
 								checked={event.onlineSubmissions}
 							/>
@@ -208,16 +180,10 @@
 							<Switch
 								onCheckedChange={async (checked) => {
 									event.eventStatusCheckInEnabled = checked;
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											eventStatusCheckInEnabled: checked,
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{
-											merge: true,
-										},
-									);
+									await updateDoc(doc(db, 'events', event.event ?? ''), {
+										eventStatusCheckInEnabled: checked,
+										lastUpdatedBy: $user?.email ?? '',
+									});
 								}}
 								checked={event.eventStatusCheckInEnabled}
 							/>
@@ -281,10 +247,11 @@
 									await deleteDoc(doc(db, 'events', event.event ?? ''));
 									for (const user of $allUsersCollection) {
 										user.events = user.events.filter((e) => e !== event.event);
-										await setDoc(
+										await updateDoc(
 											doc(db, 'users', user.email?.toLowerCase() ?? ''),
-											user,
-											{ merge: true },
+											{
+												events: user.events,
+											} satisfies Partial<UserDoc>,
 										);
 									}
 								}}
@@ -303,19 +270,13 @@
 							</Button>
 							<Button
 								onclick={async () => {
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											description: event.description || '',
-											minTeamSize: event.minTeamSize,
-											maxTeamSize: event.maxTeamSize,
-											perChapter: event.perChapter,
-											lastUpdatedBy: $user?.email ?? '',
-										} satisfies Partial<EventDoc>,
-										{
-											merge: true,
-										},
-									);
+									await updateDoc(doc(db, 'events', event.event ?? ''), {
+										description: event.description || '',
+										minTeamSize: event.minTeamSize,
+										maxTeamSize: event.maxTeamSize,
+										perChapter: event.perChapter,
+										lastUpdatedBy: $user?.email ?? '',
+									} satisfies Partial<EventDoc>);
 
 									editEventDialogOpen = false;
 								}}
@@ -353,7 +314,7 @@
 						link.setAttribute('href', url);
 						link.setAttribute('download', 'rooming.csv');
 						link.style.visibility = 'hidden';
-						document.body.append(link);
+						document.body.append(link as unknown as string);
 						link.click();
 						link.remove();
 						URL.revokeObjectURL(url);
@@ -455,17 +416,11 @@
 								/>
 								<Dialog.Footer>
 									<Button
-										onclick={() => {
-											setDoc(
-												doc(db, 'events', event.event),
-												{
-													submissionDescription: submissionDescription ?? '',
-													lastUpdatedBy: $user?.email ?? '',
-												},
-												{
-													merge: true,
-												},
-											);
+										onclick={async () => {
+											await updateDoc(doc(db, 'events', event.event), {
+												submissionDescription: submissionDescription ?? '',
+												lastUpdatedBy: $user?.email ?? '',
+											});
 
 											submissionDialogOpen = false;
 										}}
@@ -531,13 +486,12 @@
 												userDoc.events = userDoc.events.filter(
 													(e) => e !== event.event,
 												);
-												await setDoc(
+												await updateDoc(
 													doc(db, 'users', userDoc.email?.toLowerCase() ?? ''),
 													{
-														...userDoc,
+														events: userDoc.events,
 														lastUpdatedBy: $user?.email ?? '',
-													},
-													{ merge: true },
+													} satisfies Partial<UserDoc>,
 												);
 											}
 										}
@@ -699,16 +653,10 @@
 		<Button
 			onclick={async () => {
 				event.teams.sort((a, b) => a.teamNumber - b.teamNumber);
-				await setDoc(
-					doc(db, 'events', event.event ?? ''),
-					{
-						teams: event.teams,
-						lastUpdatedBy: $user?.email ?? '',
-					},
-					{
-						merge: true,
-					},
-				);
+				await updateDoc(doc(db, 'events', event.event ?? ''), {
+					teams: event.teams,
+					lastUpdatedBy: $user?.email ?? '',
+				});
 			}}
 		>
 			Sort Teams
@@ -759,16 +707,10 @@
 					id: crypto.randomUUID(),
 					teamNumber: lowestNotTaken,
 				});
-				await setDoc(
-					doc(db, 'events', event.event ?? ''),
-					{
-						teams: event.teams,
-						lastUpdatedBy: $user?.email ?? '',
-					},
-					{
-						merge: true,
-					},
-				);
+				await updateDoc(doc(db, 'events', event.event ?? ''), {
+					teams: event.teams,
+					lastUpdatedBy: $user?.email ?? '',
+				});
 			}}
 		>
 			Create Team
@@ -795,16 +737,10 @@
 							});
 						}
 					}
-					setDoc(
-						doc(db, 'events', event.event ?? ''),
-						{
-							teams: event.teams,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{
-							merge: true,
-						},
-					);
+					updateDoc(doc(db, 'events', event.event ?? ''), {
+						teams: event.teams,
+						lastUpdatedBy: $user?.email ?? '',
+					});
 				}}
 			>
 				Create team for everyone

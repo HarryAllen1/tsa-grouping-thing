@@ -77,10 +77,6 @@
 			href: '/admin/logs',
 			icon: ClipboardList,
 		},
-		// {
-		// 	title: 'Messages',
-		// 	href: '/admin/messages',
-		// },
 	];
 
 	const sidebar = Sidebar.useSidebar();

@@ -15,17 +15,14 @@
 		POINT_OF_CONTACT_NAME,
 	} from '$lib/constants';
 	import { analytics, db } from '$lib/firebase';
+	import {
+		sendRequest,
+		sendRequestApproval,
+		sendRequestDenial,
+	} from '$lib/functions';
 	import { md } from '$lib/md';
 	import { allUsersCollection, user, userDoc } from '$lib/stores';
 	import type { EventDoc, Team, UserDoc } from '$lib/types';
-	import confetti from 'canvas-confetti';
-	import { logEvent } from 'firebase/analytics';
-	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import {
-		deleteObject,
-		getDownloadURL,
-		type FullMetadata,
-	} from 'firebase/storage';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import Crown from '@lucide/svelte/icons/crown';
 	import LogOut from '@lucide/svelte/icons/log-out';
@@ -33,17 +30,20 @@
 	import Plus from '@lucide/svelte/icons/plus';
 	import UserPlus from '@lucide/svelte/icons/user-plus';
 	import X from '@lucide/svelte/icons/x';
+	import confetti from 'canvas-confetti';
+	import { logEvent } from 'firebase/analytics';
+	import { Timestamp, doc, updateDoc } from 'firebase/firestore';
+	import {
+		deleteObject,
+		getDownloadURL,
+		type FullMetadata,
+	} from 'firebase/storage';
 	import type { Snippet } from 'svelte';
+	import { toast } from 'svelte-sonner';
 	import { flip } from 'svelte/animate';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
 	import CardboardBoatDialog from './CardboardBoatDialog.svelte';
 	import CheckInDialog from './CheckInDialog.svelte';
-	import {
-		sendRequest,
-		sendRequestApproval,
-		sendRequestDenial,
-	} from '$lib/functions';
-	import { toast } from 'svelte-sonner';
 
 	let {
 		event,
@@ -141,16 +141,10 @@
 										);
 										team.lastUpdatedBy = $user?.email ?? '';
 										team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-										await setDoc(
-											doc(db, 'events', event.event ?? ''),
-											{
-												teams: event.teams.filter((t) => t.members.length > 0),
-												lastUpdatedBy: $user?.email ?? '',
-											},
-											{
-												merge: true,
-											},
-										);
+										await updateDoc(doc(db, 'events', event.event ?? ''), {
+											teams: event.teams.filter((t) => t.members.length > 0),
+											lastUpdatedBy: $user?.email ?? '',
+										});
 									}}
 								>
 									<LogOut />
@@ -237,14 +231,11 @@
 															Date.now() / 1000,
 															0,
 														);
-														await setDoc(
+														await updateDoc(
 															doc(db, 'events', event.event ?? ''),
 															{
 																teams: event.teams,
 																lastUpdatedBy: $user?.email ?? '',
-															},
-															{
-																merge: true,
 															},
 														);
 														confetti();
@@ -276,16 +267,10 @@
 									team.teamCaptain = $user?.email ?? '';
 									team.lastUpdatedBy = $user?.email ?? '';
 									team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											teams: event.teams,
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{
-											merge: true,
-										},
-									);
+									await updateDoc(doc(db, 'events', event.event ?? ''), {
+										teams: event.teams,
+										lastUpdatedBy: $user?.email ?? '',
+									});
 								}}
 								disabled={team.teamCaptain === $user?.email}
 								class="w-fit"
@@ -460,11 +445,13 @@
 					<Button disabled>Requested</Button>
 				{:else}
 					<Button
-						onclick={async () => {
+						onclick={async (clickEvent) => {
+							(clickEvent.target as HTMLButtonElement).disabled = true;
 							await sendRequest({
 								event: event.event,
 								teamId: team.id,
 							});
+							(clickEvent.target as HTMLButtonElement).disabled = false;
 							fancyConfirm(
 								'Request sent',
 								"A email has also been sent to the members of this team notifying them of your request. This email has a habit of going straight to people's junk folder, so you might have to notify them of this request manually.",
@@ -597,8 +584,10 @@
 												size="icon"
 												class="h-5"
 												variant="ghost"
-												onclick={async () => {
-													sendRequestDenial({
+												onclick={async (clickEvent) => {
+													(clickEvent.target as HTMLButtonElement).disabled =
+														true;
+													await sendRequestDenial({
 														event: event.event,
 														teamId: team?.id ?? '',
 														userEmail: request.email,
@@ -611,6 +600,8 @@
 														.catch((error) => {
 															toast.error(`Failed to deny request: ${error}`);
 														});
+													(clickEvent.target as HTMLButtonElement).disabled =
+														false;
 												}}
 											>
 												<Minus />

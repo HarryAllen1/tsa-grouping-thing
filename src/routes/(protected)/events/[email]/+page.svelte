@@ -6,8 +6,8 @@
 	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
-	import { doc, setDoc, Timestamp } from 'firebase/firestore';
 	import Lock from '@lucide/svelte/icons/lock';
+	import { doc, Timestamp, updateDoc } from 'firebase/firestore';
 	import { derived as derivedStore } from 'svelte/store';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
 
@@ -55,19 +55,13 @@
 					id={event.event}
 					class="flex size-6 items-center justify-center [&_svg]:size-6"
 					onCheckedChange={async () => {
-						await setDoc(
-							doc(db, 'users', $user?.email ?? ''),
-							{
-								events: eventMap[event.event]
-									? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
-									: [...($userDoc?.events ?? []), event.event],
-								lastUpdated: new Timestamp(Date.now() / 1000, 0),
-								lastUpdatedBy: $actualUser?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
+						await updateDoc(doc(db, 'users', $user?.email ?? ''), {
+							events: eventMap[event.event]
+								? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
+								: [...($userDoc?.events ?? []), event.event],
+							lastUpdated: new Timestamp(Date.now() / 1000, 0),
+							lastUpdatedBy: $actualUser?.email ?? '',
+						});
 					}}
 				/>
 				<Label

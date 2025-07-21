@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { sleep } from '$lib/better-utils';
+	import Combobox from '$lib/Combobox.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
@@ -8,16 +10,14 @@
 	import { db } from '$lib/firebase';
 	import { allUsersCollection, user } from '$lib/stores';
 	import type { BasicUser, EventDoc } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
-	import { deleteObject } from 'firebase/storage';
 	import Minus from '@lucide/svelte/icons/minus';
-	import Combobox from '$lib/Combobox.svelte';
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import X from '@lucide/svelte/icons/x';
+	import { doc, updateDoc } from 'firebase/firestore';
+	import { deleteObject } from 'firebase/storage';
 	import { type Snippet } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
-	import { sleep } from '$lib/better-utils';
 
 	let {
 		event,
@@ -269,30 +269,24 @@
 			{#if editing}
 				<Button
 					onclick={async () => {
-						await setDoc(
-							doc(db, 'events', event.event),
-							{
-								results: event.results?.map((r) =>
-									r.id === id
-										? {
-												place: newPlace,
-												members: newMembers.map((m) => ({
-													name: m.name,
-													email: m.email.includes('/')
-														? m.email.split('/')[0]
-														: m.email,
-												})),
-												note,
-												id,
-											}
-										: r,
-								),
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
+						await updateDoc(doc(db, 'events', event.event), {
+							results: event.results?.map((r) =>
+								r.id === id
+									? {
+											place: newPlace,
+											members: newMembers.map((m) => ({
+												name: m.name,
+												email: m.email.includes('/')
+													? m.email.split('/')[0]
+													: m.email,
+											})),
+											note,
+											id,
+										}
+									: r,
+							),
+							lastUpdatedBy: $user?.email ?? '',
+						});
 						id = crypto.randomUUID();
 						note = '';
 						onOpenChange?.(false);
@@ -319,16 +313,10 @@
 							},
 							...(event.results?.slice(newPlace - 1) ?? []),
 						];
-						await setDoc(
-							doc(db, 'events', event.event),
-							{
-								results: event.results,
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
+						await updateDoc(doc(db, 'events', event.event), {
+							results: event.results,
+							lastUpdatedBy: $user?.email ?? '',
+						});
 
 						newMembers = [];
 						newPlace++;

@@ -22,14 +22,6 @@
 	import { md } from '$lib/md';
 	import { allUsersCollection, user, userDoc } from '$lib/stores';
 	import type { EventDoc, Team } from '$lib/types';
-	import confetti from 'canvas-confetti';
-	import { Timestamp, doc, setDoc } from 'firebase/firestore';
-	import {
-		deleteObject,
-		ref,
-		uploadBytes,
-		type FullMetadata,
-	} from 'firebase/storage';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import Crown from '@lucide/svelte/icons/crown';
 	import FileUp from '@lucide/svelte/icons/file-up';
@@ -41,6 +33,14 @@
 	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import UserPlus from '@lucide/svelte/icons/user-plus';
 	import X from '@lucide/svelte/icons/x';
+	import confetti from 'canvas-confetti';
+	import { Timestamp, doc, updateDoc } from 'firebase/firestore';
+	import {
+		deleteObject,
+		ref,
+		uploadBytes,
+		type FullMetadata,
+	} from 'firebase/storage';
 	import { toast } from 'svelte-sonner';
 	import { flip } from 'svelte/animate';
 	import { DownloadURL, StorageList, UploadTask } from 'sveltefire';
@@ -208,23 +208,17 @@
 								onclick={async () => {
 									const el = document.querySelector('#teamNumber');
 									if (el instanceof HTMLInputElement) {
-										await setDoc(
-											doc(db, 'events', event.event ?? ''),
-											{
-												teams: event.teams.map((t) =>
-													t.id === team.id
-														? {
-																...t,
-																teamNumber: el.valueAsNumber,
-															}
-														: t,
-												),
-												lastUpdatedBy: $user?.email ?? '',
-											},
-											{
-												merge: true,
-											},
-										);
+										await updateDoc(doc(db, 'events', event.event ?? ''), {
+											teams: event.teams.map((t) =>
+												t.id === team.id
+													? {
+															...t,
+															teamNumber: el.valueAsNumber,
+														}
+													: t,
+											),
+											lastUpdatedBy: $user?.email ?? '',
+										});
 										teamDialogOpen = false;
 									}
 								}}
@@ -250,16 +244,10 @@
 					)
 						return;
 					event.teams = event.teams.filter((t) => t !== team);
-					await setDoc(
-						doc(db, 'events', event.event ?? ''),
-						{
-							teams: event.teams,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{
-							merge: true,
-						},
-					);
+					await updateDoc(doc(db, 'events', event.event ?? ''), {
+						teams: event.teams,
+						lastUpdatedBy: $user?.email ?? '',
+					});
 				}}
 			>
 				<Trash2 />
@@ -316,16 +304,10 @@
 												0,
 											);
 
-											await setDoc(
-												doc(db, 'events', event.event ?? ''),
-												{
-													teams: event.teams,
-													lastUpdatedBy: $user?.email ?? '',
-												},
-												{
-													merge: true,
-												},
-											);
+											await updateDoc(doc(db, 'events', event.event ?? ''), {
+												teams: event.teams,
+												lastUpdatedBy: $user?.email ?? '',
+											});
 											confetti();
 
 											navigator.vibrate(100);
@@ -352,7 +334,7 @@
 				>
 					<Mail />
 				</Button>
-				{#if event.event !== '*Rooming'}
+				{#if event.event !== '*Rooming' && event.maxTeamSize > 1}
 					<Dialog.Root>
 						<Dialog.Trigger>
 							{#snippet child({ props })}
@@ -366,16 +348,10 @@
 									team.teamCaptain = '';
 									team.lastUpdatedBy = $user?.email ?? '';
 									team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-									await setDoc(
-										doc(db, 'events', event.event ?? ''),
-										{
-											teams: event.teams,
-											lastUpdatedBy: $user?.email ?? '',
-										},
-										{
-											merge: true,
-										},
-									);
+									await updateDoc(doc(db, 'events', event.event ?? ''), {
+										teams: event.teams,
+										lastUpdatedBy: $user?.email ?? '',
+									});
 								}}
 							>
 								Clear
@@ -391,16 +367,10 @@
 													Date.now() / 1000,
 													0,
 												);
-												await setDoc(
-													doc(db, 'events', event.event ?? ''),
-													{
-														teams: event.teams,
-														lastUpdatedBy: $user?.email ?? '',
-													},
-													{
-														merge: true,
-													},
-												);
+												await updateDoc(doc(db, 'events', event.event ?? ''), {
+													teams: event.teams,
+													lastUpdatedBy: $user?.email ?? '',
+												});
 											}}
 										>
 											{teamMember.name}
@@ -428,16 +398,10 @@
 							team.locked = checked;
 							team.lastUpdatedBy = $user?.email ?? '';
 							team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-							await setDoc(
-								doc(db, 'events', event.event ?? ''),
-								{
-									teams: event.teams,
-									lastUpdatedBy: $user?.email ?? '',
-								},
-								{
-									merge: true,
-								},
-							);
+							await updateDoc(doc(db, 'events', event.event ?? ''), {
+								teams: event.teams,
+								lastUpdatedBy: $user?.email ?? '',
+							});
 						}}
 						checked={team.locked ?? false}
 					/>
@@ -451,16 +415,10 @@
 							team.random = checked;
 							team.lastUpdatedBy = $user?.email ?? '';
 							team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-							await setDoc(
-								doc(db, 'events', event.event ?? ''),
-								{
-									teams: event.teams,
-									lastUpdatedBy: $user?.email ?? '',
-								},
-								{
-									merge: true,
-								},
-							);
+							await updateDoc(doc(db, 'events', event.event ?? ''), {
+								teams: event.teams,
+								lastUpdatedBy: $user?.email ?? '',
+							});
 						}}
 						checked={team.random ?? false}
 					/>
@@ -664,16 +622,10 @@
 											(r) =>
 												r.email !== request.email && r.name !== request.name,
 										);
-										await setDoc(
-											doc(db, 'events', event.event ?? ''),
-											{
-												teams: event.teams,
-												lastUpdatedBy: $user?.email ?? '',
-											},
-											{
-												merge: true,
-											},
-										);
+										await updateDoc(doc(db, 'events', event.event ?? ''), {
+											teams: event.teams,
+											lastUpdatedBy: $user?.email ?? '',
+										});
 										confetti();
 
 										navigator.vibrate(100);
@@ -695,16 +647,10 @@
 										);
 										team.lastUpdatedBy = $user?.email ?? '';
 										team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-										await setDoc(
-											doc(db, 'events', event.event ?? ''),
-											{
-												teams: event.teams,
-												lastUpdatedBy: $user?.email ?? '',
-											},
-											{
-												merge: true,
-											},
-										);
+										await updateDoc(doc(db, 'events', event.event ?? ''), {
+											teams: event.teams,
+											lastUpdatedBy: $user?.email ?? '',
+										});
 									}}
 								>
 									<Minus />
@@ -759,14 +705,11 @@
 														Date.now() / 1000,
 														0,
 													);
-													await setDoc(
+													await updateDoc(
 														doc(db, 'events', event.event ?? ''),
 														{
 															teams: event.teams,
 															lastUpdatedBy: $user?.email ?? '',
-														},
-														{
-															merge: true,
 														},
 													);
 
@@ -964,16 +907,10 @@
 								1,
 							);
 							team.lastUpdatedBy = $user?.email ?? '';
-							await setDoc(
-								doc(db, 'events', event.event ?? ''),
-								{
-									teams: event.teams,
-									lastUpdatedBy: $user?.email ?? '',
-								},
-								{
-									merge: true,
-								},
-							);
+							await updateDoc(doc(db, 'events', event.event ?? ''), {
+								teams: event.teams,
+								lastUpdatedBy: $user?.email ?? '',
+							});
 						}}
 					>
 						<Minus />

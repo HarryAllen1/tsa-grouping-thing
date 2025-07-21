@@ -220,7 +220,8 @@
 								<li class="flex flex-row">
 									{r.name}
 									<Button
-										onclick={async () => {
+										onclick={async (clickEvent) => {
+											(clickEvent.target as HTMLButtonElement).disabled = true;
 											const actualEvent = signedUpEvents.find(
 												(e) => e.event === request.event,
 											);
@@ -228,7 +229,7 @@
 											const event = actualEvent.teams;
 											if (!event) return;
 
-											sendRequestApproval({
+											await sendRequestApproval({
 												event: request.event,
 												teamId: request.team?.id ?? '',
 												userEmail: r.email,
@@ -243,6 +244,7 @@
 												.catch((error) => {
 													toast.error(`Failed to approve request: ${error}`);
 												});
+											(clickEvent.target as HTMLButtonElement).disabled = false;
 										}}
 										size="icon"
 										class="h-5"
@@ -254,8 +256,9 @@
 										size="icon"
 										class="h-5"
 										variant="ghost"
-										onclick={async () => {
-											sendRequestDenial({
+										onclick={async (clickEvent) => {
+											(clickEvent.target as HTMLButtonElement).disabled = true;
+											await sendRequestDenial({
 												event: request.event,
 												teamId: request.team?.id ?? '',
 												userEmail: r.email,
@@ -268,6 +271,7 @@
 												.catch((error) => {
 													toast.error(`Failed to deny request: ${error}`);
 												});
+											(clickEvent.target as HTMLButtonElement).disabled = false;
 										}}
 									>
 										<Minus />

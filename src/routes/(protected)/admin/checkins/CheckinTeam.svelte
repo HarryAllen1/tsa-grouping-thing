@@ -7,7 +7,7 @@
 	import { db } from '$lib/firebase';
 	import { user } from '$lib/stores';
 	import type { EventDoc, Team } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
+	import { doc, updateDoc } from 'firebase/firestore';
 	import { hideEmpty } from './state';
 
 	let {
@@ -65,16 +65,10 @@
 					onValueChange={async (value) => {
 						team.checkInComplete = value === 'Yes';
 
-						await setDoc(
-							doc(db, 'events', event.event ?? ''),
-							{
-								teams: event.teams,
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
+						await updateDoc(doc(db, 'events', event.event ?? ''), {
+							teams: event.teams,
+							lastUpdatedBy: $user?.email ?? '',
+						});
 					}}
 				>
 					<Select.Trigger>
@@ -106,16 +100,10 @@
 					onValueChange={async (value) => {
 						team.preparationLevel = value;
 
-						await setDoc(
-							doc(db, 'events', event.event ?? ''),
-							{
-								teams: event.teams,
-								lastUpdatedBy: $user?.email ?? '',
-							},
-							{
-								merge: true,
-							},
-						);
+						await updateDoc(doc(db, 'events', event.event ?? ''), {
+							teams: event.teams,
+							lastUpdatedBy: $user?.email ?? '',
+						});
 					}}
 				>
 					<Select.Trigger>
@@ -153,16 +141,10 @@
 				onclick={async () => {
 					team.preparationLevelDescription = preparationLevelDescription;
 
-					await setDoc(
-						doc(db, 'events', event.event ?? ''),
-						{
-							teams: event.teams,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{
-							merge: true,
-						},
-					);
+					await updateDoc(doc(db, 'events', event.event ?? ''), {
+						teams: event.teams,
+						lastUpdatedBy: $user?.email ?? '',
+					});
 				}}
 			>
 				Save

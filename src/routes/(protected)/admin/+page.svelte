@@ -14,15 +14,16 @@
 	import { auth, db } from '$lib/firebase';
 	import { allUsersCollection, eventsCollection } from '$lib/stores';
 	import type { EventData, EventDoc } from '$lib/types';
+	import Filter from '@lucide/svelte/icons/filter';
 	import {
 		collection,
 		deleteField,
 		doc,
 		getDocs,
 		setDoc,
+		updateDoc,
 	} from 'firebase/firestore';
 	import Fuse from 'fuse.js';
-	import Filter from '@lucide/svelte/icons/filter';
 	import { userStore } from 'sveltefire';
 	import { downloadAsJSON } from '../../download';
 	import Alert from './Alert.svelte';
@@ -235,16 +236,10 @@
 		<Button
 			onclick={() => {
 				for (const event of eventData) {
-					setDoc(
-						doc(db, 'events', event.event ?? ''),
-						{
-							teamCreationLocked: true,
-							lastUpdatedBy: $user?.email ?? '',
-						} satisfies Partial<EventDoc>,
-						{
-							merge: true,
-						},
-					);
+					updateDoc(doc(db, 'events', event.event ?? ''), {
+						teamCreationLocked: true,
+						lastUpdatedBy: $user?.email ?? '',
+					} satisfies Partial<EventDoc>);
 				}
 			}}
 		>
@@ -253,16 +248,10 @@
 		<Button
 			onclick={() => {
 				for (const event of eventData) {
-					setDoc(
-						doc(db, 'events', event.event ?? ''),
-						{
-							locked: true,
-							lastUpdatedBy: $user?.email ?? '',
-						} satisfies Partial<EventDoc>,
-						{
-							merge: true,
-						},
-					);
+					updateDoc(doc(db, 'events', event.event ?? ''), {
+						locked: true,
+						lastUpdatedBy: $user?.email ?? '',
+					} satisfies Partial<EventDoc>);
 				}
 			}}
 		>
@@ -306,24 +295,19 @@
 				for (const event of (await getDocs(collection(db, 'events'))).docs) {
 					const data = event.data();
 					if (data.event === '*Rooming') {
-						await setDoc(event.ref, {
-							...data,
+						await updateDoc(event.ref, {
 							allowGenderMixing: false,
 							hideInSignup: true,
 							showToEveryone: false,
-							locked: false,
 						});
 					}
 					if (data.event === '*Cardboard Boat') {
-						await setDoc(event.ref, {
-							...data,
+						await updateDoc(event.ref, {
 							showToEveryone: false,
 							hideInSignup: true,
-							locked: false,
 						});
 					}
-					await setDoc(event.ref, {
-						...data,
+					await updateDoc(event.ref, {
 						locked: deleteField(),
 						teams: [],
 						results: [],
@@ -333,15 +317,11 @@
 					});
 				}
 
-				await setDoc(
-					doc(db, 'settings', 'settings'),
-					{
-						enableOnlineSubmissions: false,
-						lastUpdatedBy: $user?.email ?? '',
-						alert: '',
-					},
-					{ merge: true },
-				);
+				await updateDoc(doc(db, 'settings', 'settings'), {
+					enableOnlineSubmissions: false,
+					lastUpdatedBy: $user?.email ?? '',
+					alert: '',
+				});
 			}}
 		>
 			Reset teams

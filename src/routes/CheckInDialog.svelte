@@ -7,7 +7,7 @@
 	import { db } from '$lib/firebase';
 	import { user, userDoc } from '$lib/stores';
 	import type { EventDoc, Team } from '$lib/types';
-	import { doc, setDoc, Timestamp } from 'firebase/firestore';
+	import { doc, Timestamp, updateDoc } from 'firebase/firestore';
 
 	let {
 		team,
@@ -53,16 +53,10 @@
 			team.lastUpdatedBy = $user?.email ?? '';
 			team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
 			team.preparationLevelDescription = preparationLevelDescription;
-			await setDoc(
-				doc(db, 'events', event.event ?? ''),
-				{
-					teams: event.teams,
-					lastUpdatedBy: $user?.email ?? '',
-				},
-				{
-					merge: true,
-				},
-			);
+			await updateDoc(doc(db, 'events', event.event ?? ''), {
+				teams: event.teams,
+				lastUpdatedBy: $user?.email ?? '',
+			});
 		}
 	}}
 >
@@ -94,16 +88,10 @@
 				team.lastUpdatedBy = $user?.email ?? '';
 				team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
 
-				await setDoc(
-					doc(db, 'events', event.event ?? ''),
-					{
-						teams: event.teams,
-						lastUpdatedBy: $user?.email ?? '',
-					},
-					{
-						merge: true,
-					},
-				);
+				await updateDoc(doc(db, 'events', event.event ?? ''), {
+					teams: event.teams,
+					lastUpdatedBy: $user?.email ?? '',
+				});
 			}}
 		>
 			<Select.Trigger>
@@ -151,16 +139,10 @@
 					team.lastUpdatedBy = $user?.email ?? '';
 					team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
 					team.preparationLevelDescription = preparationLevelDescription;
-					await setDoc(
-						doc(db, 'events', event.event ?? ''),
-						{
-							teams: event.teams,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{
-							merge: true,
-						},
-					);
+					await updateDoc(doc(db, 'events', event.event ?? ''), {
+						teams: event.teams,
+						lastUpdatedBy: $user?.email ?? '',
+					});
 					checkInDialogOpen = false;
 				}}
 			>
@@ -184,16 +166,10 @@
 						name: $userDoc.name ?? '',
 					};
 
-					await setDoc(
-						doc(db, 'events', event.event ?? ''),
-						{
-							teams: event.teams,
-							lastUpdatedBy: $user?.email ?? '',
-						},
-						{
-							merge: true,
-						},
-					);
+					await updateDoc(doc(db, 'events', event.event ?? ''), {
+						teams: event.teams,
+						lastUpdatedBy: $user?.email ?? '',
+					});
 					checkInDialogOpen = false;
 				}}
 				disabled={!selectedPreparationLevel ||

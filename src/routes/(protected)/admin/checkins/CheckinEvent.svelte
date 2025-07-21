@@ -4,7 +4,7 @@
 	import { db } from '$lib/firebase';
 	import { user } from '$lib/stores';
 	import type { EventDoc } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
+	import { doc, updateDoc } from 'firebase/firestore';
 	import CheckinTeam from './CheckinTeam.svelte';
 
 	let {
@@ -28,16 +28,10 @@
 		<Switch
 			onCheckedChange={async (checked) => {
 				event.eventStatusCheckInEnabled = checked;
-				await setDoc(
-					doc(db, 'events', event.event ?? ''),
-					{
-						eventStatusCheckInEnabled: checked,
-						lastUpdatedBy: $user?.email ?? '',
-					},
-					{
-						merge: true,
-					},
-				);
+				await updateDoc(doc(db, 'events', event.event ?? ''), {
+					eventStatusCheckInEnabled: checked,
+					lastUpdatedBy: $user?.email ?? '',
+				});
 			}}
 			checked={event.eventStatusCheckInEnabled}
 		/>

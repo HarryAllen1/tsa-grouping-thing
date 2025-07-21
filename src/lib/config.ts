@@ -8,7 +8,7 @@ type Config = {
 };
 
 export const config = persisted<Config>('config', {
-	theme: 'zinc',
+	theme: 'default',
 	radius: 0.5,
 	background: null,
 });

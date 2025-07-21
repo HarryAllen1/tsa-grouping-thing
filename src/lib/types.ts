@@ -11,12 +11,18 @@ export interface EventDoc {
 	description?: string;
 	locked?: boolean;
 	onlineSubmissions?: boolean;
+	/**
+	 * locks team creation when full
+	 */
 	teamCreationLocked?: boolean;
 	results?: Result[];
 	submissionDescription?: string;
 	allowGenderMixing?: boolean;
 	showToEveryone?: boolean;
 	hideInSignup?: boolean;
+	/**
+	 * Locks ALL team creation
+	 */
 	teamCreationActuallyLocked?: boolean;
 	lastUpdatedBy?: string;
 	eventStatusCheckInEnabled?: boolean;
@@ -88,6 +94,7 @@ export interface UserDoc {
 	locked?: boolean;
 	eventsLocked?: boolean;
 	lockRooming?: boolean;
+	lastUpdatedBy?: string;
 }
 
 export interface MailDoc {

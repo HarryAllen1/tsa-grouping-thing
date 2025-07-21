@@ -1,8 +1,8 @@
 import { onCall } from 'firebase-functions/https';
 import { HttpsError } from 'firebase-functions/identity';
 import { db } from './firebase';
-import { EventDoc, UserDoc } from './types';
-import { userToName } from './utils';
+import { UserDoc } from './types';
+import { getEvent, getAuthUser, userToName } from './utils';
 
 export const sendRequest = onCall<
 	{ event: string; teamId: string },
@@ -14,34 +14,9 @@ export const sendRequest = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		if (!auth) {
-			throw new HttpsError(
-				'failed-precondition',
-				'The function must be called while authenticated.',
-			);
-		}
+		const user = await getAuthUser(auth);
 
-		const { email } = auth.token;
-
-		if (!email) {
-			throw new HttpsError('failed-precondition', 'Invalid or missing email.');
-		}
-
-		const user = (await db.collection('users').doc(email).get()).data() as
-			| UserDoc
-			| undefined;
-		if (!user) {
-			throw new HttpsError('not-found', 'User not found.');
-		}
-
-		const eventsCollection = db.collection('events');
-		const event = (await eventsCollection.doc(data.event).get()).data() as
-			| EventDoc
-			| undefined;
-
-		if (!event) {
-			throw new HttpsError('not-found', 'Event not found.');
-		}
+		const { event, eventRef } = await getEvent(data.event);
 
 		const team = event.teams.find((t) => t.id === data.teamId);
 		if (!team) {
@@ -50,12 +25,12 @@ export const sendRequest = onCall<
 
 		if (team.locked) {
 			throw new HttpsError('failed-precondition', 'Team is locked.');
-		} else if (team.members.some((m) => m.email === email)) {
+		} else if (team.members.some((m) => m.email === user.email)) {
 			throw new HttpsError(
 				'already-exists',
 				'You are already a member of this team.',
 			);
-		} else if (team.requests?.some((m) => m.email === email)) {
+		} else if (team.requests?.some((m) => m.email === user.email)) {
 			throw new HttpsError(
 				'already-exists',
 				'You have already requested to join this team.',
@@ -65,9 +40,9 @@ export const sendRequest = onCall<
 		}
 
 		team.requests ??= [];
-		team.requests.push({ name: userToName(user), email });
-		team.lastUpdatedBy = email;
-		await eventsCollection.doc(data.event).update({
+		team.requests.push({ name: userToName(user), email: user.email });
+		team.lastUpdatedBy = user.email;
+		eventRef.update({
 			teams: event.teams,
 		});
 
@@ -100,25 +75,8 @@ export const sendRequestApproval = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		if (!auth) {
-			throw new HttpsError(
-				'failed-precondition',
-				'The function must be called while authenticated.',
-			);
-		}
+		const user = await getAuthUser(auth);
 
-		const { email } = auth.token;
-
-		if (!email) {
-			throw new HttpsError('failed-precondition', 'Invalid or missing email.');
-		}
-
-		const user = (await db.collection('users').doc(email).get()).data() as
-			| UserDoc
-			| undefined;
-		if (!user) {
-			throw new HttpsError('not-found', 'User not found.');
-		}
 		const approvedUser = (
 			await db.collection('users').doc(data.userEmail).get()
 		).data() as UserDoc | undefined;
@@ -126,14 +84,7 @@ export const sendRequestApproval = onCall<
 			throw new HttpsError('not-found', 'Approved user not found.');
 		}
 
-		const eventsCollection = db.collection('events');
-		const event = (await eventsCollection.doc(data.event).get()).data() as
-			| EventDoc
-			| undefined;
-
-		if (!event) {
-			throw new HttpsError('not-found', 'Event not found.');
-		}
+		const { event, eventRef } = await getEvent(data.event);
 
 		const team = event.teams.find((t) => t.id === data.teamId);
 		if (!team) {
@@ -163,8 +114,8 @@ export const sendRequestApproval = onCall<
 			name: userToName(approvedUser),
 			email: data.userEmail,
 		});
-		team.lastUpdatedBy = email;
-		await eventsCollection.doc(data.event).update({
+		team.lastUpdatedBy = user.email;
+		eventRef.update({
 			teams: event.teams,
 		});
 
@@ -193,25 +144,7 @@ export const sendRequestDenial = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		if (!auth) {
-			throw new HttpsError(
-				'failed-precondition',
-				'The function must be called while authenticated.',
-			);
-		}
-
-		const { email } = auth.token;
-
-		if (!email) {
-			throw new HttpsError('failed-precondition', 'Invalid or missing email.');
-		}
-
-		const user = (await db.collection('users').doc(email).get()).data() as
-			| UserDoc
-			| undefined;
-		if (!user) {
-			throw new HttpsError('not-found', 'User not found.');
-		}
+		const user = await getAuthUser(auth);
 
 		const deniedUser = (
 			await db.collection('users').doc(data.userEmail).get()
@@ -220,14 +153,7 @@ export const sendRequestDenial = onCall<
 			throw new HttpsError('not-found', 'Denied user not found.');
 		}
 
-		const eventsCollection = db.collection('events');
-		const event = (await eventsCollection.doc(data.event).get()).data() as
-			| EventDoc
-			| undefined;
-
-		if (!event) {
-			throw new HttpsError('not-found', 'Event not found.');
-		}
+		const { event, eventRef } = await getEvent(data.event);
 
 		const team = event.teams.find((t) => t.id === data.teamId);
 		if (!team) {
@@ -249,8 +175,8 @@ export const sendRequestDenial = onCall<
 		}
 		team.requests ??= [];
 		team.requests = team.requests.filter((m) => m.email !== data.userEmail);
-		team.lastUpdatedBy = email;
-		await eventsCollection.doc(data.event).update({
+		team.lastUpdatedBy = user.email;
+		eventRef.update({
 			teams: event.teams,
 		});
 

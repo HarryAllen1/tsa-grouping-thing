@@ -5,8 +5,8 @@
 	import { Label } from '$lib/components/ui/label';
 	import { db } from '$lib/firebase';
 	import type { EventDoc } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
 	import Pencil from '@lucide/svelte/icons/pencil';
+	import { doc, updateDoc } from 'firebase/firestore';
 
 	let { teamId, event }: { teamId: string; event: EventDoc } = $props();
 
@@ -35,13 +35,9 @@
 					const team = event.teams.find((team) => team.id === teamId);
 					if (!team) return;
 					team.teamName = teamName;
-					await setDoc(
-						doc(db, `events/${event.event}`),
-						{
-							teams: event.teams,
-						},
-						{ merge: true },
-					);
+					await updateDoc(doc(db, `events/${event.event}`), {
+						teams: event.teams,
+					});
 					open = false;
 				}}>Save</Button
 			>

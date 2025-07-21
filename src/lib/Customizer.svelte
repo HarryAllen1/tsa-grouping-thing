@@ -34,7 +34,7 @@
 	</Button>
 </div>
 <div class="flex flex-1 flex-col space-y-4 md:space-y-6">
-	<div class="5 space-y-1">
+	<div class="mt-2 space-y-1">
 		<Label class="text-xs">Color</Label>
 		<div class="grid grid-cols-3 gap-2">
 			{#each themes as theme (theme.name)}

@@ -8,7 +8,7 @@
 	import { db } from '$lib/firebase';
 	import { tShirtMap } from '$lib/t-shirt';
 	import CircleHelpIcon from '@lucide/svelte/icons/circle-help';
-	import { doc, getDoc, setDoc } from 'firebase/firestore';
+	import { doc, getDoc, updateDoc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
@@ -90,22 +90,16 @@
 		onsubmit={async (e) => {
 			e.preventDefault();
 
-			await setDoc(
-				doc(db, 'users', email ?? ''),
-				{
-					// non-undefined values
-					...Object.fromEntries(
-						Object.keys(formData)
-							.filter((v) => (formData as Record<string, unknown>)[v])
-							.map((a) => [a, (formData as Record<string, unknown>)[a]]),
-					),
-					preferredFirstName: formData.preferredFirstName || null,
-					grade: Number.parseInt(formData.grade!),
-				},
-				{
-					merge: true,
-				},
-			);
+			await updateDoc(doc(db, 'users', email ?? ''), {
+				// non-undefined values
+				...Object.fromEntries(
+					Object.keys(formData)
+						.filter((v) => (formData as Record<string, unknown>)[v])
+						.map((a) => [a, (formData as Record<string, unknown>)[a]]),
+				),
+				preferredFirstName: formData.preferredFirstName || null,
+				grade: Number.parseInt(formData.grade!),
+			});
 			toast.success('Saved.');
 			history.back();
 		}}

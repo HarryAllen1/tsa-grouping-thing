@@ -11,12 +11,12 @@
 	import { db } from '$lib/firebase';
 	import { eventsCollection, user as userStore } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
-	import { doc, setDoc } from 'firebase/firestore';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import CircleHelp from '@lucide/svelte/icons/circle-help';
 	import Save from '@lucide/svelte/icons/save';
 	import ToggleRight from '@lucide/svelte/icons/toggle-right';
 	import UserCog from '@lucide/svelte/icons/user-cog';
+	import { doc, updateDoc } from 'firebase/firestore';
 
 	let { user, show = true }: { user: UserDoc; show?: boolean } = $props();
 
@@ -64,11 +64,10 @@
 						user.admin = false;
 						return;
 					}
-					await setDoc(
-						doc(db, 'users', user.email),
-						{ admin: e, lastUpdatedBy: $userStore?.email ?? '' },
-						{ merge: true },
-					);
+					await updateDoc(doc(db, 'users', user.email), {
+						admin: e,
+						lastUpdatedBy: $userStore?.email ?? '',
+					});
 				}}
 			/>
 			<Label for="{hash}admin">Admin</Label>
@@ -78,11 +77,10 @@
 				id="{hash}completedIntakeForm"
 				checked={user.completedIntakeForm}
 				onCheckedChange={async (e) => {
-					await setDoc(
-						doc(db, 'users', user.email),
-						{ completedIntakeForm: e, lastUpdatedBy: $userStore?.email ?? '' },
-						{ merge: true },
-					);
+					await updateDoc(doc(db, 'users', user.email), {
+						completedIntakeForm: e,
+						lastUpdatedBy: $userStore?.email ?? '',
+					});
 				}}
 			/>
 			<Label
@@ -105,14 +103,10 @@
 				id="{hash}random"
 				checked={user.random ?? false}
 				onCheckedChange={async (e) => {
-					await setDoc(
-						doc(db, 'users', user.email),
-						{
-							random: e,
-							lastUpdatedBy: $userStore?.email ?? '',
-						},
-						{ merge: true },
-					);
+					await updateDoc(doc(db, 'users', user.email), {
+						random: e,
+						lastUpdatedBy: $userStore?.email ?? '',
+					});
 				}}
 			/>
 			<Label for="{hash}random">Random switch</Label>
@@ -122,14 +116,10 @@
 				id="{hash}room-lock"
 				checked={user.lockRooming ?? false}
 				onCheckedChange={async (e) => {
-					await setDoc(
-						doc(db, 'users', user.email),
-						{
-							lockRooming: e,
-							lastUpdatedBy: $userStore?.email ?? '',
-						},
-						{ merge: true },
-					);
+					await updateDoc(doc(db, 'users', user.email), {
+						lockRooming: e,
+						lastUpdatedBy: $userStore?.email ?? '',
+					});
 				}}
 			/>
 			<Label for="{hash}room-lock" class="flex flex-row items-center gap-2">
@@ -150,11 +140,10 @@
 				id="{hash}account-locked"
 				checked={user.locked}
 				onCheckedChange={async (e) => {
-					await setDoc(
-						doc(db, 'users', user.email),
-						{ locked: e, lastUpdatedBy: $userStore?.email ?? '' },
-						{ merge: true },
-					);
+					await updateDoc(doc(db, 'users', user.email), {
+						locked: e,
+						lastUpdatedBy: $userStore?.email ?? '',
+					});
 				}}
 			/>
 			<Label
@@ -179,11 +168,10 @@
 				id="{hash}account-locked"
 				checked={user.eventsLocked}
 				onCheckedChange={async (e) => {
-					await setDoc(
-						doc(db, 'users', user.email),
-						{ eventsLocked: e, lastUpdatedBy: $userStore?.email ?? '' },
-						{ merge: true },
-					);
+					await updateDoc(doc(db, 'users', user.email), {
+						eventsLocked: e,
+						lastUpdatedBy: $userStore?.email ?? '',
+					});
 				}}
 			/>
 			<Label for="{hash}events-locked" class="flex flex-row items-center gap-2">
@@ -214,16 +202,10 @@
 						user.nationalId?.toString()}
 					size="icon"
 					onclick={async () => {
-						await setDoc(
-							doc(db, 'users', user.email),
-							{
-								nationalId: Number.parseInt(
-									(values.nationalId ?? 0).toString(),
-								),
-								lastUpdatedBy: $userStore?.email ?? '',
-							},
-							{ merge: true },
-						);
+						await updateDoc(doc(db, 'users', user.email), {
+							nationalId: Number.parseInt((values.nationalId ?? 0).toString()),
+							lastUpdatedBy: $userStore?.email ?? '',
+						});
 					}}
 				>
 					<Save />
@@ -244,14 +226,10 @@
 						user.washingtonId?.toString()}
 					size="icon"
 					onclick={async () => {
-						await setDoc(
-							doc(db, 'users', user.email),
-							{
-								washingtonId: (values.washingtonId ?? 0).toString(),
-								lastUpdatedBy: $userStore?.email ?? '',
-							},
-							{ merge: true },
-						);
+						await updateDoc(doc(db, 'users', user.email), {
+							washingtonId: (values.washingtonId ?? 0).toString(),
+							lastUpdatedBy: $userStore?.email ?? '',
+						});
 					}}
 				>
 					<Save />

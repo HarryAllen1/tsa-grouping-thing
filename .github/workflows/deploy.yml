@@ -3,13 +3,9 @@ on:
   push:
     branches:
       - main
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      GOOGLE_APPLICATION_CREDENTIALS: firebase-service-account.json
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,16 +28,7 @@ jobs:
       - name: Install Functions dependencies
         run: cd functions && pnpm install && cd ..
 
-      - name: Add Firebase service account
-        env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" | base64 --decode > firebase-service-account.json
-
-      - name: Install Firebase CLI
-        run: pnpm install -g firebase-tools
       - name: Deploy to Firebase
-        run: firebase deploy --project tsa-grouping-thing
-      - name: Remove credentials file
-        if: success() || failure()
-        run: |
-          rm firebase-service-account.json
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: pnpm dlx firebase-tools deploy --project tsa-grouping-thing --token "${{ secrets.FIREBASE_TOKEN }}"

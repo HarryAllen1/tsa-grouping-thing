@@ -3,7 +3,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { db } from '$lib/firebase';
-	import { doc, getDoc, setDoc } from 'firebase/firestore';
+	import { doc, getDoc, updateDoc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 
 	let open = $state(false);
@@ -56,11 +56,7 @@
 			<Button
 				class="mt-2"
 				onclick={async () => {
-					await setDoc(
-						doc(db, 'settings', 'settings'),
-						{ alert },
-						{ merge: true },
-					);
+					await updateDoc(doc(db, 'settings', 'settings'), { alert });
 					open = false;
 				}}
 			>

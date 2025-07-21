@@ -50,7 +50,6 @@
 					}
 
 					if (user.user) {
-						console.log(user);
 						$microsoftAccessToken = (
 							user as unknown as {
 								_tokenResponse: { oauthAccessToken: string };

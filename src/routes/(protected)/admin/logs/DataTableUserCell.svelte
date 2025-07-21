@@ -12,7 +12,6 @@
 <button
 	class="cursor-pointer font-medium underline underline-offset-4"
 	onclick={() => {
-		console.log(user);
 		openUserDialog(user);
 	}}
 >
