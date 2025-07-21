@@ -6,7 +6,10 @@ service cloud.firestore {
       allow read: if request.auth != null;
       allow write: if
         request.auth != null &&
-        get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
+        (
+          user == request.auth.token.email ||
+          get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
+        )
       allow delete: if get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
     }
     match /events/{event} {
@@ -26,8 +29,7 @@ service cloud.firestore {
         get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
     }
     match /{document=**} {
-      allow write: if request.auth != null;
-      allow read: if true;
+      allow read, write: if request.auth != null;
     }
   }
 }
