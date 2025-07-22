@@ -2,11 +2,10 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import { db } from '$lib/firebase';
+	import { createTeam } from '$lib/functions';
 	import { allUsersCollection, user, userDoc } from '$lib/stores';
 	import type { EventData, EventDoc, Team } from '$lib/types';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
-	import { doc, updateDoc } from 'firebase/firestore';
 	import TeamCard from './TeamCard.svelte';
 
 	let { event, eventData }: { event: EventDoc; eventData: EventData[] } =
@@ -111,27 +110,14 @@
 						),
 					) || event.teamCreationActuallyLocked
 				)}
-				onclick={async () => {
-					let lowestNotTaken = 1;
-					while (event.teams.some((t) => t.teamNumber === lowestNotTaken)) {
-						lowestNotTaken++;
-					}
+				onclick={async (mouseEvent) => {
+					(mouseEvent.target as HTMLButtonElement).disabled = true;
 
-					event.teams.push({
-						members: [
-							{
-								name: $userDoc?.name ?? '',
-								email: $user?.email ?? '',
-							},
-						],
-						lastUpdatedBy: $user?.email ?? '',
-						id: crypto.randomUUID(),
-						teamNumber: lowestNotTaken,
+					await createTeam({
+						event: event.event,
 					});
-					await updateDoc(doc(db, 'events', event.event ?? ''), {
-						teams: event.teams,
-						lastUpdatedBy: $user?.email ?? '',
-					});
+
+					(mouseEvent.target as HTMLButtonElement).disabled = false;
 				}}
 			>
 				Create {event.event === '*Rooming' ? 'Room' : 'Team'}

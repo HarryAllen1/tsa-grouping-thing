@@ -47,25 +47,12 @@ export interface Team {
 	id: ReturnType<typeof crypto.randomUUID>;
 	cardboardBoatOnlyPeopleInBoat?: BasicUser[];
 	teamName?: string;
-	messages?: Message[];
 	checkInComplete?: boolean;
 	preparationLevel?: string;
 	preparationLevelDescription?: string;
 	checkInSubmittedTime?: Timestamp;
 	checkInSubmittedBy?: BasicUser;
 	random?: boolean;
-}
-
-export interface SimpleMessage {
-	content: string;
-	time: Timestamp;
-	sender: BasicUser;
-}
-
-export interface Message extends SimpleMessage {
-	id: ReturnType<typeof crypto.randomUUID>;
-	reactions: (BasicUser & { reaction: string })[];
-	readBy: BasicUser[];
 }
 
 export interface BasicUser {
@@ -95,22 +82,6 @@ export interface UserDoc {
 	eventsLocked?: boolean;
 	lockRooming?: boolean;
 	lastUpdatedBy?: string;
-}
-
-export interface MailDoc {
-	to: string[];
-	message: {
-		subject: string;
-		html?: string;
-		text?: string;
-	};
-	delivery?: {
-		attempts: number;
-		endTime?: Timestamp;
-		error?: string;
-		// ...
-		state: string;
-	};
 }
 
 export interface SettingsDoc {

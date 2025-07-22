@@ -132,51 +132,68 @@
 				Close
 			</Button>
 			<div class="grow"></div>
-			<Button
-				variant="outline"
-				class="my-2 md:my-0"
-				onclick={async () => {
-					team.lastUpdatedBy = $user?.email ?? '';
-					team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-					team.preparationLevelDescription = preparationLevelDescription;
-					await updateDoc(doc(db, 'events', event.event ?? ''), {
-						teams: event.teams,
-						lastUpdatedBy: $user?.email ?? '',
-					});
-					checkInDialogOpen = false;
-				}}
-			>
-				Save for Later
-			</Button>
-			<Button
-				onclick={async () => {
-					if (
-						!team.preparationLevel ||
-						preparationLevelDescription.length === 0
-					) {
-						return alert('Please fill out all fields');
-					}
-					team.checkInComplete = true;
-					team.lastUpdatedBy = $user?.email ?? '';
-					team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-					team.preparationLevelDescription = preparationLevelDescription;
-					team.checkInSubmittedTime = new Timestamp(Date.now() / 1000, 0);
-					team.checkInSubmittedBy = {
-						email: $userDoc.email ?? '',
-						name: $userDoc.name ?? '',
-					};
+			{#if team.checkInComplete}
+				<Button
+					onclick={async () => {
+						team.lastUpdatedBy = $user?.email ?? '';
+						team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+						team.preparationLevelDescription = preparationLevelDescription;
+						await updateDoc(doc(db, 'events', event.event ?? ''), {
+							teams: event.teams,
+							lastUpdatedBy: $user?.email ?? '',
+						});
+						checkInDialogOpen = false;
+					}}
+				>
+					Save
+				</Button>
+			{:else}
+				<Button
+					variant="outline"
+					class="my-2 md:my-0"
+					onclick={async () => {
+						team.lastUpdatedBy = $user?.email ?? '';
+						team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+						team.preparationLevelDescription = preparationLevelDescription;
+						await updateDoc(doc(db, 'events', event.event ?? ''), {
+							teams: event.teams,
+							lastUpdatedBy: $user?.email ?? '',
+						});
+						checkInDialogOpen = false;
+					}}
+				>
+					Save for Later
+				</Button>
+				<Button
+					onclick={async () => {
+						if (
+							!team.preparationLevel ||
+							preparationLevelDescription.length === 0
+						) {
+							return alert('Please fill out all fields');
+						}
+						team.checkInComplete = true;
+						team.lastUpdatedBy = $user?.email ?? '';
+						team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+						team.preparationLevelDescription = preparationLevelDescription;
+						team.checkInSubmittedTime = new Timestamp(Date.now() / 1000, 0);
+						team.checkInSubmittedBy = {
+							email: $userDoc.email ?? '',
+							name: $userDoc.name ?? '',
+						};
 
-					await updateDoc(doc(db, 'events', event.event ?? ''), {
-						teams: event.teams,
-						lastUpdatedBy: $user?.email ?? '',
-					});
-					checkInDialogOpen = false;
-				}}
-				disabled={!selectedPreparationLevel ||
-					preparationLevelDescription.length === 0}
-			>
-				Mark as Complete
-			</Button>
+						await updateDoc(doc(db, 'events', event.event ?? ''), {
+							teams: event.teams,
+							lastUpdatedBy: $user?.email ?? '',
+						});
+						checkInDialogOpen = false;
+					}}
+					disabled={!selectedPreparationLevel ||
+						preparationLevelDescription.length === 0}
+				>
+					Mark as Complete
+				</Button>
+			{/if}
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

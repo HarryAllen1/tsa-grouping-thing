@@ -4,6 +4,8 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { db } from '$lib/firebase';
+	import { editCardboardBoatTeamName } from '$lib/functions';
+	import { userDoc } from '$lib/stores';
 	import type { EventDoc } from '$lib/types';
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import { doc, updateDoc } from 'firebase/firestore';
@@ -12,7 +14,7 @@
 
 	let open = $state(false);
 	let teamName = $state(
-		event.teams.find((team) => team.id === teamId)?.teamName,
+		event.teams.find((team) => team.id === teamId)?.teamName ?? '',
 	);
 </script>
 
@@ -31,13 +33,25 @@
 		<Dialog.Footer>
 			<Button variant="secondary" onclick={() => (open = false)}>Cancel</Button>
 			<Button
-				onclick={async () => {
-					const team = event.teams.find((team) => team.id === teamId);
-					if (!team) return;
-					team.teamName = teamName;
-					await updateDoc(doc(db, `events/${event.event}`), {
-						teams: event.teams,
-					});
+				onclick={async (mouseEvent) => {
+					if ($userDoc.admin) {
+						const team = event.teams.find((team) => team.id === teamId);
+						if (!team) return;
+						team.teamName = teamName;
+						await updateDoc(doc(db, `events/${event.event}`), {
+							teams: event.teams,
+						});
+					} else {
+						(mouseEvent.target as HTMLButtonElement).disabled = true;
+
+						await editCardboardBoatTeamName({
+							name: teamName,
+							teamId: teamId,
+						});
+
+						(mouseEvent.target as HTMLButtonElement).disabled = false;
+					}
+
 					open = false;
 				}}>Save</Button
 			>

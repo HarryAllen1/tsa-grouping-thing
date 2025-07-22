@@ -247,6 +247,31 @@ export const editCardboardBoatTeamName = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
+		const user = await getAuthUser(auth);
+		const { event, eventRef } = await getEvent('*Cardboard Boat');
+
+		const team = event.teams.find((team) =>
+			team.members.some((m) => m.email === user.email),
+		);
+
+		if (!team) {
+			throw new HttpsError('failed-precondition', 'Member is not in a team');
+		} else if (event.locked) {
+			throw new HttpsError('failed-precondition', 'Event is locked');
+		} else if (team.locked) {
+			throw new HttpsError('failed-precondition', 'Team is locked');
+		} else if (team.teamName === data.name) {
+			return {
+				success: true,
+			};
+		}
+
+		team.teamName = data.name;
+
+		await eventRef.update({
+			teams: event.teams,
+		} satisfies Partial<EventDoc>);
+
 		return {
 			success: true,
 		};

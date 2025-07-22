@@ -181,10 +181,12 @@
 				You have incomplete check-ins
 			</Alert.Title>
 			<Alert.Description>
-				Check-ins are required for your progress for the January Qualifier and
-				the State Conference to be gauged. Please complete your check-ins for
-				the following events:
-				<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
+				<p class="leading-7 [&:not(:first-child)]:mt-6">
+					Check-ins are required for your progress for the January Qualifier and
+					the State Conference to be gauged. Please complete your check-ins for
+					the following events:
+				</p>
+				<ul class="my-2 ml-6 list-disc [&>li]:mt-2">
 					{#each eventsWithCheckIn as event}
 						<li>{event.event}</li>
 					{/each}
