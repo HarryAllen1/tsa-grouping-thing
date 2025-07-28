@@ -5,6 +5,8 @@ export {
 	becomeTeamCaptain,
 	createTeam,
 	editCardboardBoatTeamName,
+	joinEvent,
+	leaveEvent,
 	leaveTeam,
 } from './events';
 export {

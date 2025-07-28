@@ -14,13 +14,12 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import {
-		CHAPTER_ID,
 		POINT_OF_CONTACT_EMAIL,
 		POINT_OF_CONTACT_NAME,
 	} from '$lib/constants';
 	import { db, storage } from '$lib/firebase';
 	import { md } from '$lib/md';
-	import { allUsersCollection, user, userDoc } from '$lib/stores';
+	import { allUsersCollection, settings, user, userDoc } from '$lib/stores';
 	import type { EventDoc, Team } from '$lib/types';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import Crown from '@lucide/svelte/icons/crown';
@@ -176,7 +175,7 @@
 							u.email.toLowerCase() === team.members[0].email.toLowerCase(),
 					)?.washingtonId}
 				{:else}
-					Team {CHAPTER_ID}-{team.teamNumber}
+					Team {$settings?.chapterId}-{team.teamNumber}
 				{/if}
 			</span>
 			{#if event.event !== '*Cardboard Boat'}

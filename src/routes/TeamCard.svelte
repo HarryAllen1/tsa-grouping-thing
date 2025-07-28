@@ -2,6 +2,7 @@
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import SimpleTooltip from '$lib/SimpleTooltip.svelte';
 	import StorageMetadata from '$lib/StorageMetadata.svelte';
+	import { disableOnClick } from '$lib/better-utils';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -10,18 +11,20 @@
 	import { Progress } from '$lib/components/ui/progress';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import {
-		CHAPTER_ID,
 		POINT_OF_CONTACT_EMAIL,
 		POINT_OF_CONTACT_NAME,
 	} from '$lib/constants';
-	import { analytics, db } from '$lib/firebase';
+	import { analytics } from '$lib/firebase';
 	import {
+		addTeamMember,
+		becomeTeamCaptain,
+		leaveTeam,
 		sendRequest,
 		sendRequestApproval,
 		sendRequestDenial,
 	} from '$lib/functions';
 	import { md } from '$lib/md';
-	import { allUsersCollection, user, userDoc } from '$lib/stores';
+	import { allUsersCollection, settings, user, userDoc } from '$lib/stores';
 	import type { EventDoc, Team, UserDoc } from '$lib/types';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import Crown from '@lucide/svelte/icons/crown';
@@ -32,7 +35,6 @@
 	import X from '@lucide/svelte/icons/x';
 	import confetti from 'canvas-confetti';
 	import { logEvent } from 'firebase/analytics';
-	import { Timestamp, doc, updateDoc } from 'firebase/firestore';
 	import {
 		deleteObject,
 		getDownloadURL,
@@ -89,11 +91,16 @@
 						),
 					) &&
 					// didn't request to be part of another team
-					!event.teams.some((t) =>
-						t.requests?.find(
-							(e) => e.email.toLowerCase() === m.email.toLowerCase(),
+					!event.teams
+						.filter(
+							(team) =>
+								!team.members.some((member) => member.email === $userDoc.email),
+						)
+						.some((t) =>
+							t.requests?.find(
+								(e) => e.email.toLowerCase() === m.email.toLowerCase(),
+							),
 						),
-					),
 			)
 			.sort((a, b) => a.name.localeCompare(b.name))
 			.filter((user) => !user.lockRooming);
@@ -115,7 +122,7 @@
 				{:else if event.maxTeamSize === 1 && team.members.length === 1}
 					Individual Event
 				{:else}
-					Team {CHAPTER_ID}-{team.teamNumber}
+					Team {$settings?.chapterId}-{team.teamNumber}
 				{/if}
 			</span>
 			{#if event.event === '*Cardboard Boat' && !team.locked && !event.locked && team.members.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
@@ -132,20 +139,14 @@
 							<Tooltip.Trigger>
 								<Button
 									variant="destructive"
-									onclick={async () => {
-										team.members.splice(
-											team.members.findIndex(
-												(e) => e.email.toLowerCase() === ($user?.email ?? ''),
-											),
-											1,
-										);
-										team.lastUpdatedBy = $user?.email ?? '';
-										team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-										await updateDoc(doc(db, 'events', event.event ?? ''), {
-											teams: event.teams.filter((t) => t.members.length > 0),
-											lastUpdatedBy: $user?.email ?? '',
+									{@attach disableOnClick(async () => {
+										await leaveTeam({
+											event: event.event,
+											teamId: team.id,
+										}).catch((error) => {
+											toast.error(`Failed to leave team: ${error}`);
 										});
-									}}
+									})}
 								>
 									<LogOut />
 								</Button>
@@ -218,29 +219,39 @@
 											>
 												{person.name}
 												<Button
-													onclick={async () => {
+													{@attach disableOnClick(async () => {
 														if (team.members.length >= event.maxTeamSize) {
 															return alert('Your team is full');
 														}
-														team.members.push({
-															name: person.name,
-															email: person.email,
-														});
-														team.lastUpdatedBy = $user?.email ?? '';
-														team.lastUpdatedTime = new Timestamp(
-															Date.now() / 1000,
-															0,
-														);
-														await updateDoc(
-															doc(db, 'events', event.event ?? ''),
-															{
-																teams: event.teams,
-																lastUpdatedBy: $user?.email ?? '',
-															},
-														);
-														confetti();
-														navigator.vibrate(100);
-													}}
+
+														await (
+															team.requests?.some(
+																(r) => r.email === person.email,
+															)
+																? sendRequestApproval({
+																		event: event.event,
+																		teamId: team.id,
+																		userEmail: person.email,
+																	})
+																: addTeamMember({
+																		event: event.event,
+																		teamId: team.id,
+																		userEmail: person.email,
+																	})
+														)
+															.then(() => {
+																toast.success(
+																	`Added ${person.name} to the team successfully.`,
+																);
+																confetti();
+																navigator.vibrate(100);
+															})
+															.catch((error) => {
+																toast.error(
+																	`Failed to add ${person.name} to the team: ${error}`,
+																);
+															});
+													})}
 													variant="outline"
 													size="icon"
 													class="ml-2"
@@ -263,15 +274,14 @@
 					{#if event.event !== '*Rooming' && event.event !== '*Cardboard Boat' && event.maxTeamSize > 1}
 						<div class="flex w-full flex-row gap-2">
 							<Button
-								onclick={async () => {
-									team.teamCaptain = $user?.email ?? '';
-									team.lastUpdatedBy = $user?.email ?? '';
-									team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
-									await updateDoc(doc(db, 'events', event.event ?? ''), {
-										teams: event.teams,
-										lastUpdatedBy: $user?.email ?? '',
+								{@attach disableOnClick(async () => {
+									await becomeTeamCaptain({
+										event: event.event,
+										teamId: team.id,
+									}).catch((error) => {
+										toast.error(`Failed to become team captain: ${error}`);
 									});
-								}}
+								})}
 								disabled={team.teamCaptain === $user?.email}
 								class="w-fit"
 							>
@@ -445,19 +455,17 @@
 					<Button disabled>Requested</Button>
 				{:else}
 					<Button
-						onclick={async (clickEvent) => {
-							(clickEvent.target as HTMLButtonElement).disabled = true;
+						{@attach disableOnClick(async () => {
 							await sendRequest({
 								event: event.event,
 								teamId: team.id,
 							});
-							(clickEvent.target as HTMLButtonElement).disabled = false;
 							fancyConfirm(
 								'Request sent',
 								"A email has also been sent to the members of this team notifying them of your request. This email has a habit of going straight to people's junk folder, so you might have to notify them of this request manually.",
 								[['OK', true]],
 							);
-						}}
+						})}
 					>
 						Request to join
 					</Button>
@@ -552,7 +560,7 @@
 										<li class="flex flex-row">
 											{request.name}
 											<Button
-												onclick={async () => {
+												{@attach disableOnClick(async () => {
 													if (team.members.length >= event.maxTeamSize) {
 														return alert('Your team is full');
 													}
@@ -573,7 +581,7 @@
 																`Failed to approve request: ${error}`,
 															);
 														});
-												}}
+												})}
 												size="icon"
 												class="h-5"
 												variant="ghost"
@@ -584,9 +592,7 @@
 												size="icon"
 												class="h-5"
 												variant="ghost"
-												onclick={async (clickEvent) => {
-													(clickEvent.target as HTMLButtonElement).disabled =
-														true;
+												{@attach disableOnClick(async () => {
 													await sendRequestDenial({
 														event: event.event,
 														teamId: team?.id ?? '',
@@ -600,9 +606,7 @@
 														.catch((error) => {
 															toast.error(`Failed to deny request: ${error}`);
 														});
-													(clickEvent.target as HTMLButtonElement).disabled =
-														false;
-												}}
+												})}
 											>
 												<Minus />
 											</Button>

@@ -277,3 +277,52 @@ export const editCardboardBoatTeamName = onCall<
 		};
 	},
 );
+
+export const leaveEvent = onCall<
+	{
+		event: string;
+	},
+	Promise<{
+		success: boolean;
+	}>
+>(
+	{
+		region: 'us-west1',
+	},
+	async ({ auth, data }) => {
+		const user = await getAuthUser(auth);
+		const { event, eventRef } = await getEvent(data.event);
+
+		if (event.locked) {
+			throw new HttpsError('failed-precondition', 'Event is locked');
+		}
+
+		const team = event.teams.find((team) =>
+			team.members.some((m) => m.email === user.email),
+		);
+		if (team) {
+		}
+
+		return {
+			success: true,
+		};
+	},
+);
+
+export const joinEvent = onCall<
+	{
+		event: string;
+	},
+	Promise<{
+		success: boolean;
+	}>
+>(
+	{
+		region: 'us-west1',
+	},
+	async () => {
+		return {
+			success: true,
+		};
+	},
+);

@@ -1,14 +1,11 @@
 <script lang="ts">
 	import * as Alert from '$lib/components/ui/alert';
-	import { Checkbox } from '$lib/components/ui/checkbox';
-	import { Label } from '$lib/components/ui/label';
 	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
-	import Lock from '@lucide/svelte/icons/lock';
-	import { Timestamp, doc, updateDoc } from 'firebase/firestore';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
+	import EventLine from './EventLine.svelte';
 
 	const user = userStore(auth);
 
@@ -23,7 +20,7 @@
 					acc[curr.event] = $userDoc?.events.includes(curr.event) ?? false;
 					return acc;
 				},
-				{} as { [event: string]: boolean },
+				{} as Record<string, boolean>,
 			),
 	);
 </script>
@@ -111,96 +108,7 @@
 
 	<div class="mb-4 flex flex-col gap-2">
 		{#each $events.filter((e) => !e.hideInSignup) as event (event.event)}
-			{@const disabled =
-				$userDoc?.eventsLocked ||
-				event.locked ||
-				(!eventMap[event.event] &&
-					($userDoc?.events.length ?? 0) >= MAX_EVENTS) ||
-				(event.teamCreationLocked &&
-					event.maxTeamSize === 1 &&
-					event.teams.length >= event.perChapter) ||
-				(event.teamCreationLocked &&
-					event.teams.reduce((acc, curr) => acc + curr.members.length, 0) >=
-						event.perChapter * event.maxTeamSize)}
-			<div class="flex items-center space-x-2">
-				<Checkbox
-					checked={eventMap[event.event]}
-					{disabled}
-					id={event.event}
-					class="flex size-6 items-center justify-center [&_svg]:size-6"
-					onCheckedChange={async (state) => {
-						if (
-							event.locked ||
-							(!eventMap[event.event] &&
-								($userDoc?.events.length ?? 0) >= MAX_EVENTS)
-						)
-							return;
-
-						const membersTeam = event.teams.find((t) =>
-							t.members
-								.map((m) => m.email)
-								.includes($user?.email?.toLowerCase() ?? ''),
-						);
-						if (
-							event.maxTeamSize === 1 &&
-							((event.teamCreationLocked &&
-								event.teams.length < event.perChapter) ||
-								!event.teamCreationLocked)
-						) {
-							if (state && !membersTeam) {
-								let lowestNotTaken = 1;
-								while (
-									event.teams.some((t) => t.teamNumber === lowestNotTaken)
-								) {
-									lowestNotTaken++;
-								}
-
-								event.teams.push({
-									members: [
-										{
-											name: $userDoc?.name ?? '',
-											email: $user?.email ?? '',
-										},
-									],
-									lastUpdatedBy: $user?.email ?? '',
-									id: crypto.randomUUID(),
-									teamNumber: lowestNotTaken,
-								});
-							} else if (!state && membersTeam) {
-								membersTeam.members.splice(
-									membersTeam.members.findIndex(
-										(e) => e.email.toLowerCase() === ($user?.email ?? ''),
-									),
-									1,
-								);
-							}
-							await updateDoc(doc(db, 'events', event.event), {
-								teams: event.teams.filter((t) => t.members.length > 0),
-								lastUpdated: new Timestamp(Date.now() / 1000, 0),
-								lastUpdatedBy: $user?.email ?? '',
-							});
-						}
-						await updateDoc(doc(db, 'users', $user?.email ?? ''), {
-							events: eventMap[event.event]
-								? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
-								: [...($userDoc?.events ?? []), event.event],
-							lastUpdated: new Timestamp(Date.now() / 1000, 0),
-							lastUpdatedBy: $user?.email ?? '',
-						});
-					}}
-				/>
-				<Label
-					for={event.event}
-					class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {disabled
-						? 'opacity-50'
-						: ''} {event.locked ? 'line-through' : ''}"
-				>
-					<span class="ml-2">{event.event}</span>
-				</Label>
-				{#if event.locked}
-					<Lock />
-				{/if}
-			</div>
+			<EventLine {event} {eventMap} />
 		{/each}
 	</div>
 </div>

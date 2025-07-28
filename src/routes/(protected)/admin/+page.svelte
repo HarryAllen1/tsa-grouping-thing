@@ -10,9 +10,8 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Switch } from '$lib/components/ui/switch';
-	import { CHAPTER_ID } from '$lib/constants';
 	import { auth, db } from '$lib/firebase';
-	import { allUsersCollection, eventsCollection } from '$lib/stores';
+	import { allUsersCollection, eventsCollection, settings } from '$lib/stores';
 	import type { EventData, EventDoc } from '$lib/types';
 	import Filter from '@lucide/svelte/icons/filter';
 	import {
@@ -48,7 +47,9 @@
 						name: m.name,
 						email: m.email,
 					})),
-					teamNumbers: e.teams.map((t) => `${CHAPTER_ID}-${t.teamNumber}`),
+					teamNumbers: e.teams.map(
+						(t) => `${$settings?.chapterId}-${t.teamNumber}`,
+					),
 					waId: allMembers.map((m) => m.washingtonId).filter(Boolean),
 				};
 			})

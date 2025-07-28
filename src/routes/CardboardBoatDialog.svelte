@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { disableOnClick } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
@@ -33,7 +34,7 @@
 		<Dialog.Footer>
 			<Button variant="secondary" onclick={() => (open = false)}>Cancel</Button>
 			<Button
-				onclick={async (mouseEvent) => {
+				{@attach disableOnClick(async () => {
 					if ($userDoc.admin) {
 						const team = event.teams.find((team) => team.id === teamId);
 						if (!team) return;
@@ -42,19 +43,17 @@
 							teams: event.teams,
 						});
 					} else {
-						(mouseEvent.target as HTMLButtonElement).disabled = true;
-
 						await editCardboardBoatTeamName({
 							name: teamName,
 							teamId: teamId,
 						});
-
-						(mouseEvent.target as HTMLButtonElement).disabled = false;
 					}
 
 					open = false;
-				}}>Save</Button
+				})}
 			>
+				Save
+			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

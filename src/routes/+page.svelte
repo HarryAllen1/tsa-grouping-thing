@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { disableOnClick } from '$lib/better-utils';
 	import * as Alert from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -222,8 +223,7 @@
 								<li class="flex flex-row">
 									{r.name}
 									<Button
-										onclick={async (clickEvent) => {
-											(clickEvent.target as HTMLButtonElement).disabled = true;
+										{@attach disableOnClick(async () => {
 											const actualEvent = signedUpEvents.find(
 												(e) => e.event === request.event,
 											);
@@ -246,8 +246,7 @@
 												.catch((error) => {
 													toast.error(`Failed to approve request: ${error}`);
 												});
-											(clickEvent.target as HTMLButtonElement).disabled = false;
-										}}
+										})}
 										size="icon"
 										class="h-5"
 										variant="ghost"
@@ -258,8 +257,7 @@
 										size="icon"
 										class="h-5"
 										variant="ghost"
-										onclick={async (clickEvent) => {
-											(clickEvent.target as HTMLButtonElement).disabled = true;
+										{@attach disableOnClick(async () => {
 											await sendRequestDenial({
 												event: request.event,
 												teamId: request.team?.id ?? '',
@@ -273,8 +271,7 @@
 												.catch((error) => {
 													toast.error(`Failed to deny request: ${error}`);
 												});
-											(clickEvent.target as HTMLButtonElement).disabled = false;
-										}}
+										})}
 									>
 										<Minus />
 									</Button>

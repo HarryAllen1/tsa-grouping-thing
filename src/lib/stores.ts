@@ -57,6 +57,7 @@ user.subscribe(async ($u) => {
 			alert: '',
 			openAIAPIKey: '',
 			lockAccounts: false,
+			chapterId: '',
 		});
 	}
 });

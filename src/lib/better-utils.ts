@@ -1,6 +1,8 @@
 import * as Dialog from '$lib/components/ui/dialog';
 import * as Drawer from '$lib/components/ui/drawer';
+import type { Attachment } from 'svelte/attachments';
 import { derived, readable, type Readable } from 'svelte/store';
+import { loaderString } from './loader-string';
 
 export const sleep = (ms: number): Promise<void> =>
 	new Promise((resolve) => setTimeout(resolve, ms));
@@ -16,6 +18,51 @@ export const removeRef = (obj: Record<string, any>) => {
 	}
 	return newObj;
 };
+
+/**
+ * Disables a button on click and re-enables it after the callback resolves.
+ *
+ *
+ * @param callback Listener which runs on click.
+ * @returns An attachment to be applied to a button with {@attach disableOnClick}
+ */
+export const disableOnClick =
+	(
+		callback: (event: Event) => unknown,
+	): Attachment<HTMLButtonElement | HTMLAnchorElement> =>
+	(node: HTMLButtonElement | HTMLAnchorElement) => {
+		const listener: EventListenerOrEventListenerObject = (mouseEvent) => {
+			if (node instanceof HTMLButtonElement) {
+				node.disabled = true;
+			}
+			const container = document.createElement('div');
+			container.classList.add('mr-1');
+			container.innerHTML = loaderString;
+			// sentry sveltekit -> cloudflare workers types messes up this type def
+			node.prepend(container as unknown as string);
+
+			const result = callback(mouseEvent);
+
+			if (result instanceof Promise) {
+				result.finally(() => {
+					if (node instanceof HTMLButtonElement) {
+						node.disabled = false;
+						container.remove();
+					}
+				});
+			} else {
+				if (node instanceof HTMLButtonElement) {
+					node.disabled = false;
+					container.remove();
+				}
+			}
+		};
+
+		node.addEventListener('click', listener);
+		return () => {
+			node.removeEventListener('click', listener);
+		};
+	};
 
 export const mediaQuery = (query: string): Readable<boolean> => {
 	return readable(false, (set) => {

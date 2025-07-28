@@ -89,6 +89,7 @@ export interface SettingsDoc {
 	alert: string;
 	openAIAPIKey: string;
 	lockAccounts: boolean;
+	chapterId: string;
 }
 
 export interface EventData extends EventDoc {

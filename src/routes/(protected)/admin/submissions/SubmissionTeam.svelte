@@ -3,12 +3,12 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { CHAPTER_ID } from '$lib/constants';
 	import StorageMetadata from '$lib/StorageMetadata.svelte';
+	import { settings } from '$lib/stores';
 	import type { EventDoc, Team } from '$lib/types';
+	import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
 	import { getBlob, type FullMetadata } from 'firebase/storage';
 	import JSZip from 'jszip';
-	import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
 	import { DownloadURL, StorageList } from 'sveltefire';
 	import AddResultDialog from '../results/AddResultDialog.svelte';
 	import { hideEmpty, showMemberNames } from './state';
@@ -209,7 +209,7 @@
 						const a = document.createElement('a');
 
 						a.href = url;
-						a.download = `${CHAPTER_ID}-${team.teamNumber} ${event.event}.zip`;
+						a.download = `${$settings?.chapterId}-${team.teamNumber} ${event.event}.zip`;
 						a.click();
 						URL.revokeObjectURL(url);
 					}}

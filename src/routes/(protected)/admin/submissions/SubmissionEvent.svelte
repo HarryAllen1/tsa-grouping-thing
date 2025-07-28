@@ -2,10 +2,9 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import { CHAPTER_ID } from '$lib/constants';
 	import { db, storage } from '$lib/firebase';
 	import { md } from '$lib/md';
-	import { user } from '$lib/stores';
+	import { settings, user } from '$lib/stores';
 	import type { EventDoc } from '$lib/types';
 	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import { doc, updateDoc } from 'firebase/firestore';
@@ -94,7 +93,9 @@
 				onclick={async () => {
 					const zip = new JSZip();
 					for (const team of event.teams) {
-						const teamFolder = zip.folder(`${CHAPTER_ID}-${team.teamNumber}`);
+						const teamFolder = zip.folder(
+							`${$settings?.chapterId}-${team.teamNumber}`,
+						);
 						const submissions = await listAll(
 							ref(storage, `submissions/${event.event}/${team.id}`),
 						);

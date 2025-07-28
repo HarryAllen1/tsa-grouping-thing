@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { disableOnClick } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -110,15 +111,11 @@
 						),
 					) || event.teamCreationActuallyLocked
 				)}
-				onclick={async (mouseEvent) => {
-					(mouseEvent.target as HTMLButtonElement).disabled = true;
-
+				{@attach disableOnClick(async () => {
 					await createTeam({
 						event: event.event,
 					});
-
-					(mouseEvent.target as HTMLButtonElement).disabled = false;
-				}}
+				})}
 			>
 				Create {event.event === '*Rooming' ? 'Room' : 'Team'}
 			</Button>
