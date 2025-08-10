@@ -2,22 +2,21 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    let isAdmin = get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
   	match /users/{user} {
       allow read: if request.auth != null;
       allow write: if
         request.auth != null &&
         (
           user == request.auth.token.email ||
-          isAdmin
+          get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin
         );
-      allow delete: if isAdmin;
+      allow delete: if get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
     }
     match /events/{event} {
       allow read: if request.auth != null;
       allow write: if 
         request.auth != null &&
-        isAdmin;
+        get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
     }
     match /mail/{email} {
       // should only be written through request functions
@@ -27,7 +26,7 @@ service cloud.firestore {
     	allow read: if request.auth != null;
       allow write: if
         request.auth != null &&
-        isAdmin;
+        get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
     }
     match /{document=**} {
       allow read, write: if request.auth != null;
