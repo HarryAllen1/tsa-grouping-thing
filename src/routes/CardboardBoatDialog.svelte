@@ -10,6 +10,7 @@
 	import type { EventDoc } from '$lib/types';
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import { doc, updateDoc } from 'firebase/firestore';
+	import { toast } from 'svelte-sonner';
 
 	let { teamId, event }: { teamId: string; event: EventDoc } = $props();
 
@@ -46,7 +47,7 @@
 						await editCardboardBoatTeamName({
 							name: teamName,
 							teamId: teamId,
-						});
+						}).catch(toast.error);
 					}
 
 					open = false;

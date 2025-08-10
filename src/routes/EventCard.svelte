@@ -116,7 +116,6 @@
 					await createTeam({
 						event: event.event,
 					}).catch((error) => {
-						console.log('asfd');
 						toast.error(`Failed to create team or room: ${error}`);
 					});
 				})}

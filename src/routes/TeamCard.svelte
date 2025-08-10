@@ -459,7 +459,7 @@
 							await sendRequest({
 								event: event.event,
 								teamId: team.id,
-							});
+							}).catch(toast.error);
 							fancyConfirm(
 								'Request sent',
 								"A email has also been sent to the members of this team notifying them of your request. This email has a habit of going straight to people's junk folder, so you might have to notify them of this request manually.",
