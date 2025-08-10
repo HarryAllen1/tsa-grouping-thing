@@ -1,6 +1,7 @@
 import { HttpsError, onCall } from 'firebase-functions/https';
 import { EventDoc, Team } from './types';
 import { getAuthUser, getEvent, getUser, userToName } from './utils';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export const leaveTeam = onCall<
 	{
@@ -15,7 +16,7 @@ export const leaveTeam = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		const user = await getAuthUser(auth);
+		const { user } = await getAuthUser(auth);
 		const { event, eventRef } = await getEvent(data.event);
 
 		if (event.locked) {
@@ -37,6 +38,7 @@ export const leaveTeam = onCall<
 		if (team.members.length === 1) {
 			await eventRef.update({
 				teams: event.teams.filter((t) => t !== team),
+				lastUpdatedBy: user.email,
 			} satisfies Partial<EventDoc>);
 
 			return {
@@ -48,6 +50,7 @@ export const leaveTeam = onCall<
 			);
 			await eventRef.update({
 				teams: event.teams,
+				lastUpdatedBy: user.email,
 			} satisfies Partial<EventDoc>);
 
 			return {
@@ -71,7 +74,7 @@ export const addTeamMember = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		const user = await getAuthUser(auth);
+		const { user } = await getAuthUser(auth);
 		const { event, eventRef } = await getEvent(data.event);
 
 		if (event.locked) {
@@ -103,11 +106,14 @@ export const addTeamMember = onCall<
 			throw new HttpsError('failed-precondition', 'Team is at capacity');
 		}
 
-		const newUser = await getUser(data.userEmail);
+		const { user: newUser } = await getUser(data.userEmail);
 		team.members.push({
 			name: userToName(newUser),
 			email: newUser.email,
 		});
+		team.lastUpdatedBy = user.email;
+		team.lastUpdatedTime = Timestamp.now();
+
 		await eventRef.update({
 			teams: event.teams,
 		} satisfies Partial<EventDoc>);
@@ -131,7 +137,7 @@ export const becomeTeamCaptain = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		const user = await getAuthUser(auth);
+		const { user } = await getAuthUser(auth);
 		const { event, eventRef } = await getEvent(data.event);
 
 		if (event.locked) {
@@ -161,6 +167,9 @@ export const becomeTeamCaptain = onCall<
 		}
 
 		team.teamCaptain = user.email;
+		team.lastUpdatedBy = user.email;
+		team.lastUpdatedTime = Timestamp.now();
+
 		await eventRef.update({
 			teams: event.teams,
 		} satisfies Partial<EventDoc>);
@@ -183,7 +192,7 @@ export const createTeam = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		const user = await getAuthUser(auth);
+		const { user } = await getAuthUser(auth);
 		const { event, eventRef } = await getEvent(data.event);
 		if (event.locked) {
 			throw new HttpsError('failed-precondition', 'Event is locked');
@@ -215,6 +224,8 @@ export const createTeam = onCall<
 
 		event.teams.push({
 			id: crypto.randomUUID(),
+			lastUpdatedBy: user.email,
+			lastUpdatedTime: Timestamp.now(),
 			members: [
 				{
 					name: userToName(user),
@@ -247,7 +258,7 @@ export const editCardboardBoatTeamName = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		const user = await getAuthUser(auth);
+		const { user } = await getAuthUser(auth);
 		const { event, eventRef } = await getEvent('*Cardboard Boat');
 
 		const team = event.teams.find((team) =>
@@ -267,60 +278,13 @@ export const editCardboardBoatTeamName = onCall<
 		}
 
 		team.teamName = data.name;
+		team.lastUpdatedBy = user.email;
+		team.lastUpdatedTime = Timestamp.now();
 
 		await eventRef.update({
 			teams: event.teams,
 		} satisfies Partial<EventDoc>);
 
-		return {
-			success: true,
-		};
-	},
-);
-
-export const leaveEvent = onCall<
-	{
-		event: string;
-	},
-	Promise<{
-		success: boolean;
-	}>
->(
-	{
-		region: 'us-west1',
-	},
-	async ({ auth, data }) => {
-		const user = await getAuthUser(auth);
-		const { event, eventRef } = await getEvent(data.event);
-
-		if (event.locked) {
-			throw new HttpsError('failed-precondition', 'Event is locked');
-		}
-
-		const team = event.teams.find((team) =>
-			team.members.some((m) => m.email === user.email),
-		);
-		if (team) {
-		}
-
-		return {
-			success: true,
-		};
-	},
-);
-
-export const joinEvent = onCall<
-	{
-		event: string;
-	},
-	Promise<{
-		success: boolean;
-	}>
->(
-	{
-		region: 'us-west1',
-	},
-	async () => {
 		return {
 			success: true,
 		};

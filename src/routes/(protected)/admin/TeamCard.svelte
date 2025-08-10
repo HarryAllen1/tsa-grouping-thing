@@ -346,7 +346,7 @@
 								onclick={async () => {
 									team.teamCaptain = '';
 									team.lastUpdatedBy = $user?.email ?? '';
-									team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+									team.lastUpdatedTime = Timestamp.now();
 									await updateDoc(doc(db, 'events', event.event ?? ''), {
 										teams: event.teams,
 										lastUpdatedBy: $user?.email ?? '',
@@ -396,7 +396,7 @@
 						onCheckedChange={async (checked) => {
 							team.locked = checked;
 							team.lastUpdatedBy = $user?.email ?? '';
-							team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+							team.lastUpdatedTime = Timestamp.now();
 							await updateDoc(doc(db, 'events', event.event ?? ''), {
 								teams: event.teams,
 								lastUpdatedBy: $user?.email ?? '',
@@ -413,7 +413,7 @@
 						onCheckedChange={async (checked) => {
 							team.random = checked;
 							team.lastUpdatedBy = $user?.email ?? '';
-							team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+							team.lastUpdatedTime = Timestamp.now();
 							await updateDoc(doc(db, 'events', event.event ?? ''), {
 								teams: event.teams,
 								lastUpdatedBy: $user?.email ?? '',
@@ -616,7 +616,7 @@
 											email: request.email,
 										});
 										team.lastUpdatedBy = $user?.email ?? '';
-										team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+										team.lastUpdatedTime = Timestamp.now();
 										team.requests = team.requests?.filter(
 											(r) =>
 												r.email !== request.email && r.name !== request.name,
@@ -645,7 +645,7 @@
 												r.email !== request.email && r.name !== request.name,
 										);
 										team.lastUpdatedBy = $user?.email ?? '';
-										team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+										team.lastUpdatedTime = Timestamp.now();
 										await updateDoc(doc(db, 'events', event.event ?? ''), {
 											teams: event.teams,
 											lastUpdatedBy: $user?.email ?? '',

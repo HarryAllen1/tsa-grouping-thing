@@ -2,15 +2,13 @@
 	import { goto } from '$app/navigation';
 	import { sleep } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
-	import { Checkbox } from '$lib/components/ui/checkbox';
-	import { Label } from '$lib/components/ui/label';
 	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
-	import Lock from '@lucide/svelte/icons/lock';
 	import confetti from 'canvas-confetti';
 	import { Timestamp, doc, updateDoc } from 'firebase/firestore';
 	import { collectionStore, docStore, userStore } from 'sveltefire';
+	import EventLine from '../events/EventLine.svelte';
 
 	let {
 		page = $bindable(),
@@ -92,45 +90,7 @@
 
 <div class="mb-4 flex flex-col gap-2">
 	{#each $events.filter((e) => !e.hideInSignup) as event (event.event)}
-		<div class="flex items-center space-x-2">
-			<Checkbox
-				checked={eventMap[event.event]}
-				disabled={event.locked ||
-					(!eventMap[event.event] &&
-						($userDoc?.events.length ?? 0) >= MAX_EVENTS) ||
-					!$userDoc?.events}
-				id={event.event}
-				class="flex h-6 w-6 items-center justify-center [&>div]:h-6 [&>div]:w-6"
-				onCheckedChange={async () => {
-					if (
-						event.locked ||
-						(!eventMap[event.event] &&
-							($userDoc?.events.length ?? 0) >= MAX_EVENTS)
-					)
-						return;
-
-					await updateDoc(doc(db, 'users', $user?.email ?? ''), {
-						events: eventMap[event.event]
-							? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
-							: [...($userDoc?.events ?? []), event.event],
-						lastUpdated: new Timestamp(Date.now() / 1000, 0),
-						lastUpdatedBy: $user?.email ?? '',
-					});
-				}}
-			/>
-			<Label
-				for={event.event}
-				class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {event.locked ||
-				(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= MAX_EVENTS)
-					? 'opacity-50'
-					: ''} {event.locked ? 'line-through' : ''}"
-			>
-				<span class="ml-2">{event.event}</span>
-			</Label>
-			{#if event.locked}
-				<Lock />
-			{/if}
-		</div>
+		<EventLine {event} {eventMap} />
 	{/each}
 </div>
 

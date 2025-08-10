@@ -14,7 +14,7 @@
 	const actualUser = userStore(auth);
 	const user = derivedStore(actualUser, ($u) => ({
 		...$u,
-		email: decodeURIComponent(page.params.email),
+		email: decodeURIComponent(page.params.email ?? ''),
 	}));
 
 	const userDoc = docStore<UserDoc>(db, `users/${$user.email}`);
@@ -59,7 +59,7 @@
 							events: eventMap[event.event]
 								? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
 								: [...($userDoc?.events ?? []), event.event],
-							lastUpdated: new Timestamp(Date.now() / 1000, 0),
+							lastUpdated: Timestamp.now(),
 							lastUpdatedBy: $actualUser?.email ?? '',
 						});
 					}}

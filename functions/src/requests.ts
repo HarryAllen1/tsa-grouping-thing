@@ -14,7 +14,7 @@ export const sendRequest = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		const user = await getAuthUser(auth);
+		const { user } = await getAuthUser(auth);
 
 		const { event, eventRef } = await getEvent(data.event);
 
@@ -75,7 +75,7 @@ export const sendRequestApproval = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		const user = await getAuthUser(auth);
+		const { user } = await getAuthUser(auth);
 
 		const approvedUser = (
 			await db.collection('users').doc(data.userEmail).get()
@@ -144,7 +144,7 @@ export const sendRequestDenial = onCall<
 		region: 'us-west1',
 	},
 	async ({ auth, data }) => {
-		const user = await getAuthUser(auth);
+		const { user } = await getAuthUser(auth);
 
 		const deniedUser = (
 			await db.collection('users').doc(data.userEmail).get()

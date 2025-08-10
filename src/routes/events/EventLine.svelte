@@ -4,10 +4,12 @@
 	import { MAX_EVENTS } from '$lib/constants';
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import { db } from '$lib/firebase';
+	import { createTeam, leaveTeam } from '$lib/functions';
 	import { user, userDoc } from '$lib/stores';
 	import type { EventDoc } from '$lib/types';
 	import Lock from '@lucide/svelte/icons/lock';
 	import { doc, Timestamp, updateDoc } from 'firebase/firestore';
+	import { toast } from 'svelte-sonner';
 
 	let {
 		event,
@@ -48,89 +50,77 @@
 			{disabled}
 			id={event.event}
 			class="flex size-6 items-center justify-center [&_svg]:size-6"
-			onCheckedChange={async (state) => {
-				if (
-					!state &&
-					event.teams.some((team) =>
-						team.members.some(
-							(member) =>
-								member.email.toLowerCase() === $user?.email?.toLowerCase(),
-						),
-					)
-				) {
-					const result = await fancyConfirm(
-						'You are still in a team!',
-						'Are you sure you want to leave this event? You will be removed from your team and will be unable to rejoin it unless added by a team member.',
-						[
-							['No, stay', false],
-							['Yes, leave', true],
-						],
-					);
+			onCheckedChange={(state) => {
+				toast.promise(
+					(async (state) => {
+						if (
+							!state &&
+							event.maxTeamSize > 1 &&
+							event.teams.some((team) =>
+								team.members.some(
+									(member) =>
+										member.email.toLowerCase() === $user?.email?.toLowerCase(),
+								),
+							)
+						) {
+							const result = await fancyConfirm(
+								'You are still in a team!',
+								'Are you sure you want to leave this event? You will be removed from your team and will be unable to rejoin it unless added by a team member.',
+								[
+									['No, stay', false],
+									['Yes, leave', true],
+								],
+							);
 
-					if (!result) {
-						updater++;
-						return;
-					}
-				}
-
-				if (
-					event.locked ||
-					(!eventMap[event.event] &&
-						($userDoc?.events.length ?? 0) >= MAX_EVENTS)
-				) {
-					updater++;
-					return;
-				}
-
-				const membersTeam = event.teams.find((t) =>
-					t.members
-						.map((m) => m.email)
-						.includes($user?.email?.toLowerCase() ?? ''),
-				);
-				if (
-					event.maxTeamSize === 1 &&
-					((event.teamCreationLocked &&
-						event.teams.length < event.perChapter) ||
-						!event.teamCreationLocked)
-				) {
-					if (state && !membersTeam) {
-						let lowestNotTaken = 1;
-						while (event.teams.some((t) => t.teamNumber === lowestNotTaken)) {
-							lowestNotTaken++;
+							if (!result) {
+								updater++;
+								return;
+							}
 						}
 
-						event.teams.push({
-							members: [
-								{
-									name: $userDoc?.name ?? '',
-									email: $user?.email ?? '',
-								},
-							],
-							lastUpdatedBy: $user?.email ?? '',
-							id: crypto.randomUUID(),
-							teamNumber: lowestNotTaken,
-						});
-					} else if (!state && membersTeam) {
-						membersTeam.members.splice(
-							membersTeam.members.findIndex(
-								(e) => e.email.toLowerCase() === ($user?.email ?? ''),
-							),
-							1,
+						if (
+							event.locked ||
+							(!eventMap[event.event] &&
+								($userDoc?.events.length ?? 0) >= MAX_EVENTS)
+						) {
+							updater++;
+							return;
+						}
+
+						const membersTeam = event.teams.find((t) =>
+							t.members.some((member) => member.email === $userDoc.email),
 						);
-					}
-					await updateDoc(doc(db, 'events', event.event), {
-						teams: event.teams.filter((t) => t.members.length > 0),
-						lastUpdated: new Timestamp(Date.now() / 1000, 0),
-						lastUpdatedBy: $user?.email ?? '',
-					});
-				}
-				await updateDoc(doc(db, 'users', $user?.email ?? ''), {
-					events: eventMap[event.event]
-						? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
-						: [...($userDoc?.events ?? []), event.event],
-					lastUpdated: new Timestamp(Date.now() / 1000, 0),
-					lastUpdatedBy: $user?.email ?? '',
-				});
+						if (
+							event.maxTeamSize === 1 &&
+							((event.teamCreationLocked &&
+								event.teams.length < event.perChapter) ||
+								!event.teamCreationLocked)
+						) {
+							if (state && !membersTeam) {
+								await createTeam({
+									event: event.event,
+								}).catch(toast.error);
+							} else if (!state && membersTeam) {
+								await leaveTeam({
+									event: event.event,
+									teamId: membersTeam.id,
+								}).catch(toast.error);
+							}
+						}
+						await updateDoc(doc(db, 'users', $user?.email ?? ''), {
+							events: eventMap[event.event]
+								? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
+								: [...($userDoc?.events ?? []), event.event],
+							lastUpdated: Timestamp.now(),
+							lastUpdatedBy: $user?.email ?? '',
+						});
+					})(state),
+					{
+						loading: `${state ? 'Joining' : 'Leaving'} event...`,
+						success: `Successfully ${state ? 'joined' : 'left'} event`,
+						error: `An error occurred whilst ${state ? 'joining' : 'leaving'} the event.`,
+					},
+				);
 			}}
 		/>
 		<Label

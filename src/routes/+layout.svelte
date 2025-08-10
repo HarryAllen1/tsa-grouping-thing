@@ -154,7 +154,7 @@
 					</div>
 
 					<FancyConfirm />
-					<Toaster />
+					<Toaster duration={2000} closeButton />
 					<!-- must be after Toaster -->
 					<OfflineNotifier />
 				</ThemeWrapper>

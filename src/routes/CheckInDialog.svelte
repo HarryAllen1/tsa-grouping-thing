@@ -51,7 +51,7 @@
 	onOpenChange={async (state) => {
 		if (!state) {
 			team.lastUpdatedBy = $user?.email ?? '';
-			team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+			team.lastUpdatedTime = Timestamp.now();
 			team.preparationLevelDescription = preparationLevelDescription;
 			await updateDoc(doc(db, 'events', event.event ?? ''), {
 				teams: event.teams,
@@ -86,7 +86,7 @@
 			onValueChange={async (value) => {
 				team.preparationLevel = value;
 				team.lastUpdatedBy = $user?.email ?? '';
-				team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+				team.lastUpdatedTime = Timestamp.now();
 
 				await updateDoc(doc(db, 'events', event.event ?? ''), {
 					teams: event.teams,
@@ -136,7 +136,7 @@
 				<Button
 					onclick={async () => {
 						team.lastUpdatedBy = $user?.email ?? '';
-						team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+						team.lastUpdatedTime = Timestamp.now();
 						team.preparationLevelDescription = preparationLevelDescription;
 						await updateDoc(doc(db, 'events', event.event ?? ''), {
 							teams: event.teams,
@@ -153,7 +153,7 @@
 					class="my-2 md:my-0"
 					onclick={async () => {
 						team.lastUpdatedBy = $user?.email ?? '';
-						team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+						team.lastUpdatedTime = Timestamp.now();
 						team.preparationLevelDescription = preparationLevelDescription;
 						await updateDoc(doc(db, 'events', event.event ?? ''), {
 							teams: event.teams,
@@ -174,9 +174,9 @@
 						}
 						team.checkInComplete = true;
 						team.lastUpdatedBy = $user?.email ?? '';
-						team.lastUpdatedTime = new Timestamp(Date.now() / 1000, 0);
+						team.lastUpdatedTime = Timestamp.now();
 						team.preparationLevelDescription = preparationLevelDescription;
-						team.checkInSubmittedTime = new Timestamp(Date.now() / 1000, 0);
+						team.checkInSubmittedTime = Timestamp.now();
 						team.checkInSubmittedBy = {
 							email: $userDoc.email ?? '',
 							name: $userDoc.name ?? '',

@@ -132,7 +132,7 @@
 		<div class="flex flex-col gap-1 lg:flex-row">
 			{#if (team.locked || event.locked) && team.members.some((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 				<p class="text-sm">Your team is currently locked from editing.</p>
-			{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
+			{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? '')) && event.maxTeamSize > 1}
 				<div class="flex flex-col gap-2">
 					<div class="flex w-full flex-row gap-2">
 						<Tooltip.Root>

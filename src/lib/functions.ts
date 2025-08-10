@@ -45,7 +45,7 @@ export const createTeam = httpsCallable<
 		event: string;
 	},
 	BasicResponse
->(functions, 'leaveTeam');
+>(functions, 'createTeam');
 export const editCardboardBoatTeamName = httpsCallable<
 	{
 		teamId: string;

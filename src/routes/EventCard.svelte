@@ -8,6 +8,7 @@
 	import type { EventData, EventDoc, Team } from '$lib/types';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import TeamCard from './TeamCard.svelte';
+	import { toast } from 'svelte-sonner';
 
 	let { event, eventData }: { event: EventDoc; eventData: EventData[] } =
 		$props();
@@ -101,7 +102,7 @@
 			{@render renderTeams(event.teams)}
 		{/if}
 	</Card.Content>
-	{#if !event.locked && !(event.teamCreationLocked && event.teams.length >= event.perChapter)}
+	{#if !event.locked && !(event.teamCreationLocked && event.teams.length >= event.perChapter) && event.maxTeamSize > 1}
 		<Card.Footer>
 			<Button
 				disabled={!!(
@@ -114,6 +115,9 @@
 				{@attach disableOnClick(async () => {
 					await createTeam({
 						event: event.event,
+					}).catch((error) => {
+						console.log('asfd');
+						toast.error(`Failed to create team or room: ${error}`);
 					});
 				})}
 			>

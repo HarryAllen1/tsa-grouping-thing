@@ -8,15 +8,16 @@ export const userToName = (user: UserDoc): string =>
 		? `${user.preferredFirstName} (${user.firstName}) ${user.lastName}`
 		: `${user.firstName} ${user.lastName}`;
 
-export const getUser = async (email: string): Promise<UserDoc> => {
-	const user = (await db.collection('users').doc(email).get()).data() as
-		| UserDoc
-		| undefined;
+export const getUser = async (
+	email: string,
+): Promise<{ user: UserDoc; userRef: FirebaseFirestore.DocumentReference }> => {
+	const userRef = db.collection('users').doc(email);
+	const user = (await userRef.get()).data() as UserDoc | undefined;
 	if (!user) {
 		throw new HttpsError('not-found', 'User not found.');
 	}
 
-	return user;
+	return { user, userRef };
 };
 
 export const getAuthUser = async (
@@ -26,7 +27,7 @@ export const getAuthUser = async (
 				token: DecodedIdToken;
 		  }
 		| undefined,
-): Promise<UserDoc> => {
+): Promise<{ user: UserDoc; userRef: FirebaseFirestore.DocumentReference }> => {
 	if (!auth) {
 		throw new HttpsError(
 			'failed-precondition',
