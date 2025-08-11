@@ -53,3 +53,13 @@ export const editCardboardBoatTeamName = httpsCallable<
 	},
 	BasicResponse
 >(functions, 'editCardboardBoatTeamName');
+export const saveCheckIn = httpsCallable<
+	{
+		preparationLevel: 1 | 2 | 3 | 4;
+		preparationLevelDescription: string;
+		event: string;
+		teamId: string;
+		markAsComplete?: boolean;
+	},
+	BasicResponse
+>(functions, 'saveCheckIn');

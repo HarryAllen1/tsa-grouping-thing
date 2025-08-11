@@ -91,6 +91,10 @@ Yep. Just ignore it.
 
 The order is determined by the order of which the teams were created, not the team number. Click the "Sort Teams" right above the first team to sort all the teams in the event in numerical order of team number.
 
+::: note
+Although the "Sort Teams" button sorts the teams in the database, for members, if they are in a team, their team will always be first.
+:::
+
 ## Some things update in realtime, others don't
 
 Yep. Deal with it. Sometimes there is a refresh button. Typically, anything to do with files are not realtime, everything else is.

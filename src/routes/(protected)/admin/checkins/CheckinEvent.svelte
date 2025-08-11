@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { disableOnClick } from '$lib/better-utils';
+	import { Button } from '$lib/components/ui/button';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
+	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import { db } from '$lib/firebase';
 	import { user } from '$lib/stores';
 	import type { EventDoc } from '$lib/types';
@@ -12,6 +15,8 @@
 	}: {
 		event: EventDoc;
 	} = $props();
+
+	let updater = $state(0);
 </script>
 
 <div class="my-4">
@@ -38,13 +43,47 @@
 		Enable event status check-in
 	</Label>
 
+	<Button
+		variant="destructive"
+		class="mt-2"
+		{@attach disableOnClick(async () => {
+			if (
+				!(await fancyConfirm(
+					'Are you sure you want to delete check ins for all teams for this event?',
+					'This action is irreversible.',
+				))
+			) {
+				return;
+			}
+
+			await updateDoc(doc(db, `events/${event.event}`), {
+				teams: event.teams.map((team) => {
+					const {
+						checkInComplete: _,
+						checkInSubmittedBy: __,
+						checkInSubmittedTime: ___,
+						preparationLevel: ____,
+						preparationLevelDescription: _____,
+						...restTeam
+					} = team;
+					return restTeam;
+				}),
+			} satisfies Partial<EventDoc>);
+			updater++;
+		})}
+	>
+		Delete all for event
+	</Button>
+
 	<div
 		class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 lg:items-start xl:grid-cols-3"
 	>
-		{#each event.teams as team (team.id)}
-			<CheckinTeam {team} {event} />
-		{:else}
-			<p>No teams</p>
-		{/each}
+		{#key updater}
+			{#each event.teams as team (team.id)}
+				<CheckinTeam {team} {event} />
+			{:else}
+				<p>No teams</p>
+			{/each}
+		{/key}
 	</div>
 </div>

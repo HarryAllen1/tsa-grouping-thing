@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { disableOnClick } from '$lib/better-utils';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { createTeam } from '$lib/functions';
@@ -33,14 +33,18 @@
 					<TeamCard {event} {team} />
 				{/each}
 			</Collapsible.Content>
-			<Collapsible.Trigger class="w-full">
-				{#snippet child({ props })}
-					<Button variant="ghost" size="sm" class=" w-full" {...props}>
-						<ChevronUp
-							class="transition-transform {collapsibleOpen ? '' : 'rotate-180'}"
-						/>
-					</Button>
-				{/snippet}
+			<Collapsible.Trigger
+				class={buttonVariants({
+					variant: 'ghost',
+					size: 'sm',
+					class: 'mt-2 w-full',
+				})}
+			>
+				{collapsibleOpen ? 'Hide' : 'View'}
+				{teams.length - 4} more {event.event === '*Rooming' ? 'rooms' : 'teams'}
+				<ChevronUp
+					class="transition-transform {collapsibleOpen ? '' : 'rotate-180'}"
+				/>
 			</Collapsible.Trigger>
 		</Collapsible.Root>
 	{/if}
@@ -96,8 +100,10 @@
 			t.members.some((m) => m.email === $userDoc.email),
 		)}
 		{#if usersTeam}
-			<TeamCard {event} team={usersTeam} />
-			{@render renderTeams(event.teams.filter((t) => t.id !== usersTeam.id))}
+			{@render renderTeams([
+				usersTeam,
+				...event.teams.filter((t) => t.id !== usersTeam.id),
+			])}
 		{:else}
 			{@render renderTeams(event.teams)}
 		{/if}

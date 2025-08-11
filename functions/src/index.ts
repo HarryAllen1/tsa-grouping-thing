@@ -1,4 +1,5 @@
 export { onlyAllowLWSDEmails } from './auth';
+export { saveCheckIn } from './check-ins';
 export { logEventChanges } from './db';
 export {
 	addTeamMember,

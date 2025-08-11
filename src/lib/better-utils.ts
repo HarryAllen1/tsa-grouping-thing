@@ -119,3 +119,14 @@ export const canScroll = (
 	}
 	return false;
 };
+
+export const filterObjectKeys = <T extends object>(
+	object: T,
+	filter: (key: keyof T, index: number) => boolean,
+): T =>
+	Object.keys(object)
+		.filter((key, index) => filter(key as keyof T, index))
+		.reduce((obj, key) => {
+			obj[key as keyof T] = object[key as keyof T];
+			return obj;
+		}, {} as T);
