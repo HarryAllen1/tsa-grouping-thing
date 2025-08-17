@@ -71,9 +71,8 @@
 		<Dialog.Header>
 			<Dialog.Title>Event Status Check-in</Dialog.Title>
 			<Dialog.Description>
-				This is required to ensure you are on-track and prepared for the January
-				virtual qualifier and the State conference. Please complete one check-in
-				per event.
+				This is required to ensure you are on-track and prepared for the
+				deadlines throughout the year. Please complete one check-in per event.
 			</Dialog.Description>
 		</Dialog.Header>
 
