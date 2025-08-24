@@ -1,7 +1,7 @@
+import { Timestamp } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/https';
 import { EventDoc, Team } from './types';
 import { getAuthUser, getEvent, getUser, userToName } from './utils';
-import { Timestamp } from 'firebase-admin/firestore';
 
 export const leaveTeam = onCall<
 	{

@@ -74,7 +74,7 @@
 
 							if (!result) {
 								updater++;
-								return;
+								throw new Error('Did not leave team');
 							}
 						}
 

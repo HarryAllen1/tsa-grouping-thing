@@ -1,7 +1,7 @@
-import { HttpsError, onCall } from 'firebase-functions/https';
-import { getAuthUser, getEvent, userToName } from './utils';
-import { EventDoc } from './types';
 import { Timestamp } from 'firebase-admin/firestore';
+import { HttpsError, onCall } from 'firebase-functions/https';
+import { EventDoc } from './types';
+import { getAuthUser, getEvent, userToName } from './utils';
 
 export const saveCheckIn = onCall<
 	| {
@@ -59,7 +59,6 @@ export const saveCheckIn = onCall<
 		}
 
 		if (data.markAsComplete) {
-			team.checkInComplete = data.markAsComplete;
 			team.checkInSubmittedBy = {
 				email: user.email,
 				name: userToName(user),
@@ -72,6 +71,8 @@ export const saveCheckIn = onCall<
 		if (data.preparationLevelDescription?.length) {
 			team.preparationLevelDescription = data.preparationLevelDescription;
 		}
+
+		team.checkInComplete = data.markAsComplete;
 
 		await eventRef.update({
 			teams: event.teams,

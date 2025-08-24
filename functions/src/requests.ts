@@ -2,7 +2,7 @@ import { onCall } from 'firebase-functions/https';
 import { HttpsError } from 'firebase-functions/identity';
 import { db } from './firebase';
 import { UserDoc } from './types';
-import { getEvent, getAuthUser, userToName } from './utils';
+import { getAuthUser, getEvent, userToName } from './utils';
 
 export const sendRequest = onCall<
 	{ event: string; teamId: string },

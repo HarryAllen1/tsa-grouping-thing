@@ -1,13 +1,14 @@
 <script lang="ts">
+	import { disableOnClick } from '$lib/better-utils';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import { db } from '$lib/firebase';
-	import { user, userDoc } from '$lib/stores';
+	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
+	import { saveCheckIn } from '$lib/functions';
 	import type { EventDoc, Team } from '$lib/types';
-	import { doc, Timestamp, updateDoc } from 'firebase/firestore';
+	import { watch } from 'runed';
 
 	let {
 		team,
@@ -44,18 +45,29 @@
 	let preparationLevelDescription = $state<string>(
 		team.preparationLevelDescription ?? '',
 	);
+
+	watch(
+		() => team,
+		() => {
+			if (!checkInDialogOpen) {
+				selectedPreparationLevel =
+					team.preparationLevel ?? selectedPreparationLevel;
+				preparationLevelDescription =
+					team.preparationLevelDescription ?? preparationLevelDescription;
+			}
+		},
+	);
 </script>
 
 <Dialog.Root
 	bind:open={checkInDialogOpen}
 	onOpenChange={async (state) => {
 		if (!state) {
-			team.lastUpdatedBy = $user?.email ?? '';
-			team.lastUpdatedTime = Timestamp.now();
-			team.preparationLevelDescription = preparationLevelDescription;
-			await updateDoc(doc(db, 'events', event.event ?? ''), {
-				teams: event.teams,
-				lastUpdatedBy: $user?.email ?? '',
+			await saveCheckIn({
+				event: event.event,
+				teamId: team.id,
+				preparationLevelDescription,
+				preparationLevel: Number(selectedPreparationLevel) as 1 | 2 | 3 | 4,
 			});
 		}
 	}}
@@ -79,24 +91,11 @@
 		<Label>
 			As of right now, how prepared do you feel you/your team is for this event?
 		</Label>
-		<Select.Root
-			type="single"
-			bind:value={selectedPreparationLevel}
-			onValueChange={async (value) => {
-				team.preparationLevel = value;
-				team.lastUpdatedBy = $user?.email ?? '';
-				team.lastUpdatedTime = Timestamp.now();
-
-				await updateDoc(doc(db, 'events', event.event ?? ''), {
-					teams: event.teams,
-					lastUpdatedBy: $user?.email ?? '',
-				});
-			}}
-		>
+		<Select.Root type="single" bind:value={selectedPreparationLevel}>
 			<Select.Trigger>
-				{team.preparationLevel
+				{selectedPreparationLevel
 					? preparationLevels.find(
-							(level) => level.value === team.preparationLevel,
+							(level) => level.value === selectedPreparationLevel,
 						)?.label
 					: 'Select a level'}
 			</Select.Trigger>
@@ -133,16 +132,52 @@
 			<div class="grow"></div>
 			{#if team.checkInComplete}
 				<Button
-					onclick={async () => {
-						team.lastUpdatedBy = $user?.email ?? '';
-						team.lastUpdatedTime = Timestamp.now();
-						team.preparationLevelDescription = preparationLevelDescription;
-						await updateDoc(doc(db, 'events', event.event ?? ''), {
-							teams: event.teams,
-							lastUpdatedBy: $user?.email ?? '',
+					variant="outline"
+					{@attach disableOnClick(async () => {
+						await saveCheckIn({
+							event: event.event,
+							teamId: team.id,
+							markAsComplete: false,
+							preparationLevelDescription,
+							preparationLevel: Number(selectedPreparationLevel) as
+								| 1
+								| 2
+								| 3
+								| 4,
 						});
+
 						checkInDialogOpen = false;
-					}}
+					})}
+				>
+					Unsubmit
+				</Button>
+				<Button
+					{@attach disableOnClick(async () => {
+						if (
+							!team.preparationLevel ||
+							preparationLevelDescription.length === 0
+						) {
+							return fancyConfirm(
+								'Please fill out all fields',
+								'You must fill out the preparation level and description to complete your check in.',
+								[['OK', true]],
+							);
+						}
+
+						await saveCheckIn({
+							event: event.event,
+							teamId: team.id,
+							markAsComplete: true,
+							preparationLevelDescription,
+							preparationLevel: Number(selectedPreparationLevel) as
+								| 1
+								| 2
+								| 3
+								| 4,
+						});
+
+						checkInDialogOpen = false;
+					})}
 				>
 					Save
 				</Button>
@@ -150,43 +185,51 @@
 				<Button
 					variant="outline"
 					class="my-2 md:my-0"
-					onclick={async () => {
-						team.lastUpdatedBy = $user?.email ?? '';
-						team.lastUpdatedTime = Timestamp.now();
-						team.preparationLevelDescription = preparationLevelDescription;
-						await updateDoc(doc(db, 'events', event.event ?? ''), {
-							teams: event.teams,
-							lastUpdatedBy: $user?.email ?? '',
+					{@attach disableOnClick(async () => {
+						await saveCheckIn({
+							event: event.event,
+							teamId: team.id,
+							markAsComplete: false,
+							preparationLevelDescription,
+							preparationLevel: Number(selectedPreparationLevel) as
+								| 1
+								| 2
+								| 3
+								| 4,
 						});
+
 						checkInDialogOpen = false;
-					}}
+					})}
 				>
 					Save for Later
 				</Button>
 				<Button
-					onclick={async () => {
+					{@attach disableOnClick(async () => {
 						if (
 							!team.preparationLevel ||
 							preparationLevelDescription.length === 0
 						) {
-							return alert('Please fill out all fields');
+							return fancyConfirm(
+								'Please fill out all fields',
+								'You must fill out the preparation level and description to complete your check in.',
+								[['OK', true]],
+							);
 						}
-						team.checkInComplete = true;
-						team.lastUpdatedBy = $user?.email ?? '';
-						team.lastUpdatedTime = Timestamp.now();
-						team.preparationLevelDescription = preparationLevelDescription;
-						team.checkInSubmittedTime = Timestamp.now();
-						team.checkInSubmittedBy = {
-							email: $userDoc.email ?? '',
-							name: $userDoc.name ?? '',
-						};
 
-						await updateDoc(doc(db, 'events', event.event ?? ''), {
-							teams: event.teams,
-							lastUpdatedBy: $user?.email ?? '',
+						await saveCheckIn({
+							event: event.event,
+							teamId: team.id,
+							markAsComplete: true,
+							preparationLevel: Number(selectedPreparationLevel) as
+								| 1
+								| 2
+								| 3
+								| 4,
+							preparationLevelDescription,
 						});
+
 						checkInDialogOpen = false;
-					}}
+					})}
 					disabled={!selectedPreparationLevel ||
 						preparationLevelDescription.length === 0}
 				>

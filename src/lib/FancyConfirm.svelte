@@ -38,7 +38,7 @@
 </script>
 
 <AlertDialog.Root bind:open={$open}>
-	<AlertDialog.Content>
+	<AlertDialog.Content class="z-[80]">
 		<AlertDialog.Title>
 			{alertTitle}
 		</AlertDialog.Title>
