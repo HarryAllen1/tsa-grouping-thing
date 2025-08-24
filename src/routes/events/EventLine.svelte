@@ -118,7 +118,10 @@
 					{
 						loading: `${state ? 'Joining' : 'Leaving'} event...`,
 						success: `Successfully ${state ? 'joined' : 'left'} event`,
-						error: `An error occurred whilst ${state ? 'joining' : 'leaving'} the event.`,
+						error: (error) =>
+							error instanceof Error
+								? error.message
+								: `An error occurred whilst ${state ? 'joining' : 'leaving'} the event.`,
 					},
 				);
 			}}
