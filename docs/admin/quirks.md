@@ -24,6 +24,10 @@ If an elimination has been completed and the unqualified teams removed, the memb
 
 See [above](#removing-a-member-from-a-team-doesn-t-remove-them-from-the-event).
 
+::: info
+This only affects admins as users who attempt to leave an event will be prompted to leave their team before leaving an event.
+:::
+
 ## Results of teamed events which are completed individually are probably coloured incorrectly
 
 Results are coloured by the number of teams/individuals which can be sent to the State conference. Therefore, the site assumes that eliminations were held with the teams/individuals which would be sent as-is to the state conference. Sometimes this assumption is incorrect.
@@ -46,10 +50,6 @@ This is exclusively for returning files which don't fit in the aforementioned ca
 
 - Returning rubrics from the state/regional conference
 - Returning results from JHS eliminations which can't be returned through the rubrics page as there is no ranking (i.e., the elimination is feedback only).
-
-## Updating a name doesn't update that person's name in their teams
-
-Unfortunately, this is due to how teams are stored internally. Changing it would make the app stupidly slow. If this really bothers you, remove that member from the team and re-add them.
 
 ## It's impossible to change an event's name
 
@@ -75,14 +75,6 @@ Same as before except teams can never be created.
 
 Team numbers for individual events are a legacy thing. They don't matter and really shouldn't be used as individual event entries are tracked by member IDs. Just ignore them.
 
-## Event IDs???
-
-Underneath the basic details of an event, there is an "ID" field. Normally, this is a number, but sometimes it is the event name.
-
-![event id](event-id.png)
-
-This is for internal (Harry's) use so that it's easier for me to bot registration. Just ignore this number.
-
 ## Requests still exist after a member has joined a team
 
 Yep. Just ignore it.
@@ -102,7 +94,3 @@ Yep. Deal with it. Sometimes there is a refresh button. Typically, anything to d
 ## X doesn't work on mobile
 
 Yeah, you're probably right. Developing for mobile is a nightmare.
-
-## Signing up for an individual event only sometimes creates a team
-
-A recent change (as of Oct 2024) is that, when signing up for an individual event, a team is automatically created (and vice-versa). Sometimes this doesn't work, for whatever reason. Just fix it manually.

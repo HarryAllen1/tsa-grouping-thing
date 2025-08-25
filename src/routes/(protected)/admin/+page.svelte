@@ -27,6 +27,7 @@
 	import { downloadAsJSON } from '../../download';
 	import Alert from './Alert.svelte';
 	import EventCard from './EventCard.svelte';
+	import { toast } from 'svelte-sonner';
 
 	const user = userStore(auth);
 
@@ -92,13 +93,13 @@
 		maxTeamSize: number;
 		perChapter: number;
 		locked: boolean | undefined;
-	} = {
+	} = $state({
 		event: '',
 		minTeamSize: 1,
 		maxTeamSize: 1,
 		perChapter: 1,
 		locked: false,
-	};
+	});
 
 	let newEventDialogOpen = $state(false);
 </script>
@@ -177,14 +178,14 @@
 			<Dialog.Content>
 				<Dialog.Title>Create new event</Dialog.Title>
 				<div class="flex flex-col gap-4">
-					<Label class="flex w-full flex-col gap-1.5">
+					<Label class="flex w-full flex-col items-start gap-1.5">
 						<span>Event name</span>
 						<Input
 							bind:value={newEventStuff.event}
 							placeholder="really cool event name"
 						/>
 					</Label>
-					<Label class="flex w-full flex-col gap-1.5">
+					<Label class="flex w-full flex-col items-start gap-1.5">
 						<span>Minimum team size</span>
 						<Input
 							bind:value={newEventStuff.minTeamSize}
@@ -192,19 +193,23 @@
 							placeholder="1"
 						/>
 					</Label>
-					<Label class="flex w-full flex-col gap-1.5">
+					<Label class="flex w-full flex-col items-start gap-1.5">
 						<span>Maximum team size</span>
 						<Input
 							bind:value={newEventStuff.maxTeamSize}
 							type="number"
+							min={1}
+							step={1}
 							placeholder="1"
 						/>
 					</Label>
-					<Label class="flex w-full flex-col gap-1.5">
+					<Label class="flex w-full flex-col items-start gap-1.5">
 						<span>Maximum teams per chapter</span>
 						<Input
 							bind:value={newEventStuff.perChapter}
 							type="number"
+							min={1}
+							step={1}
 							placeholder="1"
 						/>
 					</Label>
@@ -226,14 +231,44 @@
 							e.preventDefault();
 							newEventStuff.maxTeamSize = Number(newEventStuff.maxTeamSize);
 							newEventStuff.minTeamSize = Number(newEventStuff.minTeamSize);
-							await setDoc(doc(db, 'events', newEventStuff.event), {
-								...newEventStuff,
-								teams: [],
-								lastUpdatedBy: $user?.email ?? '',
-							});
-							newEventDialogOpen = false;
-						}}>Create</Button
+							if (newEventStuff.event.length === 0) {
+								toast.error('Event name must not be empty.');
+							} else if (newEventStuff.perChapter < 1) {
+								toast.error('Per chapter must be at least one.');
+							} else if (
+								newEventStuff.perChapter !==
+								Math.round(newEventStuff.perChapter)
+							) {
+								toast.error('Per chapter must be an integer.');
+							} else if (
+								newEventStuff.maxTeamSize < newEventStuff.minTeamSize
+							) {
+								toast.error(
+									'Max team size must be at least the min team size.',
+								);
+							} else if (
+								newEventStuff.maxTeamSize <= 0 ||
+								newEventStuff.minTeamSize <= 0 ||
+								Math.round(newEventStuff.maxTeamSize) !==
+									newEventStuff.maxTeamSize ||
+								Math.round(newEventStuff.minTeamSize) !==
+									newEventStuff.minTeamSize
+							) {
+								toast.error(
+									'Max and min event size must be positive, non-zero integers.',
+								);
+							} else {
+								await setDoc(doc(db, 'events', newEventStuff.event), {
+									...newEventStuff,
+									teams: [],
+									lastUpdatedBy: $user?.email ?? '',
+								});
+								newEventDialogOpen = false;
+							}
+						}}
 					>
+						Create
+					</Button>
 				</Dialog.Footer>
 			</Dialog.Content>
 		</Dialog.Root>

@@ -119,8 +119,11 @@
 					Room #{team.teamNumber}
 				{:else if event.event === '*Cardboard Boat'}
 					{team.teamName || '(no team name)'}
-				{:else if event.maxTeamSize === 1 && team.members.length === 1}
-					Individual Event
+				{:else if event.maxTeamSize === 1}
+					Individual
+					{#if team.members?.some((e) => e.email.toLowerCase() === ($user?.email ?? '')) && $userDoc.washingtonId}
+						{$userDoc.washingtonId}
+					{/if}
 				{:else}
 					Team {$settings?.chapterId}-{team.teamNumber}
 				{/if}
@@ -132,7 +135,7 @@
 		<div class="flex flex-col gap-1 lg:flex-row">
 			{#if (team.locked || event.locked) && team.members.some((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 				<p class="text-sm">Your team is currently locked from editing.</p>
-			{:else if team.members?.find((e) => e.email.toLowerCase() === ($user?.email ?? '')) && event.maxTeamSize > 1}
+			{:else if team.members?.some((e) => e.email.toLowerCase() === ($user?.email ?? '')) && event.maxTeamSize > 1}
 				<div class="flex flex-col gap-2">
 					<div class="flex w-full flex-row gap-2">
 						<Tooltip.Root>

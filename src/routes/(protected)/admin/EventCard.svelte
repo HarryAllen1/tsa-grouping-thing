@@ -349,9 +349,6 @@
 						: (eventData.find((e) => e.event === event.event)?.members.length ??
 							0)} people joined {event.event === '*Rooming' ? 'rooms' : 'teams'}
 				</li>
-				<li>
-					ID: {event.id}
-				</li>
 				{#if event.event === '*Rooming'}
 					<li>
 						{event.teams.length} rooms

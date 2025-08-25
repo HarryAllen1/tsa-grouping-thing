@@ -12,7 +12,7 @@ Once a member has signed up for an event, they can then create or join teams for
 
 ![creating a team](./create%20team.png)
 
-You can only create a team if you are not already in an existing team.
+You can only create a team if you are not already in an existing team. A team is automatically created upon signing up for an individual event.
 When you create a team, you will automatically be added to that team. To add other people to the team, click the green add person icon:
 
 ![adding a person to a team](./add%20people%20to%20team.png)

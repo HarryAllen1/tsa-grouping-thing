@@ -169,11 +169,11 @@
 					Room #{team.teamNumber}
 				{:else if event.event === '*Cardboard Boat'}
 					{team.teamName || '(no team name)'}
-				{:else if event.maxTeamSize === 1 && team.members.length === 1}
-					Team {$allUsersCollection.find(
+				{:else if event.maxTeamSize === 1}
+					Individual {$allUsersCollection.find(
 						(u) =>
 							u.email.toLowerCase() === team.members[0].email.toLowerCase(),
-					)?.washingtonId}
+					)?.washingtonId ?? '(no ID)'}{team.members.length > 1 ? '?????' : ''}
 				{:else}
 					Team {$settings?.chapterId}-{team.teamNumber}
 				{/if}
