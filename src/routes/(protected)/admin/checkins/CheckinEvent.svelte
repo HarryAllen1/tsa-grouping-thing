@@ -29,7 +29,7 @@
 	>
 		{event.event}
 	</h2>
-	<Label class="mb-4 flex flex-row items-center gap-2">
+	<Label class="mb-2 flex flex-row items-center gap-2">
 		<Switch
 			onCheckedChange={async (checked) => {
 				event.eventStatusCheckInEnabled = checked;
@@ -45,7 +45,7 @@
 
 	<Button
 		variant="destructive"
-		class="mt-2"
+		class="mb-2"
 		{@attach disableOnClick(async () => {
 			if (
 				!(await fancyConfirm(

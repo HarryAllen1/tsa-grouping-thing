@@ -154,7 +154,7 @@
 				<Button
 					{@attach disableOnClick(async () => {
 						if (
-							!team.preparationLevel ||
+							!selectedPreparationLevel ||
 							preparationLevelDescription.length === 0
 						) {
 							return fancyConfirm(
@@ -206,7 +206,7 @@
 				<Button
 					{@attach disableOnClick(async () => {
 						if (
-							!team.preparationLevel ||
+							!selectedPreparationLevel ||
 							preparationLevelDescription.length === 0
 						) {
 							return fancyConfirm(
@@ -233,7 +233,7 @@
 					disabled={!selectedPreparationLevel ||
 						preparationLevelDescription.length === 0}
 				>
-					Mark as Complete
+					Submit
 				</Button>
 			{/if}
 		</Dialog.Footer>
