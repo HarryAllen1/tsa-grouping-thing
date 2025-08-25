@@ -2,7 +2,7 @@
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import SimpleTooltip from '$lib/SimpleTooltip.svelte';
 	import StorageMetadata from '$lib/StorageMetadata.svelte';
-	import { sleep } from '$lib/better-utils';
+	import { resolveName, sleep } from '$lib/better-utils';
 	import * as Alert from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -372,7 +372,7 @@
 												});
 											}}
 										>
-											{teamMember.name}
+											{resolveName(teamMember, $allUsersCollection)}
 										</button>
 										{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 											<Tooltip.Root>
@@ -607,19 +607,18 @@
 						{#each team.requests ?? [] as request}
 							<li class="flex flex-row">
 								<button onclick={() => openUserDialog(request.email)}>
-									{request.name}
+									{resolveName(request, $allUsersCollection)}
 								</button>
 								<Button
 									onclick={async () => {
 										team.members.push({
-											name: request.name,
+											name: resolveName(request, $allUsersCollection),
 											email: request.email,
 										});
 										team.lastUpdatedBy = $user?.email ?? '';
 										team.lastUpdatedTime = Timestamp.now();
 										team.requests = team.requests?.filter(
-											(r) =>
-												r.email !== request.email && r.name !== request.name,
+											(r) => r.email !== request.email,
 										);
 										await updateDoc(doc(db, 'events', event.event ?? ''), {
 											teams: event.teams,
@@ -641,8 +640,7 @@
 									variant="ghost"
 									onclick={async () => {
 										team.requests = team.requests?.filter(
-											(r) =>
-												r.email !== request.email && r.name !== request.name,
+											(r) => r.email !== request.email,
 										);
 										team.lastUpdatedBy = $user?.email ?? '';
 										team.lastUpdatedTime = Timestamp.now();
@@ -881,7 +879,7 @@
 						onclick={() => openUserDialog(teamMember.email)}
 						class="text-start"
 					>
-						{teamMember.name}
+						{resolveName(teamMember, $allUsersCollection)}
 					</button>
 
 					{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
@@ -899,9 +897,7 @@
 						onclick={async () => {
 							team.members.splice(
 								team.members.findIndex(
-									(e) =>
-										e.email === (teamMember?.email ?? '') &&
-										e.name === (teamMember?.name ?? ''),
+									(e) => e.email === (teamMember?.email ?? ''),
 								),
 								1,
 							);

@@ -2,7 +2,7 @@
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import SimpleTooltip from '$lib/SimpleTooltip.svelte';
 	import StorageMetadata from '$lib/StorageMetadata.svelte';
-	import { disableOnClick } from '$lib/better-utils';
+	import { disableOnClick, resolveName } from '$lib/better-utils';
 	import { Alert, AlertTitle } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -191,8 +191,8 @@
 								{#if team.members.length >= (event.maxTeamSize ?? 9999)}
 									<Alert>
 										<AlertTitle>
-											This {event.event === '*Rooming' ? 'room' : 'team'} is full</AlertTitle
-										>
+											This {event.event === '*Rooming' ? 'room' : 'team'} is full
+										</AlertTitle>
 									</Alert>
 								{:else}
 									{#if event.event === '*Rooming'}
@@ -558,7 +558,7 @@
 												.flatMap((t) => t.members)
 												.some((u) => u.email.toLowerCase() === r.email.toLowerCase())) ?? [] as request}
 										<li class="flex flex-row">
-											{request.name}
+											{resolveName(request, $allUsersCollection)}
 											<Button
 												{@attach disableOnClick(async () => {
 													if (team.members.length >= event.maxTeamSize) {
@@ -571,7 +571,7 @@
 													})
 														.then(() => {
 															toast.success(
-																`Request for ${request.name} approved successfully.`,
+																`Request for ${resolveName(request, $allUsersCollection)} approved successfully.`,
 															);
 															confetti();
 															navigator.vibrate(100);
@@ -600,7 +600,7 @@
 													})
 														.then(() => {
 															toast.success(
-																`Request for ${request.name} denied successfully.`,
+																`Request for ${resolveName(request, $allUsersCollection)} denied successfully.`,
 															);
 														})
 														.catch((error) => {
@@ -624,7 +624,7 @@
 		<ul>
 			{#each team.members as teamMember (teamMember.email)}
 				<li>
-					{teamMember.name}
+					{resolveName(teamMember, $allUsersCollection)}
 					{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
 						<Tooltip.Root>
 							<Tooltip.Trigger>

@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { resolveName } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { db } from '$lib/firebase';
-	import { user } from '$lib/stores';
+	import { allUsersCollection, user } from '$lib/stores';
 	import type { EventDoc, Team } from '$lib/types';
 	import { doc, updateDoc } from 'firebase/firestore';
 	import { hideEmpty } from './state';
@@ -52,7 +53,11 @@
 		<Card.Header>
 			<Card.Title>
 				{team.members
-					.map((m) => (m.email === team.teamCaptain ? `👑${m.name}👑` : m.name))
+					.map((m) =>
+						m.email === team.teamCaptain
+							? `👑${resolveName(m, $allUsersCollection)}👑`
+							: resolveName(m, $allUsersCollection),
+					)
 					.join(', ')} ({team.teamNumber})
 			</Card.Title>
 		</Card.Header>
@@ -86,7 +91,9 @@
 					Check in completed at {date?.toString()}
 				</p>
 				<p class="text-sm">
-					Check in completed by {team.checkInSubmittedBy?.name ?? 'Unknown'}
+					Check in completed by {team.checkInSubmittedBy
+						? resolveName(team.checkInSubmittedBy, $allUsersCollection)
+						: 'Unknown'}
 				</p>
 			{/if}
 

@@ -1,14 +1,19 @@
+import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
 import svelte from 'eslint-plugin-svelte';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import globals from 'globals';
-import ts from 'typescript-eslint';
+import { fileURLToPath } from 'node:url';
+import tseslint from 'typescript-eslint';
+
+const gitignorePath = fileURLToPath(new URL('.gitignore', import.meta.url));
 
 /** @type {import('eslint').Linter.Config[]} */
-export default [
+export default tseslint.config(
+	includeIgnoreFile(gitignorePath),
 	js.configs.recommended,
-	...ts.configs.recommended,
+	...tseslint.configs.recommended,
 	...svelte.configs['flat/recommended'],
 	eslintPluginUnicorn.configs['recommended'],
 	prettier,
@@ -45,7 +50,7 @@ export default [
 		files: ['**/*.svelte'],
 		languageOptions: {
 			parserOptions: {
-				parser: ts.parser,
+				parser: tseslint.parser,
 			},
 		},
 		rules: {
@@ -56,17 +61,10 @@ export default [
 	},
 	{
 		ignores: [
-			'build/',
-			'.svelte-kit/',
-			'dist/',
-			'docs/.vitepress/dist/',
-			'docs/.vitepress/cache/',
-			'.vercel/',
+			'docs/',
 			'functions/',
 			'src/lib/components/ui/',
 			'src/lib/utils.ts',
-			'vite.config.js.timestamp-*',
-			'vite.config.ts.timestamp-*',
 		],
 	},
-];
+);

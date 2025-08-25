@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
-	import { sleep } from '$lib/better-utils';
+	import { resolveName, sleep } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -68,7 +68,10 @@
 	let threshold = 0.2;
 	let fuse = $derived(
 		new Fuse(
-			eventData.map((e) => ({ ...e, members: e.members.map((m) => m.name) })),
+			eventData.map((e) => ({
+				...e,
+				members: e.members.map((m) => resolveName(m, $allUsersCollection)),
+			})),
 			{
 				keys: Object.entries(fuseKeys)
 					.filter(([, value]) => value)

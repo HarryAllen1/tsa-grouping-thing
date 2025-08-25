@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { disableOnClick } from '$lib/better-utils';
+	import { disableOnClick, resolveName } from '$lib/better-utils';
 	import * as Alert from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -220,7 +220,7 @@
 						<ul>
 							{#each request.requests ?? [] as r}
 								<li class="flex flex-row">
-									{r.name}
+									{resolveName(r, $allUsersCollection)}
 									<Button
 										{@attach disableOnClick(async () => {
 											const actualEvent = signedUpEvents.find(
@@ -237,7 +237,7 @@
 											})
 												.then(() => {
 													toast.success(
-														`Request for ${r.name} approved successfully.`,
+														`Request for ${resolveName(r, $allUsersCollection)} approved successfully.`,
 													);
 													confetti();
 													navigator.vibrate(100);
@@ -264,7 +264,7 @@
 											})
 												.then(() => {
 													toast.success(
-														`Request for ${r.name} denied successfully.`,
+														`Request for ${resolveName(r, $allUsersCollection)} denied successfully.`,
 													);
 												})
 												.catch((error) => {

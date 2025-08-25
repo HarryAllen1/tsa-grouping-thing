@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolveName } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Popover from '$lib/components/ui/popover';
@@ -53,7 +54,10 @@
 												<Popover.Root>
 													<Popover.Trigger>
 														<!-- DO NOT FORMAT -->
-														{member.name}{#if member.email === $user.email}
+														{resolveName(
+															member,
+															$allUsersCollection,
+														)}{#if member.email === $user.email}
 															<!-- eslint-disable-next-line svelte/no-useless-mustaches -->
 															{' '}(you){/if}{#if i < result.members.length - 1},
 															<!-- eslint-disable-next-line svelte/no-useless-mustaches -->

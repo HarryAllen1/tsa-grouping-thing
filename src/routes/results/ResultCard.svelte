@@ -1,14 +1,15 @@
 <script lang="ts">
+	import { resolveName } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { storage } from '$lib/firebase';
 	import { md } from '$lib/md';
-	import { user } from '$lib/stores';
+	import { allUsersCollection, user } from '$lib/stores';
 	import type { EventDoc, Result } from '$lib/types';
-	import { listAll, ref } from 'firebase/storage';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
+	import { listAll, ref } from 'firebase/storage';
 	import { DownloadURL } from 'sveltefire';
 
 	let {
@@ -27,7 +28,10 @@
 	<li class={i < event.perChapter ? 'font-bold text-green-500' : ''}>
 		{#each result.members as member, i}
 			<!-- DO NOT FORMAT -->
-			{member.name}{#if member.email === $user.email}
+			{resolveName(
+				member,
+				$allUsersCollection,
+			)}{#if member.email === $user.email}
 				<!-- eslint-disable-next-line svelte/no-useless-mustaches -->
 				{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
 			{/if}

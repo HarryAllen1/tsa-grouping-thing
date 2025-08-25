@@ -3,6 +3,7 @@ import * as Drawer from '$lib/components/ui/drawer';
 import type { Attachment } from 'svelte/attachments';
 import { derived, readable, type Readable } from 'svelte/store';
 import { loaderString } from './loader-string';
+import type { BasicUser, UserDoc } from './types';
 
 export const sleep = (ms: number): Promise<void> =>
 	new Promise((resolve) => setTimeout(resolve, ms));
@@ -130,3 +131,11 @@ export const filterObjectKeys = <T extends object>(
 			obj[key as keyof T] = object[key as keyof T];
 			return obj;
 		}, {} as T);
+
+export const resolveName = (
+	basicUser: BasicUser,
+	allUsers: UserDoc[],
+): string =>
+	allUsers.find(
+		(user) => basicUser.email.toLowerCase() === user.email.toLowerCase(),
+	)?.name || basicUser.name;

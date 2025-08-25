@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { sleep } from '$lib/better-utils';
+	import { resolveName, sleep } from '$lib/better-utils';
 	import Combobox from '$lib/Combobox.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -119,7 +119,7 @@
 		<p>Members</p>
 		{#each newMembers as member}
 			<div class="flex items-center gap-2">
-				<span>{member.name}</span>
+				<span>{resolveName(member, $allUsersCollection)}</span>
 				<Button
 					variant="ghost"
 					class="h-6"
@@ -275,7 +275,7 @@
 									? {
 											place: newPlace,
 											members: newMembers.map((m) => ({
-												name: m.name,
+												name: resolveName(m, $allUsersCollection),
 												email: m.email.includes('/')
 													? m.email.split('/')[0]
 													: m.email,
@@ -302,7 +302,7 @@
 							...(event.results?.slice(0, newPlace - 1) ?? []),
 							{
 								members: newMembers.map((m) => ({
-									name: m.name,
+									name: resolveName(m, $allUsersCollection),
 									email: m.email.includes('/')
 										? m.email.split('/')[0]
 										: m.email,

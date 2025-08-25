@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { resolveName } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import StorageMetadata from '$lib/StorageMetadata.svelte';
-	import { settings } from '$lib/stores';
+	import { allUsersCollection, settings } from '$lib/stores';
 	import type { EventDoc, Team } from '$lib/types';
 	import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
 	import { getBlob, type FullMetadata } from 'firebase/storage';
@@ -33,7 +34,9 @@
 					{#if $showMemberNames}
 						{team.members
 							.map((m) =>
-								m.email === team.teamCaptain ? `👑${m.name}👑` : m.name,
+								m.email === team.teamCaptain
+									? `👑${resolveName(m, $allUsersCollection)}👑`
+									: resolveName(m, $allUsersCollection),
 							)
 							.join(', ')} ({team.teamNumber})
 					{:else}

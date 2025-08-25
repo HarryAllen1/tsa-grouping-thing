@@ -56,6 +56,7 @@ export interface Team {
 }
 
 export interface BasicUser {
+	/** @deprecated search for the user to ensure an updated name */
 	name: string;
 	email: string;
 }

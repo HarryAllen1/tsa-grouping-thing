@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
+	import { resolveName } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -50,8 +51,8 @@
 		eventData.filter(
 			(e) =>
 				intersect(
-					e.members.map((m) => m.name),
-					event.members.map((m) => m.name),
+					e.members.map((m) => m.email),
+					event.members.map((m) => m.email),
 				).length === 0,
 		);
 	let submissionDescription = $state<string | number | string[] | null>(
@@ -578,7 +579,7 @@
 								<li>
 									<Popover.Root>
 										<Popover.Trigger class="underline">
-											{person.name}
+											{resolveName(person, $allUsersCollection)}
 										</Popover.Trigger>
 										<Popover.Content>
 											<UserCard
