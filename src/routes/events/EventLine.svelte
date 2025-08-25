@@ -53,16 +53,10 @@
 			onCheckedChange={(state) => {
 				toast.promise(
 					(async (state) => {
-						if (
-							!state &&
-							event.maxTeamSize > 1 &&
-							event.teams.some((team) =>
-								team.members.some(
-									(member) =>
-										member.email.toLowerCase() === $user?.email?.toLowerCase(),
-								),
-							)
-						) {
+						const membersTeam = event.teams.find((t) =>
+							t.members.some((member) => member.email === $userDoc.email),
+						);
+						if (!state && event.maxTeamSize > 1 && membersTeam) {
 							const result = await fancyConfirm(
 								'You are still in a team!',
 								'Are you sure you want to leave this event? You will be removed from your team and will be unable to rejoin it unless added by a team member.',
@@ -72,7 +66,12 @@
 								],
 							);
 
-							if (!result) {
+							if (result) {
+								await leaveTeam({
+									event: event.event,
+									teamId: membersTeam.id,
+								});
+							} else {
 								updater++;
 								throw new Error('Did not leave team');
 							}
@@ -87,9 +86,6 @@
 							return;
 						}
 
-						const membersTeam = event.teams.find((t) =>
-							t.members.some((member) => member.email === $userDoc.email),
-						);
 						if (
 							event.maxTeamSize === 1 &&
 							((event.teamCreationLocked &&
