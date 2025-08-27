@@ -23,9 +23,6 @@
 	} from 'firebase/auth';
 
 	const provider = new OAuthProvider('microsoft.com');
-	provider.addScope('email');
-	provider.addScope('openid');
-	provider.addScope('profile');
 
 	// let email = $state('');
 </script>

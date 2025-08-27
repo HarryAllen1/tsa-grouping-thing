@@ -3,7 +3,7 @@
 	import SimpleTooltip from '$lib/SimpleTooltip.svelte';
 	import StorageMetadata from '$lib/StorageMetadata.svelte';
 	import { disableOnClick, resolveName } from '$lib/better-utils';
-	import { Alert, AlertTitle } from '$lib/components/ui/alert';
+	import * as Alert from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -192,20 +192,21 @@
 							<Dialog.Content class="max-h-screen overflow-y-auto">
 								<Dialog.Title>Add People</Dialog.Title>
 								{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-									<Alert>
-										<AlertTitle>
+									<Alert.Root>
+										<Alert.Title>
 											This {event.event === '*Rooming' ? 'room' : 'team'} is full
-										</AlertTitle>
-									</Alert>
+										</Alert.Title>
+									</Alert.Root>
 								{:else}
 									{#if event.event === '*Rooming'}
-										<Alert variant="destructive">
-											<AlertTitle>
+										<Alert.Root variant="destructive">
+											<Alert.Title>Note on room genders</Alert.Title>
+											<Alert.Description>
 												You can only be in rooms with people of the same gender
-												(this is district policy).
-											</AlertTitle>
-											If something seems wrong, contact a JHS TSA board member.
-										</Alert>
+												(this is district policy). If something seems wrong,
+												contact a JHS TSA board member.
+											</Alert.Description>
+										</Alert.Root>
 									{:else}
 										<Dialog.Description>
 											<p>People who signed up for this event:</p>
@@ -264,8 +265,13 @@
 											</li>
 										{:else}
 											<li>
-												No one else singed up for this event. Ask around to see
-												if other people want to sign up for this event.
+												{#if event.event === '*Rooming'}
+													No one is available to be added to your room at this
+													time.
+												{:else}
+													No one else singed up for this event. Ask around to
+													see if other people want to sign up for this event.
+												{/if}
 											</li>
 										{/each}
 									</ul>
