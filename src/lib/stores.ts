@@ -40,16 +40,25 @@ user.subscribe(async ($u) => {
 		allUsersCollection = derived(
 			collectionStore<UserDoc>(db, 'users') as Readable<UserDoc[]>,
 			($users) =>
-				$users.map(($doc) => ({
-					...$doc,
-					// allow confirmation check
-					admin: !!$doc?.admin,
-					random: !!$doc?.random,
-					name:
-						$doc?.firstName && $doc?.lastName
-							? `${$doc.preferredFirstName ? `${$doc.preferredFirstName.trim()} (${$doc.firstName.trim()})` : $doc?.firstName.trim()} ${$doc?.lastName.trim()}`
-							: $doc?.name.trim(),
-				})),
+				$users
+					.filter(
+						(u) =>
+							![
+								'harry@kampmusic.org',
+								'1036145@lwsd.org',
+								'harryall@uw.edu',
+							].includes(u.email),
+					)
+					.map(($doc) => ({
+						...$doc,
+						// allow confirmation check
+						admin: !!$doc?.admin,
+						random: !!$doc?.random,
+						name:
+							$doc?.firstName && $doc?.lastName
+								? `${$doc.preferredFirstName ? `${$doc.preferredFirstName.trim()} (${$doc.firstName.trim()})` : $doc?.firstName.trim()} ${$doc?.lastName.trim()}`
+								: $doc?.name.trim(),
+					})),
 		);
 		eventsCollection = collectionStore<EventDoc>(db, 'events');
 		settings = docStore<SettingsDoc>(db, 'settings/settings', {
