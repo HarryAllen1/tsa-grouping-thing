@@ -21,9 +21,41 @@ By default, there is a collapsible which hides members' events to avoid the page
 
 This downloads a .csv file (basically a simple spreadsheet) which is used for uploading members to TSA Nationals (which you must do at the start of every school year before any state-level registration). See the [registration page](./registration.md#assisted) for more information.
 
-## Random Switch
+### Lock all accounts
+
+This prevents all users from editing their account information. This overrides the member-level [lock account details](#lock-account-details).
+
+## Member Settings
+
+![member card](member-card-settings.png)
+
+### Admin
+
+Enable this switch if the member is a board member or other admin. This effectively gives full write access to the database.
+
+::: danger
+Admins can change who is admin. Only enable this for people you absolutely trust.
+:::
+
+### Completed intake form
+
+Enabling this allows a new user to bypass the initial intake form. Disabling it for a member later forces them to complete it again.
+
+### Random Switch
 
 This switch can be used for whatever you like -- use it for keeping track of who you registered, who paid their fees, or whatever else.
+
+### Prevent rooming
+
+Some members should not be in the list of members to add to rooms, for whatever reason that may be. Enable this switch to disable rooming for that member and remove them from the list of members which can be added to a room.
+
+### Lock account details
+
+This prevents a member from editing their account details (gender, name, grade, etc.). Members can still edit their events with this enabled.
+
+### Lock events
+
+This prevents a member from editing any of their events.
 
 ## Names
 

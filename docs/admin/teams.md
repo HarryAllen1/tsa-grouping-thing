@@ -6,15 +6,23 @@ The admin teams page is fundamentally the same as the member teams page, except 
 
 Teams are colour coded to assist in finding teams that might need adjusting or communicating with.
 
-If a team is red, the team is either underfilled or overfilled. If the team is underfilled, the team should be talked to so that the minimum team size can be hit. If it is too big, then something happened that shouldn't have. Communicate with the team to remove the necessary amount of people.
+If a team is red, the team is either undefiled or overfilled. If the team is undefiled, the team should be talked to so that the minimum team size can be hit. If it is too big, then something happened that shouldn't have. Communicate with the team to remove the necessary amount of people.
 
 If a team is green, the team is exactly at the event limit.
 
-If a team has no colour, it is in the middle: not at the event limit, but not underfilled either.
+If a team has no colour, it is in the middle: not at the event limit, but not undefiled either.
 
 ## Naming
 
 The names of events are largely whatever the event name is. However, as there is no way to manually order the events, as the events are sorted alphabetically, if you want to have an event be at the top, you will have to prefix it with a letter that has a [character code](https://www.ascii-code.com/) which is smaller than all of the other events' first character (in other words, if you want an event to be at the top, prefix it with a "\*").
+
+## Submissions
+
+You can click "Manage Submissions" to see the submissions for a team. However, it is probably easier to use the [submissions page](./submissions.md).
+
+## Files
+
+This is best used from returning rubrics which cannot be posted on the [results page](./results.md) (typically from the State conference or January qualifier). You can click "Manage Files" to see and add files. But, by far the easier way to upload files is to drag and drop files from your file explorer on top of the team card (it works with multiple files at a time, too). The system will upload them.
 
 ## Editing events
 
