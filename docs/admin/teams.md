@@ -2,6 +2,59 @@
 
 The admin teams page is fundamentally the same as the member teams page, except admin's can view all teams in all events, and admins can change every aspect of every team and every event.
 
+## Settings at the top
+
+### Search filters
+
+To the right of the search bar, there is a filter button which drops down to some search filters. They're (hopefully) pretty self-explanatory.
+
+### Create new event
+
+This creates a new event.
+
+### Disable all team creation
+
+This toggles the ["Disable team creation" switch](#lock-team-creation) for all events.
+
+### Lock all events
+
+This locks all events by [locking all events](#lock-event).
+
+### Manage alert
+
+Anything written in this dialog will be present right underneath the "Edit Events" button on the member home page. All markdown is supported (as well as regular HTML -- please don't abuse this).
+
+You can use some special strings to embed some member-specific information:
+
+- Washington id: {{washingtonId}}
+- National id: {{nationalId}}
+- First name: {{firstName}}
+- Last name: {{lastName}}
+
+::: note
+These strings must be inserted exactly as written above (no extra whitespace or different capitalization). This is because the system effectively preforms a find-and-replace for these strings. If it doesn't work, you probably typed it wrong.
+:::
+
+You can also use the following string to embed a date:
+
+```html
+<div class="counter">
+	Fri Mar 01 2024 17:00:00 GMT-0800 (Pacific Standard Time)
+</div>
+```
+
+That date in the middle must be a [correctly formatted JavaScript Date string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format).
+
+You can also add a copyable with
+
+```html
+<span class="copyable">copyable thing here</span>
+```
+
+### Reset teams
+
+See [resetting](./resetting.md#resetting-the-teams).
+
 ## Team colour coding
 
 Teams are colour coded to assist in finding teams that might need adjusting or communicating with.
