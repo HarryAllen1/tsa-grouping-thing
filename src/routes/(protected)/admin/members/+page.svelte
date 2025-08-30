@@ -322,7 +322,7 @@
 	<p><span class="text-red-500">Red</span> = not enough events</p>
 	<p>
 		<span class="text-orange-500">Orange</span> = doesn't have teams for {MIN_EVENTS}
-		events
+		(min events) events
 	</p>
 	<p>
 		<span class="text-yellow-500">Yellow</span> = doesn't have a team for all events
