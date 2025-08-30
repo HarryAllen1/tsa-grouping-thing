@@ -39,7 +39,15 @@
 	const isAuthReady = auth.authStateReady();
 
 	const unsub = onAuthStateChanged(auth, async (user) => {
-		if (user && !user?.email?.endsWith('@lwsd.org') && !dev) {
+		if (
+			user &&
+			!(
+				user?.email?.endsWith('@lwsd.org') ||
+				user.email?.endsWith('@kampmusic.org') ||
+				user.email?.endsWith('@kcl.ac.uk')
+			) &&
+			!dev
+		) {
 			setUser(null);
 			alert('You must use an LWSD account to log in.');
 			await auth.currentUser?.delete();
@@ -47,8 +55,6 @@
 		//  else if (
 		// 	user &&
 		// 	![
-		// 		's-hallen@lwsd.org',
-		// 		'1036145@lwsd.org',
 		// 		'1103909@lwsd.org',
 		// 		'harryall@uw.edu',
 		// 	].includes(user.email?.toLowerCase() ?? '')

@@ -26,7 +26,14 @@
 				) ??
 				'';
 
-			if (!email.endsWith('@lwsd.org') && !dev) {
+			if (
+				!(
+					email.endsWith('@lwsd.org') ||
+					email.endsWith('@kampmusic.org') ||
+					email.endsWith('@kcl.ac.uk')
+				) &&
+				!dev
+			) {
 				await fancyConfirm(
 					'Invalid email',
 					'You must use an LWSD email address to log in.',

@@ -41,7 +41,14 @@
 				try {
 					const user = await signInWithPopup(auth, provider);
 
-					if (!user.user.email?.endsWith('@lwsd.org') && !dev) {
+					if (
+						!(
+							user.user.email?.endsWith('@lwsd.org') ||
+							user.user.email?.endsWith('@kampmusic.org') ||
+							user.user.email?.endsWith('@kcl.ac.uk')
+						) &&
+						!dev
+					) {
 						alert('You must use an LWSD account to log in.');
 						await user.user.delete();
 					}
