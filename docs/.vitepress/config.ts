@@ -57,6 +57,10 @@ export default defineConfig({
 				text: 'Admin Pages',
 				items: [
 					{
+						text: 'Timeline',
+						link: '/admin/timeline',
+					},
+					{
 						text: 'Teams',
 						link: '/admin/teams',
 					},
