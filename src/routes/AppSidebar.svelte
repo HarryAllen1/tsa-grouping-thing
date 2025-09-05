@@ -226,7 +226,7 @@
 				<Popover.Root>
 					<Popover.Trigger>
 						{#snippet child({ props })}
-							<Sidebar.MenuButton class="hidden md:flex" {...props}>
+							<Sidebar.MenuButton {...props} class="hidden md:flex">
 								<Paintbrush />
 
 								<span> Customize </span>
