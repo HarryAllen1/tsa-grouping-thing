@@ -12,12 +12,12 @@
 	"main": "lib/index.js",
 	"dependencies": {
 		"@google-cloud/functions-framework": "4.0.0",
-		"firebase-admin": "13.4.0",
+		"firebase-admin": "13.5.0",
 		"firebase-functions": "6.4.0"
 	},
 	"devDependencies": {
 		"firebase-functions-test": "3.4.1",
-		"@typescript/native-preview": "7.0.0-dev.20250827.1"
+		"@typescript/native-preview": "7.0.0-dev.20250904.1"
 	},
 	"private": true
 }
