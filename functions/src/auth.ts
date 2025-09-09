@@ -11,11 +11,14 @@ export const onlyAllowLWSDEmails = beforeUserCreated(
 			throw new HttpsError('invalid-argument', 'User not found');
 		}
 		if (!allowedDomains.has(user.email?.split('@')[1] ?? '')) {
-			throw new HttpsError('invalid-argument', 'Unauthorized email');
+			throw new HttpsError(
+				'invalid-argument',
+				'Unauthorized email (email is not an LWSD email)',
+			);
 		}
 		const doc = db.doc(`users/${user.email}`);
 		if (!(await doc.get()).exists) {
-			await doc.update({
+			await doc.create({
 				email: user.email,
 				name: user.displayName ?? '',
 				uid: user.uid,
