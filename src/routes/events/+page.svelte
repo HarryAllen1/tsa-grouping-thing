@@ -49,8 +49,7 @@
 	<h1
 		class="mt-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>
-		Changes will automatically be saved. Try to leave any teams for events you
-		are dropping.
+		Changes are automatically saved.
 	</h1>
 	<p class="leading-7 not-first:mt-6">
 		You may choose up to {MAX_EVENTS} events. You must have at at least {MIN_EVENTS}
