@@ -11,7 +11,6 @@
 		POINT_OF_CONTACT_NAME,
 	} from '$lib/constants';
 	import { auth } from '$lib/firebase';
-	import { microsoftAccessToken } from '$lib/stores';
 	import { captureException } from '@sentry/sveltekit';
 	import confetti from 'canvas-confetti';
 	import {
@@ -54,11 +53,6 @@
 					}
 
 					if (user.user) {
-						$microsoftAccessToken = (
-							user as unknown as {
-								_tokenResponse: { oauthAccessToken: string };
-							}
-						)._tokenResponse.oauthAccessToken;
 						confetti();
 						closeConfirmationDialog();
 					}

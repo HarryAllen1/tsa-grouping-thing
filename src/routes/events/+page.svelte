@@ -68,14 +68,15 @@
 			>: a form created by the Washington TSA State Officer team to help you
 			choose an event
 		</li>
-		<li>
+		<!-- <li>
+		 This link is outdated...
 			<a
 				target="_blank"
 				class="text-primary font-medium underline underline-offset-4"
 				href="https://lwsd.sharepoint.com/:f:/r/sites/GR-JHS-TechnologyStudentAssociation-SCA/Shared%20Documents/2024-25/Event%20Guides?csf=1&web=1&e=5PsOsB"
 				>Event guides</a
 			>: detailed rules and rubrics for each event
-		</li>
+		</li> -->
 		<li>
 			<a
 				target="_blank"
@@ -85,13 +86,14 @@
 			>: Washington-specific guidelines for each event as well as previous
 			year's event entries
 		</li>
-		<li>
+		<!-- <li>
+		 This site must be updated before it can be included...
 			<a
 				target="_blank"
 				class="text-primary font-medium underline underline-offset-4"
 				href="https://jhstsa.org">JHS TSA website</a
 			>: quick facts about each event
-		</li>
+		</li> -->
 	</ul>
 	<p class="mb-4">
 		Currently at {$userDoc?.events.length} out of a maximum of {MAX_EVENTS} events.

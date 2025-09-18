@@ -4,7 +4,7 @@ import { type User } from 'firebase/auth';
 import { persisted } from 'svelte-persisted-store';
 import { derived, get, type Readable } from 'svelte/store';
 import { collectionStore, docStore, userStore } from 'sveltefire';
-import { analytics, auth, db, lookupMsAzureProfilePhoto } from './firebase';
+import { analytics, auth, db } from './firebase';
 import type { EventDoc, SettingsDoc, UserDoc } from './types';
 
 export const user = userStore(auth) as Readable<User>;
@@ -13,13 +13,6 @@ export let allUsersCollection: Readable<UserDoc[]>;
 export let eventsCollection: ReturnType<typeof collectionStore<EventDoc>>;
 export let settings: ReturnType<typeof docStore<SettingsDoc>>;
 export const profilePhoto = persisted('profile-photo', '');
-export const microsoftAccessToken = persisted('tsa-access-token', '');
-
-microsoftAccessToken.subscribe(async (token) => {
-	if (token.length > 0) {
-		profilePhoto.set(await lookupMsAzureProfilePhoto(token));
-	}
-});
 
 user.subscribe(async ($u) => {
 	if ($u !== null && $u.email) {
