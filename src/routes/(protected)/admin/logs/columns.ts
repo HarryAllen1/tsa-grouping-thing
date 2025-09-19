@@ -1,14 +1,13 @@
 import { renderComponent } from '$lib/components/ui/data-table';
-import type { EventDoc } from '$lib/types';
 import type { ColumnDef } from '@tanstack/table-core';
-import DataTableUserCell from './DataTableUserCell.svelte';
-import DataTableDialog from './DataTableDialog.svelte';
 import type { Timestamp } from 'firebase/firestore';
+import DataTableDialog from './DataTableDialog.svelte';
+import DataTableUserCell from './DataTableUserCell.svelte';
 
 export interface FirestoreLog {
 	updatedAt: Timestamp;
 	updatedBy: string;
-	functionName: string;
+	function: string;
 	data: Record<string, boolean | number | string | null>;
 }
 
@@ -16,9 +15,7 @@ export const columns: ColumnDef<FirestoreLog>[] = [
 	{
 		id: 'updatedAt',
 		header: 'Time',
-		cell: ({ row }) => {
-			return row.original.updatedAt.toDate().toLocaleString();
-		},
+		cell: ({ row }) => row.original.updatedAt.toDate().toLocaleString(),
 	},
 	{
 		id: 'updatedBy',
@@ -31,7 +28,7 @@ export const columns: ColumnDef<FirestoreLog>[] = [
 	{
 		id: 'function',
 		header: 'Function',
-		cell: ({ row }) => row.original.functionName,
+		cell: ({ row }) => row.original.function,
 	},
 	{
 		id: 'actions',
