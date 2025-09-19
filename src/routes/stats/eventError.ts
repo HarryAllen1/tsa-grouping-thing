@@ -16,7 +16,7 @@ export const eventError = (
 				}),
 			),
 		}))
-		.sort((a, b) => a.event.localeCompare(b.event));
+		.toSorted((a, b) => a.event.localeCompare(b.event));
 	const eventStats = eventData.find((e) => e.event === event);
 
 	if (

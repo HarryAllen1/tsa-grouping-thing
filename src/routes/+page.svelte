@@ -54,11 +54,7 @@
 	});
 
 	$effect(() => {
-		if ($yellowMode) {
-			document.body.classList.add('yellow');
-		} else {
-			document.body.classList.remove('yellow');
-		}
+		document.body.classList.toggle('yellow', $yellowMode);
 	});
 
 	let signedUpEvents = $derived(

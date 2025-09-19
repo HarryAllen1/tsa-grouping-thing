@@ -102,7 +102,7 @@
 							),
 						),
 			)
-			.sort((a, b) => a.name.localeCompare(b.name))
+			.toSorted((a, b) => a.name.localeCompare(b.name))
 			.filter((user) => !user.lockRooming);
 </script>
 

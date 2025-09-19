@@ -57,6 +57,7 @@ export default tseslint.config(
 			'svelte/valid-compile': 'off',
 			'svelte/require-each-key': 'off',
 			'svelte/no-dom-manipulating': 'off',
+			'svelte/no-navigation-without-resolve': 'off',
 		},
 	},
 	{

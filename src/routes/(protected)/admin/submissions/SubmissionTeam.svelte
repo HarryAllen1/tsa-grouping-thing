@@ -64,9 +64,9 @@
 								(r) =>
 									r.members
 										.map((m) => m.email)
-										.sort((a, b) => a.localeCompare(b))
+										.toSorted((a, b) => a.localeCompare(b))
 										.join(',') ===
-									teamResult.sort((a, b) => a.localeCompare(b)).join(','),
+									teamResult.toSorted((a, b) => a.localeCompare(b)).join(','),
 							) + 1,
 						)}
 						place

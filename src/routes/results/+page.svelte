@@ -20,7 +20,7 @@
 	>
 		{#each $eventsCollection
 			.filter((e) => e.results?.length)
-			.sort((a, b) => a.event.localeCompare(b.event)) as event}
+			.toSorted((a, b) => a.event.localeCompare(b.event)) as event}
 			<ResultCard {event} />
 		{:else}
 			<p class="text-gray-500">No results posted yet</p>
