@@ -29,6 +29,11 @@ export const columns: ColumnDef<FirestoreLog>[] = [
 			}),
 	},
 	{
+		id: 'function',
+		header: 'Function',
+		cell: ({ row }) => row.original.functionName,
+	},
+	{
 		id: 'actions',
 		header: 'Actions',
 		cell: ({ row }) =>
