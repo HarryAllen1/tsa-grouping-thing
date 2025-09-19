@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/https';
 import { EventDoc } from './types';
-import { getAuthUser, getEvent, userToName } from './utils';
+import { getAuthUser, getEvent, logFunctionCall, userToName } from './utils';
 
 export const saveCheckIn = onCall<
 	| {
@@ -77,6 +77,8 @@ export const saveCheckIn = onCall<
 		await eventRef.update({
 			teams: event.teams,
 		} satisfies Partial<EventDoc>);
+
+		await logFunctionCall('saveCheckIn', user, data);
 
 		return {
 			success: true,

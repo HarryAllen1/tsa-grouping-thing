@@ -1,7 +1,13 @@
 import { Timestamp } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/https';
 import { EventDoc, Team } from './types';
-import { getAuthUser, getEvent, getUser, userToName } from './utils';
+import {
+	getAuthUser,
+	getEvent,
+	getUser,
+	logFunctionCall,
+	userToName,
+} from './utils';
 
 export const leaveTeam = onCall<
 	{
@@ -41,6 +47,8 @@ export const leaveTeam = onCall<
 				lastUpdatedBy: user.email,
 			} satisfies Partial<EventDoc>);
 
+			await logFunctionCall('leaveTeam', user, data);
+
 			return {
 				success: true,
 			};
@@ -52,6 +60,8 @@ export const leaveTeam = onCall<
 				teams: event.teams,
 				lastUpdatedBy: user.email,
 			} satisfies Partial<EventDoc>);
+
+			await logFunctionCall('leaveTeam', user, data);
 
 			return {
 				success: true,
@@ -118,6 +128,8 @@ export const addTeamMember = onCall<
 			teams: event.teams,
 		} satisfies Partial<EventDoc>);
 
+		await logFunctionCall('addTeamMember', user, data);
+
 		return {
 			success: true,
 		};
@@ -173,6 +185,8 @@ export const becomeTeamCaptain = onCall<
 		await eventRef.update({
 			teams: event.teams,
 		} satisfies Partial<EventDoc>);
+
+		await logFunctionCall('becomeTeamCaptain', user, data);
 
 		return {
 			success: true,
@@ -239,6 +253,8 @@ export const createTeam = onCall<
 			teams: event.teams,
 		} satisfies Partial<EventDoc>);
 
+		await logFunctionCall('createTeam', user, data);
+
 		return {
 			success: true,
 		};
@@ -284,6 +300,8 @@ export const editCardboardBoatTeamName = onCall<
 		await eventRef.update({
 			teams: event.teams,
 		} satisfies Partial<EventDoc>);
+
+		await logFunctionCall('editCardboardBoatTeamName', user, data);
 
 		return {
 			success: true,

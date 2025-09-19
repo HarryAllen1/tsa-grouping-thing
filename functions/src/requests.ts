@@ -2,7 +2,7 @@ import { onCall } from 'firebase-functions/https';
 import { HttpsError } from 'firebase-functions/identity';
 import { db } from './firebase';
 import { UserDoc } from './types';
-import { getAuthUser, getEvent, userToName } from './utils';
+import { getAuthUser, getEvent, logFunctionCall, userToName } from './utils';
 
 export const sendRequest = onCall<
 	{ event: string; teamId: string },
@@ -60,6 +60,8 @@ export const sendRequest = onCall<
 					}. Please go to the <a href="https://teaming.jhstsa.org">team creation wizard</a> to accept or deny the request.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
 				},
 			});
+
+		await logFunctionCall('sendRequest', user, data);
 
 		return { success: true };
 	},
@@ -130,6 +132,8 @@ export const sendRequestApproval = onCall<
 				},
 			});
 
+		await logFunctionCall('sendRequestApproval', user, data);
+
 		return { success: true };
 	},
 );
@@ -190,6 +194,8 @@ export const sendRequestDenial = onCall<
 					html: `Your request to join ${members}'s team for ${event.event} has been denied. Please contact them for more information.<br /><br />- JHS TSA Board<br />Please do not reply to this email; it comes from an unmonitored email address.`,
 				},
 			});
+
+		await logFunctionCall('sendRequestDenial', user, data);
 
 		return { success: true };
 	},

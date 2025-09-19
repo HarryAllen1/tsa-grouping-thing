@@ -5,11 +5,13 @@ This page shows actions performed by every user for every event. Useful for trac
 It does **NOT** log:
 
 - Changes people make to their account (name, gender, events, etc.),
+- Changes preformed by admins,
 - Results changes, or
 - File changes (submission uploads, file uploads).
 
 It DOES log:
 
 - All request changes,
-- Rooming changes and,
-- Admin changes.
+- Rooming changes,
+- Cardboard boat changes (i.e., team name),
+- All team changes (member removal and addition, team captains, etc.).

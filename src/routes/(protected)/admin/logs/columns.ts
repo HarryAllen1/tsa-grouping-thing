@@ -3,13 +3,13 @@ import type { EventDoc } from '$lib/types';
 import type { ColumnDef } from '@tanstack/table-core';
 import DataTableUserCell from './DataTableUserCell.svelte';
 import DataTableDialog from './DataTableDialog.svelte';
+import type { Timestamp } from 'firebase/firestore';
 
 export interface FirestoreLog {
-	/** unix timestamp */
-	updatedAt: number;
-	beforeData: EventDoc;
-	afterData: EventDoc;
+	updatedAt: Timestamp;
 	updatedBy: string;
+	functionName: string;
+	data: Record<string, boolean | number | string | null>;
 }
 
 export const columns: ColumnDef<FirestoreLog>[] = [
@@ -17,7 +17,7 @@ export const columns: ColumnDef<FirestoreLog>[] = [
 		id: 'updatedAt',
 		header: 'Time',
 		cell: ({ row }) => {
-			return new Date(row.original.updatedAt).toLocaleString();
+			return row.original.updatedAt.toDate().toLocaleString();
 		},
 	},
 	{
@@ -33,8 +33,7 @@ export const columns: ColumnDef<FirestoreLog>[] = [
 		header: 'Actions',
 		cell: ({ row }) =>
 			renderComponent(DataTableDialog, {
-				beforeData: row.original.beforeData,
-				afterData: row.original.afterData,
+				data: row.original.data,
 			}),
 	},
 ];

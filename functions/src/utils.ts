@@ -2,6 +2,7 @@ import { DecodedIdToken } from 'firebase-admin/auth';
 import { HttpsError } from 'firebase-functions/https';
 import { db } from './firebase';
 import { EventDoc, UserDoc } from './types';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export const userToName = (user: UserDoc): string =>
 	user.preferredFirstName
@@ -60,4 +61,17 @@ export const getEvent = async (
 	}
 
 	return { event: eventData, eventsCollection, eventRef: eventDoc };
+};
+
+export const logFunctionCall = async (
+	functionName: string,
+	user: UserDoc,
+	data: Record<string, number | string | null | boolean>,
+) => {
+	db.collection('event_logs').doc(Date.now().toString()).set({
+		updatedAt: Timestamp.now(),
+		updatedBy: user.email,
+		function: functionName,
+		data,
+	});
 };
