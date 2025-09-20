@@ -48,7 +48,9 @@
 	<p class="mb-4">Currently {$userDoc?.events.length}/{MAX_EVENTS}</p>
 
 	<div class="mb-4 flex flex-col gap-2">
-		{#each $events.filter((e) => e.event !== '*Rooming') as event (event.event)}
+		{#each $events
+			.filter((e) => e.event !== '*Rooming')
+			.toSorted( (a, b) => a.event.localeCompare(b.event), ) as event (event.event)}
 			<div class="flex items-center space-x-2">
 				<Checkbox
 					checked={eventMap[event.event]}

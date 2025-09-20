@@ -108,7 +108,9 @@
 	{/if}
 
 	<div class="mb-4 flex flex-col gap-2">
-		{#each $events.filter((e) => !e.hideInSignup) as event (event.event)}
+		{#each $events
+			.filter((e) => !e.hideInSignup)
+			.toSorted( (a, b) => a.event.localeCompare(b.event), ) as event (event.event)}
 			<EventLine {event} {eventMap} />
 		{/each}
 	</div>
