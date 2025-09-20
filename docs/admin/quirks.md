@@ -53,7 +53,7 @@ This is exclusively for returning files which don't fit in the aforementioned ca
 
 ## It's impossible to change an event's name
 
-Yes. It's to prone to user error later.
+Yes. It's to prone to user error later. The best way to change an event name is to delete the old event and create it again with the new name. If you change the event name from the database, ensure that all the members who signed up for the old event name have that event name switched to the new one, otherwise the site will error.
 
 ## There are too many ways to lock things
 

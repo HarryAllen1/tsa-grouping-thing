@@ -8,7 +8,7 @@ Members sign into the site, complete intake, and create teams.
 
 ## Fall
 
-Eliminations are held. After each elimination, the event is narrowed to the advancing teams and [results are posted](./results.md). [The "Lock team creation when full" switch](./teams.md#lock-team-creation-when-full) is enabled for that event to prevent necessitating additional eliminations.
+Eliminations are held. You can use the "Events without member overlap" section underneath each event detail to assist in planning events (using this ensures that members will avoid participating in multiple eliminations in a single day). After each elimination, the event is narrowed to the advancing teams and [results are posted](./results.md). [The "Lock team creation when full" switch](./teams.md#lock-team-creation-when-full) is enabled for that event to prevent necessitating additional eliminations.
 
 ## Late Fall/early Winter
 
