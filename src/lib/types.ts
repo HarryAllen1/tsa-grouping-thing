@@ -9,6 +9,7 @@ export interface EventDoc {
 	maxTeamSize: number;
 	perChapter: number;
 	description?: string;
+	deadline?: string;
 	locked?: boolean;
 	onlineSubmissions?: boolean;
 	/**

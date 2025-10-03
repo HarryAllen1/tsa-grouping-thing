@@ -14,6 +14,33 @@
 		$props();
 
 	let collapsibleOpen = $state(false);
+
+	function humanDate(dateString: string) {
+		const date = new Date(dateString);
+		const today = new Date();
+		const tomorrow = new Date();
+		tomorrow.setDate(today.getDate() + 1);
+
+		if (date.toDateString() === today.toDateString()) {
+			return (
+				'Today ' +
+				date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+			);
+		}
+
+		if (date.toDateString() === tomorrow.toDateString()) {
+			return (
+				'Tomorrow ' +
+				date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+			);
+		}
+
+		return date.toLocaleDateString(undefined, {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		});
+	}
 </script>
 
 {#snippet renderTeams(teams: Team[])}
@@ -58,6 +85,11 @@
 		<Card.Description>
 			{#if event.description}
 				<p>{event.description}</p>
+			{/if}
+			{#if event.deadline}
+				<p class="mb-2 font-bold text-red-600 dark:text-red-400">
+					Deadline: {humanDate(event.deadline)}
+				</p>
 			{/if}
 			<ul>
 				<li>

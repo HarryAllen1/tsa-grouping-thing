@@ -93,12 +93,14 @@
 		maxTeamSize: number;
 		perChapter: number;
 		locked: boolean | undefined;
+		deadline: string;
 	} = $state({
 		event: '',
 		minTeamSize: 1,
 		maxTeamSize: 1,
 		perChapter: 1,
 		locked: false,
+		deadline: '',
 	});
 
 	let newEventDialogOpen = $state(false);
@@ -211,6 +213,14 @@
 							min={1}
 							step={1}
 							placeholder="1"
+						/>
+					</Label>
+					<Label class="flex w-full flex-col items-start gap-1.5">
+						<span>Deadline (optional)</span>
+						<Input
+							bind:value={newEventStuff.deadline}
+							type="datetime-local"
+							placeholder="Select deadline"
 						/>
 					</Label>
 					<div class="flex items-center space-x-2">

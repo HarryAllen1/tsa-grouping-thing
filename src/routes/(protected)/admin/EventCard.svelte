@@ -216,7 +216,48 @@
 							bind:value={event.perChapter}
 							id="perChapter"
 						/>
+						<Label for="deadline">Deadline (optional)</Label>
+						<div class="datetime-wrapper">
+							<Input
+								type="datetime-local"
+								bind:value={event.deadline}
+								id="deadline"
+								placeholder="No deadline"
+								class="datetime-input"
+							/>
+						</div>
 
+						<style>
+							/* Wrap to control icon positioning */
+							.datetime-wrapper {
+								position: relative;
+								width: 100%;
+							}
+
+							/* Style the input itself */
+							.datetime-input {
+								width: 100%;
+								box-sizing: border-box;
+								appearance: none;
+								-webkit-appearance: none;
+								-moz-appearance: none;
+								padding-right: 2.5rem; /* leave room for the icon */
+							}
+
+							/* Position the calendar icon flush right */
+							.datetime-input::-webkit-calendar-picker-indicator {
+								position: absolute;
+								right: 0.75rem;
+								top: 50%;
+								transform: translateY(-50%);
+								cursor: pointer;
+							}
+
+							/* Prevent text from overlapping the icon in Safari */
+							.datetime-input::-webkit-datetime-edit {
+								padding-right: 1.5rem;
+							}
+						</style>
 						<Dialog.Footer class="flex flex-row">
 							<Button
 								variant="destructive"
@@ -276,6 +317,7 @@
 										minTeamSize: event.minTeamSize,
 										maxTeamSize: event.maxTeamSize,
 										perChapter: event.perChapter,
+										deadline: event.deadline || '',
 										lastUpdatedBy: $user?.email ?? '',
 									} satisfies Partial<EventDoc>);
 
@@ -328,6 +370,11 @@
 		<Card.Description>
 			{#if event.description}
 				<p>{event.description}</p>
+			{/if}
+			{#if event.deadline}
+				<p class="mb-2 font-bold text-red-600 dark:text-red-400">
+					Deadline: {new Date(event.deadline).toLocaleString()}
+				</p>
 			{/if}
 			<ul class="mb-2">
 				<li>
