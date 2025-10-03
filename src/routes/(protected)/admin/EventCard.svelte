@@ -383,18 +383,20 @@
 			{/if}
 		</Card.Title>
 		<Card.Description>
-			<div class="mb-2 rounded-md bg-red-300 dark:bg-red-900">
-				{#if event.deadline}
-					<p class="mb-2 px-2 pt-2 font-bold">
-						Deadline: {new Date(event.deadline).toLocaleString()}
-					</p>
-				{/if}
-				{#if event.eventLead}
-					<p class="px-2 pb-2 font-bold">
-						Event Lead: {event.eventLead}
-					</p>
-				{/if}
-			</div>
+			{#if event.deadline || event.eventLead}
+				<div class="mb-2 gap-2 rounded-md bg-red-300 p-2 dark:bg-red-900">
+					{#if event.deadline}
+						<p class="font-bold">
+							Deadline: {new Date(event.deadline).toLocaleString()}
+						</p>
+					{/if}
+					{#if event.eventLead}
+						<p class="font-bold">
+							Event Lead: {event.eventLead}
+						</p>
+					{/if}
+				</div>
+			{/if}
 			<ul class="mb-2">
 				<li>
 					Min {event.minTeamSize} people per team

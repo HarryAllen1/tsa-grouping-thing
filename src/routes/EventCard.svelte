@@ -83,22 +83,20 @@
 			{event.event}
 		</Card.Title>
 		<Card.Description>
-			{#if event.description}
-				<p>{event.description}</p>
+			{#if event.deadline || event.eventLead}
+				<div class="my-1 gap-2 rounded-md bg-red-300 p-2 dark:bg-red-900">
+					{#if event.deadline}
+						<p class="font-bold">
+							Deadline: {humanDate(event.deadline)}
+						</p>
+					{/if}
+					{#if event.eventLead}
+						<p class="font-bold">
+							Event Lead: {event.eventLead}
+						</p>
+					{/if}
+				</div>
 			{/if}
-			<div class="my-2 rounded-md bg-red-300 dark:bg-red-900">
-				{#if event.deadline}
-					<p class="mb-2 px-2 pt-2 font-bold">
-						Deadline: {humanDate(event.deadline)}
-					</p>
-				{/if}
-				{#if event.eventLead}
-					<p class="px-2 font-bold">
-						Event Lead: {event.eventLead}
-					</p>
-					<p class="px-2 pb-2 text-xs">Go pester them please</p>
-				{/if}
-			</div>
 
 			<ul>
 				<li>
