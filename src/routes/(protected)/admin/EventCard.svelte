@@ -63,7 +63,7 @@
 	let collapsibleOpen = $state(false);
 </script>
 
-<Card.Root class={hidden ? 'hidden' : ''}>
+<Card.Root class={hidden ? 'hidden' : 'gap-0'}>
 	<Card.Header>
 		<Card.Title class="flex flex-row items-center">
 			<span>
@@ -757,6 +757,7 @@
 					lastUpdatedBy: $user?.email ?? '',
 				});
 			}}
+			class="mt-4"
 		>
 			Create Team
 		</Button>
