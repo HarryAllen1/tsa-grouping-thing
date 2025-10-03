@@ -10,6 +10,7 @@ export interface EventDoc {
 	perChapter: number;
 	description?: string;
 	deadline?: string;
+	eventLead?: string;
 	locked?: boolean;
 	onlineSubmissions?: boolean;
 	/**

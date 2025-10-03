@@ -94,6 +94,7 @@
 		perChapter: number;
 		locked: boolean | undefined;
 		deadline: string;
+		eventLead: string;
 	} = $state({
 		event: '',
 		minTeamSize: 1,
@@ -101,6 +102,7 @@
 		perChapter: 1,
 		locked: false,
 		deadline: '',
+		eventLead: '',
 	});
 
 	let newEventDialogOpen = $state(false);
@@ -220,8 +222,23 @@
 						<Input
 							bind:value={newEventStuff.deadline}
 							type="datetime-local"
+							step="600"
 							placeholder="Select deadline"
 						/>
+					</Label>
+					<Label class="flex w-full flex-col items-start gap-1.5">
+						<span>Event Lead (optional)</span>
+						<select
+							bind:value={newEventStuff.eventLead}
+							class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+						>
+							<option value="">(none)</option>
+							{#each $allUsersCollection.filter((user) => user.admin) as user (user.email)}
+								<option value={user.email}
+									>{resolveName(user, $allUsersCollection)}</option
+								>
+							{/each}
+						</select>
 					</Label>
 					<div class="flex items-center space-x-2">
 						<Checkbox id="newEventLocked" bind:checked={newEventStuff.locked} />

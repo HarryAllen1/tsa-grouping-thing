@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { disableOnClick } from '$lib/better-utils';
+	import { disableOnClick, resolveName } from '$lib/better-utils';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -91,6 +91,13 @@
 					Deadline: {humanDate(event.deadline)}
 				</p>
 			{/if}
+			{#if event.eventLead}
+				<p class="font-bold text-red-600 dark:text-red-400">
+					Event Lead: {event.eventLead}
+				</p>
+				<p class="mb-2 text-xs">Go pester them please</p>
+			{/if}
+
 			<ul>
 				<li>
 					Min {event.minTeamSize} people per {event.event === '*Rooming'

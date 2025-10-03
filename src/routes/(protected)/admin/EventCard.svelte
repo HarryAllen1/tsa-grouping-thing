@@ -226,6 +226,20 @@
 								class="datetime-input"
 							/>
 						</div>
+						<Label class="flex w-full flex-col items-start gap-1.5">
+							<span>Event Lead (optional)</span>
+							<select
+								bind:value={event.eventLead}
+								class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								<option value="">(none)</option>
+								{#each $allUsersCollection.filter((user) => user.admin) as user}
+									<option value={resolveName(user, $allUsersCollection)}
+										>{resolveName(user, $allUsersCollection)}</option
+									>
+								{/each}
+							</select>
+						</Label>
 
 						<style>
 							/* Wrap to control icon positioning */
@@ -319,6 +333,7 @@
 										perChapter: event.perChapter,
 										deadline: event.deadline || '',
 										lastUpdatedBy: $user?.email ?? '',
+										eventLead: event.eventLead || '',
 									} satisfies Partial<EventDoc>);
 
 									editEventDialogOpen = false;

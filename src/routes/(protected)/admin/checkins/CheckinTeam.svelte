@@ -49,7 +49,7 @@
 </script>
 
 {#if ($hideEmpty && team.checkInComplete) || !$hideEmpty}
-	<Card.Root>
+	<Card.Root class="h-full w-full">
 		<Card.Header>
 			<Card.Title>
 				{team.members
@@ -62,7 +62,7 @@
 			</Card.Title>
 		</Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<div>
+			<div class="flex items-center justify-center">
 				<Label>Check-in marked as complete?</Label>
 				<Select.Root
 					type="single"
@@ -97,7 +97,7 @@
 				</p>
 			{/if}
 
-			<div>
+			<div class="flex flex-col gap-2">
 				<Label>
 					As of right now, how prepared do you feel your team is for this event?
 				</Label>
@@ -129,7 +129,7 @@
 			</div>
 
 			{@const id = `checkinResponse-${event.event.slice(0, 4)}-${team.teamNumber}`}
-			<div>
+			<div class="flex flex-col gap-2">
 				<Label for={id}>
 					Please briefly elaborate on your response. If you feel you are
 					well-prepared, please comment on your progress. If you feel
