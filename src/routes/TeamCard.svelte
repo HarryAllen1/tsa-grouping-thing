@@ -135,150 +135,152 @@
 		<div class="flex flex-col gap-1 lg:flex-row">
 			{#if (team.locked || event.locked) && team.members.some((e) => e.email.toLowerCase() === ($user?.email ?? ''))}
 				<p class="text-sm">Your team is currently locked from editing.</p>
-			{:else if team.members?.some((e) => e.email.toLowerCase() === ($user?.email ?? '')) && event.maxTeamSize > 1}
+			{:else if team.members?.some((e) => e.email.toLowerCase() === ($user?.email ?? '')) && event.maxTeamSize >= 1}
 				<div class="flex flex-col gap-2">
-					<div class="flex w-full flex-row gap-2">
-						<Tooltip.Root>
-							<Tooltip.Trigger>
-								<Button
-									variant="destructive"
-									{@attach disableOnClick(async () => {
-										await leaveTeam({
-											event: event.event,
-											teamId: team.id,
-										}).catch((error) => {
-											toast.error(`Failed to leave team: ${error}`);
-										});
-									})}
-								>
-									<LogOut />
-								</Button>
-							</Tooltip.Trigger>
-							<Tooltip.Content>Leave team</Tooltip.Content>
-						</Tooltip.Root>
-						<Dialog.Root>
-							{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-								<Tooltip.Root>
-									<Tooltip.Trigger>
-										<Dialog.Trigger>
-											{#snippet child({ props })}
-												<Button
-													class="bg-green-500 hover:bg-green-400"
-													disabled
-													{...props}
-												>
-													<UserPlus />
-												</Button>
-											{/snippet}
-										</Dialog.Trigger>
-									</Tooltip.Trigger>
-									<Tooltip.Content>
-										<p>Team is full</p>
-									</Tooltip.Content>
-								</Tooltip.Root>
-							{:else}
-								<Dialog.Trigger>
+					{#if event.maxTeamSize > 1}
+						<div class="flex w-full flex-row gap-2">
+							<Tooltip.Root>
+								<Tooltip.Trigger>
+									<Button
+										variant="destructive"
+										{@attach disableOnClick(async () => {
+											await leaveTeam({
+												event: event.event,
+												teamId: team.id,
+											}).catch((error) => {
+												toast.error(`Failed to leave team: ${error}`);
+											});
+										})}
+									>
+										<LogOut />
+									</Button>
+								</Tooltip.Trigger>
+								<Tooltip.Content>Leave team</Tooltip.Content>
+							</Tooltip.Root>
+							<Dialog.Root>
+								{#if team.members.length >= (event.maxTeamSize ?? 9999)}
 									<Tooltip.Root>
 										<Tooltip.Trigger>
-											<Button class="bg-green-500 hover:bg-green-400">
-												<UserPlus />
-											</Button>
+											<Dialog.Trigger>
+												{#snippet child({ props })}
+													<Button
+														class="bg-green-500 hover:bg-green-400"
+														disabled
+														{...props}
+													>
+														<UserPlus />
+													</Button>
+												{/snippet}
+											</Dialog.Trigger>
 										</Tooltip.Trigger>
-										<Tooltip.Content>Add person</Tooltip.Content>
+										<Tooltip.Content>
+											<p>Team is full</p>
+										</Tooltip.Content>
 									</Tooltip.Root>
-								</Dialog.Trigger>
-							{/if}
-
-							<Dialog.Content class="max-h-screen overflow-y-auto">
-								<Dialog.Title>Add People</Dialog.Title>
-								{#if team.members.length >= (event.maxTeamSize ?? 9999)}
-									<Alert.Root>
-										<Alert.Title>
-											This {event.event === '*Rooming' ? 'room' : 'team'} is full
-										</Alert.Title>
-									</Alert.Root>
 								{:else}
-									{#if event.event === '*Rooming'}
-										<Alert.Root variant="destructive">
-											<Alert.Title>Note on room genders</Alert.Title>
-											<Alert.Description>
-												You can only be in rooms with people of the same gender
-												(this is district policy). If something seems wrong,
-												contact a JHS TSA board member.
-											</Alert.Description>
+									<Dialog.Trigger>
+										<Tooltip.Root>
+											<Tooltip.Trigger>
+												<Button class="bg-green-500 hover:bg-green-400">
+													<UserPlus />
+												</Button>
+											</Tooltip.Trigger>
+											<Tooltip.Content>Add person</Tooltip.Content>
+										</Tooltip.Root>
+									</Dialog.Trigger>
+								{/if}
+
+								<Dialog.Content class="max-h-screen overflow-y-auto">
+									<Dialog.Title>Add People</Dialog.Title>
+									{#if team.members.length >= (event.maxTeamSize ?? 9999)}
+										<Alert.Root>
+											<Alert.Title>
+												This {event.event === '*Rooming' ? 'room' : 'team'} is full
+											</Alert.Title>
 										</Alert.Root>
 									{:else}
-										<Dialog.Description>
-											<p>People who signed up for this event:</p>
-										</Dialog.Description>
-									{/if}
-
-									<ul>
-										{#each getPeopleWhoCanBeAddedToEvent(event, $allUsersCollection) as person (person.email)}
-											<li
-												class="flex flex-row items-center"
-												animate:flip={{
-													duration: 200,
-												}}
-											>
-												{person.name}
-												<Button
-													{@attach disableOnClick(async () => {
-														if (team.members.length >= event.maxTeamSize) {
-															return alert('Your team is full');
-														}
-
-														await (
-															team.requests?.some(
-																(r) => r.email === person.email,
-															)
-																? sendRequestApproval({
-																		event: event.event,
-																		teamId: team.id,
-																		userEmail: person.email,
-																	})
-																: addTeamMember({
-																		event: event.event,
-																		teamId: team.id,
-																		userEmail: person.email,
-																	})
-														)
-															.then(() => {
-																toast.success(
-																	`Added ${person.name} to the team successfully.`,
-																);
-																confetti();
-																navigator.vibrate(100);
-															})
-															.catch((error) => {
-																toast.error(
-																	`Failed to add ${person.name} to the team: ${error}`,
-																);
-															});
-													})}
-													variant="outline"
-													size="icon"
-													class="ml-2"
-												>
-													<Plus />
-												</Button>
-											</li>
+										{#if event.event === '*Rooming'}
+											<Alert.Root variant="destructive">
+												<Alert.Title>Note on room genders</Alert.Title>
+												<Alert.Description>
+													You can only be in rooms with people of the same
+													gender (this is district policy). If something seems
+													wrong, contact a JHS TSA board member.
+												</Alert.Description>
+											</Alert.Root>
 										{:else}
-											<li>
-												{#if event.event === '*Rooming'}
-													No one is available to be added to your room at this
-													time.
-												{:else}
-													No one else singed up for this event. Ask around to
-													see if other people want to sign up for this event.
-												{/if}
-											</li>
-										{/each}
-									</ul>
-								{/if}
-							</Dialog.Content>
-						</Dialog.Root>
-					</div>
+											<Dialog.Description>
+												<p>People who signed up for this event:</p>
+											</Dialog.Description>
+										{/if}
+
+										<ul>
+											{#each getPeopleWhoCanBeAddedToEvent(event, $allUsersCollection) as person (person.email)}
+												<li
+													class="flex flex-row items-center"
+													animate:flip={{
+														duration: 200,
+													}}
+												>
+													{person.name}
+													<Button
+														{@attach disableOnClick(async () => {
+															if (team.members.length >= event.maxTeamSize) {
+																return alert('Your team is full');
+															}
+
+															await (
+																team.requests?.some(
+																	(r) => r.email === person.email,
+																)
+																	? sendRequestApproval({
+																			event: event.event,
+																			teamId: team.id,
+																			userEmail: person.email,
+																		})
+																	: addTeamMember({
+																			event: event.event,
+																			teamId: team.id,
+																			userEmail: person.email,
+																		})
+															)
+																.then(() => {
+																	toast.success(
+																		`Added ${person.name} to the team successfully.`,
+																	);
+																	confetti();
+																	navigator.vibrate(100);
+																})
+																.catch((error) => {
+																	toast.error(
+																		`Failed to add ${person.name} to the team: ${error}`,
+																	);
+																});
+														})}
+														variant="outline"
+														size="icon"
+														class="ml-2"
+													>
+														<Plus />
+													</Button>
+												</li>
+											{:else}
+												<li>
+													{#if event.event === '*Rooming'}
+														No one is available to be added to your room at this
+														time.
+													{:else}
+														No one else singed up for this event. Ask around to
+														see if other people want to sign up for this event.
+													{/if}
+												</li>
+											{/each}
+										</ul>
+									{/if}
+								</Dialog.Content>
+							</Dialog.Root>
+						</div>
+					{/if}
 
 					{#if event.event !== '*Rooming' && event.event !== '*Cardboard Boat' && event.maxTeamSize > 1}
 						<div class="flex w-full flex-row gap-2">
