@@ -54,17 +54,33 @@
 					waId: allMembers.map((m) => m.washingtonId).filter(Boolean),
 				};
 			})
-			.toSorted((a, b) => a.event.localeCompare(b.event)),
+			.toSorted((a, b) => {
+				if (sortByDeadline) {
+					const aDeadline = a.deadline
+						? new Date(a.deadline).getTime()
+						: Infinity;
+					const bDeadline = b.deadline
+						? new Date(b.deadline).getTime()
+						: Infinity;
+
+					if (aDeadline !== bDeadline) {
+						return aDeadline - bDeadline;
+					}
+				}
+				return a.event.localeCompare(b.event);
+			}),
 	);
 
 	let shouldHideIndividualEvents = $state(false);
 	let onlyShowOverflown = $state(false);
+	let sortByDeadline = $state(false);
 
 	const fuseKeys = {
 		event: true,
 		members: true,
 		waId: true,
 		teamNumbers: true,
+		deadline: true,
 	};
 	let threshold = 0.2;
 	let fuse = $derived(
@@ -165,6 +181,12 @@
 					<Label class="flex flex-row items-center">
 						<Switch class="mr-2" bind:checked={onlyShowOverflown} />
 						Only show overflown events
+					</Label>
+				</div>
+				<div>
+					<Label class="flex flex-row items-center">
+						<Switch class="mr-2" bind:checked={sortByDeadline} />
+						Sort by Deadline
 					</Label>
 				</div>
 			</Popover.Content>

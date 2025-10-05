@@ -358,30 +358,35 @@
 							<ul>
 								{#each team.members as teamMember (teamMember.email)}
 									<li>
-										<button
-											onclick={async () => {
-												team.teamCaptain = teamMember?.email ?? '';
-												team.lastUpdatedBy = $user?.email ?? '';
-												team.lastUpdatedTime = new Timestamp(
-													Date.now() / 1000,
-													0,
-												);
-												await updateDoc(doc(db, 'events', event.event ?? ''), {
-													teams: event.teams,
-													lastUpdatedBy: $user?.email ?? '',
-												});
-											}}
-										>
-											{resolveName(teamMember, $allUsersCollection)}
-										</button>
-										{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
-											<Tooltip.Root>
-												<Tooltip.Trigger>
-													<Crown class="h-4 w-4" />
-												</Tooltip.Trigger>
-												<Tooltip.Content>Team captain</Tooltip.Content>
-											</Tooltip.Root>
-										{/if}
+										<div class="flex items-center justify-center">
+											<button
+												onclick={async () => {
+													team.teamCaptain = teamMember?.email ?? '';
+													team.lastUpdatedBy = $user?.email ?? '';
+													team.lastUpdatedTime = new Timestamp(
+														Date.now() / 1000,
+														0,
+													);
+													await updateDoc(
+														doc(db, 'events', event.event ?? ''),
+														{
+															teams: event.teams,
+															lastUpdatedBy: $user?.email ?? '',
+														},
+													);
+												}}
+											>
+												{resolveName(teamMember, $allUsersCollection)}
+											</button>
+											{#if team.teamCaptain?.toLowerCase() === teamMember.email.toLowerCase()}
+												<Tooltip.Root>
+													<Tooltip.Trigger>
+														<Crown class="h-4 w-4 justify-center" />
+													</Tooltip.Trigger>
+													<Tooltip.Content>Team captain</Tooltip.Content>
+												</Tooltip.Root>
+											{/if}
+										</div>
 									</li>
 								{/each}
 							</ul>
