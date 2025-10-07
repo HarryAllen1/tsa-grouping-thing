@@ -42,6 +42,12 @@
 					</Card.Header>
 					<Card.Content>
 						{#if event.results && event.results.length > 0}
+							<Button
+								href={`mailto:${event.results.map((r) => r.members.map((m) => m.email))}`}
+								class="w-full py-2"
+							>
+								Email Everyone
+							</Button>
 							<ol class="my-6 ml-6 list-decimal [&>li]:mt-2">
 								{#each event.results as result, i}
 									<li
