@@ -83,6 +83,15 @@
 					),
 				),
 	);
+
+	let visibleMembers = $derived(
+		results.filter(
+			(user) =>
+				(showRandomSwitch === 'false' && !user.random) ||
+				(showRandomSwitch === 'true' && user.random) ||
+				showRandomSwitch === 'null',
+		),
+	);
 </script>
 
 <svelte:head>
@@ -217,7 +226,7 @@
 	</div>
 	<div class="flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
 		<div>
-			<Label for="sortBy">Sort by</Label>
+			<Label for="sortBy" class="py-1">Sort by</Label>
 			<div id="sortBy" class="mb-2 flex items-center space-x-2">
 				<Select.Root
 					disabled={view === 'list'}
@@ -239,8 +248,9 @@
 				</Select.Root>
 			</div>
 		</div>
+
 		<div>
-			<Label for="view">View</Label>
+			<Label for="view" class="py-1">View</Label>
 			<div id="view" class="mb-2 flex items-center space-x-2">
 				<Select.Root type="single" bind:value={view}>
 					<Select.Trigger class="w-[180px]">
@@ -257,7 +267,7 @@
 		</div>
 
 		<div>
-			<Label for="randomSwitch">See...</Label>
+			<Label for="randomSwitch" class="py-1">See...</Label>
 			<div id="randomSwitch" class="mb-2 flex items-center space-x-2">
 				<Select.Root
 					disabled={view === 'list'}
@@ -287,7 +297,7 @@
 			</div>
 		</div>
 		<div>
-			<Label for="randomSwitch">Number of events</Label>
+			<Label for="randomSwitch" class="py-1">Number of events</Label>
 			<div id="randomSwitch" class="mb-2 flex items-center space-x-2">
 				<Select.Root
 					disabled={view === 'list'}
@@ -308,6 +318,16 @@
 					</Select.Content>
 				</Select.Root>
 			</div>
+		</div>
+		<div>
+			<Label for="emailEveryone" class="py-1">Email Everyone</Label>
+			<Button
+				variant="outline"
+				href="mailto:{visibleMembers.map((m) => m.email)}"
+				class="mb-2 w-auto"
+			>
+				Email Everyone
+			</Button>
 		</div>
 	</div>
 

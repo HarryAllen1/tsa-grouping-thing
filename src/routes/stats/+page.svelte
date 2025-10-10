@@ -45,6 +45,8 @@
 				}
 			}
 
+			events.sort((a, b) => b.freq - a.freq);
+
 			const plotEl = plot({
 				grid: true,
 				x: {
@@ -52,6 +54,7 @@
 				},
 				y: {
 					label: 'Event name',
+					domain: events.map((d) => d.name),
 				},
 				marks: [
 					barX(events, {
