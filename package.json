@@ -52,7 +52,7 @@
 		"@types/eslint": "9.6.1",
 		"@types/markdown-it": "14.1.2",
 		"@types/node": "24.8.1",
-		"bits-ui": "2.13.1",
+		"bits-ui": "2.14.0",
 		"eslint": "9.38.0",
 		"eslint-config-prettier": "10.1.8",
 		"eslint-plugin-svelte": "3.12.4",
