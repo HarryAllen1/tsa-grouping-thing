@@ -5,6 +5,5 @@
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
-	},
-	"pages_build_output_dir": "docs/.vitepress/dist"
+	}
 }
