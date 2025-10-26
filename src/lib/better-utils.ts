@@ -143,7 +143,6 @@ export const resolveName = (
 export const humanDate = (dateString: string): string => {
 	const date = new Date(dateString);
 	const today = new Date();
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity -- this isn't used in Svelte markup
 	const tomorrow = new Date();
 	tomorrow.setDate(today.getDate() + 1);
 
