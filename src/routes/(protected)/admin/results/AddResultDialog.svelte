@@ -112,41 +112,42 @@
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<Dialog.Title>Add Results</Dialog.Title>
-		<Label class="flex flex-col gap-2">
-			<span>Place</span>
-			<Input bind:value={newPlace} type="number" />
-		</Label>
-		<p>Members</p>
-		{#each newMembers as member}
-			<div class="flex items-center gap-2">
-				<span>{resolveName(member, $allUsersCollection)}</span>
-				<Button
-					variant="ghost"
-					class="h-6"
-					size="icon"
-					onclick={() => {
-						newMembers = newMembers.filter((m) => m.email !== member.email);
-					}}
-				>
-					<Minus />
-				</Button>
-			</div>
-		{/each}
-		<Combobox
-			bind:value={comboboxValue}
-			options={comboboxUsers}
-			onSelect={(selected) => {
-				const newUser = $allUsersCollection.find(
-					(u) => u.name === selected.value,
-				)!;
-				newMembers.push({
-					name: newUser.name,
-					email: newUser.email,
-				});
-				comboboxValue = '';
-			}}
-		/>
-		<!-- <Popover.Root bind:open={comboboxOpen} let:ids>
+		<div>
+			<Label class="flex flex-col gap-2">
+				<span class="w-full">Place</span>
+				<Input bind:value={newPlace} type="number" />
+			</Label>
+			<p>Members</p>
+			{#each newMembers as member}
+				<div class="flex items-center gap-2">
+					<span>{resolveName(member, $allUsersCollection)}</span>
+					<Button
+						variant="ghost"
+						class="h-6"
+						size="icon"
+						onclick={() => {
+							newMembers = newMembers.filter((m) => m.email !== member.email);
+						}}
+					>
+						<Minus />
+					</Button>
+				</div>
+			{/each}
+			<Combobox
+				bind:value={comboboxValue}
+				options={comboboxUsers}
+				onSelect={(selected) => {
+					const newUser = $allUsersCollection.find(
+						(u) => u.name === selected.value,
+					)!;
+					newMembers.push({
+						name: newUser.name,
+						email: newUser.email,
+					});
+					comboboxValue = '';
+				}}
+			/>
+			<!-- <Popover.Root bind:open={comboboxOpen} let:ids>
 			<Popover.Trigger asChild let:builder>
 				<Button
 					builders={[builder]}
@@ -184,84 +185,84 @@
 				</Command.Root>
 			</Popover.Content>
 		</Popover.Root> -->
-		{#key dummyVariableToRerender}
-			<StorageList ref="results/{event.event}/{id}" let:list>
-				<ul>
-					{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
-						<li class="flex w-full flex-col items-center">
-							{#if submission instanceof File}
-								<UploadTask
-									ref="results/{event.event}/{id}/{submission.name}"
-									data={submission}
-									let:snapshot
-									let:progress
-								>
-									{#if snapshot?.state === 'success'}
-										{filterSubmissions(submission)}
-										{updateStorageList()}
-									{:else}
-										<Progress value={progress} class="w-full" />
-
-										<span class="w-full">
-											{submission.name}
-										</span>
-									{/if}
-								</UploadTask>
-							{:else}
-								<div class="flex w-full flex-row items-center">
-									<DownloadURL ref={submission} let:link>
-										<a href={link} target="_blank">
-											{submission.name}
-										</a>
-									</DownloadURL>
-									<div class="flex grow"></div>
-									<Button
-										variant="ghost"
-										size="icon"
-										onclick={async () => {
-											if (submission instanceof File) return;
-											await deleteObject(submission);
-											dummyVariableToRerender++;
-										}}
+			{#key dummyVariableToRerender}
+				<StorageList ref="results/{event.event}/{id}" let:list>
+					<ul>
+						{#each [...(list?.items ?? []), ...$filesToUpload] as submission}
+							<li class="flex w-full flex-col items-center">
+								{#if submission instanceof File}
+									<UploadTask
+										ref="results/{event.event}/{id}/{submission.name}"
+										data={submission}
+										let:snapshot
+										let:progress
 									>
-										<X />
-									</Button>
-								</div>
-							{/if}
-						</li>
-					{:else}
-						<p>No submissions</p>
-					{/each}
-				</ul>
+										{#if snapshot?.state === 'success'}
+											{filterSubmissions(submission)}
+											{updateStorageList()}
+										{:else}
+											<Progress value={progress} class="w-full" />
 
-				<input
-					bind:this={fileInput}
-					onchange={(e) => {
-						if (e.target instanceof HTMLInputElement) {
-							if (!e.target.files?.length) return;
-							const files = [...(e.target.files as unknown as File[])];
-							for (const file of files) {
-								if (list?.items.map((f) => f.name).includes(file.name)) {
-									alert(
-										`File ${file.name} already exists. If you want to upload this file, change the name.`,
-									);
-									continue;
+											<span class="w-full">
+												{submission.name}
+											</span>
+										{/if}
+									</UploadTask>
+								{:else}
+									<div class="flex w-full flex-row items-center">
+										<DownloadURL ref={submission} let:link>
+											<a href={link} target="_blank">
+												{submission.name}
+											</a>
+										</DownloadURL>
+										<div class="flex grow"></div>
+										<Button
+											variant="ghost"
+											size="icon"
+											onclick={async () => {
+												if (submission instanceof File) return;
+												await deleteObject(submission);
+												dummyVariableToRerender++;
+											}}
+										>
+											<X />
+										</Button>
+									</div>
+								{/if}
+							</li>
+						{:else}
+							<p>No submissions</p>
+						{/each}
+					</ul>
+
+					<input
+						bind:this={fileInput}
+						onchange={(e) => {
+							if (e.target instanceof HTMLInputElement) {
+								if (!e.target.files?.length) return;
+								const files = [...(e.target.files as unknown as File[])];
+								for (const file of files) {
+									if (list?.items.map((f) => f.name).includes(file.name)) {
+										alert(
+											`File ${file.name} already exists. If you want to upload this file, change the name.`,
+										);
+										continue;
+									}
+
+									$filesToUpload.push(file);
+									$filesToUpload = $filesToUpload;
 								}
-
-								$filesToUpload.push(file);
-								$filesToUpload = $filesToUpload;
 							}
-						}
-					}}
-					class="hidden"
-					type="file"
-					multiple
-				/>
-			</StorageList>
-		{/key}
+						}}
+						class="hidden"
+						type="file"
+						multiple
+					/>
+				</StorageList>
+			{/key}
 
-		<Textarea bind:value={note} placeholder="Add note..." />
-
+			<Textarea bind:value={note} placeholder="Add note..." />
+		</div>
 		<Dialog.Footer>
 			<Button variant="outline" onclick={() => fileInput?.click()}>
 				Upload rubric

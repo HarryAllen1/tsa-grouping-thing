@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { disableOnClick, resolveName } from '$lib/better-utils';
+	import { disableOnClick, humanDate } from '$lib/better-utils';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -7,40 +7,13 @@
 	import { allUsersCollection, user, userDoc } from '$lib/stores';
 	import type { EventData, EventDoc, Team } from '$lib/types';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
-	import TeamCard from './TeamCard.svelte';
 	import { toast } from 'svelte-sonner';
+	import TeamCard from './TeamCard.svelte';
 
 	let { event, eventData }: { event: EventDoc; eventData: EventData[] } =
 		$props();
 
 	let collapsibleOpen = $state(false);
-
-	function humanDate(dateString: string) {
-		const date = new Date(dateString);
-		const today = new Date();
-		const tomorrow = new Date();
-		tomorrow.setDate(today.getDate() + 1);
-
-		if (date.toDateString() === today.toDateString()) {
-			return (
-				'Today ' +
-				date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-			);
-		}
-
-		if (date.toDateString() === tomorrow.toDateString()) {
-			return (
-				'Tomorrow ' +
-				date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-			);
-		}
-
-		return date.toLocaleDateString(undefined, {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-		});
-	}
 </script>
 
 {#snippet renderTeams(teams: Team[])}
@@ -129,7 +102,7 @@
 
 	<Card.Content class="flex flex-col gap-4">
 		{#if event.locked}
-			<p class="text-sm [&:not(:first-child)]:mt-6">
+			<p class="text-sm not-first:mt-6">
 				This event is locked, likely due to eliminations. If this doesn't seem
 				correct, contact a JHS TSA board member.
 			</p>

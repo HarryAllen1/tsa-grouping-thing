@@ -139,3 +139,25 @@ export const resolveName = (
 	allUsers.find(
 		(user) => basicUser.email.toLowerCase() === user.email.toLowerCase(),
 	)?.name || basicUser.name;
+
+export const humanDate = (dateString: string): string => {
+	const date = new Date(dateString);
+	const today = new Date();
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity -- this isn't used in Svelte markup
+	const tomorrow = new Date();
+	tomorrow.setDate(today.getDate() + 1);
+
+	if (date.toDateString() === today.toDateString()) {
+		return `Today ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+	}
+
+	if (date.toDateString() === tomorrow.toDateString()) {
+		return `Tomorrow ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+	}
+
+	return date.toLocaleDateString(undefined, {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	});
+};

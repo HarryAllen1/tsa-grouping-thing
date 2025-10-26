@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
-	import { resolveName } from '$lib/better-utils';
+	import { humanDate, resolveName } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -8,6 +8,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
+	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { db } from '$lib/firebase';
@@ -61,6 +62,7 @@
 	let submissionDialogOpen = $state(false);
 	let editEventDialogOpen = $state(false);
 	let collapsibleOpen = $state(false);
+	let selectedEventLead = $state(event.eventLead);
 </script>
 
 <Card.Root class={hidden ? 'hidden' : 'gap-0'}>
@@ -217,61 +219,32 @@
 							id="perChapter"
 						/>
 						<Label for="deadline">Deadline (optional)</Label>
-						<div class="datetime-wrapper">
+						<div class="relative w-full">
 							<Input
 								type="datetime-local"
 								bind:value={event.deadline}
 								id="deadline"
 								placeholder="No deadline"
-								class="datetime-input"
+								class="datetime-input w-full pr-10"
 							/>
 						</div>
 						<Label class="flex w-full flex-col items-start gap-1.5">
 							<span>Event Lead (optional)</span>
-							<select
-								bind:value={event.eventLead}
-								class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-							>
-								<option value="">(none)</option>
-								{#each $allUsersCollection.filter((user) => user.admin) as user}
-									<option value={resolveName(user, $allUsersCollection)}
-										>{resolveName(user, $allUsersCollection)}</option
-									>
-								{/each}
-							</select>
+							<Select.Root bind:value={selectedEventLead} type="single">
+								<Select.Trigger class="w-full">
+									{selectedEventLead}
+								</Select.Trigger>
+								<Select.Content>
+									<Select.Item value="">(none)</Select.Item>
+									{#each $allUsersCollection.filter((user) => user.admin) as user}
+										<Select.Item value={resolveName(user, $allUsersCollection)}>
+											{resolveName(user, $allUsersCollection)}
+										</Select.Item>
+									{/each}
+								</Select.Content>
+							</Select.Root>
 						</Label>
 
-						<style>
-							/* Wrap to control icon positioning */
-							.datetime-wrapper {
-								position: relative;
-								width: 100%;
-							}
-
-							/* Style the input itself */
-							.datetime-input {
-								width: 100%;
-								box-sizing: border-box;
-								appearance: none;
-								-webkit-appearance: none;
-								-moz-appearance: none;
-								padding-right: 2.5rem; /* leave room for the icon */
-							}
-
-							/* Position the calendar icon flush right */
-							.datetime-input::-webkit-calendar-picker-indicator {
-								position: absolute;
-								right: 0.75rem;
-								top: 50%;
-								transform: translateY(-50%);
-								cursor: pointer;
-							}
-
-							/* Prevent text from overlapping the icon in Safari */
-							.datetime-input::-webkit-datetime-edit {
-								padding-right: 1.5rem;
-							}
-						</style>
 						<Dialog.Footer class="flex flex-row">
 							<Button
 								variant="destructive"
@@ -387,7 +360,7 @@
 				<div class="mb-2 gap-2 rounded-md bg-red-300 p-2 dark:bg-red-900">
 					{#if event.deadline}
 						<p class="font-bold">
-							Deadline: {new Date(event.deadline).toLocaleString()}
+							Deadline: {humanDate(event.deadline)}
 						</p>
 					{/if}
 					{#if event.eventLead}
@@ -815,3 +788,21 @@
 		{/if}
 	</Card.Footer>
 </Card.Root>
+
+<style>
+	:global {
+		/* Position the calendar icon flush right */
+		.datetime-input::-webkit-calendar-picker-indicator {
+			position: absolute;
+			right: 0.75rem;
+			top: 50%;
+			transform: translateY(-50%);
+			cursor: pointer;
+		}
+
+		/* Prevent text from overlapping the icon in Safari */
+		.datetime-input::-webkit-datetime-edit {
+			padding-right: 1.5rem;
+		}
+	}
+</style>
