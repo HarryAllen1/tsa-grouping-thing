@@ -20,7 +20,6 @@
 		"@observablehq/plot": "0.6.17",
 		"@sentry/sveltekit": "10.21.0",
 		"@tanstack/table-core": "8.21.3",
-		"@vercel/analytics": "1.5.0",
 		"autosize": "6.0.1",
 		"canvas-confetti": "1.9.3",
 		"clsx": "2.1.1",
