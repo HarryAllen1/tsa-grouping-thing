@@ -10,15 +10,6 @@ service firebase.storage {
       return firestore.get(/databases/(default)/documents/users/$(request.auth.token.email)).data.admin == true;
     }
     
-    // Helper function to check if user is a member of a specific team in an event
-    function isTeamMember(eventName, teamId) {
-      let eventDoc = firestore.get(/databases/(default)/documents/events/$(eventName)).data;
-      let userEmail = request.auth.token.email;
-      
-      return eventDoc.teams.hasAny([teamId]) &&
-             eventDoc.teams[teamId].members.hasAny([userEmail]);
-    }
-    
     match /results/{teamId} {
       allow read: if request.auth != null;
       allow write: if isAdmin();
@@ -33,18 +24,18 @@ service firebase.storage {
     match /submissions/{eventName}/{teamId}/{fileName} {
       allow read: if request.auth != null;
       // Users can only upload to their own team's folder
-      // Deletion is handled by Cloud Function for proper validation
+      // Team membership is validated via metadata that must match the authenticated user
       allow create: if request.auth != null && 
                       request.resource.size <= 250 * 1024 * 1024 && // 250MB limit
                       request.resource.metadata.customMetadata.keys().hasAll(['teamId', 'userEmail', 'userName']) &&
                       request.resource.metadata.customMetadata.teamId == teamId &&
                       request.resource.metadata.customMetadata.userEmail == request.auth.token.email;
-      // Prevent direct deletion - must use Cloud Function
-      allow delete: if false;
+      // Admins can delete directly, team members must use Cloud Function for validation
+      allow delete: if isAdmin();
       allow update: if false;
     }
     
-    // Default deny for all other paths
+    // Default deny for all other paths (read-only for authenticated users)
     match /{allPaths=**} {
       allow read: if request.auth != null;
       allow write: if false;

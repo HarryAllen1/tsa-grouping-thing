@@ -26,13 +26,14 @@ export const deleteSubmissionFile = onCall<
 			throw new HttpsError('not-found', 'Team not found');
 		}
 
-		// Verify the user is a member of this team
+		// Verify the user is a member of this team or is an admin
 		const isMember = team.members.some((m) => m.email === user.email);
+		const isAdmin = user.admin === true;
 
-		if (!isMember) {
+		if (!isMember && !isAdmin) {
 			throw new HttpsError(
 				'permission-denied',
-				'You must be a member of this team to delete files',
+				'You must be a member of this team or an admin to delete files',
 			);
 		}
 
