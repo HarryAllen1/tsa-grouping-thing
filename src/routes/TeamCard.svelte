@@ -22,6 +22,7 @@
 		sendRequest,
 		sendRequestApproval,
 		sendRequestDenial,
+		deleteSubmissionFile,
 	} from '$lib/functions';
 	import { md } from '$lib/md';
 	import { allUsersCollection, settings, user, userDoc } from '$lib/stores';
@@ -35,11 +36,7 @@
 	import X from '@lucide/svelte/icons/x';
 	import confetti from 'canvas-confetti';
 	import { logEvent } from 'firebase/analytics';
-	import {
-		deleteObject,
-		getDownloadURL,
-		type FullMetadata,
-	} from 'firebase/storage';
+	import { getDownloadURL, type FullMetadata } from 'firebase/storage';
 	import type { Snippet } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { flip } from 'svelte/animate';
@@ -384,10 +381,23 @@
 																	size="icon"
 																	onclick={async () => {
 																		if (submission instanceof File) return;
-																		await deleteObject(submission);
+																		try {
+																			await deleteSubmissionFile({
+																				event: event.event,
+																				teamId: team.id,
+																				fileName: submission.name,
+																			});
 
-																		team.lastUpdatedBy = $user?.email ?? '';
-																		dummyVariableToRerender++;
+																			team.lastUpdatedBy = $user?.email ?? '';
+																			dummyVariableToRerender++;
+																			toast.success(
+																				'File deleted successfully',
+																			);
+																		} catch (error) {
+																			toast.error(
+																				`Failed to delete file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+																			);
+																		}
 																	}}
 																>
 																	<X />

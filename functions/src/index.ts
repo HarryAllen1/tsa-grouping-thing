@@ -12,3 +12,4 @@ export {
 	sendRequestApproval,
 	sendRequestDenial,
 } from './requests';
+export { deleteSubmissionFile } from './submissions';

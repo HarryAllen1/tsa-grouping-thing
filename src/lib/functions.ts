@@ -70,3 +70,11 @@ export const saveCheckIn = httpsCallable<
 	  },
 	BasicResponse
 >(functions, 'saveCheckIn');
+export const deleteSubmissionFile = httpsCallable<
+	{
+		event: string;
+		teamId: string;
+		fileName: string;
+	},
+	BasicResponse
+>(functions, 'deleteSubmissionFile');
