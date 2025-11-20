@@ -1,5 +1,6 @@
 {
 	"name": "functions",
+	"type": "module",
 	"scripts": {
 		"build": "tsgo",
 		"build:watch": "tsgo --watch",

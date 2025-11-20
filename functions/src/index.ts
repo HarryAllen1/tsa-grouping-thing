@@ -1,14 +1,14 @@
-export { onlyAllowLWSDEmails } from './auth';
-export { saveCheckIn } from './check-ins';
+export { onlyAllowLWSDEmails } from './auth.js';
+export { saveCheckIn } from './check-ins.js';
 export {
 	addTeamMember,
 	becomeTeamCaptain,
 	createTeam,
 	editCardboardBoatTeamName,
 	leaveTeam,
-} from './events';
+} from './events.js';
 export {
 	sendRequest,
 	sendRequestApproval,
 	sendRequestDenial,
-} from './requests';
+} from './requests.js';
