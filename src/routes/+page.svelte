@@ -178,7 +178,7 @@
 				You have incomplete check-ins
 			</Alert.Title>
 			<Alert.Description>
-				<p class="leading-7 [&:not(:first-child)]:mt-6">
+				<p class="leading-7 not-first:mt-6">
 					Check-ins are required for your progress to be gauged. Please complete
 					your check-ins for the following events:
 				</p>
@@ -340,7 +340,7 @@
 			{:else}
 				<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
 				{#each { length: 9 } as _}
-					<Skeleton class="h-[32rem] w-full" />
+					<Skeleton class="h-128 w-full" />
 				{/each}
 			{/each}
 		</div>

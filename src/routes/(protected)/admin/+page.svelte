@@ -148,8 +148,9 @@
 	<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 		Team Management
 	</h1>
-	<p class="my-4 text-red-500">
-		Please do not add yourself to events you are not signed up for
+	<p class="text-destructive my-4">
+		Please avoid using this page to edit teams whenever possible. Try to get
+		members to modify their own teams, if possible.
 	</p>
 
 	<div class="flex flex-row gap-2">
@@ -431,7 +432,7 @@
 		{:else}
 			<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
 			{#each { length: 9 } as _}
-				<Skeleton class="h-[32rem] w-full" />
+				<Skeleton class="h-128 w-full" />
 			{/each}
 		{/each}
 	</div>

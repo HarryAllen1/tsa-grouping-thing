@@ -470,7 +470,9 @@
 							</Dialog.Content>
 						</Dialog.Root>
 					</div>
-					<p class="prose dark:prose-invert mb-4 text-sm text-inherit">
+					<p
+						class="prose dark:prose-invert mb-4 text-sm wrap-break-word text-inherit"
+					>
 						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						{@html md.render(event.submissionDescription || '(none)')}
 					</p>

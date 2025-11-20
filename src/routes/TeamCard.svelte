@@ -314,7 +314,9 @@
 										<Dialog.Title>Manage Submissions</Dialog.Title>
 									</Dialog.Header>
 									{#if event.submissionDescription}
-										<div class="prose dark:prose-invert dark:text-white">
+										<div
+											class="prose dark:prose-invert max-w-md wrap-break-word dark:text-white"
+										>
 											<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 											{@html md.render(
 												`## What needs to be submitted:\n\n${event.submissionDescription}`,
