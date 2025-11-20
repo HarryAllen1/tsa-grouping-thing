@@ -1,7 +1,7 @@
 import { DecodedIdToken } from 'firebase-admin/auth';
 import { HttpsError } from 'firebase-functions/https';
-import { db } from './firebase';
-import { EventDoc, UserDoc } from './types';
+import { db } from './firebase.js';
+import { EventDoc, UserDoc } from './types.js';
 import { Timestamp } from 'firebase-admin/firestore';
 
 export const userToName = (user: UserDoc): string =>

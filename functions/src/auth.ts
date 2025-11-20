@@ -1,5 +1,5 @@
 import { beforeUserCreated, HttpsError } from 'firebase-functions/identity';
-import { allowedDomains, db } from './firebase';
+import { allowedDomains, db } from './firebase.js';
 
 export const onlyAllowLWSDEmails = beforeUserCreated(
 	{

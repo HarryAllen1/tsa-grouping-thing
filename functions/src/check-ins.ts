@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/https';
-import { EventDoc } from './types';
-import { getAuthUser, getEvent, logFunctionCall, userToName } from './utils';
+import { EventDoc } from './types.js';
+import { getAuthUser, getEvent, logFunctionCall, userToName } from './utils.js';
 
 export const saveCheckIn = onCall<
 	| {

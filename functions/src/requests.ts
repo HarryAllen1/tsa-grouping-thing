@@ -1,8 +1,8 @@
 import { onCall } from 'firebase-functions/https';
 import { HttpsError } from 'firebase-functions/identity';
-import { db } from './firebase';
-import { UserDoc } from './types';
-import { getAuthUser, getEvent, logFunctionCall, userToName } from './utils';
+import { db } from './firebase.js';
+import { UserDoc } from './types.js';
+import { getAuthUser, getEvent, logFunctionCall, userToName } from './utils.js';
 
 export const sendRequest = onCall<
 	{ event: string; teamId: string },
