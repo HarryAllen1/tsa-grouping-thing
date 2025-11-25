@@ -551,6 +551,36 @@
 									>
 										{person.name}
 									</button>
+									<button
+										class="ml-2 text-red-600 underline"
+										onclick={async () => {
+											{
+												const userDoc = $allUsersCollection.find(
+													(u) =>
+														u.email?.toLowerCase() ===
+														person.email?.toLowerCase(),
+												);
+												if (userDoc) {
+													userDoc.events = userDoc.events.filter(
+														(e) => e !== event.event,
+													);
+													await updateDoc(
+														doc(
+															db,
+															'users',
+															userDoc.email?.toLowerCase() ?? '',
+														),
+														{
+															events: userDoc.events,
+															lastUpdatedBy: $user?.email ?? '',
+														} satisfies Partial<UserDoc>,
+													);
+												}
+											}
+										}}
+									>
+										Kick
+									</button>
 								</li>
 							{/each}
 						</ul>

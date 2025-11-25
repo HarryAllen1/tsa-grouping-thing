@@ -68,15 +68,15 @@
 			>: a form created by the Washington TSA State Officer team to help you
 			choose an event
 		</li>
-		<!-- <li>
+		<li>
 		 This link is outdated...
 			<a
 				target="_blank"
 				class="text-primary font-medium underline underline-offset-4"
-				href="https://lwsd.sharepoint.com/:f:/r/sites/GR-JHS-TechnologyStudentAssociation-SCA/Shared%20Documents/2024-25/Event%20Guides?csf=1&web=1&e=5PsOsB"
+				href="https://lwsd414.instructure.com/courses/19025/files/folder/Event%20Guides%2025-26"
 				>Event guides</a
 			>: detailed rules and rubrics for each event
-		</li> -->
+		</li>
 		<li>
 			<a
 				target="_blank"
