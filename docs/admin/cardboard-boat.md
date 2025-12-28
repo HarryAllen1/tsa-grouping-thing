@@ -1,6 +1,6 @@
 # Cardboard Boat
 
-The Cardboard Boat (labeled \*Cardboard Boat) is an event to assist members in creating forming Cardboard Boat teams. The registration for Cardboard Boat is separate from regular event registration and typically occurs via a Google Form which can be submitted at the conference.
+The Cardboard Boat (labelled \*Cardboard Boat) is an event to assist members in creating forming Cardboard Boat teams. The registration for Cardboard Boat is separate from regular event registration and typically occurs via a Google Form which can be submitted at the conference.
 
 ## Enabling Cardboard Boat
 
