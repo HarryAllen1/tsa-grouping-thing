@@ -172,7 +172,7 @@
 				{:else if event.maxTeamSize === 1}
 					Individual {$allUsersCollection.find(
 						(u) =>
-							u.email.toLowerCase() === team.members[0].email.toLowerCase(),
+							u.email.toLowerCase() === team.members[0]?.email.toLowerCase(),
 					)?.washingtonId ?? '(no ID)'}{team.members.length > 1 ? '?????' : ''}
 				{:else}
 					Team {$settings?.chapterId}-{team.teamNumber}
@@ -918,6 +918,8 @@
 						<Minus />
 					</Button>
 				</li>
+			{:else}
+				<p>No members! This team can probably be deleted.</p>
 			{/each}
 		</ul>
 	</Card.Content>

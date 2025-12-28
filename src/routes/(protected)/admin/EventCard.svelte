@@ -20,6 +20,7 @@
 	import Download from '@lucide/svelte/icons/download';
 	import Lock from '@lucide/svelte/icons/lock';
 	import LockOpen from '@lucide/svelte/icons/lock-open';
+	import Minus from '@lucide/svelte/icons/minus';
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import Settings from '@lucide/svelte/icons/settings';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
@@ -372,14 +373,19 @@
 			{/if}
 			<ul class="mb-2">
 				<li>
-					Min {event.minTeamSize} people per team
+					Min {event.minTeamSize} people per {event.event === '*Rooming'
+						? 'room'
+						: 'team'}
 				</li>
 				<li>
-					Max {event.maxTeamSize} people per team
+					Max {event.maxTeamSize} people per {event.event === '*Rooming'
+						? 'room'
+						: 'team'}
 				</li>
 				<li class={[event.teams.length > event.perChapter && 'text-red-500']}>
-					Max {event.perChapter} teams per chapter (currently {event.teams
-						.length})
+					Max {event.perChapter}
+					{event.event === '*Rooming' ? 'rooms' : 'teams'} per chapter (currently
+					{event.teams.length})
 				</li>
 				<li>
 					{event.teams.reduce(
@@ -551,36 +557,40 @@
 									>
 										{person.name}
 									</button>
-									<button
-										class="ml-2 text-red-600 underline"
-										onclick={async () => {
-											{
-												const userDoc = $allUsersCollection.find(
-													(u) =>
-														u.email?.toLowerCase() ===
-														person.email?.toLowerCase(),
-												);
-												if (userDoc) {
-													userDoc.events = userDoc.events.filter(
-														(e) => e !== event.event,
+									{#if person.events.includes(event.event)}
+										<Button
+											size="icon"
+											class="h-5"
+											variant="ghost"
+											onclick={async () => {
+												{
+													const userDoc = $allUsersCollection.find(
+														(u) =>
+															u.email?.toLowerCase() ===
+															person.email?.toLowerCase(),
 													);
-													await updateDoc(
-														doc(
-															db,
-															'users',
-															userDoc.email?.toLowerCase() ?? '',
-														),
-														{
-															events: userDoc.events,
-															lastUpdatedBy: $user?.email ?? '',
-														} satisfies Partial<UserDoc>,
-													);
+													if (userDoc) {
+														userDoc.events = userDoc.events.filter(
+															(e) => e !== event.event,
+														);
+														await updateDoc(
+															doc(
+																db,
+																'users',
+																userDoc.email?.toLowerCase() ?? '',
+															),
+															{
+																events: userDoc.events,
+																lastUpdatedBy: $user?.email ?? '',
+															} satisfies Partial<UserDoc>,
+														);
+													}
 												}
-											}
-										}}
-									>
-										Kick
-									</button>
+											}}
+										>
+											<Minus />
+										</Button>
+									{/if}
 								</li>
 							{/each}
 						</ul>
@@ -721,17 +731,19 @@
 			{/if}
 		</div>
 
-		<Button
-			onclick={async () => {
-				event.teams.sort((a, b) => a.teamNumber - b.teamNumber);
-				await updateDoc(doc(db, 'events', event.event ?? ''), {
-					teams: event.teams,
-					lastUpdatedBy: $user?.email ?? '',
-				});
-			}}
-		>
-			Sort Teams
-		</Button>
+		{#if event.maxTeamSize > 1 && event.event !== '*Cardboard Boat'}
+			<Button
+				onclick={async () => {
+					event.teams.sort((a, b) => a.teamNumber - b.teamNumber);
+					await updateDoc(doc(db, 'events', event.event ?? ''), {
+						teams: event.teams,
+						lastUpdatedBy: $user?.email ?? '',
+					});
+				}}
+			>
+				Sort {event.event === '*Rooming' ? 'rooms' : 'teams'}
+			</Button>
+		{/if}
 
 		<!-- teams loop -->
 		{#if event.teams.length <= 5}
@@ -785,7 +797,7 @@
 			}}
 			class="mt-4"
 		>
-			Create Team
+			Create {event.event === '*Rooming' ? 'room' : 'team'}
 		</Button>
 		{#if event.maxTeamSize === 1 && event.teams.reduce((acc, curr) => acc + curr.members.length, 0) < event.members.length}
 			<Button
