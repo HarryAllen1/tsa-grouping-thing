@@ -69,7 +69,7 @@
 			choose an event
 		</li>
 		<li>
-		 This link is outdated...
+			This link is outdated...
 			<a
 				target="_blank"
 				class="text-primary font-medium underline underline-offset-4"

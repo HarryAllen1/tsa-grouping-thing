@@ -403,8 +403,8 @@
 					<li>
 						{event.teams
 							.filter((t) => t.members.length < event.minTeamSize)
-							.reduce((acc, curr) => (acc += curr.members.length), 0)} people in
-						unfilled rooms
+							.reduce((acc, curr) => (acc += curr.members.length), 0)} people in unfilled
+						rooms
 					</li>
 				{/if}
 			</ul>
