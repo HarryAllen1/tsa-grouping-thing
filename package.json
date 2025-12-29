@@ -58,7 +58,7 @@
 		"eslint-plugin-unicorn": "62.0.0",
 		"globals": "16.5.0",
 		"mode-watcher": "1.1.0",
-		"oxc-minify": "0.105.0",
+		"oxc-minify": "0.106.0",
 		"prettier": "3.7.4",
 		"prettier-plugin-svelte": "3.4.1",
 		"prettier-plugin-tailwindcss": "0.7.2",

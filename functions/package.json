@@ -17,7 +17,7 @@
 		"firebase-functions": "7.0.2"
 	},
 	"devDependencies": {
-		"@typescript/native-preview": "7.0.0-dev.20251228.1",
+		"@typescript/native-preview": "7.0.0-dev.20251229.1",
 		"firebase-functions-test": "3.4.1"
 	},
 	"private": true
