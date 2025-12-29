@@ -5,10 +5,12 @@ type Config = {
 	theme: Theme['name'];
 	radius: number;
 	background: string | null | undefined;
+	yellowMode: boolean;
 };
 
 export const config = persisted<Config>('config', {
 	theme: 'default',
 	radius: 0.5,
 	background: null,
+	yellowMode: false,
 });

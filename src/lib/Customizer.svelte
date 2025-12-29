@@ -10,6 +10,11 @@
 	import { Input } from './components/ui/input';
 	import { config } from './config.js';
 	import { themes } from './themes.js';
+	import { Switch } from './components/ui/switch';
+
+	$effect(() => {
+		document.body.classList.toggle('yellow', $config.yellowMode);
+	});
 </script>
 
 <div class="flex items-start">
@@ -102,6 +107,10 @@
 				Dark
 			</Button>
 		</div>
+	</div>
+	<div class="mb-4 flex items-center space-x-2">
+		<Switch bind:checked={$config.yellowMode} id="yellow" />
+		<Label for="yellow">Yellow mode</Label>
 	</div>
 	<div class="space-y-1.5">
 		<Label class="text-xs" for="bgCustom">Background</Label>

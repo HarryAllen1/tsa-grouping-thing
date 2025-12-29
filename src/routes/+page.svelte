@@ -3,9 +3,7 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import { Label } from '$lib/components/ui/label';
 	import { Skeleton } from '$lib/components/ui/skeleton';
-	import { Switch } from '$lib/components/ui/switch';
 	import { MIN_EVENTS } from '$lib/constants';
 	import { sendRequestApproval, sendRequestDenial } from '$lib/functions';
 	import { md } from '$lib/md';
@@ -22,12 +20,10 @@
 	import Plus from '@lucide/svelte/icons/plus';
 	import confetti from 'canvas-confetti';
 	import { mount, onDestroy, unmount } from 'svelte';
-	import { persisted } from 'svelte-persisted-store';
 	import { toast } from 'svelte-sonner';
 	import Copyable from './Copyable.svelte';
 	import EventCard from './EventCard.svelte';
 
-	const yellowMode = persisted('yellowMode', false);
 	let alertEl = $state<HTMLDivElement>();
 
 	const toUnmount: Record<string, object>[] = [];
@@ -51,10 +47,6 @@
 
 	$effect(() => {
 		addAlertStuff(alertEl);
-	});
-
-	$effect(() => {
-		document.body.classList.toggle('yellow', $yellowMode);
 	});
 
 	let signedUpEvents = $derived(
@@ -339,14 +331,10 @@
 				<EventCard {event} {eventData} />
 			{:else}
 				<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
-				{#each { length: 9 } as _}
+				{#each { length: 9 }}
 					<Skeleton class="h-128 w-full" />
 				{/each}
 			{/each}
 		</div>
 	{/if}
-	<div class="my-4 flex items-center space-x-2">
-		<Switch bind:checked={$yellowMode} id="yellow" />
-		<Label for="yellow">Yellow mode</Label>
-	</div>
 </div>
