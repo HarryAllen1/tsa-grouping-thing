@@ -164,6 +164,19 @@
 		Edit events
 	</Button>
 
+	<Alert.Root class="mb-6">
+		<Alert.Title class="text-xl font-bold">WTSA Login Credentials</Alert.Title>
+		<Alert.Description class="space-y-2">
+			<div class="flex items-center gap-2">
+				<span class="font-semibold">Login:</span>
+				<span class="font-mono">{$userDoc?.participantID ?? 'Not set'}</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<span class="font-semibold">Password:</span>
+				<span class="font-mono">Ravens2526</span>
+			</div>
+		</Alert.Description>
+	</Alert.Root>
 	{#if eventsWithCheckIn.length > 0}
 		<Alert.Root variant="destructive" class="mb-4">
 			<Alert.Title class="text-2xl font-bold">

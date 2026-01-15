@@ -85,6 +85,7 @@ export interface UserDoc {
 	eventsLocked?: boolean;
 	lockRooming?: boolean;
 	lastUpdatedBy?: string;
+	participantID?: string;
 }
 
 export interface SettingsDoc {
