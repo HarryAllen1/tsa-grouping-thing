@@ -164,9 +164,9 @@
 		Edit events
 	</Button>
 
-	<Alert.Root class="mb-6">
+	<Alert.Root>
 		<Alert.Title class="text-xl font-bold">WTSA Login Credentials</Alert.Title>
-		<Alert.Description class="space-y-2">
+		<Alert.Description>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold">Login:</span>
 				<span class="font-mono">{$userDoc?.participantID ?? 'Not set'}</span>
@@ -174,6 +174,14 @@
 			<div class="flex items-center gap-2">
 				<span class="font-semibold">Password:</span>
 				<span class="font-mono">Ravens2526</span>
+			</div>
+			<div>
+				<a
+					href="https://judgepro.registermychapter.com/org/jpwa-tsastate/conf/jpwa-tsastate/student"
+					class="font-medium text-blue-600 underline underline-offset-4 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+				>
+					Submit your regional submission at the WTSA submission portal
+				</a>
 			</div>
 		</Alert.Description>
 	</Alert.Root>
@@ -312,11 +320,9 @@
 		</div>
 	{/if}
 
-	<h2
-		class="my-4 w-full scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors"
-	>
-		Your Teams
-	</h2>
+	<h3 class="my-4 scroll-m-20 text-2xl font-semibold tracking-tight">
+		Your Events
+	</h3>
 
 	{#if !signedUpEvents || signedUpEvents.length === 0}
 		<p class="mt-4 w-full">
