@@ -168,7 +168,7 @@
 		<Alert.Title class="text-xl font-bold">WTSA Login Credentials</Alert.Title>
 		<Alert.Description>
 			<div class="flex items-center gap-2">
-				<span class="font-semibold">Login:</span>
+				<span class="font-semibold">Participant ID:</span>
 				<span class="font-mono">{$userDoc?.participantID ?? 'Not set'}</span>
 			</div>
 			<div class="flex items-center gap-2">
@@ -179,6 +179,8 @@
 				<a
 					href="https://judgepro.registermychapter.com/org/jpwa-tsastate/conf/jpwa-tsastate/student"
 					class="font-medium text-blue-600 underline underline-offset-4 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+					target="_blank"
+					rel="noopener noreferrer"
 				>
 					Submit your regional submission at the WTSA submission portal
 				</a>
