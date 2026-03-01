@@ -124,8 +124,8 @@ importers:
         specifier: 62.0.0
         version: 62.0.0(eslint@9.39.2(jiti@2.6.1))
       globals:
-        specifier: 16.5.0
-        version: 16.5.0
+        specifier: 17.4.0
+        version: 17.4.0
       mode-watcher:
         specifier: 1.1.0
         version: 1.1.0(svelte@5.50.2)
@@ -2846,6 +2846,10 @@ packages:
 
   globals@16.5.0:
     resolution: {integrity: sha512-c/c15i26VrJ4IRt5Z89DnIzCGDn9EcebibhAOjw5ibqEHsE1wLUgkPn9RDmNcUKyU87GeaL633nyJ+pplFR2ZQ==}
+    engines: {node: '>=18'}
+
+  globals@17.4.0:
+    resolution: {integrity: sha512-hjrNztw/VajQwOLsMNT1cbJiH2muO3OROCHnbehc8eY5JyD2gqz4AcMHPqgaOR59DjgUjYAYLeH699g/eWi2jw==}
     engines: {node: '>=18'}
 
   globalyzer@0.1.0:
@@ -6824,6 +6828,8 @@ snapshots:
   globals@14.0.0: {}
 
   globals@16.5.0: {}
+
+  globals@17.4.0: {}
 
   globalyzer@0.1.0: {}
 
