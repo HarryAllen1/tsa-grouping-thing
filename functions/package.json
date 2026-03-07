@@ -14,10 +14,10 @@
 	"dependencies": {
 		"@google-cloud/functions-framework": "4.0.1",
 		"firebase-admin": "13.7.0",
-		"firebase-functions": "7.0.6"
+		"firebase-functions": "7.1.0"
 	},
 	"devDependencies": {
-		"@typescript/native-preview": "7.0.0-dev.20260304.1",
+		"@typescript/native-preview": "7.0.0-dev.20260307.1",
 		"firebase-functions-test": "3.4.1"
 	},
 	"private": true
