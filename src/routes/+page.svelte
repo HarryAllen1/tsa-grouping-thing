@@ -164,19 +164,6 @@
 		Edit events
 	</Button>
 
-	<Alert.Root>
-		<Alert.Title class="flex items-center justify-center text-xl font-bold">
-			<a
-				class="text-center text-xl font-bold text-blue-600 underline underline-offset-4 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-				target="_blank"
-				rel="noopener noreferrer"
-				href="https://docs.google.com/spreadsheets/d/13iis4aj1SCbPEmWK_E5bSkrb2i7NaJ7XFBTYnnKcj9Q/edit?gid=0#gid=0"
-			>
-				January Qualifier Results Link
-			</a>
-		</Alert.Title>
-	</Alert.Root>
-
 	<!-- <Alert.Root>
 		<Alert.Title class="text-xl font-bold">WTSA Login Credentials</Alert.Title>
 		<Alert.Description>
