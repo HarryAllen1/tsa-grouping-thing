@@ -38,11 +38,15 @@
 									? `👑${resolveName(m, $allUsersCollection)}👑`
 									: resolveName(m, $allUsersCollection),
 							)
-							.join(', ')} ({team.teamNumber})
+							.join(', ')} (team #{team.teamNumber})
 					{:else}
 						<Tooltip.Root>
 							<Tooltip.Trigger>
-								Team {team.teamNumber} ({team.members.length} members)
+								{#if event.maxTeamSize === 1}
+									Member {team.teamNumber}
+								{:else}
+									Team {team.teamNumber} ({team.members.length} members)
+								{/if}
 							</Tooltip.Trigger>
 							<Tooltip.Content>
 								View team member names by clicking the "Show team member names"
@@ -132,14 +136,15 @@
 														)}"
 														target="_blank"
 														rel="noreferrer"
-														class="w-full text-start break-words">{item.name}</a
+														class="w-full text-start wrap-break-word"
+														>{item.name}</a
 													>
 												{:else}
 													<a
 														href={link}
 														target="_blank"
 														rel="noreferrer"
-														class="flex flex-row items-center break-words"
+														class="flex flex-row items-center wrap-break-word"
 													>
 														{item.name}
 														<ArrowUpRight class="h-4 opacity-50" />
