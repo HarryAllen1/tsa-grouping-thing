@@ -59,6 +59,7 @@
 		"globals": "17.6.0",
 		"mode-watcher": "1.1.0",
 		"oxc-minify": "0.134.0",
+		"pnpm": "^11.5.1",
 		"prettier": "3.8.3",
 		"prettier-plugin-svelte": "4.1.0",
 		"prettier-plugin-tailwindcss": "0.8.0",
