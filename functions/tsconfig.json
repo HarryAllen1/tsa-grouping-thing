@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"rootDir": "./src",
 		"module": "node20",
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
