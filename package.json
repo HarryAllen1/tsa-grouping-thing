@@ -19,7 +19,7 @@
 	"dependencies": {
 		"@observablehq/plot": "0.6.17",
 		"@sentry/sveltekit": "10.56.0",
-		"@tanstack/table-core": "8.21.3",
+		"@tanstack/table-core": "9.2.4",
 		"autosize": "6.0.1",
 		"canvas-confetti": "1.9.4",
 		"clsx": "2.1.1",
