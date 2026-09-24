@@ -23,6 +23,7 @@
 	import OfflineNotifier from './OfflineNotifier.svelte';
 	import { mouseThing } from './senuka-put-stuff-here';
 	import { config } from '$lib/config';
+	import { CTE_CLASSES, CTE_CLASS_STATUSES } from '$lib/constants';
 
 	navigator.vibrate ||= (pattern: number | number[]) => !!pattern;
 
@@ -83,7 +84,13 @@
 						events: [],
 					});
 				}
-				if (!userData.completedIntakeForm) await goto('/intake');
+				const hasValidCteInformation =
+					CTE_CLASS_STATUSES.includes(userData.cteClassStatus!) &&
+					CTE_CLASSES.includes(userData.cteClass!) &&
+					userData.cteClass !== 'Other';
+				if (!userData.completedIntakeForm || !hasValidCteInformation) {
+					await goto('/intake');
+				}
 			} else {
 				await setDoc(doc(db, 'users', auth.currentUser?.email ?? ''), {
 					email: auth.currentUser?.email ?? '',

@@ -4,6 +4,11 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import {
+		CTE_CLASSES,
+		CTE_CLASS_STATUSES,
+		POINT_OF_CONTACT_EMAIL,
+	} from '$lib/constants';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { db } from '$lib/firebase';
@@ -45,6 +50,8 @@
 			| 'Club fair'
 			| 'Other'
 			| undefined;
+		cteClassStatus: (typeof CTE_CLASS_STATUSES)[number] | undefined;
+		cteClass: (typeof CTE_CLASSES)[number] | undefined;
 	}>({
 		firstName: '',
 		lastName: '',
@@ -55,10 +62,17 @@
 		tShirtSize: undefined,
 		demographic: undefined,
 		foundBy: undefined,
+		cteClassStatus: undefined,
+		cteClass: undefined,
 	});
 
 	const capitalizeFirstLetter = (str: string) =>
 		`${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
+
+	const hasValidCteInformation = () =>
+		CTE_CLASS_STATUSES.includes(formData.cteClassStatus!) &&
+		CTE_CLASSES.includes(formData.cteClass!) &&
+		formData.cteClass !== 'Other';
 
 	let locked = $derived(!!($settings?.lockAccounts || $userDoc.locked));
 
@@ -82,6 +96,8 @@
 		formData.tShirtSize = userData.tShirtSize;
 		formData.demographic = userData.demographic;
 		formData.foundBy = userData.foundBy;
+		formData.cteClassStatus = userData.cteClassStatus;
+		formData.cteClass = userData.cteClass;
 	});
 </script>
 
@@ -109,6 +125,14 @@
 		class="flex flex-col gap-2"
 		onsubmit={async (e) => {
 			e.preventDefault();
+			if (!hasValidCteInformation()) {
+				toast.error(
+					formData.cteClass === 'Other'
+						? 'Please contact a board member about your CTE class.'
+						: 'Please select your CTE class status and class.',
+				);
+				return;
+			}
 
 			await updateDoc(doc(db, 'users', $user.email ?? ''), {
 				// non-undefined values
@@ -462,8 +486,81 @@
 			</div>
 			<input required hidden bind:value={formData.foundBy} name="foundBy" />
 		</div>
+		<div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+			<div>
+				<Select.Root
+					required
+					type="single"
+					value={formData.cteClassStatus}
+					onValueChange={(v) => {
+						if (v) {
+							formData.cteClassStatus =
+								v as (typeof CTE_CLASS_STATUSES)[number];
+						}
+					}}
+					disabled={locked}
+				>
+					<Label>
+						CTE class status<span class="text-red-500 dark:text-red-400">*</span
+						>
+					</Label>
+					<Select.Trigger class="w-full">
+						<span>{formData.cteClassStatus}</span>
+					</Select.Trigger>
+					<Select.Content>
+						{#each CTE_CLASS_STATUSES as status}
+							<Select.Item value={status}>{status}</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+				<input
+					required
+					hidden
+					bind:value={formData.cteClassStatus}
+					name="cteClassStatus"
+				/>
+			</div>
+			<div>
+				<Select.Root
+					required
+					type="single"
+					value={formData.cteClass}
+					onValueChange={(v) => {
+						if (v) {
+							formData.cteClass = v as (typeof CTE_CLASSES)[number];
+						}
+					}}
+					disabled={locked}
+				>
+					<Label>
+						CTE class<span class="text-red-500 dark:text-red-400">*</span>
+					</Label>
+					<Select.Trigger class="w-full">
+						<span>{formData.cteClass}</span>
+					</Select.Trigger>
+					<Select.Content>
+						{#each CTE_CLASSES as cteClass}
+							<Select.Item value={cteClass}>{cteClass}</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+				<input required hidden bind:value={formData.cteClass} name="cteClass" />
+				{#if formData.cteClass === 'Other'}
+					<p class="text-muted-foreground mt-2 text-sm">
+						Don't see your CTE class? Please contact a board member at <a
+							href="mailto:{POINT_OF_CONTACT_EMAIL}"
+							class="text-primary font-medium underline underline-offset-4"
+							>{POINT_OF_CONTACT_EMAIL}</a
+						>
+						for assistance.
+					</p>
+				{/if}
+			</div>
+		</div>
 		<div class="mt-2 flex w-full flex-row justify-end">
-			<Button type="submit" disabled={locked}>Save</Button>
+			<Button type="submit" disabled={locked || formData.cteClass === 'Other'}
+				>Save</Button
+			>
 		</div>
 	</form>
 </div>

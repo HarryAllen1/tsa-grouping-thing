@@ -71,6 +71,8 @@ export interface UserDoc {
 	completedIntakeForm?: boolean;
 	studentId?: number;
 	foundBy?: string;
+	cteClassStatus?: string;
+	cteClass?: string;
 	locked?: boolean;
 	eventsLocked?: boolean;
 	lockRooming?: boolean;

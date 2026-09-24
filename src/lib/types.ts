@@ -1,4 +1,5 @@
 import type { Timestamp } from 'firebase/firestore';
+import type { CTE_CLASSES, CTE_CLASS_STATUSES } from './constants';
 import { tShirtMap } from './t-shirt';
 
 export interface EventDoc {
@@ -81,6 +82,8 @@ export interface UserDoc {
 	completedIntakeForm?: boolean;
 	studentId?: number;
 	foundBy?: string;
+	cteClassStatus?: (typeof CTE_CLASS_STATUSES)[number];
+	cteClass?: (typeof CTE_CLASSES)[number];
 	locked?: boolean;
 	eventsLocked?: boolean;
 	lockRooming?: boolean;
