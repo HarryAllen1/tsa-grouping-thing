@@ -83,7 +83,7 @@
 		If you are having trouble choosing events, here are some resources:
 	</p>
 	<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-		// TODO: Add Links
+		<!-- TODO: Add Links -->
 		<!-- <li>
 			<a
 				target="_blank"
