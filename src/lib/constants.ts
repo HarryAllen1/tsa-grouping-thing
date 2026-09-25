@@ -18,6 +18,8 @@ export const CTE_CLASSES = [
 	'Yearbook',
 	'Business Classes',
 	'Leadership',
-	'Middle School Classes',
+	'Biotechnology 1',
+	'Biotechnology 2',
+	'Middle School Classes (Make sure they count!)',
 	'Other',
 ] as const;
