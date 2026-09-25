@@ -83,23 +83,23 @@
 		If you are having trouble choosing events, here are some resources:
 	</p>
 	<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-		<li>
+		// TODO: Add Links
+		<!-- <li>
 			<a
 				target="_blank"
 				class="text-primary font-medium underline underline-offset-4"
-				href="https://qz.app.do/what-tsa-events-are-for-me"
+				href=""
 				>Competitive event quiz</a
 			>: a form created by the Washington TSA State Officer team to help you
 			choose an event
-		</li>
+		</li> -->
 		<li>
-			This link is outdated...
 			<a
 				target="_blank"
 				class="text-primary font-medium underline underline-offset-4"
-				href="https://lwsd414.instructure.com/courses/19025/files/folder/Event%20Guides%2025-26"
+				href="https://lwsd414.instructure.com/courses/19025/files/folder/Event%20Guides/Event%20Guides%2026-27"
 				>Event guides</a
-			>: detailed rules and rubrics for each event
+			>: detailed rules and rubrics for each event. MUST READ.
 		</li>
 		<li>
 			<a
@@ -110,14 +110,13 @@
 			>: Washington-specific guidelines for each event as well as previous
 			year's event entries
 		</li>
-		<!-- <li>
-		 This site must be updated before it can be included...
+		<li>
 			<a
 				target="_blank"
 				class="text-primary font-medium underline underline-offset-4"
 				href="https://jhstsa.org">JHS TSA website</a
 			>: quick facts about each event
-		</li> -->
+		</li>
 	</ul>
 	<Tabs.Root bind:value={view} class="gap-4">
 		<Tabs.List aria-label="Event list view">
