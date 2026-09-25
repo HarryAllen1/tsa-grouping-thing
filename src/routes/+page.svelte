@@ -5,26 +5,25 @@
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { MIN_EVENTS } from '$lib/constants';
+	import { db } from '$lib/firebase';
 	import { sendRequestApproval, sendRequestDenial } from '$lib/functions';
 	import { md } from '$lib/md';
-	import {
-		allUsersCollection,
-		eventsCollection,
-		settings,
-		user,
-		userDoc,
-	} from '$lib/stores';
+	import { allUsersCollection, settings, user, userDoc } from '$lib/stores';
 	import type { EventDoc } from '$lib/types';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import Minus from '@lucide/svelte/icons/minus';
 	import Plus from '@lucide/svelte/icons/plus';
 	import confetti from 'canvas-confetti';
 	import { mount, onDestroy, unmount } from 'svelte';
+	import { collectionStore } from 'sveltefire';
 	import { toast } from 'svelte-sonner';
 	import Copyable from './Copyable.svelte';
 	import EventCard from './EventCard.svelte';
 
 	let alertEl = $state<HTMLDivElement>();
+	// Keep this listener local to the page. The event sign-up page uses the same
+	// pattern, avoiding a dependency on a global store initialized after auth.
+	const events = collectionStore<EventDoc>(db, 'events');
 
 	const toUnmount: Record<string, object>[] = [];
 
@@ -49,28 +48,24 @@
 		addAlertStuff(alertEl);
 	});
 
-	let signedUpEvents = $derived(
-		$user
-			? $eventsCollection.length > 0
-				? ($userDoc?.events
-						? [
-								...$userDoc.events,
-								...$eventsCollection
-									.filter((e) => e.showToEveryone)
-									.map((e) => e.event),
-							]
-						: []
-					)
-						.map((e) => ({
-							...$eventsCollection.find((ev) => ev.event === e),
-						}))
-						.toSorted((a, b) => a.event!.localeCompare(b.event!))
-				: []
-			: [],
-	) as EventDoc[];
+	let signedUpEvents = $derived.by(() => {
+		if (!$user || !$userDoc) return [];
+
+		const eventNames = new Set([
+			...($userDoc.events ?? []),
+			...$events
+				.filter((event) => event.showToEveryone)
+				.map((event) => event.event),
+		]);
+
+		return [...eventNames]
+			.map((eventName) => $events.find((event) => event.event === eventName))
+			.filter((event): event is EventDoc => event !== undefined)
+			.toSorted((a, b) => a.event.localeCompare(b.event));
+	});
 	let eventData = $derived(
-		$eventsCollection.length > 0 && $user
-			? $eventsCollection
+		$user
+			? $events
 					.map((e) => ({
 						...e,
 						members: (
