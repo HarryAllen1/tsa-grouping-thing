@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { MIN_EVENTS } from '$lib/constants';
-	import { allUsersCollection, eventsCollection, userDoc } from '$lib/stores';
+	import { db } from '$lib/firebase';
+	import { allUsersCollection, userDoc } from '$lib/stores';
+	import type { EventDoc } from '$lib/types';
 	import { barX, plot } from '@observablehq/plot';
+	import { collectionStore } from 'sveltefire';
 	import colors from 'tailwindcss/colors';
 	import ColorKey from './ColorKey.svelte';
 	import Demographics from './Demographics.svelte';
@@ -15,10 +18,13 @@
 	import TShirt from './TShirt.svelte';
 
 	let graph = $state<HTMLDivElement>();
+	// Mirror the working event-sign-up page instead of relying on the shared
+	// store, whose listener may not be initialized on this route.
+	const events = collectionStore<EventDoc>(db, 'events');
 
 	$effect(() => {
-		if ($allUsersCollection.length > 0 && $eventsCollection.length > 0) {
-			const events = $allUsersCollection
+		if ($allUsersCollection.length > 0 && $events.length > 0) {
+			const eventCounts = $allUsersCollection
 				.filter((u) => u.events)
 				.reduce((acc, curr) => {
 					acc.push(...curr.events);
@@ -36,16 +42,16 @@
 					},
 					[] as { name: string; freq: number }[],
 				);
-			for (const e of $eventsCollection.filter(
+			for (const e of $events.filter(
 				(e) => !['*Rooming', '*Cardboard Boat'].includes(e.event),
 			)) {
-				const index = events.findIndex((event) => event.name === e.event);
+				const index = eventCounts.findIndex((event) => event.name === e.event);
 				if (index === -1) {
-					events.push({ name: e.event, freq: 0 });
+					eventCounts.push({ name: e.event, freq: 0 });
 				}
 			}
 
-			events.sort((a, b) => b.freq - a.freq);
+			eventCounts.sort((a, b) => b.freq - a.freq);
 
 			const plotEl = plot({
 				grid: true,
@@ -54,16 +60,16 @@
 				},
 				y: {
 					label: 'Event name',
-					domain: events.map((d) => d.name),
+					domain: eventCounts.map((d) => d.name),
 				},
 				marks: [
-					barX(events, {
+					barX(eventCounts, {
 						x: 'freq',
 						y: 'name',
 						fill(d: { name: string; freq: number }) {
 							const error = eventError(
 								d.name,
-								$eventsCollection,
+								$events,
 								$allUsersCollection.filter((e) => e.events),
 							);
 							return error === 'errorNotEnough'
@@ -101,18 +107,18 @@
 	});
 
 	let teamsWithPreparedness = $derived(
-		$eventsCollection
+		$events
 			.flatMap((e) => e.teams)
 			.filter((t) => t.preparationLevel !== undefined),
 	);
 
 	let totalTeams = $derived(
-		$eventsCollection
+		$events
 			.filter((event) => !['*Rooming', '*Cardboard Boat'].includes(event.event))
 			.flatMap((e) => e.teams).length,
 	);
 	let teamsWithRandomSwitch = $derived(
-		$eventsCollection
+		$events
 			.filter((event) => !['*Rooming', '*Cardboard Boat'].includes(event.event))
 			.flatMap((e) => e.teams)
 			.filter((t) => t.random).length,
@@ -146,7 +152,7 @@
 		{/each}
 
 		<p>
-			Events requiring eliminations: {$eventsCollection.reduce(
+			Events requiring eliminations: {$events.reduce(
 				(acc, e) =>
 					e.teams.length > e.perChapter ||
 					$allUsersCollection.filter((u) => u.events.includes(e.event)).length /
