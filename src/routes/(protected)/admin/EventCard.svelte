@@ -201,6 +201,15 @@
 
 						<Label for="eventDesc">Event description</Label>
 						<Input type="text" bind:value={event.description} id="eventDesc" />
+						<Label for="eventPoints">Event points</Label>
+						<Input
+							type="number"
+							bind:value={event.points}
+							id="eventPoints"
+							min={0}
+							max={5}
+							step={1}
+						/>
 						<Label for="minTeamSize">Min team size</Label>
 						<Input
 							type="number"
@@ -305,6 +314,7 @@
 										minTeamSize: event.minTeamSize,
 										maxTeamSize: event.maxTeamSize,
 										perChapter: event.perChapter,
+										points: event.points,
 										deadline: event.deadline || '',
 										lastUpdatedBy: $user?.email ?? '',
 										eventLead: event.eventLead || '',
@@ -403,8 +413,8 @@
 					<li>
 						{event.teams
 							.filter((t) => t.members.length < event.minTeamSize)
-							.reduce((acc, curr) => (acc += curr.members.length), 0)} people in unfilled
-						rooms
+							.reduce((acc, curr) => (acc += curr.members.length), 0)} people in
+						unfilled rooms
 					</li>
 				{/if}
 			</ul>

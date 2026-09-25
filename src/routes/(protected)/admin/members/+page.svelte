@@ -5,7 +5,7 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
-	import { MIN_EVENTS } from '$lib/constants';
+	import { MIN_POINTS } from '$lib/constants';
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import { db } from '$lib/firebase';
 	import { allUsersCollection, settings } from '$lib/stores';
@@ -37,22 +37,11 @@
 				hidePeopleWithoutEvents = true;
 				sortBy = 'firstName';
 				showRandomSwitch = 'null';
-				numberOfEvents = ['0', '1', '2', '3', '4', '5', '6'];
 			}
 		},
 	);
 
 	let showRandomSwitch = $state<'null' | 'false' | 'true'>('null');
-	// max number of events is always 6
-	let numberOfEvents = $state<('0' | '1' | '2' | '3' | '4' | '5' | '6')[]>([
-		'0',
-		'1',
-		'2',
-		'3',
-		'4',
-		'5',
-		'6',
-	]);
 
 	let fuse = $derived(
 		new Fuse($allUsersCollection, {
@@ -60,28 +49,12 @@
 			threshold: 0.2,
 		}),
 	);
-	let resultsPreNumEventsFilter = $derived(
+	let results = $derived(
 		search.current === ''
 			? $allUsersCollection
 					.toSorted((a, b) => a.name.localeCompare(b.name))
 					.filter((u) => !hidePeopleWithoutEvents || u.events.length > 0)
 			: fuse.search(search.current).map((r) => r.item),
-	);
-	let results = $derived(
-		numberOfEvents.length === 6
-			? resultsPreNumEventsFilter
-			: resultsPreNumEventsFilter.filter((u) =>
-					numberOfEvents.includes(
-						u.events.length.toString() as
-							| '0'
-							| '1'
-							| '2'
-							| '3'
-							| '4'
-							| '5'
-							| '6',
-					),
-				),
 	);
 
 	let visibleMembers = $derived(
@@ -297,29 +270,6 @@
 			</div>
 		</div>
 		<div>
-			<Label for="randomSwitch" class="py-1">Number of events</Label>
-			<div id="randomSwitch" class="mb-2 flex items-center space-x-2">
-				<Select.Root
-					disabled={view === 'list'}
-					type="multiple"
-					bind:value={numberOfEvents}
-				>
-					<Select.Trigger class="w-[180px]">
-						{numberOfEvents.toSorted().join(', ') || 'None'}
-					</Select.Trigger>
-					<Select.Content>
-						<Select.Group>
-							{#each [0, 1, 2, 3, 4, 5, 6] as i}
-								<Select.Item label={i.toString()} value={i.toString()}>
-									{i}
-								</Select.Item>
-							{/each}
-						</Select.Group>
-					</Select.Content>
-				</Select.Root>
-			</div>
-		</div>
-		<div>
 			<Label for="emailEveryone" class="py-1">Email Everyone</Label>
 			<Button
 				variant="outline"
@@ -339,10 +289,12 @@
 		placeholder="Search"
 	/>
 
-	<p><span class="text-red-500">Red</span> = not enough events</p>
 	<p>
-		<span class="text-orange-500">Orange</span> = doesn't have teams for {MIN_EVENTS}
-		(min events) events
+		<span class="text-red-500">Red</span> = fewer than {MIN_POINTS} event points
+	</p>
+	<p>
+		<span class="text-orange-500">Orange</span> = doesn't have viable teams for {MIN_POINTS}
+		points
 	</p>
 	<p>
 		<span class="text-yellow-500">Yellow</span> = doesn't have a team for all events

@@ -3,7 +3,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
-	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
+	import { MAX_EVENTS, MIN_POINTS } from '$lib/constants';
+	import { totalEventPoints } from '$lib/event-points';
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
 	import Lock from '@lucide/svelte/icons/lock';
@@ -31,6 +32,7 @@
 				{} as { [event: string]: boolean },
 			),
 	);
+	let selectedPoints = $derived(totalEventPoints($userDoc?.events, $events));
 </script>
 
 <svelte:head>
@@ -44,8 +46,11 @@
 		Crossed out events are locked, likely due to eliminations.
 	</h1>
 	<Button href="/account/{$userDoc?.email}">Modify intake form</Button>
-	<p class="mb-2">Minimum {MIN_EVENTS} events, maximum {MAX_EVENTS} events.</p>
-	<p class="mb-4">Currently {$userDoc?.events.length}/{MAX_EVENTS}</p>
+	<p class="mb-2">Minimum {MIN_POINTS} points, maximum {MAX_EVENTS} events.</p>
+	<p class="mb-4">
+		Currently {$userDoc?.events.length}/{MAX_EVENTS} events and {selectedPoints}/{MIN_POINTS}
+		points
+	</p>
 
 	<div class="mb-4 flex flex-col gap-2">
 		{#each $events

@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { sleep } from '$lib/better-utils';
 	import { Button } from '$lib/components/ui/button';
-	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
+	import { MAX_EVENTS, MIN_POINTS } from '$lib/constants';
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
 	import confetti from 'canvas-confetti';
@@ -40,8 +40,8 @@
 	Choose Events
 </h1>
 <p class="leading-7 not-first:mt-6">
-	You may choose up to {MAX_EVENTS} events. You must have at at least {MIN_EVENTS}
-	events. Crossed out events are locked, likely due to eliminations.
+	You may choose up to {MAX_EVENTS} events. You must have at least {MIN_POINTS} points.
+	Crossed out events are locked, likely due to eliminations.
 </p>
 <p class="leading-7 not-first:mt-6">
 	If you are having trouble choosing events, here are some resources:

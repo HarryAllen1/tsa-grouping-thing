@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Checkbox } from '$lib/components/ui/checkbox';
+	import { Badge } from '$lib/components/ui/badge';
 	import { Label } from '$lib/components/ui/label';
 	import { MAX_EVENTS } from '$lib/constants';
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
@@ -43,7 +44,9 @@
 	);
 </script>
 
-<div class="flex items-center space-x-2">
+<div
+	class="hover:bg-accent/60 flex items-center gap-2 rounded-lg px-3 py-2 transition-colors"
+>
 	{#key updater}
 		<Checkbox
 			checked={eventMap[event.event]}
@@ -122,14 +125,17 @@
 				);
 			}}
 		/>
-		<Label
-			for={event.event}
-			class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {disabled
-				? 'opacity-50'
-				: ''} {event.locked ? 'line-through' : ''}"
-		>
-			<span class="ml-2">{event.event}</span>
-		</Label>
+		<div class="flex min-w-0 items-center gap-2">
+			<Label
+				for={event.event}
+				class="truncate text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {disabled
+					? 'opacity-50'
+					: ''} {event.locked ? 'line-through' : ''}"
+			>
+				<span>{event.event}</span>
+			</Label>
+			<Badge variant="secondary">{event.points}</Badge>
+		</div>
 		{#if event.locked}
 			<Lock />
 		{/if}

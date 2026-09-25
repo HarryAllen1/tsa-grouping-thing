@@ -7,7 +7,8 @@
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
 	import { Switch } from '$lib/components/ui/switch';
-	import { MIN_EVENTS } from '$lib/constants';
+	import { MIN_POINTS } from '$lib/constants';
+	import { totalEventPoints } from '$lib/event-points';
 	import { db } from '$lib/firebase';
 	import { eventsCollection, user as userStore } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
@@ -25,6 +26,22 @@
 		nationalId: user.nationalId,
 		washingtonId: user.washingtonId,
 	});
+	let selectedPoints = $derived(
+		totalEventPoints(user.events, $eventsCollection),
+	);
+	let viableTeamPoints = $derived(
+		user.events.reduce((total, eventName) => {
+			const event = $eventsCollection.find(
+				(candidate) => candidate.event === eventName,
+			);
+			const hasViableTeam = event?.teams.some(
+				(team) =>
+					team.members.some((member) => member.email === user.email) &&
+					team.members.length >= event.minTeamSize,
+			);
+			return total + (hasViableTeam ? (event?.points ?? 0) : 0);
+		}, 0),
+	);
 </script>
 
 <Card.Root class={show ? '' : 'hidden'}>
@@ -244,23 +261,10 @@
 						<Button
 							variant="ghost"
 							size="sm"
-							class="member-collapsible flex w-full items-center p-2 {user
-								.events.length < MIN_EVENTS || user.events.length > 6
+							class="member-collapsible flex w-full items-center p-2 {selectedPoints <
+								MIN_POINTS || user.events.length > 6
 								? 'text-red-500'
-								: user.events
-											.map((e) => {
-												const event = $eventsCollection.find(
-													(ev) => ev.event === e,
-												);
-												return (
-													event?.teams.find(
-														(t) =>
-															t.members.find((m) => m.email === user.email) &&
-															t.members.length >= event.minTeamSize,
-													) ?? null
-												);
-											})
-											.filter(Boolean).length < MIN_EVENTS
+								: viableTeamPoints < MIN_POINTS
 									? 'text-orange-500'
 									: user.events
 												.map(
@@ -276,7 +280,7 @@
 										: ''}"
 							{...props}
 						>
-							Events ({user.events.length})
+							Events ({user.events.length}, {selectedPoints} points)
 							<div class="flex-1"></div>
 							<ChevronsUpDown class="h-4 w-4" />
 						</Button>

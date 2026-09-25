@@ -108,6 +108,7 @@
 		minTeamSize: number;
 		maxTeamSize: number;
 		perChapter: number;
+		points: number;
 		locked: boolean | undefined;
 		deadline: string;
 		eventLead: string;
@@ -116,6 +117,7 @@
 		minTeamSize: 1,
 		maxTeamSize: 1,
 		perChapter: 1,
+		points: 0,
 		locked: false,
 		deadline: '',
 		eventLead: '',
@@ -213,6 +215,16 @@
 						/>
 					</Label>
 					<Label class="flex w-full flex-col items-start gap-1.5">
+						<span>Event points</span>
+						<Input
+							bind:value={newEventStuff.points}
+							type="number"
+							min={0}
+							max={5}
+							step={1}
+						/>
+					</Label>
+					<Label class="flex w-full flex-col items-start gap-1.5">
 						<span>Minimum team size</span>
 						<Input
 							bind:value={newEventStuff.minTeamSize}
@@ -281,6 +293,7 @@
 							e.preventDefault();
 							newEventStuff.maxTeamSize = Number(newEventStuff.maxTeamSize);
 							newEventStuff.minTeamSize = Number(newEventStuff.minTeamSize);
+							newEventStuff.points = Number(newEventStuff.points);
 							if (newEventStuff.event.length === 0) {
 								toast.error('Event name must not be empty.');
 							} else if (newEventStuff.perChapter < 1) {
@@ -290,6 +303,12 @@
 								Math.round(newEventStuff.perChapter)
 							) {
 								toast.error('Per chapter must be an integer.');
+							} else if (
+								!Number.isInteger(newEventStuff.points) ||
+								newEventStuff.points < 0 ||
+								newEventStuff.points > 5
+							) {
+								toast.error('Event points must be a whole number from 0 to 5.');
 							} else if (
 								newEventStuff.maxTeamSize < newEventStuff.minTeamSize
 							) {

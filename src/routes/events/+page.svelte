@@ -1,6 +1,10 @@
 <script lang="ts">
 	import * as Alert from '$lib/components/ui/alert';
-	import { MAX_EVENTS, MIN_EVENTS } from '$lib/constants';
+	import { Badge } from '$lib/components/ui/badge';
+	import { Progress } from '$lib/components/ui/progress';
+	import * as Tabs from '$lib/components/ui/tabs';
+	import { MAX_EVENTS, MIN_POINTS } from '$lib/constants';
+	import { totalEventPoints } from '$lib/event-points';
 	import { auth, db } from '$lib/firebase';
 	import type { EventDoc, UserDoc } from '$lib/types';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
@@ -22,6 +26,26 @@
 				},
 				{} as Record<string, boolean>,
 			),
+	);
+	let selectedPoints = $derived(totalEventPoints($userDoc?.events, $events));
+	let pointProgress = $derived(
+		Math.min(100, (selectedPoints / MIN_POINTS) * 100),
+	);
+	let pointsRemaining = $derived(Math.max(0, MIN_POINTS - selectedPoints));
+	let view = $state<'events' | 'points'>('events');
+	let selectableEvents = $derived(
+		$events
+			.filter((event) => !event.hideInSignup)
+			.toSorted((a, b) => a.event.localeCompare(b.event)),
+	);
+	let eventsByPoints = $derived(
+		Array.from({ length: 6 }, (_, index) => {
+			const points = 5 - index;
+			return {
+				points,
+				events: selectableEvents.filter((event) => event.points === points),
+			};
+		}).filter((group) => group.events.length > 0),
 	);
 </script>
 
@@ -52,8 +76,8 @@
 		Changes are automatically saved.
 	</h1>
 	<p class="leading-7 not-first:mt-6">
-		You may choose up to {MAX_EVENTS} events. You must have at at least {MIN_EVENTS}
-		events. Crossed out events are locked, likely due to eliminations.
+		You may choose up to {MAX_EVENTS} events. You must have at least {MIN_POINTS}
+		points. Crossed out events are locked, likely due to eliminations.
 	</p>
 	<p class="leading-7 not-first:mt-6">
 		If you are having trouble choosing events, here are some resources:
@@ -95,23 +119,66 @@
 			>: quick facts about each event
 		</li> -->
 	</ul>
-	<p class="mb-4">
-		Currently at {$userDoc?.events.length} out of a maximum of {MAX_EVENTS} events.
-		The minimum number of events is
-		{MIN_EVENTS}.
-	</p>
+	<Tabs.Root bind:value={view} class="gap-4">
+		<Tabs.List aria-label="Event list view">
+			<Tabs.Trigger value="events">Event view</Tabs.Trigger>
+			<Tabs.Trigger value="points">Points view</Tabs.Trigger>
+		</Tabs.List>
+		<section
+			aria-labelledby="point-progress-heading"
+			class="bg-card/95 border-border sticky top-3 z-10 mb-6 rounded-xl border p-4 shadow-sm"
+		>
+			<div class="mb-3 flex items-center justify-between gap-3">
+				<div>
+					<h2 class="text-foreground text-md font-semibold">
+						{#if pointsRemaining > 0}
+							{pointsRemaining} more point{pointsRemaining === 1 ? '' : 's'} needed
+						{:else}
+							Minimum requirement met
+						{/if}
+					</h2>
+				</div>
+				<Badge variant={pointsRemaining > 0 ? 'secondary' : 'default'}>
+					{selectedPoints} / {MIN_POINTS}
+				</Badge>
+			</div>
+			<Progress
+				value={pointProgress}
+				aria-label="{selectedPoints} of {MIN_POINTS} event points"
+			/>
+		</section>
 
-	{#if ($userDoc?.events.length ?? 1) >= MAX_EVENTS && !$userDoc?.eventsLocked}
-		<p class="mb-4">
-			Remove one or more events if you want to change your events.
-		</p>
-	{/if}
+		{#if ($userDoc?.events.length ?? 1) >= MAX_EVENTS && !$userDoc?.eventsLocked}
+			<p class="mb-4">
+				Remove one or more events if you want to change your events.
+			</p>
+		{/if}
 
-	<div class="mb-4 flex flex-col gap-2">
-		{#each $events
-			.filter((e) => !e.hideInSignup)
-			.toSorted( (a, b) => a.event.localeCompare(b.event), ) as event (event.event)}
-			<EventLine {event} {eventMap} />
-		{/each}
-	</div>
+		<Tabs.Content value="events" class="mb-4">
+			<div class="flex flex-col gap-1">
+				{#each selectableEvents as event (event.event)}
+					<EventLine {event} {eventMap} />
+				{/each}
+			</div>
+		</Tabs.Content>
+		<Tabs.Content value="points" class="mb-4">
+			<div class="flex flex-col gap-5">
+				{#each eventsByPoints as group (group.points)}
+					<section aria-labelledby="points-{group.points}">
+						<div class="mb-1 flex items-center gap-2 px-3">
+							<h2 id="points-{group.points}" class="text-sm font-semibold">
+								{group.points} point{group.points === 1 ? '' : 's'}
+							</h2>
+							<Badge variant="secondary">{group.events.length} events</Badge>
+						</div>
+						<div class="flex flex-col gap-1">
+							{#each group.events as event (event.event)}
+								<EventLine {event} {eventMap} />
+							{/each}
+						</div>
+					</section>
+				{/each}
+			</div>
+		</Tabs.Content>
+	</Tabs.Root>
 </div>

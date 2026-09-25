@@ -4,7 +4,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Skeleton } from '$lib/components/ui/skeleton';
-	import { MIN_EVENTS } from '$lib/constants';
+	import { MIN_POINTS } from '$lib/constants';
+	import { totalEventPoints } from '$lib/event-points';
 	import { db } from '$lib/firebase';
 	import { sendRequestApproval, sendRequestDenial } from '$lib/functions';
 	import { md } from '$lib/md';
@@ -79,6 +80,7 @@
 					.toSorted((a, b) => a.event.localeCompare(b.event))
 			: [],
 	);
+	let selectedPoints = $derived(totalEventPoints($userDoc?.events, $events));
 
 	let requests = $derived(
 		signedUpEvents
@@ -330,12 +332,11 @@
 			>
 		</p>
 	{:else}
-		{#if signedUpEvents.length < MIN_EVENTS}
+		{#if selectedPoints < MIN_POINTS}
 			<p class="my-4 w-full">
-				You haven't signed up for enough events yet. Please add some more events
-				on the <a
-					href="/events"
-					class="font-medium underline underline-offset-4"
+				You currently have {selectedPoints}/{MIN_POINTS} required event points. Please
+				add more events on the
+				<a href="/events" class="font-medium underline underline-offset-4"
 					>event sign up page.</a
 				>
 			</p>

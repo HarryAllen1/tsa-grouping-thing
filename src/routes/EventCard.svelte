@@ -72,6 +72,7 @@
 			{/if}
 
 			<ul>
+				<li>{event.points} points</li>
 				<li>
 					Min {event.minTeamSize} people per {event.event === '*Rooming'
 						? 'room'

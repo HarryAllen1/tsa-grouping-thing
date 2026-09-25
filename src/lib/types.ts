@@ -6,6 +6,7 @@ export interface EventDoc {
 	teams: Team[];
 	id: number;
 	event: string;
+	points: number;
 	minTeamSize: number;
 	maxTeamSize: number;
 	perChapter: number;

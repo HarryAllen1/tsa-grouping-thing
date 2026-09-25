@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { MIN_EVENTS } from '$lib/constants';
+	import { MIN_POINTS } from '$lib/constants';
+	import { totalEventPoints } from '$lib/event-points';
 	import { db } from '$lib/firebase';
 	import { allUsersCollection, userDoc } from '$lib/stores';
 	import type { EventDoc } from '$lib/types';
-	import { barX, plot } from '@observablehq/plot';
+	import { barX, plot, rectY } from '@observablehq/plot';
 	import { collectionStore } from 'sveltefire';
 	import colors from 'tailwindcss/colors';
 	import ColorKey from './ColorKey.svelte';
@@ -18,9 +19,12 @@
 	import TShirt from './TShirt.svelte';
 
 	let graph = $state<HTMLDivElement>();
+	let pointsGraph = $state<HTMLDivElement>();
 	// Mirror the working event-sign-up page instead of relying on the shared
 	// store, whose listener may not be initialized on this route.
 	const events = collectionStore<EventDoc>(db, 'events');
+	const userPoints = (eventNames: string[]) =>
+		totalEventPoints(eventNames, $events);
 
 	$effect(() => {
 		if ($allUsersCollection.length > 0 && $events.length > 0) {
@@ -111,6 +115,47 @@
 		}
 	});
 
+	$effect(() => {
+		if ($events.length === 0) return;
+
+		const pointTotals = $allUsersCollection
+			.filter((user) => user.completedIntakeForm)
+			.map((user) => userPoints(user.events));
+		const nonZeroPointTotals = pointTotals.filter((total) => total > 0);
+		const maxPoints = Math.max(MIN_POINTS, ...nonZeroPointTotals, 1);
+		const distribution = Array.from({ length: maxPoints }, (_, index) => {
+			const points = index + 1;
+			return {
+				points,
+				members: nonZeroPointTotals.filter((total) => total === points).length,
+			};
+		});
+
+		const plotEl = plot({
+			grid: true,
+			x: {
+				label: 'Total event points',
+				domain: [0.5, maxPoints + 0.5],
+				ticks: maxPoints,
+			},
+			y: {
+				label: 'Members',
+			},
+			marks: [
+				rectY(distribution, {
+					x: 'points',
+					interval: 1,
+					y2: 'members',
+					fill: 'var(--chart-1)',
+					inset: 1,
+					tip: true,
+				}),
+			],
+		});
+		plotEl.classList.add('bg-transparent!');
+		pointsGraph?.replaceChildren(plotEl);
+	});
+
 	let teamsWithPreparedness = $derived(
 		$events
 			.flatMap((e) => e.teams)
@@ -136,25 +181,21 @@
 
 <div class="mt-6">
 	<p>
-		Total members: {$allUsersCollection.filter(
-			(u) => u.events.length > 0 && u.completedIntakeForm,
+		Total members with event points: {$allUsersCollection.filter(
+			(u) => userPoints(u.events) > 0 && u.completedIntakeForm,
 		).length}
 	</p>
 	{#if $userDoc.admin}
 		<p>
-			Members with at least {MIN_EVENTS} events: {$allUsersCollection.filter(
-				(u) => u.events.length >= MIN_EVENTS && u.completedIntakeForm,
+			Members with at least {MIN_POINTS} event points: {$allUsersCollection.filter(
+				(u) => userPoints(u.events) >= MIN_POINTS && u.completedIntakeForm,
 			).length}
 		</p>
-		<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
-		{#each { length: MIN_EVENTS } as _, i}
-			{@const num = MIN_EVENTS - i - 1}
-			<p>
-				Members with {num} events: {$allUsersCollection.filter(
-					(u) => u.events.length === num && u.completedIntakeForm,
-				).length}
-			</p>
-		{/each}
+		<p>
+			Members below {MIN_POINTS} event points: {$allUsersCollection.filter(
+				(u) => userPoints(u.events) < MIN_POINTS && u.completedIntakeForm,
+			).length}
+		</p>
 
 		<p>
 			Events requiring eliminations: {$events.reduce(
@@ -192,6 +233,14 @@
 		</p>
 	{/if}
 
+	<h2 class="mt-8 mb-3 text-xl font-semibold tracking-tight">
+		Point distribution
+	</h2>
+	<div bind:this={pointsGraph}></div>
+
+	<h2 class="mt-8 mb-3 text-xl font-semibold tracking-tight">
+		Event distribution
+	</h2>
 	<ColorKey />
 	<div bind:this={graph}></div>
 
