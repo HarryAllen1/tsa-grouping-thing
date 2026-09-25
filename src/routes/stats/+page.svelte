@@ -24,6 +24,12 @@
 
 	$effect(() => {
 		if ($allUsersCollection.length > 0 && $events.length > 0) {
+			const activeEvents = $events.filter(
+				(event) => !['*Rooming', '*Cardboard Boat'].includes(event.event),
+			);
+			const activeEventNames = new Set(
+				activeEvents.map((event) => event.event),
+			);
 			const eventCounts = $allUsersCollection
 				.filter((u) => u.events)
 				.reduce((acc, curr) => {
@@ -41,10 +47,9 @@
 						return acc;
 					},
 					[] as { name: string; freq: number }[],
-				);
-			for (const e of $events.filter(
-				(e) => !['*Rooming', '*Cardboard Boat'].includes(e.event),
-			)) {
+				)
+				.filter((event) => activeEventNames.has(event.name));
+			for (const e of activeEvents) {
 				const index = eventCounts.findIndex((event) => event.name === e.event);
 				if (index === -1) {
 					eventCounts.push({ name: e.event, freq: 0 });
