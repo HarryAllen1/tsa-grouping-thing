@@ -14,6 +14,33 @@
 		$props();
 
 	let collapsibleOpen = $state(false);
+	let isCreatingTeam = $state(false);
+	let optimisticTeamCreated = $state(false);
+
+	$effect(() => {
+		if (
+			optimisticTeamCreated &&
+			event.teams.some((team) =>
+				team.members.some((member) => member.email === $user?.email),
+			)
+		) {
+			optimisticTeamCreated = false;
+		}
+	});
+
+	const createOwnTeam = async () => {
+		optimisticTeamCreated = true;
+		isCreatingTeam = true;
+
+		try {
+			await createTeam({ event: event.event });
+		} catch (error) {
+			optimisticTeamCreated = false;
+			throw error;
+		} finally {
+			isCreatingTeam = false;
+		}
+	};
 </script>
 
 {#snippet renderTeams(teams: Team[])}
@@ -129,17 +156,20 @@
 						t.members.find(
 							(e) => e.email.toLowerCase() === ($user?.email ?? ''),
 						),
-					) || event.teamCreationActuallyLocked
+					) ||
+					event.teamCreationActuallyLocked ||
+					optimisticTeamCreated ||
+					isCreatingTeam
 				)}
 				{@attach disableOnClick(async () => {
-					await createTeam({
-						event: event.event,
-					}).catch((error) => {
+					await createOwnTeam().catch((error) => {
 						toast.error(`Failed to create team or room: ${error}`);
 					});
 				})}
 			>
-				Create {event.event === '*Rooming' ? 'Room' : 'Team'}
+				{optimisticTeamCreated
+					? `${event.event === '*Rooming' ? 'Room' : 'Team'} created`
+					: `Create ${event.event === '*Rooming' ? 'Room' : 'Team'}`}
 			</Button>
 		</Card.Footer>
 	{/if}

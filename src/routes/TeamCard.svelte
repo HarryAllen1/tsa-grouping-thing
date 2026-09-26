@@ -49,11 +49,91 @@
 
 	let {
 		event,
-		team,
+		team: serverTeam,
 	}: {
 		event: EventDoc;
 		team: Team;
 	} = $props();
+
+	let optimisticTeam = $state<Team | null>(null);
+	let pendingMembershipChange = $state<{
+		type: 'add' | 'leave';
+		email: string;
+	} | null>(null);
+	let isLeavingTeam = $state(false);
+	let team = $derived(optimisticTeam ?? serverTeam);
+
+	$effect(() => {
+		if (!optimisticTeam || !pendingMembershipChange) return;
+
+		const memberIsOnServer = serverTeam.members.some(
+			(member) => member.email === pendingMembershipChange?.email,
+		);
+		const changeIsReflected =
+			pendingMembershipChange.type === 'add'
+				? memberIsOnServer
+				: !memberIsOnServer;
+
+		if (changeIsReflected) {
+			optimisticTeam = null;
+			pendingMembershipChange = null;
+		}
+	});
+
+	const leaveCurrentTeam = async () => {
+		const currentUserEmail = $user?.email;
+		if (!currentUserEmail)
+			throw new Error('You must be signed in to leave a team.');
+
+		optimisticTeam = {
+			...team,
+			members: team.members.filter(
+				(member) => member.email !== currentUserEmail,
+			),
+		};
+		pendingMembershipChange = { type: 'leave', email: currentUserEmail };
+		isLeavingTeam = true;
+
+		try {
+			await leaveTeam({ event: event.event, teamId: team.id });
+		} catch (error) {
+			optimisticTeam = null;
+			pendingMembershipChange = null;
+			throw error;
+		} finally {
+			isLeavingTeam = false;
+		}
+	};
+
+	const addMemberToTeam = async (person: UserDoc) => {
+		if (team.members.length >= event.maxTeamSize) {
+			throw new Error('Your team is full.');
+		}
+
+		optimisticTeam = {
+			...team,
+			members: [...team.members, { name: person.name, email: person.email }],
+		};
+		pendingMembershipChange = { type: 'add', email: person.email };
+
+		try {
+			await (team.requests?.some((request) => request.email === person.email)
+				? sendRequestApproval({
+						event: event.event,
+						teamId: team.id,
+						userEmail: person.email,
+					})
+				: addTeamMember({
+						event: event.event,
+						teamId: team.id,
+						userEmail: person.email,
+					}));
+		} catch (error) {
+			optimisticTeam = null;
+			pendingMembershipChange = null;
+			throw error;
+		}
+	};
 
 	let submissionsFileUpload = $state<HTMLInputElement>();
 	let filesToUpload = $state<File[]>([]);
@@ -143,11 +223,9 @@
 								<Tooltip.Trigger>
 									<Button
 										variant="destructive"
+										disabled={isLeavingTeam}
 										{@attach disableOnClick(async () => {
-											await leaveTeam({
-												event: event.event,
-												teamId: team.id,
-											}).catch((error) => {
+											await leaveCurrentTeam().catch((error) => {
 												toast.error(`Failed to leave team: ${error}`);
 											});
 										})}
@@ -225,25 +303,7 @@
 													{person.name}
 													<Button
 														{@attach disableOnClick(async () => {
-															if (team.members.length >= event.maxTeamSize) {
-																return alert('Your team is full');
-															}
-
-															await (
-																team.requests?.some(
-																	(r) => r.email === person.email,
-																)
-																	? sendRequestApproval({
-																			event: event.event,
-																			teamId: team.id,
-																			userEmail: person.email,
-																		})
-																	: addTeamMember({
-																			event: event.event,
-																			teamId: team.id,
-																			userEmail: person.email,
-																		})
-															)
+															await addMemberToTeam(person)
 																.then(() => {
 																	toast.success(
 																		`Added ${person.name} to the team successfully.`,
@@ -257,6 +317,7 @@
 																	);
 																});
 														})}
+														disabled={pendingMembershipChange !== null}
 														variant="outline"
 														size="icon"
 														class="ml-2"
@@ -463,7 +524,7 @@
 						</div>
 					{/if}
 				</div>
-			{:else if !event.locked /* event isn't locked */ && !event.teams.some( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) /* user isn't in a different team */ && team.members.length < event.maxTeamSize && /* ensure user is of the same gender as room */ (event.event === '*Rooming' ? (['Male', 'Female'].includes($userDoc.gender ?? '') ? $allUsersCollection.find((u) => u.email === team.members[0].email)?.gender === $userDoc.gender : true) : true)}
+			{:else if !isLeavingTeam && !event.locked /* event isn't locked */ && !event.teams.some( (t) => t.members.find((e) => e.email.toLowerCase() === ($user?.email ?? '')), ) /* user isn't in a different team */ && team.members.length < event.maxTeamSize && /* ensure user is of the same gender as room */ (event.event === '*Rooming' ? (['Male', 'Female'].includes($userDoc.gender ?? '') ? $allUsersCollection.find((u) => u.email === team.members[0].email)?.gender === $userDoc.gender : true) : true)}
 				{#if team.requests?.find((u) => u.email === $user?.email)}
 					<Button disabled>Requested</Button>
 				{:else}

@@ -18,6 +18,9 @@
 	}: { event: EventDoc; eventMap: Record<string, boolean> } = $props();
 
 	let updater = $state(0);
+	let optimisticChecked = $state<boolean | null>(null);
+	let isSaving = $state(false);
+	let checked = $derived(optimisticChecked ?? eventMap[event.event]);
 	let disabled = $derived(
 		// user's events are locked by admin
 		$userDoc?.eventsLocked ||
@@ -42,6 +45,86 @@
 					),
 				)?.locked),
 	);
+
+	$effect(() => {
+		if (!isSaving && optimisticChecked === eventMap[event.event]) {
+			optimisticChecked = null;
+		}
+	});
+
+	const updateEventSelection = async (state: boolean) => {
+		const previousState = eventMap[event.event];
+		const membersTeam = event.teams.find((t) =>
+			t.members.some((member) => member.email === $userDoc.email),
+		);
+
+		optimisticChecked = state;
+		isSaving = true;
+
+		try {
+			if (
+				event.locked ||
+				(!eventMap[event.event] && ($userDoc?.events.length ?? 0) >= MAX_EVENTS)
+			) {
+				throw new Error('This event can no longer be changed.');
+			}
+
+			if (event.maxTeamSize === 1) {
+				if (state && !membersTeam) {
+					await createTeam({ event: event.event });
+				} else if (!state && membersTeam) {
+					await leaveTeam({
+						event: event.event,
+						teamId: membersTeam.id,
+					});
+				}
+			}
+
+			await updateDoc(doc(db, 'users', $user?.email ?? ''), {
+				events: previousState
+					? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
+					: [...($userDoc?.events ?? []), event.event],
+				lastUpdated: Timestamp.now(),
+				lastUpdatedBy: $user?.email ?? '',
+			});
+		} catch (error) {
+			optimisticChecked = previousState;
+			throw error;
+		} finally {
+			isSaving = false;
+		}
+	};
+
+	const handleCheckedChange = async (state: boolean) => {
+		const membersTeam = event.teams.find((t) =>
+			t.members.some((member) => member.email === $userDoc.email),
+		);
+
+		if (!state && event.maxTeamSize > 1 && membersTeam) {
+			const result = await fancyConfirm(
+				'You are still in a team!',
+				'Are you sure you want to leave this event? You will be removed from your team and will be unable to rejoin it unless added by a team member.',
+				[
+					['No, stay', false],
+					['Yes, leave', true],
+				],
+			);
+
+			if (!result) {
+				updater++;
+				return;
+			}
+		}
+
+		toast.promise(updateEventSelection(state), {
+			loading: `${state ? 'Joining' : 'Leaving'} event...`,
+			success: `Successfully ${state ? 'joined' : 'left'} event`,
+			error: (error) =>
+				error instanceof Error
+					? error.message
+					: `An error occurred whilst ${state ? 'joining' : 'leaving'} the event.`,
+		});
+	};
 </script>
 
 <div
@@ -49,81 +132,11 @@
 >
 	{#key updater}
 		<Checkbox
-			checked={eventMap[event.event]}
-			{disabled}
+			{checked}
+			disabled={disabled || isSaving}
 			id={event.event}
 			class="flex size-6 items-center justify-center [&_svg]:size-6"
-			onCheckedChange={(state) => {
-				toast.promise(
-					(async (state) => {
-						const membersTeam = event.teams.find((t) =>
-							t.members.some((member) => member.email === $userDoc.email),
-						);
-						if (!state && event.maxTeamSize > 1 && membersTeam) {
-							const result = await fancyConfirm(
-								'You are still in a team!',
-								'Are you sure you want to leave this event? You will be removed from your team and will be unable to rejoin it unless added by a team member.',
-								[
-									['No, stay', false],
-									['Yes, leave', true],
-								],
-							);
-
-							if (result) {
-								await leaveTeam({
-									event: event.event,
-									teamId: membersTeam.id,
-								});
-							} else {
-								updater++;
-								throw new Error('Did not leave team');
-							}
-						}
-
-						if (
-							event.locked ||
-							(!eventMap[event.event] &&
-								($userDoc?.events.length ?? 0) >= MAX_EVENTS)
-						) {
-							updater++;
-							return;
-						}
-
-						if (
-							event.maxTeamSize === 1 &&
-							((event.teamCreationLocked &&
-								event.teams.length < event.perChapter) ||
-								!event.teamCreationLocked)
-						) {
-							if (state && !membersTeam) {
-								await createTeam({
-									event: event.event,
-								}).catch(toast.error);
-							} else if (!state && membersTeam) {
-								await leaveTeam({
-									event: event.event,
-									teamId: membersTeam.id,
-								}).catch(toast.error);
-							}
-						}
-						await updateDoc(doc(db, 'users', $user?.email ?? ''), {
-							events: eventMap[event.event]
-								? ($userDoc?.events.filter((e) => e !== event.event) ?? [])
-								: [...($userDoc?.events ?? []), event.event],
-							lastUpdated: Timestamp.now(),
-							lastUpdatedBy: $user?.email ?? '',
-						});
-					})(state),
-					{
-						loading: `${state ? 'Joining' : 'Leaving'} event...`,
-						success: `Successfully ${state ? 'joined' : 'left'} event`,
-						error: (error) =>
-							error instanceof Error
-								? error.message
-								: `An error occurred whilst ${state ? 'joining' : 'leaving'} the event.`,
-					},
-				);
-			}}
+			onCheckedChange={handleCheckedChange}
 		/>
 		<div class="flex min-w-0 items-center gap-2">
 			<Label
