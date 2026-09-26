@@ -21,5 +21,8 @@ export const CTE_CLASSES = [
 	'Biotechnology 1',
 	'Biotechnology 2',
 	'Middle School Classes (Make sure they count!)',
+	'Art',
+	'Drama',
+	'Band/Music',
 	'Other',
 ] as const;
