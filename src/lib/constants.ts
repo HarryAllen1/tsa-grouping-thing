@@ -23,6 +23,9 @@ export const CTE_CLASSES = [
 	'Middle School Classes (Make sure they count!)',
 	'Art',
 	'Drama',
-	'Band/Music',
+	'Interior Design',
+	'AP Statistics',
+	'Graphic Production & Design',
+	'AI Foundations',
 	'Other',
 ] as const;
