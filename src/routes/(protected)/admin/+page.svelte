@@ -75,13 +75,13 @@
 	let onlyShowOverflown = $state(false);
 	let sortByDeadline = $state(false);
 
-	const fuseKeys = {
+	const fuseKeys = $state({
 		event: true,
 		members: true,
 		waId: true,
 		teamNumbers: true,
 		deadline: true,
-	};
+	});
 	let threshold = 0.2;
 	let fuse = $derived(
 		new Fuse(

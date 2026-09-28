@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
+	import { CTE_CLASSES, CTE_CLASS_STATUSES } from '$lib/constants';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
@@ -46,6 +47,8 @@
 			| 'Club fair'
 			| 'Other'
 			| undefined;
+		cteClassStatus: (typeof CTE_CLASS_STATUSES)[number] | undefined;
+		cteClass: (typeof CTE_CLASSES)[number] | undefined;
 	}>({
 		firstName: '',
 		lastName: '',
@@ -56,6 +59,8 @@
 		tShirtSize: undefined,
 		demographic: undefined,
 		foundBy: undefined,
+		cteClassStatus: undefined,
+		cteClass: undefined,
 	});
 
 	onMount(async () => {
@@ -70,6 +75,8 @@
 		formData.tShirtSize = userData.tShirtSize;
 		formData.demographic = userData.demographic;
 		formData.foundBy = userData.foundBy;
+		formData.cteClassStatus = userData.cteClassStatus;
+		formData.cteClass = userData.cteClass;
 
 		initialized = true;
 	});
@@ -256,6 +263,51 @@
 					</div>
 				</div>
 				<input hidden bind:value={formData.gender} name="gender" />
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 md:space-x-2">
+				<div>
+					<Label>CTE class status</Label>
+					<Select.Root
+						type="single"
+						value={formData.cteClassStatus}
+						onValueChange={(value) => {
+							if (value) {
+								formData.cteClassStatus =
+									value as (typeof CTE_CLASS_STATUSES)[number];
+							}
+						}}
+					>
+						<Select.Trigger class="w-full">
+							{formData.cteClassStatus ?? 'Select status'}
+						</Select.Trigger>
+						<Select.Content>
+							{#each CTE_CLASS_STATUSES as status}
+								<Select.Item value={status}>{status}</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
+				</div>
+				<div>
+					<Label>CTE class</Label>
+					<Select.Root
+						type="single"
+						value={formData.cteClass}
+						onValueChange={(value) => {
+							if (value) {
+								formData.cteClass = value as (typeof CTE_CLASSES)[number];
+							}
+						}}
+					>
+						<Select.Trigger class="w-full">
+							{formData.cteClass ?? 'Select class'}
+						</Select.Trigger>
+						<Select.Content>
+							{#each CTE_CLASSES as cteClass}
+								<Select.Item value={cteClass}>{cteClass}</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
+				</div>
 			</div>
 			<div class="grid grid-cols-1 md:grid-cols-3 md:space-x-2">
 				<div>

@@ -319,7 +319,7 @@
 		</div>
 	{:else}
 		<TableView
-			results={$allUsersCollection
+			results={visibleMembers
 				.filter((m) => m.events.length > 0)
 				.toSorted((a, b) => a.firstName?.localeCompare(b.firstName ?? '') ?? 0)}
 		/>
