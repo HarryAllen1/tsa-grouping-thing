@@ -38,8 +38,15 @@ service cloud.firestore {
         request.auth != null &&
         isAdmin();
     }
+    match /event_logs/{log} {
+      allow read: if isAdmin();
+      // Logs are written by trusted Cloud Functions using the Admin SDK.
+      allow write: if false;
+    }
     match /{document=**} {
-      allow read, write: if request.auth != null;
+      // Firestore grants access if *any* matching rule grants access. This
+      // must remain closed so it cannot override the collection rules above.
+      allow read, write: if false;
     }
   }
 }

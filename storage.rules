@@ -5,16 +5,22 @@ rules_version = '2';
 //    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
-    match /results/{teamId} {
-      allow read: if request.auth != null;
-      allow write: if firestore.get(/databases/(default)/documents/users/$(request.auth.token.email)).admin;
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
     }
-    match /files/{event}/{teamId} {
-    	allow read: if request.auth != null;
-      allow write: if firestore.get(/databases/(default)/documents/users/$(request.auth.token.email)).admin;
+    match /results/{event}/{result} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+    match /files/{event}/{teamId}/{file=**} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+    match /submissions/{event}/{teamId} {
+      allow read, write: if isAdmin();
     }
     match /{allPaths=**} {
-      allow read, write: if request.auth != null;
+      allow read, write: if false;
     }
   }
 }
