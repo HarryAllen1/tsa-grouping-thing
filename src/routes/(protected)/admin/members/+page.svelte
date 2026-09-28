@@ -20,7 +20,6 @@
 		getDocs,
 		updateDoc,
 	} from 'firebase/firestore';
-	import Fuse from 'fuse.js';
 	import { watch } from 'runed';
 	import MemberGridCard from './MemberGridCard.svelte';
 	import { search } from './search.svelte';
@@ -43,19 +42,33 @@
 
 	let showRandomSwitch = $state<'null' | 'false' | 'true'>('null');
 
-	let fuse = $derived(
-		new Fuse($allUsersCollection, {
-			keys: ['name', 'email', 'grade', 'events', 'nationalId', 'washingtonId'],
-			threshold: 0.2,
-		}),
-	);
-	let results = $derived(
-		search.current === ''
-			? $allUsersCollection
-					.toSorted((a, b) => a.name.localeCompare(b.name))
-					.filter((u) => !hidePeopleWithoutEvents || u.events.length > 0)
-			: fuse.search(search.current).map((r) => r.item),
-	);
+	const memberSearchText = (user: UserDoc) =>
+		[
+			user.name,
+			user.firstName,
+			user.preferredFirstName,
+			user.lastName,
+			user.email,
+			user.grade,
+			user.nationalId,
+			user.washingtonId,
+			...user.events,
+		]
+			.filter((value) => value !== undefined && value !== null)
+			.join(' ')
+			.toLocaleLowerCase();
+
+	let results = $derived.by(() => {
+		const query = search.current.trim().toLocaleLowerCase();
+
+		return $allUsersCollection
+			.filter(
+				(user) =>
+					(!hidePeopleWithoutEvents || user.events.length > 0) &&
+					(query === '' || memberSearchText(user).includes(query)),
+			)
+			.toSorted((a, b) => a.name.localeCompare(b.name));
+	});
 
 	let visibleMembers = $derived(
 		results.filter(
@@ -307,14 +320,8 @@
 		<div
 			class="grid w-full grid-cols-1 items-center gap-4 sm:grid-cols-2 sm:items-start xl:grid-cols-3"
 		>
-			{#each $allUsersCollection.toSorted( (a, b) => (sortBy === 'firstName' ? a.name : (a.lastName ?? '')).localeCompare(sortBy === 'firstName' ? b.name : (b.lastName ?? '')), ) as user (user.email)}
-				<MemberGridCard
-					{user}
-					show={results.includes(user) &&
-						((showRandomSwitch === 'false' && !user.random) ||
-							(showRandomSwitch === 'true' && user.random) ||
-							showRandomSwitch === 'null')}
-				/>
+			{#each visibleMembers.toSorted( (a, b) => (sortBy === 'firstName' ? a.name : (a.lastName ?? '')).localeCompare(sortBy === 'firstName' ? b.name : (b.lastName ?? '')), ) as user (user.email)}
+				<MemberGridCard {user} />
 			{/each}
 		</div>
 	{:else}

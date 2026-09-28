@@ -12,8 +12,6 @@
 		getFilteredRowModel,
 		getSortedRowModel,
 	} from '@tanstack/table-core';
-	import { watch } from 'runed';
-	import { search } from './search.svelte';
 
 	type DataTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
@@ -24,13 +22,6 @@
 
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
-
-	watch(
-		() => search.current,
-		() => {
-			table.getColumn('name')?.setFilterValue(search.current);
-		},
-	);
 
 	const table = createSvelteTable({
 		get data() {
