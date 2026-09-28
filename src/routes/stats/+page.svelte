@@ -4,8 +4,8 @@
 	import { totalEventPoints } from '$lib/event-points';
 	import { db } from '$lib/firebase';
 	import { allUsersCollection, userDoc } from '$lib/stores';
-	import type { EventDoc } from '$lib/types';
-	import { barX, plot, rectY } from '@observablehq/plot';
+	import type { EventDoc, UserDoc } from '$lib/types';
+	import { barX, plot, rectY, ruleX, text, tip } from '@observablehq/plot';
 	import { collectionStore } from 'sveltefire';
 	import colors from 'tailwindcss/colors';
 	import ColorKey from './ColorKey.svelte';
@@ -20,11 +20,39 @@
 
 	let graph = $state<HTMLDivElement>();
 	let pointsGraph = $state<HTMLDivElement>();
+	let selectedPointTotal = $state<number>();
+	const selectPointGroup = (points: number) => (selectedPointTotal = points);
 	// Mirror the working event-sign-up page instead of relying on the shared
 	// store, whose listener may not be initialized on this route.
 	const events = collectionStore<EventDoc>(db, 'events');
 	const userPoints = (eventNames: string[]) =>
 		totalEventPoints(eventNames, $events);
+	const memberName = (member: UserDoc) =>
+		member.preferredFirstName
+			? `${member.preferredFirstName} ${member.lastName ?? ''}`.trim()
+			: member.name;
+
+	let pointDistribution = $derived.by(() => {
+		const membersByPoints: Record<number, UserDoc[]> = {};
+		for (const member of $allUsersCollection.filter(
+			(member) => member.completedIntakeForm,
+		)) {
+			const points = userPoints(member.events);
+			membersByPoints[points] = [...(membersByPoints[points] ?? []), member];
+		}
+
+		const maxPoints = Math.max(
+			MIN_POINTS,
+			...Object.keys(membersByPoints).map(Number),
+			0,
+		);
+		return Array.from({ length: maxPoints + 1 }, (_, points) => {
+			const members = (membersByPoints[points] ?? []).toSorted((a, b) =>
+				memberName(a).localeCompare(memberName(b)),
+			);
+			return { points, members, count: members.length };
+		});
+	});
 
 	$effect(() => {
 		if ($allUsersCollection.length > 0 && $events.length > 0) {
@@ -118,40 +146,66 @@
 	$effect(() => {
 		if ($events.length === 0) return;
 
-		const pointTotals = $allUsersCollection
-			.filter((user) => user.completedIntakeForm)
-			.map((user) => userPoints(user.events));
-		const nonZeroPointTotals = pointTotals.filter((total) => total > 0);
-		const maxPoints = Math.max(MIN_POINTS, ...nonZeroPointTotals, 1);
-		const distribution = Array.from({ length: maxPoints }, (_, index) => {
-			const points = index + 1;
-			return {
-				points,
-				members: nonZeroPointTotals.filter((total) => total === points).length,
-			};
-		});
-
 		const plotEl = plot({
 			grid: true,
 			x: {
-				label: 'Total event points',
-				domain: [0.5, maxPoints + 0.5],
-				ticks: maxPoints,
+				label: 'Exact total event points',
+				domain: [-0.5, pointDistribution.length - 0.5],
+				ticks: pointDistribution.length,
 			},
 			y: {
 				label: 'Members',
 			},
 			marks: [
-				rectY(distribution, {
+				rectY(pointDistribution, {
 					x: 'points',
 					interval: 1,
-					y2: 'members',
+					y2: 'count',
 					fill: 'var(--chart-1)',
 					inset: 1,
-					tip: true,
+				}),
+				ruleX([MIN_POINTS], {
+					stroke: 'var(--destructive)',
+					strokeDasharray: '4,4',
+				}),
+				text(pointDistribution, {
+					x: 'points',
+					y: 'count',
+					text: 'count',
+					dy: -8,
+					fontWeight: 600,
+				}),
+				tip(pointDistribution, {
+					x: 'points',
+					y: 'count',
+					lineWidth: 42,
+					title: (group) =>
+						$userDoc?.admin
+							? `${group.points} points\n${group.count} member${group.count === 1 ? '' : 's'}\n${group.members.map((member: UserDoc) => memberName(member)).join(', ') || 'No members'}`
+							: `${group.points} points\n${group.count} member${group.count === 1 ? '' : 's'}`,
 				}),
 			],
 		});
+		const bars = plotEl.querySelectorAll<SVGRectElement>(
+			'g[aria-label="rect"] rect',
+		);
+		for (const [index, bar] of bars.entries()) {
+			const group = pointDistribution[index];
+			bar.style.cursor = 'pointer';
+			bar.tabIndex = 0;
+			bar.setAttribute('role', 'button');
+			bar.setAttribute(
+				'aria-label',
+				`${group.points} points, ${group.count} member${group.count === 1 ? '' : 's'}. Show members.`,
+			);
+			bar.addEventListener('click', () => selectPointGroup(group.points));
+			bar.addEventListener('keydown', (event) => {
+				if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault();
+					selectPointGroup(group.points);
+				}
+			});
+		}
 		plotEl.classList.add('bg-transparent!');
 		pointsGraph?.replaceChildren(plotEl);
 	});
@@ -237,6 +291,36 @@
 		Point distribution
 	</h2>
 	<div bind:this={pointsGraph}></div>
+	<p class="text-muted-foreground mt-2 text-sm">
+		Each bar is one exact point total. The dashed line marks the {MIN_POINTS}-point
+		minimum.
+	</p>
+	{#if $userDoc?.admin && selectedPointTotal !== undefined}
+		{@const selectedGroup = pointDistribution[selectedPointTotal]}
+		<section class="mt-4" aria-labelledby="selected-points-heading">
+			<h3 id="selected-points-heading" class="font-semibold">
+				{selectedPointTotal} points, {selectedGroup.count} member{selectedGroup.count ===
+				1
+					? ''
+					: 's'}
+			</h3>
+			{#if selectedGroup.members.length > 0}
+				<ul class="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+					{#each selectedGroup.members as member (member.email)}
+						<li>
+							<a class="underline" href="/account/{member.email}"
+								>{memberName(member)}</a
+							>
+						</li>
+					{/each}
+				</ul>
+			{:else}
+				<p class="text-muted-foreground mt-1 text-sm">
+					No members have this total.
+				</p>
+			{/if}
+		</section>
+	{/if}
 
 	<h2 class="mt-8 mb-3 text-xl font-semibold tracking-tight">
 		Event distribution
