@@ -70,3 +70,13 @@ export const saveCheckIn = httpsCallable<
 	  },
 	BasicResponse
 >(functions, 'saveCheckIn');
+
+export const claimExistingAdminRole = httpsCallable<
+	Record<string, never>,
+	{ admin: true }
+>(functions, 'claimExistingAdminRole');
+
+export const setAdminRole = httpsCallable<
+	{ email: string; admin: boolean },
+	BasicResponse
+>(functions, 'setAdminRole');

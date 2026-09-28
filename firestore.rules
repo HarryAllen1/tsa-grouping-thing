@@ -4,16 +4,22 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function isAdmin() {
-      return get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.admin;
+      return request.auth != null && request.auth.token.admin == true;
     }
-  	match /users/{user} {
+    match /users/{user} {
       allow read: if request.auth != null;
-      allow write: if
+      // Members may manage their own profile, but authorization fields must
+      // never be client-writable. Admin status is the source of truth for
+      // privileged Firestore writes and for the server route guard.
+      allow create: if
         request.auth != null &&
-        (
-          user == request.auth.token.email ||
-          isAdmin()
-        );
+        user == request.auth.token.email &&
+        !('admin' in request.resource.data);
+      allow update: if
+        request.auth != null &&
+        (isAdmin() ||
+          (user == request.auth.token.email &&
+            !request.resource.data.diff(resource.data).affectedKeys().hasAny(['admin'])));
       allow delete: if isAdmin();
     }
     match /events/{event} {

@@ -10,6 +10,7 @@
 	import { MIN_POINTS } from '$lib/constants';
 	import { totalEventPoints } from '$lib/event-points';
 	import { db } from '$lib/firebase';
+	import { setAdminRole } from '$lib/functions';
 	import { eventsCollection, user as userStore } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
@@ -81,10 +82,7 @@
 						user.admin = false;
 						return;
 					}
-					await updateDoc(doc(db, 'users', user.email), {
-						admin: e,
-						lastUpdatedBy: $userStore?.email ?? '',
-					});
+					await setAdminRole({ email: user.email, admin: e });
 				}}
 			/>
 			<Label for="{hash}admin">Admin</Label>

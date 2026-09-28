@@ -12,7 +12,7 @@
 	import { user } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
 	import { setUser } from '@sentry/sveltekit';
-	import { onAuthStateChanged } from 'firebase/auth';
+	import { onIdTokenChanged } from 'firebase/auth';
 	import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 	import { ModeWatcher } from 'mode-watcher';
 	import { onDestroy, onMount, type Snippet } from 'svelte';
@@ -24,6 +24,7 @@
 	import { mouseThing } from './senuka-put-stuff-here';
 	import { config } from '$lib/config';
 	import { CTE_CLASSES, CTE_CLASS_STATUSES } from '$lib/constants';
+	import { claimExistingAdminRole } from '$lib/functions';
 
 	navigator.vibrate ||= (pattern: number | number[]) => !!pattern;
 
@@ -39,7 +40,20 @@
 
 	const isAuthReady = auth.authStateReady();
 
-	const unsub = onAuthStateChanged(auth, async (user) => {
+	const syncServerSession = async (idToken: string) => {
+		await fetch('/api/session', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ idToken }),
+		});
+	};
+
+	const unsub = onIdTokenChanged(auth, async (user) => {
+		if (!user) {
+			await fetch('/api/session', { method: 'DELETE' });
+			return;
+		}
+
 		if (
 			user &&
 			!(
@@ -79,6 +93,12 @@
 			}
 			const userData = userDoc.data() as UserDoc | undefined;
 			if (userData) {
+				const { claims } = await user.getIdTokenResult();
+				if (userData.admin && claims.admin !== true) {
+					await claimExistingAdminRole({});
+				}
+				await syncServerSession(await user.getIdToken(userData.admin));
+
 				if (!userData.events) {
 					await updateDoc(doc(db, 'users', auth.currentUser?.email ?? ''), {
 						events: [],
