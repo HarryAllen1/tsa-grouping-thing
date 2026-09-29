@@ -83,16 +83,15 @@
 		If you are having trouble choosing events, here are some resources:
 	</p>
 	<ul class="my-6 ml-6 list-disc [&>li]:mt-2">
-		<!-- TODO: Add Links -->
-		<!-- <li>
+		<li>
 			<a
 				target="_blank"
 				class="text-primary font-medium underline underline-offset-4"
-				href=""
+				href="https://www.opinionstage.com/page/ef21e6f8-8848-4654-86af-08f1f57c81f9"
 				>Competitive event quiz</a
-			>: a form created by the Washington TSA State Officer team to help you
-			choose an event
-		</li> -->
+			>: a personality-test type form created by the Washington TSA to find the
+			best fit events for you
+		</li>
 		<li>
 			<a
 				target="_blank"
