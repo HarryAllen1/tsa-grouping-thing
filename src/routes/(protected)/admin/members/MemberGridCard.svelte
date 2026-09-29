@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { fancyConfirm } from '$lib/FancyConfirm.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -9,7 +10,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { MIN_POINTS } from '$lib/constants';
 	import { totalEventPoints } from '$lib/event-points';
-	import { db } from '$lib/firebase';
+	import { auth, db } from '$lib/firebase';
 	import { setAdminRole } from '$lib/functions';
 	import { eventsCollection, user as userStore } from '$lib/stores';
 	import type { UserDoc } from '$lib/types';
@@ -83,6 +84,17 @@
 						return;
 					}
 					await setAdminRole({ email: user.email, admin: e });
+					if (!e && user.email === $userStore?.email) {
+						const idToken = await auth.currentUser?.getIdToken(true);
+						if (idToken) {
+							await fetch('/api/session', {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify({ idToken }),
+							});
+						}
+						await goto('/');
+					}
 				}}
 			/>
 			<Label for="{hash}admin">Admin</Label>
