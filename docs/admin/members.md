@@ -1,7 +1,3 @@
-<script setup>
-  import { MIN_EVENTS } from '../../src/lib/constants'
-</script>
-
 # Members
 
 The [members page](https://teaming.jhstsa.org/admin/members) is a useful tool to organize members. This page is used for:
@@ -101,8 +97,8 @@ In the list view, events are always shown. In the grid view, at the bottom of ea
 
 ![event expansion](event-expansion.png)
 
-If the collapsible button is red, the user is under the {{ MIN_EVENTS }} event limit. You should talk to that person at some point to bring them up to {{ MIN_EVENTS }}.
-If the collapsible button is orange, the user has {{ MIN_EVENTS }} events, but doesn't have teams for all of those events. You should talk to that person so that they have teams for at least {{ MIN_EVENTS }} events.
+If the collapsible button is red, the user is under the minimum event limit. You should talk to that person at some point to bring them up to minimum.
+If the collapsible button is orange, the user has minimum events, but doesn't have teams for all of those events. You should talk to that person so that they have teams for at least minimum events.
 If the collapsible button is yellow, the user has enough teams and events, but doesn't have teams for all of their events.
 
 ### Editing a member's events
