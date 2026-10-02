@@ -116,6 +116,14 @@
 				href="https://jhstsa.org">JHS TSA website</a
 			>: quick facts about each event
 		</li>
+		<li>
+			<a
+				target="_blank"
+				rel="noopener noreferrer"
+				class="text-primary font-medium underline underline-offset-4"
+				href="https://jhstsa.org/calendar">JHS TSA calendar</a
+			>: dates and deadlines for TSA events
+		</li>
 	</ul>
 	<Tabs.Root bind:value={view} class="gap-4">
 		<Tabs.List aria-label="Event list view">

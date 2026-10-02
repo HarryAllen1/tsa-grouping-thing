@@ -160,6 +160,16 @@
 	>
 		Edit events
 	</Button>
+	<Button
+		href="https://jhstsa.org/calendar"
+		target="_blank"
+		rel="noopener noreferrer"
+		size="lg"
+		variant="outline"
+		class="mb-4 h-16 w-full text-2xl"
+	>
+		View calendar
+	</Button>
 
 	<!-- <Alert.Root>
 		<Alert.Title class="text-xl font-bold">WTSA Login Credentials</Alert.Title>
