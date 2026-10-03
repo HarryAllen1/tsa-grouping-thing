@@ -63,7 +63,19 @@
 	let submissionDialogOpen = $state(false);
 	let editEventDialogOpen = $state(false);
 	let collapsibleOpen = $state(false);
-	let selectedEventLead = $state(event.eventLead);
+	let selectedEventLead = $state(event.eventLead ?? '');
+	let selectedEventLeadName = $derived(
+		$allUsersCollection.find(
+			(user) => user.email.toLowerCase() === selectedEventLead.toLowerCase(),
+		)?.name ?? selectedEventLead,
+	);
+	let eventLeadName = $derived(
+		event.eventLead
+			? ($allUsersCollection.find(
+					(user) => user.email.toLowerCase() === event.eventLead?.toLowerCase(),
+				)?.name ?? event.eventLead)
+			: '',
+	);
 </script>
 
 <Card.Root class={hidden ? 'hidden' : 'gap-0'}>
@@ -242,12 +254,12 @@
 							<span>Event Lead (optional)</span>
 							<Select.Root bind:value={selectedEventLead} type="single">
 								<Select.Trigger class="w-full">
-									{selectedEventLead}
+									{selectedEventLeadName || 'Select an event lead'}
 								</Select.Trigger>
 								<Select.Content>
 									<Select.Item value="">(none)</Select.Item>
 									{#each $allUsersCollection.filter((user) => user.admin) as user}
-										<Select.Item value={resolveName(user, $allUsersCollection)}>
+										<Select.Item value={user.email}>
 											{resolveName(user, $allUsersCollection)}
 										</Select.Item>
 									{/each}
@@ -317,7 +329,7 @@
 										points: event.points,
 										deadline: event.deadline || '',
 										lastUpdatedBy: $user?.email ?? '',
-										eventLead: event.eventLead || '',
+										eventLead: selectedEventLead,
 									} satisfies Partial<EventDoc>);
 
 									editEventDialogOpen = false;
@@ -367,16 +379,16 @@
 			{/if}
 		</Card.Title>
 		<Card.Description>
-			{#if event.deadline || event.eventLead}
+			{#if event.deadline || eventLeadName}
 				<div class="mb-2 gap-2 rounded-md bg-red-300 p-2 dark:bg-red-900">
 					{#if event.deadline}
 						<p class="font-bold">
 							Deadline: {humanDate(event.deadline)}
 						</p>
 					{/if}
-					{#if event.eventLead}
+					{#if eventLeadName}
 						<p class="font-bold">
-							Event Lead: {event.eventLead}
+							Event Lead: {eventLeadName}
 						</p>
 					{/if}
 				</div>

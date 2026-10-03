@@ -16,6 +16,14 @@
 	let collapsibleOpen = $state(false);
 	let isCreatingTeam = $state(false);
 	let optimisticTeamCreated = $state(false);
+	let eventLeadName = $derived(
+		event.eventLead
+			? ($allUsersCollection.find(
+					(user) =>
+						user.email.toLowerCase() === event.eventLead?.toLowerCase(),
+				)?.name ?? event.eventLead)
+			: '',
+	);
 
 	$effect(() => {
 		if (
@@ -83,16 +91,16 @@
 			{event.event}
 		</Card.Title>
 		<Card.Description>
-			{#if event.deadline || event.eventLead}
+			{#if event.deadline || eventLeadName}
 				<div class="my-1 gap-2 rounded-md bg-red-300 p-2 dark:bg-red-900">
 					{#if event.deadline}
 						<p class="font-bold">
 							Deadline: {humanDate(event.deadline)}
 						</p>
 					{/if}
-					{#if event.eventLead}
+					{#if eventLeadName}
 						<p class="font-bold">
-							Event Lead: {event.eventLead}
+							Event Lead: {eventLeadName}
 						</p>
 					{/if}
 				</div>
