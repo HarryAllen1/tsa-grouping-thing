@@ -69,15 +69,13 @@
 				throw new Error('This event can no longer be changed.');
 			}
 
-			if (event.maxTeamSize === 1) {
-				if (state && !membersTeam) {
-					await createTeam({ event: event.event });
-				} else if (!state && membersTeam) {
-					await leaveTeam({
-						event: event.event,
-						teamId: membersTeam.id,
-					});
-				}
+			if (state && event.maxTeamSize === 1 && !membersTeam) {
+				await createTeam({ event: event.event });
+			} else if (!state && membersTeam) {
+				await leaveTeam({
+					event: event.event,
+					teamId: membersTeam.id,
+				});
 			}
 
 			await updateDoc(doc(db, 'users', $user?.email ?? ''), {

@@ -8,7 +8,6 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Popover from '$lib/components/ui/popover';
-	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { db } from '$lib/firebase';
@@ -44,6 +43,7 @@
 	event.teamCreationLocked ??= false;
 	event.teamCreationActuallyLocked ??= false;
 	event.onlineSubmissions ??= false;
+	event.eventLead ??= '';
 
 	const intersect = <T,>(a: T[], b: T[]): T[] => {
 		const setB = new Set(b);
@@ -63,12 +63,6 @@
 	let submissionDialogOpen = $state(false);
 	let editEventDialogOpen = $state(false);
 	let collapsibleOpen = $state(false);
-	let selectedEventLead = $state(event.eventLead ?? '');
-	let selectedEventLeadName = $derived(
-		$allUsersCollection.find(
-			(user) => user.email.toLowerCase() === selectedEventLead.toLowerCase(),
-		)?.name ?? selectedEventLead,
-	);
 	let eventLeadName = $derived(
 		event.eventLead
 			? ($allUsersCollection.find(
@@ -252,19 +246,17 @@
 						</div>
 						<Label class="flex w-full flex-col items-start gap-1.5">
 							<span>Event Lead (optional)</span>
-							<Select.Root bind:value={selectedEventLead} type="single">
-								<Select.Trigger class="w-full">
-									{selectedEventLeadName || 'Select an event lead'}
-								</Select.Trigger>
-								<Select.Content>
-									<Select.Item value="">(none)</Select.Item>
-									{#each $allUsersCollection.filter((user) => user.admin) as user}
-										<Select.Item value={user.email}>
-											{resolveName(user, $allUsersCollection)}
-										</Select.Item>
-									{/each}
-								</Select.Content>
-							</Select.Root>
+							<select
+								bind:value={event.eventLead}
+								class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								<option value="">(none)</option>
+								{#each $allUsersCollection.filter((user) => user.admin) as user (user.email)}
+									<option value={user.email}>
+										{resolveName(user, $allUsersCollection)}
+									</option>
+								{/each}
+							</select>
 						</Label>
 
 						<Dialog.Footer class="flex flex-row">
@@ -329,7 +321,7 @@
 										points: event.points,
 										deadline: event.deadline || '',
 										lastUpdatedBy: $user?.email ?? '',
-										eventLead: selectedEventLead,
+										eventLead: event.eventLead,
 									} satisfies Partial<EventDoc>);
 
 									editEventDialogOpen = false;
