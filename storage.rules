@@ -16,7 +16,12 @@ service firebase.storage {
       allow read: if request.auth != null;
       allow write: if isAdmin();
     }
-    match /submissions/{event}/{teamId} {
+    // Any signed-in user can manage files in a team's submission folder.
+    match /submissions/{event}/{teamId}/{file} {
+      allow read, write: if request.auth != null;
+    }
+    // Admins may manage every object under the submissions namespace.
+    match /submissions/{path=**} {
       allow read, write: if isAdmin();
     }
     match /{allPaths=**} {
