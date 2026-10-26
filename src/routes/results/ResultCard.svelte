@@ -19,12 +19,31 @@
 	} = $props();
 
 	let open = $state(false);
+
+	const isResultMember = (result: Result) => {
+		const currentEmail = $user?.email?.trim().toLowerCase();
+		const resultEmails = result.members.map((member) =>
+			member.email.trim().toLowerCase(),
+		);
+
+		return (
+			currentEmail !== undefined &&
+			resultEmails.includes(currentEmail) &&
+			event.teams.some(
+				(team) =>
+					team.members.some(
+						(member) => member.email.trim().toLowerCase() === currentEmail,
+					) &&
+					team.members.some((member) =>
+						resultEmails.includes(member.email.trim().toLowerCase()),
+					),
+			)
+		);
+	};
 </script>
 
 {#snippet resultItem(result: Result, i: number)}
-	{@const rubrics = listAll(
-		ref(storage, `results/${event.event}/${result.id}`),
-	)}
+	{@const hasRubricAccess = isResultMember(result)}
 	<li class={i < event.perChapter ? 'font-bold text-green-500' : ''}>
 		{#each result.members as member, i}
 			<!-- DO NOT FORMAT -->
@@ -36,42 +55,45 @@
 				{' '}(you){/if}{#if i < result.members.length - 1}, {' '}
 			{/if}
 		{/each}
-		{#await rubrics then rubs}
-			{#if result.members
-				.map((u) => u.email.toLowerCase())
-				.includes($user.email?.toLowerCase() ?? '') && (rubs.items.length > 0 || result.note)}
-				<Dialog.Root>
-					<Dialog.Trigger class="underline">View rubric</Dialog.Trigger>
-					<Dialog.Content class="max-h-screen overflow-y-auto">
-						<Dialog.Title>Rubric</Dialog.Title>
-						{#if result.note}
-							<div class="prose dark:prose-invert">
-								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-								{@html md.render(result.note)}
-							</div>
-						{/if}
-						{#each rubs.items ?? [] as rubric}
-							<DownloadURL ref={rubric} let:link>
-								{#if link}
-									{@const url = new URL(link)}
-									{#if ['.jpg', '.jpeg', '.webp', '.png', '.avif'].includes(url.pathname
-											.slice(-4)
-											.toLowerCase())}
-										<a href={link} target="_blank">
-											<img src={link} alt="Rubric" />
-										</a>
-									{:else}
-										<a href={link} target="_blank" rel="noopener noreferrer">
-											{url.pathname.slice(1)}
-										</a>
+		{#if hasRubricAccess}
+			{@const rubrics = listAll(
+				ref(storage, `results/${event.event}/${result.id}`),
+			)}
+			{#await rubrics then rubs}
+				{#if rubs.items.length > 0 || result.note}
+					<Dialog.Root>
+						<Dialog.Trigger class="underline">View rubric</Dialog.Trigger>
+						<Dialog.Content class="max-h-screen overflow-y-auto">
+							<Dialog.Title>Rubric</Dialog.Title>
+							{#if result.note}
+								<div class="prose dark:prose-invert">
+									<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+									{@html md.render(result.note)}
+								</div>
+							{/if}
+							{#each rubs.items ?? [] as rubric}
+								<DownloadURL ref={rubric} let:link>
+									{#if link}
+										{@const url = new URL(link)}
+										{#if ['.jpg', '.jpeg', '.webp', '.png', '.avif'].includes(url.pathname
+													.slice(-4)
+													.toLowerCase())}
+											<a href={link} target="_blank">
+												<img src={link} alt="Rubric" />
+											</a>
+										{:else}
+											<a href={link} target="_blank" rel="noopener noreferrer">
+												{url.pathname.slice(1)}
+											</a>
+										{/if}
 									{/if}
-								{/if}
-							</DownloadURL>
-						{/each}
-					</Dialog.Content>
-				</Dialog.Root>
+								</DownloadURL>
+							{/each}
+						</Dialog.Content>
+					</Dialog.Root>
+				{/if}
+			{/await}
 			{/if}
-		{/await}
 	</li>
 {/snippet}
 
