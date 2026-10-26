@@ -8,7 +8,9 @@ service firebase.storage {
     function isAdmin() {
       return request.auth != null && request.auth.token.admin == true;
     }
-    match /results/{event}/{result} {
+    // Rubrics are files stored one level beneath their event/result folder.
+    // Matching only the folder path does not authorize uploads to those files.
+    match /results/{event}/{result}/{file=**} {
       allow read: if request.auth != null;
       allow write: if isAdmin();
     }
