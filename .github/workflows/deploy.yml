@@ -31,4 +31,13 @@ jobs:
       - name: Deploy to Firebase
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: pnpm dlx firebase-tools deploy --project tsa-grouping-thing --token "${{ secrets.FIREBASE_TOKEN }}"
+        run: |
+          for attempt in 1 2 3; do
+            pnpm dlx firebase-tools deploy --project tsa-grouping-thing --token "${{ secrets.FIREBASE_TOKEN }}" && exit 0
+            if [ "$attempt" -lt 3 ]; then
+              echo "Deploy attempt ${attempt} failed; retrying in 15 seconds..."
+              sleep 15
+            fi
+          done
+          echo "Deploy failed after 3 attempts."
+          exit 1
